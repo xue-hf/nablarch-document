@@ -7,7 +7,7 @@ Nablarch Validation
   :depth: 3
   :local:
 
-この章では、Nablarchで独自に実装したバリデーション機能を解説する。
+本章节、Nablarchで独自に実装したバリデーション機能を解説する。
 
 .. tip::
 

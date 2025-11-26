@@ -1,93 +1,93 @@
 .. _`batch-functional_comparison`:
 
-Jakarta Batchに準拠したバッチアプリケーションとNablarchバッチアプリケーションとの機能比較
+Jakarta Batch 与 Nablarch Batch 应用程序的功能对比
 ----------------------------------------------------------------------------------------------------
-この章では、以下の機能の比較を示す。
+本章节展示了以下的功能对比。
 
 * :doc:`jsr352/index`
 * :doc:`nablarch_batch/index`
 
-.. list-table:: 機能比較（◎：Jakarta Batchの仕様で定義されている　○：提供あり　△：一部提供あり　×：提供なし　－：対象外）
+.. list-table:: 功能对比（◎：根据 Jakarta Batch 规范定义　○：支出　△：部分支持　×：不支持　－：除外）
   :header-rows: 1
   :class: something-special-class
   :widths: 30 35 35
 
-  * - 機能
+  * - 功能
     - Jakarta Batchに準拠 [#jsr]_
     - Nablarchバッチ
 
-  * - 起動時に任意のパラメータを設定できる
+  * - 启动时设置任意参数
     - ◎
-    - ○ |br| :ref:`解説書へ <main-option_parameter>`
+    - ○ |br| :ref:`前往文档 <main-option_parameter>`
 
-  * - 同一バッチアプリケーションの同時実行を防止できる
+  * - 防止同一Batch应用重复启动
     - ○ |br| :java:extdoc:`Javadocへ <nablarch.fw.batch.ee.listener.job.DuplicateJobRunningCheckListener>`
-    - ○ |br| :ref:`解説書へ <duplicate_process_check_handler>`
+    - ○ |br| :ref:`前往文档 <duplicate_process_check_handler>`
 
-  * - 実行中のバッチアプリケーションを |br| 外部から安全に停止できる
+  * - 从外部安全地停止正在运行的批处理应用程序。
     - ◎
-    - ○ |br| :ref:`解説書へ <process_stop_handler>`
+    - ○ |br| :ref:`前往文档 <process_stop_handler>`
 
-  * - 1回の実行で処理する最大の件数を指定できる
+  * - 指定单次执行中处理的最大记录数。
     - × |br| [#jsr_max]_
-    - ○ |br| :ref:`解説書へ <data_read_handler-max_count>`
+    - ○ |br| :ref:`前往文档 <data_read_handler-max_count>`
 
-  * - 一定件数単位のコミットができる
+  * - 以指定记录数为单位进行commit
     - ◎
-    - ○ |br| :ref:`解説書へ <loop_handler-commit_interval>`
+    - ○ |br| :ref:`前往文档 <loop_handler-commit_interval>`
 
-  * - 障害発生ポイントから再実行できる
+  * - 故障恢复
     - ◎
     - △ |br| [#resumable]_
 
-  * - 業務処理を複数スレッドで並列実行できる
+  * - 多线程处理业务逻辑
     - ◎
-    - ○ |br| :ref:`解説書へ <multi_thread_execution_handler>`
+    - ○ |br| :ref:`前往文档 <multi_thread_execution_handler>`
 
-  * - 特定の例外を無視して処理を継続できる |br|
-      (ロールバック後に処理を継続できる)
+  * - 忽略指定异常继续执行处理 |br|
+      (回滚后可继续处理)
     - ◎
     - × |br| [#skip_exception]_
 
-  * - 特定の例外発生時に処理をリトライできる
+  * - 发生特定异常时重试处理
     - ◎
     - △ |br| [#retry_exception]_
 
-  * - バッチアプリケーションの結果を元に |br| 次に実行する処理を切り替えられる
+  * - 根据Batch应用程序的执行结果 |br| 可切换下一执行的处理流程
     - ◎
     - × |br| [#branch_batch]_
 
-  * - 入力データソースを一定間隔で監視し |br| バッチを実行出来る
+  * - 定期监控输入数据源 |br| 并执行Batch处理
     - × [#resident_batch]_
-    - ○ |br| :ref:`解説書へ <nablarch_batch-resident_batch>`
+    - ○ |br| :ref:`前往文档 <nablarch_batch-resident_batch>`
 
 
 .. [#jsr]
-  ◎の箇所は、Jakarta Batchで規定されている仕様に従う。
-  詳細は、 `Jakarta Batch(外部サイト、英語) <https://jakarta.ee/specifications/batch/>`_ のSpecificationを参照すること。
+  ◎ 处遵循 Jakarta Batch 所规定的规范。
+  详细内容请参阅 `Jakarta Batch(外部サイト、英語) <https://jakarta.ee/specifications/batch/>`_ 的规范文档。
 
 .. [#jsr_max]
-  :java:extdoc:`ItemReader <jakarta.batch.api.chunk.ItemReader>` の実装クラスに、1回の実行で読み込む最大件数を指定できるプロパティを持たせるなどで対応可能。
+  可通过为 :java:extdoc:`ItemReader <jakarta.batch.api.chunk.ItemReader>` 的实现类添加一个用于指定单次执行时最大读取记录数的属性等方式进行对应。
 
 .. [#resumable]
-  :java:extdoc:`ResumeDataReader (レジューム機能付き読み込み)<nablarch.fw.reader.ResumeDataReader>` を使用することで障害発生ポイントからの再実行が可能。
-  ただし、この機能はファイルを入力としている場合にのみ使用できる。それ以外のデータを入力とする場合には、アプリケーション側で設計及び実装が必要となる。
+  通过使用 :java:extdoc:`ResumeDataReader (支持断点续传的读取器)<nablarch.fw.reader.ResumeDataReader>` 可实现从故障发生点重新执行。
+  但该功能仅适用于以文件作为输入源的情况；若输入数据非文件形式，则需由应用程序侧自行设计与实现相应功能。
 
 .. [#skip_exception]
-  特定例外を無視して処理を継続したい場合は、ハンドラを追加して対応すること。
+  若需忽略特定异常并继续处理，应添加相应的handler进行对应。
 
 .. [#retry_exception]
-  :ref:`retry_handler` でリトライ可能例外の場合にリトライできるが、Jakarta Batchのように例外が発生したデータの単純なリトライはできない。
-  :ref:`retry_handler` では、リトライ対象の例外を柔軟に指定できない。
+  通过 :ref:`retry_handler` 可对可重试异常执行重试，但无法像 Jakarta Batch 那样对发生异常的单条数据进行简单重试。
+  此外，:ref:`retry_handler` 无法灵活指定需重试的异常类型。
 
-  :ref:`retry_handler` で要件を満たすことができない(例外が発生したデータの単純なリトライや柔軟に例外を指定したい)場合は、ハンドラを追加して対応すること。
+  若 :ref:`retry_handler` 无法满足需求（例如需要对发生异常的数据进行简单重试，或需灵活指定异常类型），则应通过自定义处理器进行应对。
 
 .. [#branch_batch]
-  ジョブスケジューラなどで対応すること。例えば、終了コードを元に次に実行するジョブを切り替える等の対応が必要になる。
+  通过作业调度器等进行应对。例如，需根据退出代码切换下一个执行的作业等。
 
 .. [#resident_batch]
-  Jakarta Batchに準拠したバッチアプリケーションでは、一定間隔で入力データソースを監視するようなバッチ処理は実現できない。
-  このため、このようなバッチアプリケーションが必要となった場合は、 :ref:`Nablarchバッチアプリケーションの常駐バッチ  <nablarch_batch-resident_batch>` を使用して実現すること。
+  Jakarta Batch 的Batch应用无法实现定期监控输入数据源的Batch功能。
+  因此，当需要此类Batch应用时，应使用 :ref:`Nablarch Batch应用的常驻Batch <nablarch_batch-resident_batch>` 来实现。
 
 .. |br| raw:: html
 

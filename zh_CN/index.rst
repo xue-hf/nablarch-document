@@ -1,4 +1,3 @@
-
 .. image:: ./_image/Nablarch.jpg
  :width: 300px
 
@@ -10,7 +9,7 @@
 Nablarch
 =======================
 
-Nablarch(ナブラーク)は、TISの豊富な基幹システム構築経験から得られたナレッジを集約したJavaアプリケーション開発/実行基盤です。
+Nablarch（ナブラーク）是TIS基于其丰富的核心系统构建经验所汇聚的Java应用程序开发与执行平台。
 
 .. toctree::
   :maxdepth: 1
@@ -32,33 +31,33 @@ Nablarch(ナブラーク)は、TISの豊富な基幹システム構築経験か�
   terms_of_use/index
 
 -----------------------------------------------
-Nablarchについて
+关于Nablarch
 -----------------------------------------------
 
- | :doc:`コンセプト <about_nablarch/concept>`
- | :doc:`モジュール一覧 <about_nablarch/mvn_module>`
- | :doc:`ライセンス <about_nablarch/license>`
+ | :doc:`理念 <about_nablarch/concept>`
+ | :doc:`模块列表 <about_nablarch/mvn_module>`
+ | :doc:`许可证 <about_nablarch/license>`
 
 -----------------------------------------------
-Nablarchアプリケーションフレームワーク
+Nablarch应用程序框架
 -----------------------------------------------
 
-  | :doc:`解説書 <application_framework/application_framework/index>`
-  | :doc:`アダプタ <application_framework/adaptors/index>`
+ | :doc:`说明文档 <application_framework/application_framework/index>`
+ | :doc:`适配器 <application_framework/adaptors/index>`
 
 -----------------------------------------------
-Nablarch開発ツール
+Nablarch开发工具
 -----------------------------------------------
 
-  | :doc:`効率的なJava静的チェック <development_tools/java_static_analysis/index>` 
-  | :doc:`テスティングフレームワーク <development_tools/testing_framework/index>`
-  | :doc:`アプリケーション開発時に使える便利なツール <development_tools/toolbox/index>` 
+ | :doc:`高效的Java静态检查 <development_tools/java_static_analysis/index>`
+ | :doc:`测试框架 <development_tools/testing_framework/index>`
+ | :doc:`应用程序开发中的实用工具 <development_tools/toolbox/index>`
 
 -----------------------------------------------
-Nablarchでの開発に役立つコンテンツ
+有助于Nablarch开发的外部内容
 -----------------------------------------------
 
-`Fintan(外部サイト) <https://fintan.jp/>`_ で公開している、Nablarchでの開発に役立つ :doc:`コンテンツを紹介 <external_contents/index>` しています。
+在外部网站 `Fintan <https://fintan.jp/>`_ 上，介绍了有助于Nablarch开发的 :doc:`内容 <external_contents/index>`。
 
  | :ref:`system_development_guide`
  | :ref:`development_standards`

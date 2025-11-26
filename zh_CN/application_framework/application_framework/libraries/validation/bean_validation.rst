@@ -6,7 +6,7 @@ Bean Validation
   :depth: 3
   :local:
 
-この章では、Jakarta EEのJakarta Bean Validationに準拠したバリデーション機能を解説する。
+本章节、Jakarta EEのJakarta Bean Validationに準拠したバリデーション機能を解説する。
 
 .. important::
 

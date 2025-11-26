@@ -1,6 +1,6 @@
 .. _about_nablarch:
 
-Nablarchについて
+关于 Nablarch
 =======================
 
 .. toctree::
@@ -9,3 +9,4 @@ Nablarchについて
   concept
   mvn_module
   license
+  versionup_policy
