@@ -212,7 +212,7 @@ Exampleアプリケーションを元に、ファイルをDBに登録するバ�
 .. _`getting_started_nablarch_batch-action`:
 
 業務アクションの作成
-  :java:extdoc:`BatchAction<nablarch.fw.action.BatchAction>` を継承し、業務アクションクラスを作成する。
+  :java:extdoc:`BatchAction<nablarch.fw.action.BatchAction>` を継承し、業務Action类を作成する。
 
   ImportZipCodeFileAction.java
     .. code-block:: java

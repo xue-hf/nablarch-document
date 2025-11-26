@@ -3,7 +3,7 @@
 Jakarta RESTful Web Servicesサポート/Jakarta RESTful Web Services/HTTPメッセージングの機能比較
 =================================================================================================
 
-.. contents:: 目次
+.. contents:: 目录
   :depth: 3
   :local:
 

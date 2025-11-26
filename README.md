@@ -39,6 +39,10 @@ pip install -r requirements.txt
   ```bash
   make html en
   ```
+* 中国語ドキュメント
+  ```bash
+  make html zh_CN
+  ```
 
 ### Docker
 * 日本語ドキュメント
@@ -49,7 +53,10 @@ pip install -r requirements.txt
   ```bash
   docker run --rm -v <リポジトリをクローンしたディレクトリ(フルパス)>:/root/document nablarch-document-build /bin/bash -c "cd /root/document; sphinx-build -d _build/.doctrees/en -b html en _build/html/en"
   ```
-
+* 中国語ドキュメント
+  ```bash
+  docker run --rm -v <リポジトリをクローンしたディレクトリ(フルパス)>:/root/document nablarch-document-build /bin/bash -c "cd /root/document; sphinx-build -d _build/.doctrees/zh_CN -b html zh_CN _build/html/zh_CN"
+  ```
 
 ## textlintの実行方法
 ### textlintの設定ファイル

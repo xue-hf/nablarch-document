@@ -2,7 +2,7 @@
 Jakarta Server Pages静的解析ツール 設定変更ガイド
 ===================================================
 
-.. contents:: 目次
+.. contents:: 目录
   :depth: 2
   :local:
 

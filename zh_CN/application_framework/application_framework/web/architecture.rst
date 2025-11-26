@@ -1,7 +1,7 @@
 アーキテクチャ概要
 ==============================
 
-.. contents:: 目次
+.. contents:: 目录
   :depth: 3
   :local:
 
@@ -20,7 +20,7 @@ Nablarchではウェブアプリケーションを構築する場合、ServletAP
   システムリポジトリやログの初期化処理を行うサーブレットコンテキストリスナー。
 
 :ref:`web_front_controller` (WebFrontController)
-  受け取ったリクエストに対する処理をハンドラキューに委譲するサーブレットフィルタ。
+  受け取ったリクエストに対する処理をhandler队列に委譲するサーブレットフィルタ。
 
 ウェブアプリケーションの処理の流れ
 ----------------------------------------
@@ -30,19 +30,19 @@ Nablarchではウェブアプリケーションを構築する場合、ServletAP
   :scale: 80
 
 1. :ref:`web_front_controller` ( `jakarta.servlet.Filter` の実装クラス)がrequestを受信する。
-2. :ref:`web_front_controller` は、requestに対する処理をハンドラキュー(handler queue)に委譲する。
-3. ハンドラキューに設定されたディスパッチハンドラ(`DispatchHandler`) が、URIを元に処理すべきaction classを特定しハンドラキューの末尾に追加する。
-4. アクションクラス(action class)は、フォームクラス(form class)やエンティティクラス(entity class)を使用して業務ロジック(business logic) を実行する。
+2. :ref:`web_front_controller` は、requestに対する処理をhandler队列(handler queue)に委譲する。
+3. handler队列に設定されたディスパッチハンドラ(`DispatchHandler`) が、URIを元に処理すべきaction classを特定しhandler队列の末尾に追加する。
+4. Action类(action class)は、フォームクラス(form class)やエンティティクラス(entity class)を使用して業務ロジック(business logic) を実行する。
    各クラスの詳細は、 :doc:`application_design` を参照。
 
 5. action classは、処理結果を示す `HttpResponse` を作成し返却する。
-6. ハンドラキュー内のHTTPレスポンスハンドラ(`HttpResponseHandler`)が、 `HttpResponse` をクライアントに返却するレスポンスに変換する。例えば、JSPのServlet Forwardなど。
+6. handler队列内のHTTPレスポンスハンドラ(`HttpResponseHandler`)が、 `HttpResponse` をクライアントに返却するレスポンスに変換する。例えば、JSPのServlet Forwardなど。
 7. responseが返却される。
 
 ウェブアプリケーションで使用するハンドラ
 --------------------------------------------------
 Nablarchでは、ウェブアプリケーションを構築するために必要なハンドラを標準で幾つか提供している。
-プロジェクトの要件に従い、ハンドラキューを構築すること。(要件によっては、プロジェクトカスタムなハンドラを作成することになる)
+プロジェクトの要件に従い、handler队列を構築すること。(要件によっては、プロジェクトカスタムなハンドラを作成することになる)
 
 各ハンドラの詳細は、リンク先を参照すること。
 
@@ -81,7 +81,7 @@ Nablarchでは、ウェブアプリケーションを構築するために必要
 
 最小ハンドラ構成
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Nablarchでウェブアプリケーションを構築する際の、必要最小限のハンドラキューを以下に示す。
+Nablarchでウェブアプリケーションを構築する際の、必要最小限のhandler队列を以下に示す。
 これをベースに、プロジェクト要件に従ってNablarchの標準ハンドラやプロジェクトで作成したカスタムハンドラを追加する。
 
 .. list-table:: 最小ハンドラ構成

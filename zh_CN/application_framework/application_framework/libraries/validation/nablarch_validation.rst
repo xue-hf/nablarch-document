@@ -3,7 +3,7 @@
 Nablarch Validation
 ==================================================
 
-.. contents:: 目次
+.. contents:: 目录
   :depth: 3
   :local:
 

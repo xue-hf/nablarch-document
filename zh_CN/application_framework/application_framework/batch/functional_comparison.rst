@@ -13,8 +13,8 @@ Jakarta Batch 与 Nablarch Batch 应用程序的功能对比
   :widths: 30 35 35
 
   * - 功能
-    - Jakarta Batchに準拠 [#jsr]_
-    - Nablarchバッチ
+    - Jakarta Batch 标准 [#jsr]_
+    - Nablarch Batch
 
   * - 启动时设置任意参数
     - ◎
@@ -87,7 +87,7 @@ Jakarta Batch 与 Nablarch Batch 应用程序的功能对比
 
 .. [#resident_batch]
   Jakarta Batch 的Batch应用无法实现定期监控输入数据源的Batch功能。
-  因此，当需要此类Batch应用时，应使用 :ref:`Nablarch Batch应用的常驻Batch <nablarch_batch-resident_batch>` 来实现。
+  因此，当需要此类Batch应用时，应使用 :ref:`Nablarch Batch应用的驻留型Batch <nablarch_batch-resident_batch>` 来实现。
 
 .. |br| raw:: html
 

@@ -43,7 +43,7 @@ Exampleアプリケーションを元にポップアップ画面の作成方法�
   顧客を検索し、選択の結果を親画面に引き渡す。
   
   本機能は、ダイアログからのAjax呼び出しにより検索処理を実現している。
-  アクションクラスの実装方法については、 :ref:`restful_web_service` を参照。
+  Action类の実装方法については、 :ref:`restful_web_service` を参照。
 
 .. _`popup-popup_jsp`:
 

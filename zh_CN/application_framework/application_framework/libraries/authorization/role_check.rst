@@ -3,7 +3,7 @@
 アノテーションによる認可チェック
 =====================================================================
 
-.. contents:: 目次
+.. contents:: 目录
   :depth: 3
   :local:
 
@@ -36,7 +36,7 @@
   @CheckRole("ADMIN")
   public HttpResponse index(HttpRequest request, ExecutionContext context) {
 
-アノテーションによる認可チェックでは、アクションクラスのメソッドに対してアノテーションを使ってロールを割り当てることができる。
+アノテーションによる認可チェックでは、Action类のメソッドに対してアノテーションを使ってロールを割り当てることができる。
 上記例では、 ``index`` メソッドを実行するために ``ADMIN`` ロールが必要であることを定義している。
 
 
@@ -235,7 +235,7 @@ OR条件にしたい場合は、 ``anyOf`` に ``true`` を設定する。
   </component>
 
 :java:extdoc:`CheckRoleLogger <nablarch.common.authorization.role.CheckRoleLogger>` は、初期化が必要なコンポーネントとして :java:extdoc:`BasicApplicationInitializer <nablarch.core.repository.initialization.BasicApplicationInitializer>` の ``initializeList`` に設定する。
-またこのとき、 ``targetPackage`` プロパティにアクションクラスが存在するパッケージを指定する(サブパッケージも対象となる)。
+またこのとき、 ``targetPackage`` プロパティにAction类が存在するパッケージを指定する(サブパッケージも対象となる)。
 
 なお、デフォルトでは末尾が ``Action`` で終わる名前のクラスが処理の対象となる。
 この設定は ``targetClassPattern`` プロパティに任意の正規表現を指定することで変更できる。

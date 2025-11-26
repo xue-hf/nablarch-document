@@ -2,14 +2,14 @@
 
 アプリケーションの責務配置
 ================================
-Nablarchバッチアプリケーションを作成する際に実装すべきクラスとその責務について説明する。
+Nablarch Batch应用を作成する際に実装すべきクラスとその責務について説明する。
 
 **クラスとその責務**
 
 .. image:: images/batch_design.png
 
-アクションクラス(action class)
-  アクションクラスは、2つのことを行う。
+Action类(action class)
+  Action类は、2つのことを行う。
 
   * 入力データの読み込みに使う :java:extdoc:`DataReader<nablarch.fw.DataReader>` を生成する。
   * :java:extdoc:`DataReader<nablarch.fw.DataReader>` が読み込んだデータレコードを元に業務ロジックを実行し、

@@ -3,7 +3,7 @@
 Jakarta RESTful Web Servicesアダプタ
 ===========================================
 
-.. contents:: 目次
+.. contents:: 目录
   :depth: 3
   :local:
 
@@ -90,7 +90,7 @@ Jersey環境下でRESTfulウェブサービスを使用する
     <property name="methodBinderFactory">
       <component class="nablarch.fw.jaxrs.JaxRsMethodBinderFactory">
         <property name="handlerList">
-          <!-- handlerListプロパティにJerseyのハンドラキューをファクトリインジェクションする -->
+          <!-- handlerListプロパティにJerseyのhandler队列をファクトリインジェクションする -->
           <component class="nablarch.integration.jaxrs.jersey.JerseyJaxRsHandlerListFactory"/>
         </property>
       </component>
@@ -133,7 +133,7 @@ RESTEasy環境下でRESTfulウェブサービスを使用する
     <property name="methodBinderFactory">
       <component class="nablarch.fw.jaxrs.JaxRsMethodBinderFactory">
         <property name="handlerList">
-          <!-- handlerListプロパティにRESTEasyのハンドラキューをファクトリインジェクションする -->
+          <!-- handlerListプロパティにRESTEasyのhandler队列をファクトリインジェクションする -->
           <component class="nablarch.integration.jaxrs.resteasy.ResteasyJaxRsHandlerListFactory"/>
         </property>
       </component>

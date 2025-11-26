@@ -8,7 +8,7 @@ Nablarch Validationに対応したForm/Entityのクラス単体テスト
 
 .. tip::
    Form、Entityの責務については、各処理方式の責務配置を参照すること。
-   例： :ref:`ウェブアプリケーションの責務配置<application_design>` 、 :ref:`Nablarchバッチアプリケーションの責務配置<nablarch_batch-application_design>` 
+   例： :ref:`ウェブアプリケーションの責務配置<application_design>` 、 :ref:`Nablarch Batch应用の責務配置<nablarch_batch-application_design>`
 
 -----------------------------
 Form/Entity単体テストの書き方

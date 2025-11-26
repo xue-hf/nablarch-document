@@ -4,7 +4,7 @@
 Jakarta Server Pages静的解析ツール
 =====================================
 
-.. contents:: 目次
+.. contents:: 目录
   :depth: 2
   :local:
 

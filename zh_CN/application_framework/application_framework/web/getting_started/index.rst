@@ -5,7 +5,7 @@ Getting Started
 
 本章を通読することで、Nablarchを用いたウェブアプリケーション開発のイメージを掴むことができる。
 
-本章では詳細な機能説明を行わないため、実装する際には、適宜 :doc:`../feature_details`
+本章节詳細な機能説明を行わないため、実装する際には、適宜 :doc:`../feature_details`
 や :doc:`../../libraries/index` 、及び `APIドキュメント` を参照する必要がある。
 
 .. tip::
@@ -19,7 +19,7 @@ Getting Started
   Exampleアプリケーションの動作環境を事前に構築しておくこと。
 
   .. tip::
-    Exampleアプリケーションに関する以下の事項は、本章では解説しない。
+    Exampleアプリケーションに関する以下の事項は、本章节解説しない。
     以下の事項については、 :ref:`example_application` を参照すること。
     
     - Exampleアプリケーションの環境構築および実行

@@ -317,7 +317,7 @@ JSONAssertのように外部ライブラリが期待値として ``String`` し�
 
   .. code-block:: xml
 
-    <!-- ハンドラキュー構成 -->
+    <!-- handler队列構成 -->
     <component name="webFrontController" class="nablarch.fw.web.servlet.WebFrontController">
       <property name="handlerQueue">
         <list>

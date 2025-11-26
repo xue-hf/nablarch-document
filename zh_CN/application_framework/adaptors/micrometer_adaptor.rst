@@ -3,7 +3,7 @@
 Micrometerアダプタ
 ==================================================
 
-.. contents:: 目次
+.. contents:: 目录
   :depth: 3
   :local:
 
@@ -931,8 +931,8 @@ SQLの処理時間
 処理時間を計測するハンドラ
 --------------------------------------------------
 
-:java:extdoc:`TimerMetricsHandler <nablarch.integration.micrometer.instrument.handler.TimerMetricsHandler>` をハンドラキューに設定すると、後続ハンドラの処理時間を計測しメトリクスとして収集できるようになる。
-これにより、ハンドラキュー内の処理の平均処理時間や最大処理時間をモニタできるようになる。
+:java:extdoc:`TimerMetricsHandler <nablarch.integration.micrometer.instrument.handler.TimerMetricsHandler>` をhandler队列に設定すると、後続ハンドラの処理時間を計測しメトリクスとして収集できるようになる。
+これにより、handler队列内の処理の平均処理時間や最大処理時間をモニタできるようになる。
 
 ``TimerMetricsHandler`` には、 :java:extdoc:`HandlerMetricsMetaDataBuilder <nablarch.integration.micrometer.instrument.handler.HandlerMetricsMetaDataBuilder>` インタフェースを実装したクラスのインスタンスを設定する必要がある。
 ``HandlerMetricsMetaDataBuilder`` は、収集したメトリクスに設定する以下のメタ情報を構築する機能を提供する。
@@ -976,11 +976,11 @@ SQLの処理時間
 ``buildTagList()`` には、ハンドラに渡されたパラメータと後続ハンドラの実行結果、そして後続ハンドラがスローした例外が渡される（例外がスローされていない場合は ``null``）。
 本メソッドは必要に応じてこれらの情報を参照し、メトリクスに設定するタグの一覧を ``List<io.micrometer.core.instrument.Tag>`` で返すように実装する。
 
-次に、 ``TimerMetricsHandler`` をハンドラキューに設定する例を以下に示す。
+次に、 ``TimerMetricsHandler`` をhandler队列に設定する例を以下に示す。
 
 .. code-block:: xml
 
-  <!-- ハンドラキュー構成 -->
+  <!-- handler队列構成 -->
   <component name="webFrontController"
              class="nablarch.fw.web.servlet.WebFrontController">
     <property name="handlerQueue">
@@ -1000,7 +1000,7 @@ SQLの処理時間
     </property>
   </component>
 
-ハンドラキューに ``TimerMetricsHandler`` を追加し、 ``handlerMetricsMetaDataBuilder`` プロパティに作成した ``HandlerMetricsMetaDataBuilder`` のコンポーネントを設定する。
+handler队列に ``TimerMetricsHandler`` を追加し、 ``handlerMetricsMetaDataBuilder`` プロパティに作成した ``HandlerMetricsMetaDataBuilder`` のコンポーネントを設定する。
 
 また ``meterRegistry`` プロパティには、使用しているレジストリファクトリが生成した `MeterRegistry(外部サイト、英語)`_ を渡すように設定する。
 
@@ -1169,10 +1169,10 @@ HTTPリクエストの処理時間を収集する
   * - タグ名
     - 説明
   * - ``class``
-    - リクエストを処理したアクションクラスの名前(``Class.getName()``)。
+    - リクエストを処理したAction类の名前(``Class.getName()``)。
       取得できない場合は ``UNKNOWN``。
   * - ``method``
-    - リクエストを処理したアクションクラスのメソッド名と、引数の型名(``Class.getCanonicalName()``)をアンダースコア(``_``)で繋げた文字列。
+    - リクエストを処理したAction类のメソッド名と、引数の型名(``Class.getCanonicalName()``)をアンダースコア(``_``)で繋げた文字列。
       取得できない場合は ``UNKNOWN``。
   * - ``httpMethod``
     - HTTPメソッド
@@ -1187,7 +1187,7 @@ HTTPリクエストの処理時間を収集する
 
 .. code-block:: xml
 
-  <!-- ハンドラキュー構成 -->
+  <!-- handler队列構成 -->
   <component name="webFrontController"
              class="nablarch.fw.web.servlet.WebFrontController">
     <property name="handlerQueue">
@@ -1210,7 +1210,7 @@ HTTPリクエストの処理時間を収集する
     </property>
   </component>
 
-リクエスト全体の処理時間を計測するため、 ``TimerMetricsHandler`` はハンドラキューの先頭に設定する。
+リクエスト全体の処理時間を計測するため、 ``TimerMetricsHandler`` はhandler队列の先頭に設定する。
 
 以上の設定で、 ``LoggingMeterRegistry`` を使っていた場合は次のようなメトリクスが収集されるようになる。
 

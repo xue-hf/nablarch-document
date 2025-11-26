@@ -1,7 +1,7 @@
 効率的なJava静的チェック
 =========================
 
-.. contents:: 目次
+.. contents:: 目录
   :depth: 2
   :local:
 

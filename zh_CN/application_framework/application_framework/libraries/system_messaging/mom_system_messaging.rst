@@ -3,7 +3,7 @@
 MOMメッセージング
 ==================================================
 
-.. contents:: 目次
+.. contents:: 目录
   :depth: 3
   :local:
 
@@ -153,7 +153,7 @@ MOMメッセージングでは、以下のクラスをコンポーネント定�
 :java:extdoc:`AsyncMessageSendAction<nablarch.fw.messaging.action.AsyncMessageSendAction>`
 を提供している。
 :java:extdoc:`AsyncMessageSendAction<nablarch.fw.messaging.action.AsyncMessageSendAction>` は、
-:ref:`nablarch_batch` で動作するアクションクラスである。
+:ref:`nablarch_batch` で動作するAction类である。
 
 .. tip::
  一時テーブルへの送信電文の登録は、 :ref:`web_application` や :ref:`batch_application` で、
@@ -485,7 +485,7 @@ MOMメッセージングでは、以下のクラスをコンポーネント定�
 :java:extdoc:`AsyncMessageReceiveAction<nablarch.fw.messaging.action.AsyncMessageReceiveAction>`
 を提供している。
 :java:extdoc:`AsyncMessageReceiveAction<nablarch.fw.messaging.action.AsyncMessageReceiveAction>`
-は、:ref:`mom_messaging` で動作するアクションクラスである。
+は、:ref:`mom_messaging` で動作するAction类である。
 
 .. tip::
  一時テーブルに保存したデータは、 :ref:`batch_application` を用いて、
@@ -654,13 +654,13 @@ MOMメッセージングでは、以下のクラスをコンポーネント定�
 同期応答メッセージ受信では、定型的な処理を行うテンプレートクラスとして、
 :java:extdoc:`MessagingAction<nablarch.fw.messaging.action.MessagingAction>` を提供している。
 :java:extdoc:`MessagingAction<nablarch.fw.messaging.action.MessagingAction>` は、
-:ref:`mom_messaging` で動作するアクションクラスである。
+:ref:`mom_messaging` で動作するAction类である。
 
 :java:extdoc:`MessagingAction<nablarch.fw.messaging.action.MessagingAction>`
 を使用することにより、以下の成果物のみを作成すればよい。
 
 * 電文のレイアウトを表すフォーマット定義ファイル
-* 電文受信時とエラー発生時の処理(アクションクラス)
+* 電文受信時とエラー発生時の処理(Action类)
 
 :ref:`Exampleアプリケーション<example_application-mom_system_messaging>` をベースに、
 プロジェクト情報を受信する場合の実装例を以下に示す。
@@ -697,7 +697,7 @@ MOMメッセージングでは、以下のクラスをコンポーネント定�
     [data]
     項目定義は省略
 
- 電文受信時とエラー発生時の処理(アクションクラス)
+ 電文受信時とエラー発生時の処理(Action类)
   ポイント
    * :java:extdoc:`MessagingAction<nablarch.fw.messaging.action.MessagingAction>` を継承し、
      以下のメソッドをオーバーライドする。

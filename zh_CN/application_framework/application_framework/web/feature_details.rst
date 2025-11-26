@@ -1,7 +1,7 @@
 機能詳細
 ========================================
 
-.. contents:: 目次
+.. contents:: 目录
   :depth: 3
   :local:
 
@@ -17,7 +17,7 @@ Nablarchの初期化
   feature_details/web_front_controller
 
 Nablarchの初期化を行うためには、 :ref:`システムリポジトリのロードの為の設定 <nablarch_servlet_context_listener>`
-及び :ref:`ハンドラキューの設定(構築) <web_front_controller>` が必要となる。
+及び :ref:`handler队列の設定(構築) <web_front_controller>` が必要となる。
 
 入力値のチェック
 ----------------------------------------
@@ -62,7 +62,7 @@ Nablarchの初期化を行うためには、 :ref:`システムリポジトリ�
 大量データのダウンロード時には、 :ref:`universal_dao-lazy_load` を参照し、
 データベースの検索結果をヒープ上に展開しないように注意すること。
 
-URIとアクションクラスのマッピング
+URIとAction类のマッピング
 ----------------------------------------
 以下の2種類の方法を提供しているが、
 :ref:`ルーティングアダプタが推奨である理由<http_request_java_package_mapping-router_adaptor>` に記載がある通り、 :ref:`router_adaptor` の使用を推奨する。

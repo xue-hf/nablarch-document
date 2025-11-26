@@ -3,7 +3,7 @@
 Webアプリケーションをステートレスにする
 =====================================================================
 
-.. contents:: 目次
+.. contents:: 目录
   :depth: 3
 
 基本的な考え方
@@ -94,7 +94,7 @@ HTTPセッションの誤生成を検知する
 
 .. code-block:: xml
 
-  <!-- ハンドラキュー構成 -->
+  <!-- handler队列構成 -->
   <component name="webFrontController"
              class="nablarch.fw.web.servlet.WebFrontController">
 

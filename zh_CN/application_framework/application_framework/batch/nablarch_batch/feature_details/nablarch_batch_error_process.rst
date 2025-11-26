@@ -1,8 +1,8 @@
 .. _nablarch_batch_error_process:
 
-Nablarchバッチアプリケーションのエラー処理
+Nablarch Batch应用のエラー処理
 ============================================================
-.. contents:: 目次
+.. contents:: 目录
   :depth: 3
   :local:
 
@@ -10,7 +10,7 @@ Nablarchバッチアプリケーションのエラー処理
 
 バッチ処理をリランできるようにする
 --------------------------------------------------
-Nablarchバッチアプリケーションでは、ファイル入力を除き、
+Nablarch Batch应用では、ファイル入力を除き、
 バッチ処理をリランできるようにする機能を提供していない。
 
 そのため、処理対象レコードにステータスを持たせ、
@@ -27,17 +27,17 @@ Nablarchバッチアプリケーションでは、ファイル入力を除き、
 
 バッチ処理でエラー発生時に処理を継続する
 --------------------------------------------------
-エラー発生時の処理継続は、 :ref:`常駐バッチ<nablarch_batch-resident_batch>` のみ対応している。
-:ref:`都度起動バッチ<nablarch_batch-each_time_batch>` は対応していない。
+エラー発生時の処理継続は、 :ref:`驻留型Batch<nablarch_batch-resident_batch>` のみ対応している。
+:ref:`每次启动型Batch<nablarch_batch-each_time_batch>` は対応していない。
 
-:ref:`常駐バッチ<nablarch_batch-resident_batch>` では、
+:ref:`驻留型Batch<nablarch_batch-resident_batch>` では、
 :java:extdoc:`TransactionAbnormalEnd<nablarch.fw.results.TransactionAbnormalEnd>`
 を送出すると、 :ref:`retry_handler` により処理が継続される。
 ただし、 :ref:`nablarch_batch_error_process-rerun` に記載した内容で、
 バッチ処理がリランできるようになっている必要がある。
 
 .. tip::
- :ref:`都度起動バッチ<nablarch_batch-each_time_batch>` で
+ :ref:`每次启动型Batch<nablarch_batch-each_time_batch>` で
  :java:extdoc:`TransactionAbnormalEnd<nablarch.fw.results.TransactionAbnormalEnd>`
  が送出されると、バッチ処理が異常終了となる。
 
@@ -48,7 +48,7 @@ Nablarchバッチアプリケーションでは、ファイル入力を除き、
 アプリケーションでエラーを検知した場合に、
 処理を継続せずにバッチ処理を異常終了させたい場合がある。
 
-Nablarchバッチアプリケーションでは、
+Nablarch Batch应用では、
 :java:extdoc:`ProcessAbnormalEnd<nablarch.fw.launcher.ProcessAbnormalEnd>`
 を送出すると、バッチ処理を異常終了にできる。
 :java:extdoc:`ProcessAbnormalEnd<nablarch.fw.launcher.ProcessAbnormalEnd>`

@@ -5,7 +5,7 @@ Example
 =======
 
 Exampleは、Nablarchアプリケーションフレームワークの機能の使用方法を示した実装例であり、 :ref:`実行制御基盤 <runtime_platform>` 毎に作成している。
-本章では、Exampleに必要な環境構築手順と、アプリケーションの実行手順を解説する。
+本章节、Exampleに必要な環境構築手順と、アプリケーションの実行手順を解説する。
 
 .. tip::
  Exampleを改修して本格的なアプリケーションを作成することは想定していない。
@@ -61,7 +61,7 @@ Exampleの一覧
 ----------------------
   
 - `Jakarta Batchに準拠したバッチアプリケーション <https://github.com/nablarch/nablarch-example-batch-ee>`_ (:ref:`解説 <jBatch_getting_started>`)
-- `Nablarchバッチアプリケーション <https://github.com/nablarch/nablarch-example-batch>`_ (:ref:`解説 <nablarch_Batch_getting_started>`)
+- `Nablarch Batch应用 <https://github.com/nablarch/nablarch-example-batch>`_ (:ref:`解説 <nablarch_Batch_getting_started>`)
 
 
 メッセージング

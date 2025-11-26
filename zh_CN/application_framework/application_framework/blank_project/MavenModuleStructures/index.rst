@@ -2,9 +2,9 @@
 =======================
 Mavenアーキタイプの構成
 =======================
-本章では、Nablarchの提供するMavenアーキタイプの構成と、各ディレクトリ・ファイルの概要を記載する。
+本章节、Nablarchの提供するMavenアーキタイプの構成と、各ディレクトリ・ファイルの概要を記載する。
 
-.. contents:: 目次
+.. contents:: 目录
   :depth: 2
   :local:
 
@@ -297,7 +297,7 @@ Jakarta Batchに準拠したバッチアプリケーションのjarファイル�
 pj-batchプロジェクト
 ====================
 
-Nablarchバッチアプリケーションのjarファイルとしてパッケージされるプロジェクト。
+Nablarch Batch应用のjarファイルとしてパッケージされるプロジェクト。
 
 .. _firstStepBatchProjectStructure:
 
@@ -330,7 +330,7 @@ Nablarchバッチアプリケーションのjarファイルとしてパッケー
     |   |   +---java
     |   |   |
     |   |   +---resources
-    |   |   |   |   batch-boot.xml              … 都度起動バッチ起動時に指定する設定ファイル。
+    |   |   |   |   batch-boot.xml              … 每次启动型Batch起動時に指定する設定ファイル。
     |   |   |   |   mail-sender-boot.xml        … メール送信バッチ起動時に指定する設定ファイル。
     |   |   |   |   resident-batch-boot.xml     … テーブルをキューとして使ったメッセージング起動時に指定する設定ファイル。
     |   |   |   |
@@ -368,7 +368,7 @@ Nablarchバッチアプリケーションのjarファイルとしてパッケー
 pj-batch-dblessプロジェクト
 ============================
 
-DBに接続しないNablarchバッチアプリケーションのjarファイルとしてパッケージされるプロジェクト。
+DBに接続しないNablarch Batch应用のjarファイルとしてパッケージされるプロジェクト。
 
 .. _firstStepDbLessBatchProjectStructure:
 
@@ -488,7 +488,7 @@ RESTfulウェブサービスアプリケーションがデプロイされたTomc
 pj-container-batchプロジェクト
 ===============================
 
-NablarchバッチアプリケーションがデプロイされたLinuxサーバのDockerイメージをビルドするプロジェクト。
+Nablarch Batch应用がデプロイされたLinuxサーバのDockerイメージをビルドするプロジェクト。
 
 .. _firstStepContainerBatchProjectStructure:
 
@@ -521,7 +521,7 @@ NablarchバッチアプリケーションがデプロイされたLinuxサーバ�
     |   |   +---jib
     |   |   |
     |   |   +---resources
-    |   |   |   |   batch-boot.xml              … 都度起動バッチ起動時に指定する設定ファイル。
+    |   |   |   |   batch-boot.xml              … 每次启动型Batch起動時に指定する設定ファイル。
     |   |   |   |   mail-sender-boot.xml        … メール送信バッチ起動時に指定する設定ファイル。
     |   |   |   |   resident-batch-boot.xml     … テーブルをキューとして使ったメッセージング起動時に指定する設定ファイル。
     |   |   |   |
@@ -541,7 +541,7 @@ NablarchバッチアプリケーションがデプロイされたLinuxサーバ�
 pj-container-batch-dblessプロジェクト
 ========================================
 
-DBに接続しないNablarchバッチアプリケーションがデプロイされたLinuxサーバのDockerイメージをビルドするプロジェクト。
+DBに接続しないNablarch Batch应用がデプロイされたLinuxサーバのDockerイメージをビルドするプロジェクト。
 
 プロジェクトの構成
 ------------------

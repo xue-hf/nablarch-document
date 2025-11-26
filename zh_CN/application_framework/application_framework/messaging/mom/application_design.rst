@@ -6,8 +6,8 @@ MOMメッセージングを作成する際に実装すべきクラスとその�
 
 .. image:: images/mom_messaging_design.png
 
-アクションクラス(action class)
-  アクションクラスは、データリーダ(
+Action类(action class)
+  Action类は、データリーダ(
   :java:extdoc:`FwHeaderReader<nablarch.fw.messaging.reader.FwHeaderReader>` /
   :java:extdoc:`MessageReader<nablarch.fw.messaging.reader.MessageReader>`
   )が読み込んだ要求電文(
@@ -49,7 +49,7 @@ MOMメッセージングを作成する際に実装すべきクラスとその�
 
 .. important::
  メッセージングでは、システムで共通のデータリーダを使うことを想定しているため、
- :ref:`Nablarchバッチアプリケーションの責務配置<nablarch_batch-application_design>` と異なり、
+ :ref:`Nablarch Batch应用の責務配置<nablarch_batch-application_design>` と異なり、
  アクションがデータリーダを生成する責務を持っていない。
 
  メッセージングで使用するデータリーダは、コンポーネント定義に ``dataReader`` という名前で追加する。

@@ -3,7 +3,7 @@
 Domaアダプタ
 ==================================================
 
-.. contents:: 目次
+.. contents:: 目录
   :depth: 3
   :local:
 
@@ -304,7 +304,7 @@ Daoインタフェース
     }
 
 
-業務アクションクラス
+業務Action类
   ポイント
      * Daoの実装クラスを取得する際に、 :java:extdoc:`DomaDaoRepository#get(java.lang.Class,java.lang.Class)<nablarch.integration.doma.DomaDaoRepository.get(java.lang.Class,java.lang.Class)>` を使用し、第2引数に作成したConfigクラスを指定する。
 

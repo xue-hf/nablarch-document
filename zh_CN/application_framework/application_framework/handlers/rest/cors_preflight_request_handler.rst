@@ -2,7 +2,7 @@
 
 CORSプリフライトリクエストハンドラ
 ==================================================
-.. contents:: 目次
+.. contents:: 目录
   :depth: 3
   :local:
 
@@ -64,7 +64,7 @@ CORSの処理は :java:extdoc:`Cors <nablarch.fw.jaxrs.cors.Cors>` インタフ�
     </property>
   </component>
 
-  <!-- ハンドラキュー構成 -->
+  <!-- handler队列構成 -->
   <component name="webFrontController" class="nablarch.fw.web.servlet.WebFrontController">
     <property name="handlerQueue">
       <list>

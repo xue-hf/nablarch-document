@@ -3,7 +3,7 @@
 汎用データフォーマット
 ==================================================
 
-.. contents:: 目次
+.. contents:: 目录
   :depth: 3
   :local:
 
@@ -196,7 +196,7 @@
   :java:extdoc:`FileRecordWriterHolder <nablarch.common.io.FileRecordWriterHolder>` で開いたファイルリソースは、
   :ref:`file_record_writer_dispose_handler` にて自動的に開放される。
   このため、 :java:extdoc:`FileRecordWriterHolder <nablarch.common.io.FileRecordWriterHolder>` を使用する場合には、
-  必ず :ref:`file_record_writer_dispose_handler` をハンドラキュー上に設定すること。
+  必ず :ref:`file_record_writer_dispose_handler` をhandler队列上に設定すること。
 
 .. important::
   出力するデータに不正な値が設定されていた場合に正しく処理できない可能性があるため、事前にアプリケーション側で不正な値でないかをチェックすること。

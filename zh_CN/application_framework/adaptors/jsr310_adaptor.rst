@@ -3,7 +3,7 @@
 JSR310(Date and Time API)アダプタ
 ==================================================
 
-.. contents:: 目次
+.. contents:: 目录
   :depth: 3
   :local:
   

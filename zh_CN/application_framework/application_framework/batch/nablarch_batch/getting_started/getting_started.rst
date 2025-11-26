@@ -2,7 +2,7 @@
 
 Getting Started
 ==========================================
-本章を通読することで、Nablarchバッチアプリケーション方式のバッチの開発イメージを掴むことができる。
+本章を通読することで、Nablarch Batch应用方式のバッチの開発イメージを掴むことができる。
 
 .. tip::
  ExampleはNablarchの機能の使用方法を示した実装例であり、Exampleを改修して本格的なアプリケーションを作成することは想定していない。
@@ -15,7 +15,7 @@ Getting Started
   Exampleアプリケーションの動作環境を事前に構築しておくこと。
 
   .. tip::
-    Exampleアプリケーションに関する以下の事項は、本章では解説しない。
+    Exampleアプリケーションに関する以下の事項は、本章节解説しない。
     以下の事項については、 :ref:`example_application` を参照すること。
 
     - Exampleアプリケーションの環境構築および実行
@@ -28,8 +28,8 @@ Getting Started
   nablarch_batch/index
 
 .. tip::
- Nablarchバッチアプリケーションでは、 :ref:`都度起動バッチ<nablarch_batch-each_time_batch>` と
- :ref:`常駐バッチ<nablarch_batch-resident_batch>` でアプリケーションの実装方法に違いがないため、
+ Nablarch Batch应用では、 :ref:`每次启动型Batch<nablarch_batch-each_time_batch>` と
+ :ref:`驻留型Batch<nablarch_batch-resident_batch>` でアプリケーションの実装方法に違いがないため、
  別々にGetting Startedを用意していない。
- :ref:`都度起動バッチ<nablarch_batch-each_time_batch>` と
- :ref:`常駐バッチ<nablarch_batch-resident_batch>` で異なるのは、ハンドラ構成のみである。
+ :ref:`每次启动型Batch<nablarch_batch-each_time_batch>` と
+ :ref:`驻留型Batch<nablarch_batch-resident_batch>` で異なるのは、ハンドラ構成のみである。

@@ -3,7 +3,7 @@
 bouncycastleを使用した電子署名つきメールの送信サンプルの使用方法
 ============================================================================
 
-本章では、bouncycastle\  [#bouncy]_\ を使用した電子署名付きメール送信機能の使用方法を解説する。
+本章节、bouncycastle\  [#bouncy]_\ を使用した電子署名付きメール送信機能の使用方法を解説する。
 なお、本機能はサンプル実装のため、導入プロジェクトで使用する際には、ソースコード(プロダクション、テストコード共に）をプロジェクトに取込使用すること。
 
 `ソースコード <https://github.com/nablarch/nablarch-biz-sample-all/tree/main/nablarch-smime-integration>`_
@@ -95,7 +95,7 @@ bouncycastleを使用した電子署名つきメールの送信サンプルの�
 
 実行方法
 ------------------
-実行対象のアクションクラスを、\ **please.change.me.common.mail.smime.SMIMESignedMailSender**\ としてメール送信のバッチプロセスを起動する。
+実行対象のAction类を、\ **please.change.me.common.mail.smime.SMIMESignedMailSender**\ としてメール送信のバッチプロセスを起動する。
 プロセス起動時には、このプロセスが処理すべきメールが特定できるメール送信パターンIDを引数として指定する。
 
 詳細は、Nablarchアプリケーションフレームワークのメール送信機能のガイドを参照すること。

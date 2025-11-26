@@ -3,13 +3,13 @@
 共通起動ランチャ
 ==================================================
 
-.. contents:: 目次
+.. contents:: 目录
   :depth: 3
   :local:
 
 スタンドアロンで起動するアプリケーションの起点となるハンドラ。
 
-javaコマンドから直接起動することで、システムリポジトリの初期化を行い、そこに定義されたハンドラキューを実行させることができる。
+javaコマンドから直接起動することで、システムリポジトリの初期化を行い、そこに定義されたhandler队列を実行させることができる。
 
 本ハンドラでは、以下の処理を行う。
 処理の詳細は、カッコ内のJavadocを参照。
@@ -19,7 +19,7 @@ javaコマンドから直接起動することで、システムリポジトリ�
 * システムリポジトリの初期化
 * 実行コンテキストの初期化( :java:extdoc:`Main#setupExecutionContext <nablarch.fw.launcher.Main.setupExecutionContext(nablarch.fw.launcher.CommandLine,nablarch.fw.ExecutionContext)>` )
 * アプリケーション設定ログの出力( :java:extdoc:`ApplicationSettingLogFormatter<nablarch.core.log.app.ApplicationSettingLogFormatter>` )
-* ハンドラキューの実行
+* handler队列の実行
 * 例外及びエラーに応じたログの出力
 * 終了ログの出力( :java:extdoc:`LauncherLogFormatter#getEndLogFormat<nablarch.fw.launcher.logging.LauncherLogFormatter.getEndLogFormat()>` )
 

@@ -8,8 +8,8 @@ HTTPメッセージングを作成する際に実装すべきクラスとその�
 
 .. image:: images/http_messaging_design.png
 
-アクションクラス(action class)
-  アクションクラスは、リクエストメッセージ(:java:extdoc:`RequestMessage<nablarch.fw.messaging.RequestMessage>`)
+Action类(action class)
+  Action类は、リクエストメッセージ(:java:extdoc:`RequestMessage<nablarch.fw.messaging.RequestMessage>`)
   を元に業務ロジックを実行し、レスポンスメッセージ(:java:extdoc:`ResponseMessage<nablarch.fw.messaging.ResponseMessage>`)
   を作成し返却する。
 

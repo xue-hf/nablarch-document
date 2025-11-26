@@ -2,7 +2,7 @@
 
 リクエストハンドラエントリ
 ========================================
-.. contents:: 目次
+.. contents:: 目录
   :depth: 3
   :local:
 
@@ -60,7 +60,7 @@
     <property name="basePath" value="servlet:///"/>
   </component>
 
-  <!-- ハンドラキュー構成 -->
+  <!-- handler队列構成 -->
   <component name="webFrontController"
              class="nablarch.fw.web.servlet.WebFrontController">
 

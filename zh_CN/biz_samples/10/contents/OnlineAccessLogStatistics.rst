@@ -98,7 +98,7 @@ CSVのファイル名は、「REQUEST_INFO\_ + "システム日付(8桁)" + .csv
 
 * requestPath
 
-  本バッチアクションクラスのクラス名(OnlineAccessLogParseAction)を指定する。
+  本バッチAction类のクラス名(OnlineAccessLogParseAction)を指定する。
 
 * userId
 
@@ -199,7 +199,7 @@ CSVのファイル名は、「REQUEST_INFO\_ + "システム日付(8桁)" + .csv
 
 * requestPath
 
-  本バッチアクションクラスのクラス名(RequestInfoAggregateAction)を指定する。
+  本バッチAction类のクラス名(RequestInfoAggregateAction)を指定する。
 
 * userId
 

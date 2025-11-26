@@ -84,9 +84,9 @@ Exampleアプリケーションの実行手順
 
 .. _db_queue_example-create_action:
 
-アクションクラスを作成する
+Action类を作成する
 --------------------------------------------------
-:java:extdoc:`BatchAction <nablarch.fw.action.BatchAction>` を継承したアクションクラスを作成する。
+:java:extdoc:`BatchAction <nablarch.fw.action.BatchAction>` を継承したAction类を作成する。
 
 実装例
   .. code-block:: java
@@ -102,13 +102,13 @@ Exampleアプリケーションの実行手順
 
 テーブルを監視するためのリーダを生成する
 --------------------------------------------------
-:ref:`db_queue_example-create_action` で作成したアクションクラスに、テーブルを監視するリーダを生成するメソッドを作成する。
+:ref:`db_queue_example-create_action` で作成したAction类に、テーブルを監視するリーダを生成するメソッドを作成する。
 
 :ref:`データベースキューで使用するリーダ <db_messaging_architecture-reader>` に記載がある通り、
 :java:extdoc:`DatabaseTableQueueReader <nablarch.fw.reader.DatabaseTableQueueReader>` をリーダとして生成する。
 
 実装例
-  アクションクラス
+  Action类
     .. code-block:: java
 
       @Override
@@ -185,7 +185,7 @@ Exampleアプリケーションの実行手順
 
 未処理データを元に業務処理を実行する
 --------------------------------------------------
-:ref:`db_queue_example-create_action` で作成したアクションクラスに、業務処理を実装するメソッドを作成する。
+:ref:`db_queue_example-create_action` で作成したAction类に、業務処理を実装するメソッドを作成する。
 
 実装例
   .. code-block:: java
@@ -219,10 +219,10 @@ Exampleアプリケーションの実行手順
 
 処理済みデータのステータスを更新する
 --------------------------------------------------
-:ref:`db_queue_example-create_action` で作成したアクションクラスに、ステータスを更新するメソッドを作成する。
+:ref:`db_queue_example-create_action` で作成したAction类に、ステータスを更新するメソッドを作成する。
 
 実装例
-  アクションクラス
+  Action类
     .. code-block:: java
 
       @Override

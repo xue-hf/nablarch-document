@@ -21,19 +21,19 @@ HTTPメッセージング機能がリクエストを処理し、レスポンス�
   :scale: 75
 
 1. :ref:`WebFrontController <web_front_controller>` ( `jakarta.servlet.Filter` の実装クラス)がrequestを受信する。
-2. :ref:`WebFrontController <web_front_controller>` は、requestに対する処理をハンドラキュー(handler queue)に委譲する。
-3. ハンドラキューに設定されたディスパッチハンドラ(`DispatchHandler`) が、URIを元に処理すべきアクションクラス(action class)を特定しハンドラキューの末尾に追加する。
-4. アクションクラス(action class)は、フォームクラス(form class)やエンティティクラス(entity class)を使用して業務ロジック(business logic) を実行する。 |br|
+2. :ref:`WebFrontController <web_front_controller>` は、requestに対する処理をhandler队列(handler queue)に委譲する。
+3. handler队列に設定されたディスパッチハンドラ(`DispatchHandler`) が、URIを元に処理すべきAction类(action class)を特定しhandler队列の末尾に追加する。
+4. Action类(action class)は、フォームクラス(form class)やエンティティクラス(entity class)を使用して業務ロジック(business logic) を実行する。 |br|
    各クラスの詳細は、 :ref:`http_messaging-design` を参照。
 
-5. アクションクラス(action class)は、処理結果を示す `ResponseMessage` を作成し返却する。
-6. ハンドラキュー内の :ref:`http_messaging_response_building_handler` が、 `ResponseMessage` をクライアントに返却するレスポンス(jsonやxmlなど)に変換し、クライアントへ応答を返す。 |br|
+5. Action类(action class)は、処理結果を示す `ResponseMessage` を作成し返却する。
+6. handler队列内の :ref:`http_messaging_response_building_handler` が、 `ResponseMessage` をクライアントに返却するレスポンス(jsonやxmlなど)に変換し、クライアントへ応答を返す。 |br|
 
 
 HTTPメッセージングで使用するハンドラ
 --------------------------------------------------
 Nablarchでは、HTTPメッセージングを使用したウェブサービスを構築するために必要なハンドラを標準で幾つか提供している。
-プロジェクトの要件に従い、ハンドラキューを構築すること。(要件によっては、プロジェクトカスタムなハンドラを作成することになる)
+プロジェクトの要件に従い、handler队列を構築すること。(要件によっては、プロジェクトカスタムなハンドラを作成することになる)
 
 各ハンドラの詳細は、リンク先を参照すること。
 
@@ -63,7 +63,7 @@ Nablarchでは、HTTPメッセージングを使用したウェブサービス�
 
 HTTPメッセージングの最小ハンドラ構成
 --------------------------------------------------
-HTTPメッセージングを使用したウェブサービスを構築する際の必要最小限のハンドラキューを以下に示す。
+HTTPメッセージングを使用したウェブサービスを構築する際の必要最小限のhandler队列を以下に示す。
 これをベースに、プロジェクト要件に従ってNablarchの標準ハンドラやプロジェクトで作成したカスタムハンドラを追加する。
 
 .. list-table:: 最小ハンドラ構成
@@ -109,7 +109,7 @@ HTTPメッセージングを使用したウェブサービスを構築する際�
 
   * - 6
     - :ref:`request_path_java_package_mapping`
-    - リクエストパスから処理対象の業務アクションを特定し、ハンドラキューの末尾に追加する。
+    - リクエストパスから処理対象の業務アクションを特定し、handler队列の末尾に追加する。
     - 
     - 
 
@@ -146,7 +146,7 @@ HTTPメッセージングを使用したウェブサービスを構築する際�
 
 HTTPメッセージングで使用するアクション
 ---------------------------------------------------------------------------------
-Nablarchでは、HTTPメッセージングを構築するために必要なアクションクラスを標準で提供している。
+Nablarchでは、HTTPメッセージングを構築するために必要なAction类を標準で提供している。
 詳細は、リンク先を参照すること。
 
 * :java:extdoc:`MessagingAction (同期応答メッセージング用アクションのテンプレートクラス)<nablarch.fw.messaging.action.MessagingAction>`

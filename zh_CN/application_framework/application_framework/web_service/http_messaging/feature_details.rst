@@ -1,6 +1,6 @@
 機能詳細
 ========================================
-.. contents:: 目次
+.. contents:: 目录
   :depth: 3
   :local:
 
@@ -33,7 +33,7 @@ Nablarchの初期化
 
 .. _http_messaging-action_mapping:
 
-URIとアクションクラスのマッピング
+URIとAction类のマッピング
 ----------------------------------------
 * :ref:`http_request_java_package_mapping`
 
@@ -41,7 +41,7 @@ URIとアクションクラスのマッピング
  HTTPメッセージングでは :ref:`router_adaptor` を使用できない。
  HTTPメッセージングは、:ref:`mom_system_messaging` が提供する
  :java:extdoc:`MessagingAction<nablarch.fw.messaging.action.MessagingAction>`
- でアクションクラスを作成するため、URIに応じてアクションクラスのメソッドを呼び分ける想定がないため。
+ でAction类を作成するため、URIに応じてAction类のメソッドを呼び分ける想定がないため。
 
 国際化対応
 ----------------------------------------

@@ -3,7 +3,7 @@
 メール送信
 ==================================================
 
-.. contents:: 目次
+.. contents:: 目录
   :depth: 3
   :local:
 
@@ -15,7 +15,7 @@
 
 この機能では、ディレードオンライン処理と呼ばれる方式を採用しており、
 メール送信を即時に行うのではなく、一旦、メール送信要求をデータベースに格納しておき、
-:ref:`常駐バッチ<nablarch_batch-resident_batch>` を使い非同期にメールを送信する。
+:ref:`驻留型Batch<nablarch_batch-resident_batch>` を使い非同期にメールを送信する。
 
 .. image:: images/mail/mail_system.png
   :scale: 60
@@ -463,7 +463,7 @@
 メールを送信する(メール送信バッチを実行する)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 メール送信バッチには、 :java:extdoc:`MailSender<nablarch.common.mail.MailSender>` を使用する。
-:java:extdoc:`MailSender<nablarch.common.mail.MailSender>` は、 :ref:`常駐バッチ<nablarch_batch-resident_batch>`
+:java:extdoc:`MailSender<nablarch.common.mail.MailSender>` は、 :ref:`驻留型Batch<nablarch_batch-resident_batch>`
 を使用して動作させるバッチアクションとして作成している。
 
 メール送信処理では、障害発生時に同一のメールが複数送信されないように、以下のような処理の流れとなっている。

@@ -31,15 +31,15 @@
   * - 生成するプロジェクトに含まれるもの
     - 生成されたプロジェクトには以下が含まれる。
        
-      * Nablarchバッチアプリケーション用の基本的な設定
-      * 疎通確認用の都度起動バッチアプリケーション
+      * Nablarch Batch应用用の基本的な設定
+      * 疎通確認用の每次启动型Batchアプリケーション
       * 疎通確認用のテーブルをキューとして使ったメッセージング
       * メール送信バッチの設定 \ [#mailSendBatch]_\
       * Mavenと連動して動作するツールの初期設定( :ref:`about_maven_parent_module` を参照することによって取り込んでいる)。
 
 
 .. [#mailSendBatch]
-   メール送信バッチは、:ref:`常駐バッチ<nablarch_batch-resident_batch>`  として動作し、SMTPサーバに対してメールを送信するものである。
+   メール送信バッチは、:ref:`驻留型Batch<nablarch_batch-resident_batch>`  として動作し、SMTPサーバに対してメールを送信するものである。
    コンポーネント設定ファイルのサンプルは ``src/main/resources/mail-sender-boot.xml`` に存在する。
    メール送信バッチは初期環境構築時には必要ないが、必要になったタイミングで :ref:`メール送信<mail>` の解説を読んだ上で使用する。
 
@@ -201,15 +201,15 @@ package      パッケージ(通常はグループIDと同じ)       ``com.examp
 
 .. _firstStepContainerBatchStartupInnerBatchOndemand:
 
-都度起動バッチ
+每次启动型Batch
 ~~~~~~~~~~~~~~~~~
 .. code-block:: text
 
   cd myapp-container-batch
   docker run --rm -v %CD%\\h2:/h2 -v %CD%\\src\\main\\format:/var/nablarch/format -v %CD%\\work\\output:/var/nablarch/output --name myapp-container-batch myapp-container-batch:latest -diConfig classpath:batch-boot.xml -requestPath SampleBatch -userId batch_user
 
-動作は :ref:`疎通確認(都度起動バッチ)<firstStepBatchStartupTest>` と同じである。
-起動に成功すると、:ref:`都度起動バッチアプリケーションの起動 <firstStepBatchExecOnDemandBatch>` と同様なログがコンソールに出力される。
+動作は :ref:`疎通確認(每次启动型Batch)<firstStepBatchStartupTest>` と同じである。
+起動に成功すると、:ref:`每次启动型Batchアプリケーションの起動 <firstStepBatchExecOnDemandBatch>` と同様なログがコンソールに出力される。
 
 .. _firstStepContainerBatchStartupInnerBatchDbMessaging:
 
@@ -243,7 +243,7 @@ package      パッケージ(通常はグループIDと同じ)       ``com.examp
   * 上記コマンドは、データベースとしてブランクプロジェクトにあらかじめ組み込んでいるSAMPLE.h2.dbを使用する場合の例となっている。
     SAMPLE.h2.dbを使用しない場合は、``%CD%\\h2:/h2`` のボリュームの指定(``-v``)は不要になる。
 
-  * :ref:`都度起動バッチ<firstStepContainerBatchStartupInnerBatchOndemand>` では上記に加えてブランクプロジェクトの ``./work/format`` , ``./work/output`` のディレクトリをコンテナにマウントしている。
+  * :ref:`每次启动型Batch<firstStepContainerBatchStartupInnerBatchOndemand>` では上記に加えてブランクプロジェクトの ``./work/format`` , ``./work/output`` のディレクトリをコンテナにマウントしている。
 
   * :ref:`テーブルをキューとして使ったメッセージング<firstStepContainerBatchStartupInnerBatchDbMessaging>` においてもdockerコマンドの ``-itオプション`` は省略できるが、ホスト側からのctrl+cでバッチを強制終了できなくなる。
     その場合は、以下のコマンドにてコンテナを終了させればよい。

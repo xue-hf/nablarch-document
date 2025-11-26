@@ -4,7 +4,7 @@
 Nablarch OpenAPI Generator
 ====================================================
 
-.. contents:: 目次
+.. contents:: 目录
   :depth: 3
   :local:
 
@@ -15,7 +15,7 @@ Nablarch OpenAPI Generatorは、 `OpenAPI(外部サイト、英語) <https://www
 
 本ツールはNablarch RESTfulウェブサービス用のGeneratorを提供しており、 `OpenAPI GeneratorのMavenプラグイン(外部サイト、英語) <https://openapi-generator.tech/docs/plugins>`_ に組み込み実行することでソースコードを生成する。
 
-生成されたソースコードを使用することで、OpenAPIドキュメントで定義したREST APIのインターフェースに従ったアクションクラスの実装が容易となる。
+生成されたソースコードを使用することで、OpenAPIドキュメントで定義したREST APIのインターフェースに従ったAction类の実装が容易となる。
 
 前提条件
 ---------
@@ -47,7 +47,7 @@ Nablarch OpenAPI Generatorは、 `OpenAPI(外部サイト、英語) <https://www
 
 .. tip::
 
-  本ツールはOpenAPIドキュメントの修正に合わせて繰り返し実行されることを想定している。Nablarch RESTfulウェブサービスのアクションクラスは生成されたリソース(アクション)インターフェースを実装して作成するため、本ツールによる自動生成を再度行ってもアクションクラスに実装した内容が失われることはない。
+  本ツールはOpenAPIドキュメントの修正に合わせて繰り返し実行されることを想定している。Nablarch RESTfulウェブサービスのAction类は生成されたリソース(アクション)インターフェースを実装して作成するため、本ツールによる自動生成を再度行ってもAction类に実装した内容が失われることはない。
 
 .. tip::
 
