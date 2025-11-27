@@ -31,11 +31,11 @@ Nablarch（ナブラーク）是TIS基于其丰富的核心系统构建经验所
   terms_of_use/index
 
 -----------------------------------------------
-关于Nablarch
+关于 Nablarch
 -----------------------------------------------
 
  | :doc:`理念 <about_nablarch/concept>`
- | :doc:`模块列表 <about_nablarch/mvn_module>`
+ | :doc:`模块一览 <about_nablarch/mvn_module>`
  | :doc:`许可证 <about_nablarch/license>`
 
 -----------------------------------------------

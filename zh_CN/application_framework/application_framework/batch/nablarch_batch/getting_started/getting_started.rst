@@ -20,7 +20,7 @@ Getting Started
 
     - Example应用的运行环境构建与执行
     - Example应用的设置
-    - 使用的OSS插件相关
+    - 使用的开源插件相关
 
 .. toctree::
   :maxdepth: 1

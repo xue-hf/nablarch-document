@@ -9,4 +9,3 @@
   concept
   mvn_module
   license
-  versionup_policy

@@ -1,26 +1,25 @@
 .. _`platform`:
 
-稼動環境
+运行环境
 ====================================
 
 .. contents:: 目录
    :depth: 3
    :local:
 
-Nablarchフレームワークの稼動環境について説明する。
+关于Nablarch框架的运行环境的说明。
 
 .. tip::
- Nablarchフレームワーク以外のコンテンツ(例えばNablarch SQL Executorなど)に関する稼動環境は、
- 各コンテンツのドキュメントを参照。
+ 关于Nablarch框架以外的内容（例如Nablarch SQL Executor等）的运行环境，请参阅各内容的相关文档。
 
-Nablarchフレームワークの環境要件
+Nablarch框架运行环境要求
 -----------------------------------------------------
-Nablarchフレームワークは、Java標準仕様のみを使って作成しており、動かすには最低以下が必要となる。
+Nablarch框架只使用了Java标准进行开发，运行时至少需要满足以下条件。
 
 * Java SE 17
 * JDBC 3.0
 
-さらに、使用するNablarchの機能に応じて、以下のJakarta EE仕様が必要となる。
+此外，根据所使用的Nablarch功能，需要以下的Jakarta EE规范。
 
 * Jakarta Standard Tag Library 3.0
 * Jakarta Activation 2.1
@@ -34,24 +33,24 @@ Nablarchフレームワークは、Java標準仕様のみを使って作成し�
 * Jakarta RESTful Web Services 3.1
 
 .. important::
- ここで示したバージョン番号は、特定バージョンを表記しているが、
- 基本的に表記しているバージョン番号以上と読み替えて問題ない。
- Java標準仕様とJakarta EE仕様のバージョンアップで、基本的に後方互換が維持されるため。
+ 此处所示的版本号虽指定了特定版本，
+ 但基本上可理解为“版本号及以上”均可使用，
+ 这是因为Java标准规范和Jakarta EE规范在版本升级时基本保持向后兼容性。
 
-Nablarchフレームワークのテスト環境
+Nablarch框架的测试环境
 -----------------------------------------------------
-Nablarchフレームワークは、以下の環境においてテストを実施し、正常に動作することを確認している。
+Nablarch框架已在以下环境中进行了测试，并已确认能够正常运行。
 
 Java
  * Java SE 17/21 [#java21]_
 
-データベース
+数据库
  * Oracle Database 19c/21c/23ai
  * IBM Db2 11.5/12.1
  * SQL Server 2017/2019/2022
  * PostgreSQL 12.2/13.2/14.0/15.2/16.2/17.4
 
-应用サーバ
+应用服务器
  * WebSphere Application Server Liberty 25.0.0.2
  * Open Liberty 25.0.0.2
  * Red Hat JBoss Enterprise Application Platform 8.0.0
@@ -62,14 +61,14 @@ Jakarta EE
  * Hibernate Validator 8.0.0.Final
  * JBeret 2.1.1.Final
 
-MOM（メッセージ指向ミドルウェア）
+MOM（面向消息的中间件）
  * IBM MQ 9.3
 
-ブラウザ
+浏览器
  PC
   * Microsoft Edge
   * Mozilla Firefox
   * Google Chrome
   * Safari
 
-.. [#java21] Java21で使用する場合、別途設定変更が必要となる。設定方法は :doc:`../blank_project/setup_blankProject/setup_Java21` を参照。
+.. [#java21] 使用Java21时，需要额外进行配置，具体的配置方法请参考 :doc:`../blank_project/setup_blankProject/setup_Java21` 。
