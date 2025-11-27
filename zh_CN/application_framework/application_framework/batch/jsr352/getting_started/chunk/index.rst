@@ -2,7 +2,7 @@
 
 データを導出するバッチの作成(Chunkステップ)
 ===============================================================
-Exampleアプリケーションを元に、既存データから計算を行い新たにデータを導出する :ref:`Chunkステップ<jsr352-batch_type_chunk>` 方式のバッチを解説する。
+Example应用を元に、既存データから計算を行い新たにデータを導出する :ref:`Chunkステップ<jsr352-batch_type_chunk>` 方式のバッチを解説する。
 
 作成する機能の概要
   .. image:: ../images/chunk/overview.png
@@ -22,7 +22,7 @@ Exampleアプリケーションを元に、既存データから計算を行い�
 
     .. code-block:: bash
 
-      $cd {nablarch-example-batch-eeシステムリポジトリ}
+      $cd {nablarch-example-batch-eeSystem Repository}
       $mvn exec:java -Dexec.mainClass=nablarch.fw.batch.ee.Main ^
           -Dexec.args=bonus-calculate
 
@@ -47,7 +47,7 @@ Exampleアプリケーションを元に、既存データから計算を行い�
 責務配置については :ref:`Chunkステップの責務配置<jsr352-chunk_design>` を参照。
 
 バッチ処理は、 |jsr352| で規定されたインターフェースの実装に加えて、トランザクション制御などの共通的な処理を提供するリスナーによって構成する。
-リスナーの詳細は :ref:`バッチアプリケーションで使用するリスナー<jsr352-listener>` 及び :ref:`リスナーの指定方法<jsr352-listener>` を参照。
+リスナーの詳細は :ref:`バッチ应用で使用するリスナー<jsr352-listener>` 及び :ref:`リスナーの指定方法<jsr352-listener>` を参照。
 
 .. _`getting_started_chunk-read`:
 

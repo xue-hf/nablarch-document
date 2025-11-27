@@ -48,7 +48,7 @@
 
   .. tip::
 
-    Exampleアプリケーションでは、二重サブミット時のデフォルトの遷移先画面を設定している。
+    Example应用では、二重サブミット時のデフォルトの遷移先画面を設定している。
     デフォルトの遷移先の指定方法は、 :ref:`tag-double_submission` を参照。
 
   /src/main/webapp/WEB-INF/view/client/create.jsp

@@ -151,16 +151,16 @@ Daoインタフェースを作成する
                   DomaDaoRepository.get(ProjectDao.class).insert(project);
 
 
-Jakarta Batchに準拠したバッチアプリケーションで使用する
+Jakarta Batchに準拠したバッチ应用で使用する
 ----------------------------------------------------------------
-Jakarta Batchに準拠したバッチアプリケーションでDomaを使用するために、
+Jakarta Batchに準拠したバッチ应用でDomaを使用するために、
 本アダプタでは以下のリスナーを提供している。
 
 * :java:extdoc:`DomaTransactionStepListener<nablarch.integration.doma.batch.ee.listener.DomaTransactionStepListener>`
 * :java:extdoc:`DomaTransactionItemWriteListener<nablarch.integration.doma.batch.ee.listener.DomaTransactionItemWriteListener>`
 
 これらのリスナーをリスナーリストに定義することで、
-Jakarta Batchに準拠したバッチアプリケーションでもDomaを使用したデータベースアクセスを行うことができる。
+Jakarta Batchに準拠したバッチ应用でもDomaを使用したデータベースアクセスを行うことができる。
 
 設定例を以下に示す。
 
@@ -192,9 +192,9 @@ Jakarta Batchに準拠したバッチアプリケーションでもDomaを使用
       int[] batchInsert(List<Bonus> bonuses);
 
 
-Jakarta Batchに準拠したバッチアプリケーションで遅延ロードを行う
+Jakarta Batchに準拠したバッチ应用で遅延ロードを行う
 ----------------------------------------------------------------
-Jakarta Batchに準拠したバッチアプリケーションで大量データの読み込みを行う際に、遅延ロードを使用したい場合がある。
+Jakarta Batchに準拠したバッチ应用で大量データの読み込みを行う際に、遅延ロードを使用したい場合がある。
 
 その場合は、Daoの実装クラスをルックアップする際に :java:extdoc:`DomaDaoRepository#get(java.lang.Class,java.lang.Class)<nablarch.integration.doma.DomaDaoRepository.get(java.lang.Class,java.lang.Class)>` を使用し、第2引数に :java:extdoc:`DomaTransactionNotSupportedConfig<nablarch.integration.doma.DomaTransactionNotSupportedConfig>` のClassクラスを指定する。
 
@@ -352,7 +352,7 @@ DomaとNablarchのデータベースアクセスを併用する
     </component>
     
     <!-- 
-    Jakarta Batchに準拠したバッチアプリケーションで使用する場合は、Domaのトランザクションを制御するリスナーに
+    Jakarta Batchに準拠したバッチ应用で使用する場合は、Domaのトランザクションを制御するリスナーに
     上記で定義したconnectionFactoryFromDomaを設定する。
      -->
     <component class="nablarch.integration.doma.batch.ee.listener.DomaTransactionItemWriteListener">
@@ -470,7 +470,7 @@ Daoアノテーションのconfig属性を指定しないDaoを使用して :jav
 DomaTransactionNotSupportedConfigを使用して遅延ロードに対応している場合
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Jakarta Batchに準拠したバッチアプリケーションで遅延ロードに対応するため、 :java:extdoc:`DomaTransactionNotSupportedConfig<nablarch.integration.doma.DomaTransactionNotSupportedConfig>` を使用した実装例を以下に示す。
+Jakarta Batchに準拠したバッチ应用で遅延ロードに対応するため、 :java:extdoc:`DomaTransactionNotSupportedConfig<nablarch.integration.doma.DomaTransactionNotSupportedConfig>` を使用した実装例を以下に示す。
 
 .. code-block:: java
 

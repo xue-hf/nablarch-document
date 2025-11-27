@@ -8,7 +8,7 @@ SQLログの出力
   :local:
 
 SQLログは、パフォーマンスチューニングに使用するために、SQL文の実行時間やSQL文を出力する。
-アプリケーションでは、ログ出力を設定することにより出力する。
+应用では、ログ出力を設定することにより出力する。
 
 SQLログの出力方針
 --------------------------------------------------
@@ -39,7 +39,7 @@ log.propertiesの設定例
 
   writerNames=appLog
 
-  # アプリケーションログの出力先
+  # 应用ログの出力先
   writer.appLog.className=nablarch.core.log.basic.FileLogWriter
   writer.appLog.filePath=/var/log/app/app.log
   writer.appLog.encoding=UTF-8
@@ -49,7 +49,7 @@ log.propertiesの設定例
 
   availableLoggersNamesOrder=SQL,ROO
 
-  # アプリケーションログの設定
+  # 应用ログの設定
   loggers.ROO.nameRegex=.*
   loggers.ROO.level=INFO
   loggers.ROO.writerNames=appLog

@@ -6,7 +6,7 @@
   :depth: 3
   :local:
 
-本ハンドラでは、Webアプリケーションのセキュリティに関する処理やヘッダ設定を行う。
+本ハンドラでは、Web应用のセキュリティに関する処理やヘッダ設定を行う。
 
 デフォルトでは、レスポンスオブジェクト(:java:extdoc:`HttpResponse <nablarch.fw.web.HttpResponse>`)に対して以下のレスポンスヘッダを設定する。
 

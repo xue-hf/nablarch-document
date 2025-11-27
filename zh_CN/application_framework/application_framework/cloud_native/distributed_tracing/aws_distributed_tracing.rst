@@ -6,13 +6,13 @@ AWSにおける分散トレーシング
   :local:
 
 AWSでは `AWS X-Ray(外部サイト)`_ という分散トレーシングを実現するためのサービスが用意されている。
-Javaアプリケーションの分散トレーシングは以下2つの方法で実現できる。
+Java应用の分散トレーシングは以下2つの方法で実現できる。
 
 * AWS X-Ray SDK for Java
 * AWS X-Ray Java 用 自動計測エージェント
 
-`自動計測エージェント(外部サイト)`_ を使用するとアプリケーションのランタイムにコードを追加することなく計測が可能だが、
-Nablarchはフレームワークの構造上、自動計測エージェントが使用できない。そのため本手順ではAWS X-Ray SDK for Javaをアプリケーションに組み込む方法について説明する。
+`自動計測エージェント(外部サイト)`_ を使用すると应用のランタイムにコードを追加することなく計測が可能だが、
+Nablarchはフレームワークの構造上、自動計測エージェントが使用できない。そのため本手順ではAWS X-Ray SDK for Javaを应用に組み込む方法について説明する。
 以下で触れない詳細な設定方法については `AWS X-Ray SDK for Java(外部サイト)`_ を参照。
 
 .. important::
@@ -23,7 +23,7 @@ Nablarchはフレームワークの構造上、自動計測エージェントが
 
 以下にコンテナ用アーキタイプを使用した場合の例を示す。
 :ref:`xray_configuration_incoming_request` の設定だけでサービス間の関連はトレースできる。
-:ref:`xray_configuration_outgoing_http_calls` と :ref:`xray_configuration_sql_queries` はアプリケーションの要件に応じて設定する必要がある。
+:ref:`xray_configuration_outgoing_http_calls` と :ref:`xray_configuration_sql_queries` は应用の要件に応じて設定する必要がある。
 
 依存関係の追加
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -79,7 +79,7 @@ AWS X-Ray SDKのサブモジュールから必要なものを依存関係に追�
 
 * `X-Ray SDK for Java を使用して受信リクエストをトレースする(外部サイト)`_
 
-受信HTTPリクエストをトレースするためX-Ray サーブレットフィルタをアプリケーションに追加する。
+受信HTTPリクエストをトレースするためX-Ray サーブレットフィルタを应用に追加する。
 ``src/main/webapp/WEB-INF/web.xml`` に以下を追記。
 
 .. code-block:: xml
@@ -89,7 +89,7 @@ AWS X-Ray SDKのサブモジュールから必要なものを依存関係に追�
     <filter-class>com.amazonaws.xray.jakarta.servlet.AWSXRayServletFilter</filter-class>
     <init-param>
       <param-name>fixedName</param-name>
-      <!-- サービスマップでアプリケーションを識別する名前を指定する -->
+      <!-- サービスマップで应用を識別する名前を指定する -->
       <param-value>example-app</param-value>
     </init-param>
   </filter>
@@ -194,14 +194,14 @@ Jerseyには ``org.glassfish.jersey.apache.connector.ApacheHttpClientBuilderConf
       }
   }
 
-``ComponentFactory`` を ``src/main/resources/rest-component-configuration.xml`` に記述し、HTTPクライアントをシステムリポジトリに登録する。
+``ComponentFactory`` を ``src/main/resources/rest-component-configuration.xml`` に記述し、HTTPクライアントをSystem Repositoryに登録する。
 
 .. code-block:: xml
 
   <!-- HTTPクライアントの設定 -->
   <component name="httpClient" class="com.example.system.httpclient.JerseyHttpClientWithAWSXRayFactory" />
 
-システムリポジトリに登録したHTTPクライアントを使用するクラスの例を以下に示す。
+System Repositoryに登録したHTTPクライアントを使用するクラスの例を以下に示す。
 このクラスは ``@SystemRepositoryComponent`` のアノテーションを付与することでDIコンテナの構築対象となり、コンストラクタインジェクションでHTTPクライアントが登録される。
 
 .. code-block:: java
@@ -233,7 +233,7 @@ Jerseyには ``org.glassfish.jersey.apache.connector.ApacheHttpClientBuilderConf
       //以下省略
   }
 
-また、システムリポジトリから直接HTTPクライアントを取得して使用することも可能。
+また、System Repositoryから直接HTTPクライアントを取得して使用することも可能。
 
 .. code-block:: java
 

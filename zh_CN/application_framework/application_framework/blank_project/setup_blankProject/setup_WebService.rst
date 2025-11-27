@@ -34,7 +34,7 @@ RESTfulウェブサービスプロジェクトの初期セットアップでは�
   * - プロジェクト構成
     - 単一プロジェクト構成
   * - 使用DB
-    - H2 Databaes Engine(アプリケーションに組み込み)
+    - H2 Databaes Engine(应用に組み込み)
   * - 組み込まれているアダプタ
     - * Jersey用アダプタ(詳細は、 :ref:`jaxrs_adaptor` を参照)
       * ルーティングアダプタ(詳細は、 :ref:`router_adaptor` を参照)
@@ -201,7 +201,7 @@ package      パッケージ(通常はグループIDと同じ)       ``com.examp
 
   cd myapp-jaxrs
 
-その後、以下のコマンドを実行することで、疎通確認用のアプリケーションをビルドしてから起動する。
+その後、以下のコマンドを実行することで、疎通確認用の应用をビルドしてから起動する。
 
 .. code-block:: text
 
@@ -210,7 +210,7 @@ package      パッケージ(通常はグループIDと同じ)       ``com.examp
 .. tip::
 
   上記のコマンド例で使用しているMavenの「jetty:run」は、 Jetty Maven Pluginのrunゴールを使用するという指定である。
-  アプリケーションのビルドを行うcompileゴールは「jetty:run」で合わせて実行されるため、明示的に実行する必要はない。
+  应用のビルドを行うcompileゴールは「jetty:run」で合わせて実行されるため、明示的に実行する必要はない。
 
   Jetty Maven Pluginについては `Jetty Maven Plugin(外部サイト、英語) <https://jetty.org/docs/jetty/12/programming-guide/maven-jetty/jetty-maven-plugin.html>`_  を参照。
 

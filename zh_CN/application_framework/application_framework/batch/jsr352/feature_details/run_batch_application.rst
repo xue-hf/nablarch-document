@@ -1,4 +1,4 @@
-Jakarta Batchアプリケーションの起動
+Jakarta Batch应用の起動
 ==================================================
 .. contents:: 目录
   :depth: 3
@@ -6,9 +6,9 @@ Jakarta Batchアプリケーションの起動
 
 .. _jsr352_run_batch_application:
 
-バッチアプリケーションを起動する
+バッチ应用を起動する
 --------------------------------------------------
-Jakarta Batchに準拠したバッチアプリケーションの場合、バッチの起動はJakarta Batchで規定されたAPIを使用して行う。
+Jakarta Batchに準拠したバッチ应用の場合、バッチの起動はJakarta Batchで規定されたAPIを使用して行う。
 
 Nablarchでは、標準の実装クラスとして、:java:extdoc:`nablarch.fw.batch.ee.Main` を提供している。
 このクラスは実行引数として対象JOBのXMLファイル名(.xmlを除いたファイル名)を指定する。
@@ -31,7 +31,7 @@ Nablarchでは、標準の実装クラスとして、:java:extdoc:`nablarch.fw.b
 
 .. _jsr352_exitcode_batch_application:
 
-バッチアプリケーションの終了コード
+バッチ应用の終了コード
 --------------------------------------------------
 上記のMainクラスのプログラムの終了コードは以下のようになる。
 
@@ -49,11 +49,11 @@ Nablarchでは、標準の実装クラスとして、:java:extdoc:`nablarch.fw.b
 
 .. _jsr352_run_batch_init_repository:
 
-システムリポジトリを初期化する
+System Repositoryを初期化する
 --------------------------------------------------
 :ref:`repository` は、ジョブリスナーに ``nablarchJobListenerExecutor`` を設定することで初期化できる。
 
-システムリポジトリのルートxmlファイルのファイル名は、 ``batch-boot.xml`` としクラスパス直下に配置する。
+System Repositoryのルートxmlファイルのファイル名は、 ``batch-boot.xml`` としクラスパス直下に配置する。
 ファイル名や、配置場所を変更したい場合には、 ``nablarchJobListenerExecutor`` のパラメータで変更する。
 
 以下に例を示す。
@@ -80,7 +80,7 @@ Nablarchでは、標準の実装クラスとして、:java:extdoc:`nablarch.fw.b
             <!--
             diConfigFilePathプロパティに読み込むxmlを設定する
             この例の場合、クラスパス配下の「sample_project/batch-boot.xml」が
-            システムリポジトリにロードされる
+            System Repositoryにロードされる
             -->
             <property name="diConfigFilePath" value="sample_project/batch-boot.xml" />
           </properties>

@@ -1,4 +1,4 @@
-アプリケーションの責務配置
+应用の責務配置
 ================================
 MOMメッセージングを作成する際に実装すべきクラスとその責務について説明する。
 
@@ -49,7 +49,7 @@ Action类(action class)
 
 .. important::
  メッセージングでは、システムで共通のデータリーダを使うことを想定しているため、
- :ref:`Nablarch Batch应用の責務配置<nablarch_batch-application_design>` と異なり、
+ :ref:`Nablarch Batch应用职责配置<nablarch_batch-application_design>` と異なり、
  アクションがデータリーダを生成する責務を持っていない。
 
  メッセージングで使用するデータリーダは、コンポーネント定義に ``dataReader`` という名前で追加する。

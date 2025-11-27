@@ -1,13 +1,13 @@
 .. _web_thymeleaf_adaptor:
 
-ウェブアプリケーション Thymeleafアダプタ
+ウェブ应用 Thymeleafアダプタ
 ========================================
 
 .. contents:: 目录
   :depth: 3
   :local:
 
-ウェブアプリケーションで、テンプレートエンジンに `Thymeleaf(外部サイト) <https://www.thymeleaf.org>`_
+ウェブ应用で、テンプレートエンジンに `Thymeleaf(外部サイト) <https://www.thymeleaf.org>`_
 を使用するためのアダプタを提供する。
 
 モジュール一覧
@@ -15,7 +15,7 @@
 
 .. code-block:: xml
 
-  <!-- ウェブアプリケーション Thymeleafアダプタ -->
+  <!-- ウェブ应用 Thymeleafアダプタ -->
   <dependency>
     <groupId>com.nablarch.integration</groupId>
     <artifactId>nablarch-web-thymeleaf-adaptor</artifactId>
@@ -27,7 +27,7 @@
   バージョンを変更する場合は、プロジェクト側でテストを行い問題ないことを確認すること。
 
 
-ウェブアプリケーション Thymeleafアダプタを使用するための設定を行う
+ウェブ应用 Thymeleafアダプタを使用するための設定を行う
 ------------------------------------------------------------------
 
 
@@ -69,7 +69,7 @@
   以下の理由により、:ref:`repository` にコンポーネントとして登録できない。
 
   * コンストラクタ引数に ``jakarta.servlet.ServletContext`` が必須である(デフォルトコンストラクタを持たない)。
-  * システムリポジトリ構築時には ``jakarta.servlet.ServletContext`` にアクセスできず、:ref:`ファクトリ<repository-factory_injection>` によるオブジェクト生成もできない。
+  * System Repository構築時には ``jakarta.servlet.ServletContext`` にアクセスできず、:ref:`ファクトリ<repository-factory_injection>` によるオブジェクト生成もできない。
 
   このため、 ``ServletContextTemplateResolver`` ではなく、 ``ClassLoaderTemplateResolver`` 等の別の実装クラスを使用すること。
   

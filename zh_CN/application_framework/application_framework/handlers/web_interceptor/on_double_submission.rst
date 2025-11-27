@@ -43,7 +43,7 @@ OnDoubleSubmissionを使用する
 
 OnDoubleSubmissionのデフォルト値を指定する
 --------------------------------------------------
-アプリケーション全体で使用する
+应用全体で使用する
 :java:extdoc:`OnDoubleSubmission <nablarch.common.web.token.OnDoubleSubmission>` アノテーションのデフォルト値を設定する場合は、
 :java:extdoc:`BasicDoubleSubmissionHandler <nablarch.common.web.token.BasicDoubleSubmissionHandler>`
 をコンポーネント定義に ``doubleSubmissionHandler`` という名前で追加する。
@@ -70,7 +70,7 @@ OnDoubleSubmissionのデフォルト値を指定する
  どちらもpathの指定がない場合は、二重サブミットと判定した場合に遷移先が不明なため、システムエラーとなる。
 
  このため、 :ref:`トークンを使用した二重サブミットの防止 <tag-double_submission_server_side>`
- を使用するアプリケーションでは、必ずどちらかのpathを指定すること。
+ を使用する应用では、必ずどちらかのpathを指定すること。
 
 OnDoubleSubmissionの振る舞いを変更する
 --------------------------------------------------

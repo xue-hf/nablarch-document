@@ -46,7 +46,7 @@ Cookieなど前のレスポンスの情報を引き継ぐ方法
 RESTfulウェブサービス実行基盤向けテスティングフレームワークでは :java:extdoc:`RequestResponseProcessor<nablarch.test.core.http.RequestResponseProcessor>` という
 リクエスト・レスポンスを操作するためのインターフェースを用意している。
 
-各アプリケーションの要件に合わせてこのインタフェースの実装クラスを作成する。
+各应用の要件に合わせてこのインタフェースの実装クラスを作成する。
 
 フレームワークではよく使われる実装として :java:extdoc:`RequestResponseCookieManager<nablarch.test.core.http.RequestResponseCookieManager>` を提供している。
 この実装ではレスポンスの ``Set-Cookie`` ヘッダからプロパティで指定した名前のクッキーを抽出し、リクエストの ``Cookie`` ヘッダに値を引き継ぐことができる。

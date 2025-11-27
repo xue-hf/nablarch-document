@@ -8,7 +8,7 @@ Nablarch Validationに対応したForm/Entityのクラス単体テスト
 
 .. tip::
    Form、Entityの責務については、各処理方式の責務配置を参照すること。
-   例： :ref:`ウェブアプリケーションの責務配置<application_design>` 、 :ref:`Nablarch Batch应用の責務配置<nablarch_batch-application_design>`
+   例： :ref:`ウェブ应用の責務配置<application_design>` 、 :ref:`Nablarch Batch应用职责配置<nablarch_batch-application_design>`
 
 -----------------------------
 Form/Entity単体テストの書き方
@@ -570,10 +570,10 @@ Nablarch Validationで入力値チェックを実施しているEntityには、 
 
 .. tip::
    
-   Entityは自動生成されるため、アプリケーションで使用されないコンストラクタが生成される可能性がある。\
+   Entityは自動生成されるため、应用で使用されないコンストラクタが生成される可能性がある。\
    その場合リクエスト単体テストではテストできないため、Entity単体テストでコンストラクタに対するテストを必ず行うこと。
    
-   一方、一般的なFormの場合、アプリケーションで使用するコンストラクタのみを作成する。\
+   一方、一般的なFormの場合、应用で使用するコンストラクタのみを作成する。\
    したがって、リクエスト単体テストでコンストラクタのテストを行うことができる。\
    そのため、一般的なFormについては、クラス単体テストでコンストラクタのテストを行う必要はない。
 

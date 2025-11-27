@@ -6,7 +6,7 @@ Nablarch API
 * :javadoc_url:`Nablarch Testing APIドキュメント <nablarch-testing/NablarchTestingApi/>`
 
 .. tip::
-  Nablarch 5までのAPIドキュメントは、アーキテクトとアプリケーションプログラマ向けの公開APIだけに絞ったものを提供していた。
+  Nablarch 5までのAPIドキュメントは、アーキテクトと应用プログラマ向けの公開APIだけに絞ったものを提供していた。
   しかし、Nablarch 6からは非公開APIも含めた形でAPIドキュメントを提供している。
   
   これは、Javaのバージョンが上がってJavadocの生成を拡張する仕組みが変わり、公開APIだけに絞ったJavadoc生成ができなくなったためである。

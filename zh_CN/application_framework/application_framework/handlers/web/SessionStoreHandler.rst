@@ -69,7 +69,7 @@ HIDDENストア使用時は :ref:`multipart_handler` より後ろに配置する
 セッションストアを使用するには、以下のとおり設定した :java:extdoc:`SessionManager <nablarch.common.web.session.SessionManager>`
 を本ハンドラの :java:extdoc:`sessionManager <nablarch.common.web.session.SessionStoreHandler.setSessionManager(nablarch.common.web.session.SessionManager)>` プロパティに設定する必要がある。
 
-* アプリケーションで使用するセッションストア（複数指定可）
+* 应用で使用するセッションストア（複数指定可）
 * デフォルトで使用するセッションストア名
 
 以下の設定例を参考に、本ハンドラを設定すること。

@@ -7,7 +7,7 @@
   :depth: 3
   :local:
 
-Nablarchでは、Jakarta RESTful Web Servicesのリソースクラスを作るのと同じように、ウェブアプリケーションの業務アクションを使用して
+Nablarchでは、Jakarta RESTful Web Servicesのリソースクラスを作るのと同じように、ウェブ应用の業務アクションを使用して
 RESTfulウェブサービスを作成する機能（Jakarta RESTful Web Servicesサポート）を提供する。
 
 .. tip::
@@ -18,7 +18,7 @@ RESTfulウェブサービスを作成する機能（Jakarta RESTful Web Services
 
   その他、Nablarch6で名称が変更された機能については :ref:`renamed_features_in_nablarch_6` を参照のこと。
 
-Jakarta RESTful Web Servicesサポートは、Nablarchのウェブアプリケーションをベースとする。
+Jakarta RESTful Web Servicesサポートは、Nablarchのウェブ应用をベースとする。
 そのため、Jakarta RESTful Web Servicesで使用できる@Contextアノテーションを使用したServletリソースのインジェクションやJakarta Contexts and Dependency Injectionなどは使用できない。
 以下に、Jakarta RESTful Web Servicesサポートで使用できるアノテーションを示す。
 
@@ -35,7 +35,7 @@ Jakarta RESTful Web ServicesとJakarta RESTful Web Servicesサポートとの機
 
 RESTfulウェブサービスの構成
 ----------------------------------------
-Nablarchウェブアプリケーションと同じ構成となる。
+Nablarchウェブ应用と同じ構成となる。
 詳細は、 :ref:`web_application-structure` を参照。
 
 RESTfulウェブサービスの処理の流れ

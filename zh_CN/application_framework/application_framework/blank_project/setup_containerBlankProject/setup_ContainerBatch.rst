@@ -27,12 +27,12 @@
   * - プロジェクト構成
     - 単一プロジェクト構成
   * - 使用DB
-    - H2 Databaes Engine(アプリケーションに組み込み)
+    - H2 Databaes Engine(应用に組み込み)
   * - 生成するプロジェクトに含まれるもの
     - 生成されたプロジェクトには以下が含まれる。
        
       * Nablarch Batch应用用の基本的な設定
-      * 疎通確認用の每次启动型Batchアプリケーション
+      * 疎通確認用の每次启动型Batch应用
       * 疎通確認用のテーブルをキューとして使ったメッセージング
       * メール送信バッチの設定 \ [#mailSendBatch]_\
       * Mavenと連動して動作するツールの初期設定( :ref:`about_maven_parent_module` を参照することによって取り込んでいる)。
@@ -183,7 +183,7 @@ package      パッケージ(通常はグループIDと同じ)       ``com.examp
 .. tip::
 
   ブランクプロジェクトではイメージをタグで指定しているが、この場合、指定したイメージの最新バージョンが選択される。
-  検証時と異なるバージョンが選択された場合、アプリケーションの動作に影響が出る可能性があるので、
+  検証時と異なるバージョンが選択された場合、应用の動作に影響が出る可能性があるので、
   プロジェクトにおける検証が完了した段階で、バージョンを固定するために、イメージをダイジェストで指定することを推奨する。
 
   ダイジェストによる設定例を以下に示す。
@@ -209,7 +209,7 @@ package      パッケージ(通常はグループIDと同じ)       ``com.examp
   docker run --rm -v %CD%\\h2:/h2 -v %CD%\\src\\main\\format:/var/nablarch/format -v %CD%\\work\\output:/var/nablarch/output --name myapp-container-batch myapp-container-batch:latest -diConfig classpath:batch-boot.xml -requestPath SampleBatch -userId batch_user
 
 動作は :ref:`疎通確認(每次启动型Batch)<firstStepBatchStartupTest>` と同じである。
-起動に成功すると、:ref:`每次启动型Batchアプリケーションの起動 <firstStepBatchExecOnDemandBatch>` と同様なログがコンソールに出力される。
+起動に成功すると、:ref:`每次启动型Batch应用の起動 <firstStepBatchExecOnDemandBatch>` と同様なログがコンソールに出力される。
 
 .. _firstStepContainerBatchStartupInnerBatchDbMessaging:
 
@@ -221,7 +221,7 @@ package      パッケージ(通常はグループIDと同じ)       ``com.examp
   docker run -it --rm -v %CD%\\h2:/h2 --name myapp-container-batch myapp-container-batch:latest -diConfig classpath:resident-batch-boot.xml -requestPath SampleResiBatch -userId batch_user
 
 動作は :ref:`疎通確認(テーブルをキューとして使ったメッセージング)<firstStepBatchStartupTestDbMessagingBatch>` と同じである。
-起動に成功すると、:ref:`アプリケーションの起動 <firstStepBatchExecDbMessagingBatch>` と同様なログがコンソールに出力される。
+起動に成功すると、:ref:`应用の起動 <firstStepBatchExecDbMessagingBatch>` と同様なログがコンソールに出力される。
 待機状態となるので、確認後はctrl+c等で強制終了させる。
 
 

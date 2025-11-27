@@ -8,7 +8,7 @@
 
 :ref:`データリーダ <nablarch_batch-data_reader>` を使用して、入力データの順次読み込みを行なうハンドラ。
 
-このハンドラは、実行コンテキスト上の :ref:`データリーダ <nablarch_batch-data_reader>` を使用し、業務処理に対する入力データを1件ずつ読み込み、
+このハンドラは、运行上下文上の :ref:`データリーダ <nablarch_batch-data_reader>` を使用し、業務処理に対する入力データを1件ずつ読み込み、
 それを引数として後続ハンドラに処理を委譲する。
 :ref:`データリーダ <nablarch_batch-data_reader>` の終端に達した場合は、後続のハンドラを実行せずに、データの終端に達したことを示す :java:extdoc:`NoMoreRecord <nablarch.fw.DataReader.NoMoreRecord>` を返却する。
 

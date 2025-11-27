@@ -2,7 +2,7 @@
 
 更新機能の作成
 ==========================================
-Exampleアプリケーションを元に更新機能を解説する。
+Example应用を元に更新機能を解説する。
 
 作成する機能の説明
   1. プロジェクト一覧のプロジェクトIDを押下する。
@@ -136,7 +136,7 @@ Exampleアプリケーションを元に更新機能を解説する。
       一意キー検索では、対象データが存在しない場合 :java:extdoc:`NoDataException<nablarch.common.dao.NoDataException>` を送出する。
 
         .. tip::
-          Exampleアプリケーションでは、独自のエラー制御ハンドラを追加しているため、 :java:extdoc:`NoDataException<nablarch.common.dao.NoDataException>` が発生した場合は404エラー画面へ遷移する。
+          Example应用では、独自のエラー制御ハンドラを追加しているため、 :java:extdoc:`NoDataException<nablarch.common.dao.NoDataException>` が発生した場合は404エラー画面へ遷移する。
           ハンドラによるエラー制御の作成方法は、 :ref:`ハンドラで例外クラスに対応したエラーページに遷移させる <forward_error_page-handler>` を参照。
 
     * 編集中に他ユーザによる更新が行われる可能性を考慮し、編集開始時点のバージョン番号を用いて :ref:`楽観的ロック<universal_dao_jpa_version>` (後述)を行うため、

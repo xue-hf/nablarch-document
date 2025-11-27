@@ -2,7 +2,7 @@
 
 一括更新機能の作成
 ==========================================
-Exampleアプリケーションを元に一括更新機能を解説する。
+Example应用を元に一括更新機能を解説する。
 
 作成する機能の説明
   1. メニューの一括更新リンクを押下し、一括更新画面へ遷移する。
@@ -327,7 +327,7 @@ Exampleアプリケーションを元に一括更新機能を解説する。
       排他制御エラーが発生した場合は全件の更新がロールバックされる。
 
       .. tip::
-        Exampleアプリケーションでは独自のエラー制御ハンドラを追加しているため、排他制御エラーにより :java:extdoc:`OptimisticLockException<jakarta.persistence.OptimisticLockException>` が発生した場合、
+        Example应用では独自のエラー制御ハンドラを追加しているため、排他制御エラーにより :java:extdoc:`OptimisticLockException<jakarta.persistence.OptimisticLockException>` が発生した場合、
         排他制御エラー画面へ遷移する。ハンドラによるエラー制御の作成方法は、 :ref:`ハンドラで例外クラスに対応したエラーページに遷移させる <forward_error_page-handler>` を参照。
 
     * :java:extdoc:`UniversalDao<nablarch.common.dao.UniversalDao>` には、エンティティのリストを引数に取る

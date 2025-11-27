@@ -145,7 +145,7 @@ BasicStaticDataCacheクラスにローダーを設定する
 .. tip::
 
   原則起動時に一括ロードで問題ないが、静的データが大量で一部しか使用しない場合には、オンデマンドロードを選択すると良い。
-  例えば、バッチアプリケーションのように一部のデータにしかアクセスしない場合には、オンデマンドロードを選択すると良い。
+  例えば、バッチ应用のように一部のデータにしかアクセスしない場合には、オンデマンドロードを選択すると良い。
 
 
 ロードタイミングの変更は、ローダを設定した :java:extdoc:`BasicStaticDataCache.loadOnStartup <nablarch.core.cache.BasicStaticDataCache.setLoadOnStartup(boolean)>` で行う。

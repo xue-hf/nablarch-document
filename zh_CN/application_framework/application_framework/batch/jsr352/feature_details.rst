@@ -4,7 +4,7 @@
   :depth: 3
   :local:
 
-バッチアプリケーションの起動方法
+バッチ应用の起動方法
 --------------------------------------------------
 .. toctree::
   :maxdepth: 1
@@ -12,11 +12,11 @@
 
   feature_details/run_batch_application
 
-* :ref:`Jakarta Batchアプリケーションの起動方法 <jsr352_run_batch_application>`
+* :ref:`Jakarta Batch应用の起動方法 <jsr352_run_batch_application>`
 
-システムリポジトリの初期化
+System Repositoryの初期化
 --------------------------------------------------
-* :ref:`Jakarta Batchアプリケーションでシステムリポジトリの初期化 <jsr352_run_batch_init_repository>`
+* :ref:`Jakarta Batch应用でSystem Repositoryの初期化 <jsr352_run_batch_init_repository>`
 
 バッチジョブに適用するリスナーの定義方法
 --------------------------------------------------

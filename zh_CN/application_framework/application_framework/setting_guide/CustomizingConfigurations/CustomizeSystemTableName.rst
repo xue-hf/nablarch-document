@@ -53,7 +53,7 @@ src/main/resources/common.propertiesに、プロジェクトが使用する機�
     nablarch.ugroupSystemAccountTable.name=T_UGROUP_SYSTEM_ACCOUNT
 
 
-ウェブアプリケーションの場合、セッションストアに使用するテーブル名も変更する。（アプリケーションでコンポーネント定義していない場合は定義する。）
+ウェブ应用の場合、セッションストアに使用するテーブル名も変更する。（应用でコンポーネント定義していない場合は定義する。）
 
  .. code-block:: xml
 

@@ -16,7 +16,7 @@ Nablarchの初期化
   feature_details/nablarch_servlet_context_listener
   feature_details/web_front_controller
 
-Nablarchの初期化を行うためには、 :ref:`システムリポジトリのロードの為の設定 <nablarch_servlet_context_listener>`
+Nablarchの初期化を行うためには、 :ref:`System Repositoryのロードの為の設定 <nablarch_servlet_context_listener>`
 及び :ref:`handler队列の設定(構築) <web_front_controller>` が必要となる。
 
 入力値のチェック
@@ -162,7 +162,7 @@ MOMメッセージ送信
 * :ref:`同期応答メッセージ送信<mom_system_messaging-sync_message_send>`
 
 
-Webアプリケーションのスケールアウト設計
+Web应用のスケールアウト設計
 ---------------------------------------
 
 * :ref:`stateless_web_app`
@@ -171,7 +171,7 @@ CSRF対策
 ----------------------------------------
 * :ref:`CSRF対策 <csrf_token_verification_handler>`
 
-ウェブアプリケーションとRESTfulウェブサービスの併用
+ウェブ应用とRESTfulウェブサービスの併用
 -----------------------------------------------------
 * :ref:`委譲するWebフロントコントローラの名前を変更する <change_web_front_controller_name>`
 

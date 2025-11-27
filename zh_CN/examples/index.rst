@@ -4,13 +4,13 @@
 Example
 =======
 
-Exampleは、Nablarchアプリケーションフレームワークの機能の使用方法を示した実装例であり、 :ref:`実行制御基盤 <runtime_platform>` 毎に作成している。
-本章节、Exampleに必要な環境構築手順と、アプリケーションの実行手順を解説する。
+Exampleは、Nablarch应用フレームワークの機能の使用方法を示した実装例であり、 :ref:`実行制御基盤 <runtime_platform>` 毎に作成している。
+本章节、Exampleに必要な環境構築手順と、应用の実行手順を解説する。
 
 .. tip::
- Exampleを改修して本格的なアプリケーションを作成することは想定していない。
+ Exampleを改修して本格的な应用を作成することは想定していない。
  
- 本格的なアプリケーションを作成する場合は :ref:`blank_project` から作成すること。
+ 本格的な应用を作成する場合は :ref:`blank_project` から作成すること。
 
 
 Exampleの実行方法
@@ -19,7 +19,7 @@ Exampleの実行方法
 環境構築手順
 ------------
 
-Exampleは、Apache Mavenを使用してアプリケーションをビルド、実行する。以下のページを参考に、ApacheMavenのPCへのインストール及び必要な設定を行うこと。
+Exampleは、Apache Mavenを使用して应用をビルド、実行する。以下のページを参考に、ApacheMavenのPCへのインストール及び必要な設定を行うこと。
 
 :ref:`maven`
 
@@ -42,11 +42,11 @@ Exampleの一覧
 
 実行制御基盤毎のExampleを以下に示す。実装の解説も用意しているので、必要に応じて、以下一覧の「解説」リンクより参照すること。
 
-ウェブアプリケーション
+ウェブ应用
 ----------------------
 
-- `ウェブアプリケーション (JSP) <https://github.com/nablarch/nablarch-example-web>`_ (:ref:`解説 <getting_started>`)
-- `ウェブアプリケーション (Thymeleaf) <https://github.com/nablarch/nablarch-example-thymeleaf-web>`_ (:ref:`解説 <web_thymeleaf_adaptor>`)
+- `ウェブ应用 (JSP) <https://github.com/nablarch/nablarch-example-web>`_ (:ref:`解説 <getting_started>`)
+- `ウェブ应用 (Thymeleaf) <https://github.com/nablarch/nablarch-example-thymeleaf-web>`_ (:ref:`解説 <web_thymeleaf_adaptor>`)
 
 
 ウェブサービス
@@ -57,10 +57,10 @@ Exampleの一覧
 - `HTTPメッセージング (送信) <https://github.com/nablarch/nablarch-example-http-messaging-send>`_ (:ref:`解説 <http_system_messaging-message_send>`)
 
 
-バッチアプリケーション
+バッチ应用
 ----------------------
   
-- `Jakarta Batchに準拠したバッチアプリケーション <https://github.com/nablarch/nablarch-example-batch-ee>`_ (:ref:`解説 <jBatch_getting_started>`)
+- `Jakarta Batchに準拠したバッチ应用 <https://github.com/nablarch/nablarch-example-batch-ee>`_ (:ref:`解説 <jBatch_getting_started>`)
 - `Nablarch Batch应用 <https://github.com/nablarch/nablarch-example-batch>`_ (:ref:`解説 <nablarch_Batch_getting_started>`)
 
 

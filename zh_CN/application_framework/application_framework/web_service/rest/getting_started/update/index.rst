@@ -1,6 +1,6 @@
 更新機能の作成
 ================================================================
-Exampleアプリケーションを元に、更新機能を解説する。
+Example应用を元に、更新機能を解説する。
  
 作成する機能の説明
   本機能は、PUTリクエスト時にリクエストボディにJSON形式のプロジェクト情報を設定することで、
@@ -115,7 +115,7 @@ Exampleアプリケーションを元に、更新機能を解説する。
 
     .. tip::
 
-      Exampleアプリケーションでは :java:extdoc:`ErrorResponseBuilder<nablarch.fw.jaxrs.ErrorResponseBuilder>` を独自に拡張しており、
+      Example应用では :java:extdoc:`ErrorResponseBuilder<nablarch.fw.jaxrs.ErrorResponseBuilder>` を独自に拡張しており、
       :java:extdoc:`NoDataException<nablarch.common.dao.NoDataException>` が発生した場合は ``404`` 、
       :java:extdoc:`OptimisticLockException<jakarta.persistence.OptimisticLockException>` が発生した場合は ``409``
       のレスポンスを生成してクライアントに返却している。

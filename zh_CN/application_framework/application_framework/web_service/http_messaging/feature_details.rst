@@ -6,7 +6,7 @@
 
 Nablarchの初期化
 ----------------------------------------
-:ref:`ウェブアプリケーションのNablarchの初期化 <web_feature_details-nablarch_initialization>` を参照。
+:ref:`ウェブ应用のNablarchの初期化 <web_feature_details-nablarch_initialization>` を参照。
 
 .. _http_messaging-request_validation:
 

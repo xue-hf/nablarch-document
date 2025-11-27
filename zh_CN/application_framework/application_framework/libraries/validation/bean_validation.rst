@@ -62,7 +62,7 @@ Nablarchで提供しているバリデータは以下のパッケージ内のア
     <artifactId>nablarch-common-code</artifactId>
   </dependency>
   
-  <!-- ウェブアプリケーションで使用する場合 -->
+  <!-- ウェブ应用で使用する場合 -->
   <dependency>
     <groupId>com.nablarch.framework</groupId>
     <artifactId>nablarch-fw-web</artifactId>
@@ -98,7 +98,7 @@ MessageInterpolatorの設定
 ドメインバリデーション用の設定
   :ref:`bean_validation-domain_validation` を参照
 
-ウェブアプリケーションでBean Validationを使うための設定
+ウェブ应用でBean Validationを使うための設定
   :ref:`bean_validation-web_application` を参照
 
 RESTfulウェブサービスでBean Validationを使うための設定
@@ -551,9 +551,9 @@ Java実装例
 
 .. _bean_validation-web_application:
 
-ウェブアプリケーションのユーザ入力値のチェックを行う
+ウェブ应用のユーザ入力値のチェックを行う
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-ウェブアプリケーションのユーザ入力値のチェックは :ref:`inject_form_interceptor` を使用して行う。
+ウェブ应用のユーザ入力値のチェックは :ref:`inject_form_interceptor` を使用して行う。
 詳細は、 :ref:`inject_form_interceptor` を参照。
 
 :ref:`inject_form_interceptor` でBean Validationを使用するためには、コンポーネント設定ファイルに定義する必要がある。
@@ -570,7 +570,7 @@ Java実装例
   * jakarta.servlet.ServletRequest#getParameterNamesが返す項目名順
     (エラーが発生した項目がリクエストパラメータに存在しない場合は、末尾に移動する)
 
-  ``getParameterNames`` が返す値は実装依存であり、使用するアプリケーションサーバによっては並び順が変わる可能性がある点に注意すること。
+  ``getParameterNames`` が返す値は実装依存であり、使用する应用サーバによっては並び順が変わる可能性がある点に注意すること。
   プロジェクトでソート順を変更したい場合は、BeanValidationStrategyを継承し対応すること。
 
 
@@ -704,7 +704,7 @@ Jakarta Bean Validationの仕様では、項目名をメッセージに含める
 
 バリデーションの明示的な実行
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-通常、バリデーションは `ウェブアプリケーションのユーザ入力値のチェックを行う`_ や `RESTfulウェブサービスのユーザ入力値のチェックを行う`_ で案内している方法で行うが、バリデーションエラーをハンドリングしたい場合など、これらの方法が使用できない場合がある。
+通常、バリデーションは `ウェブ应用のユーザ入力値のチェックを行う`_ や `RESTfulウェブサービスのユーザ入力値のチェックを行う`_ で案内している方法で行うが、バリデーションエラーをハンドリングしたい場合など、これらの方法が使用できない場合がある。
 
 そのような場合には、 :java:extdoc:`ValidatorUtil#validate <nablarch.core.validation.ee.ValidatorUtil.validate(java.lang.Object)>` を使用して明示的にバリデーションを実行することができる。
 
@@ -715,15 +715,15 @@ Jakarta Bean Validationの仕様では、項目名をメッセージに含める
 
 バリデーションエラーが発生した場合は、 :java:extdoc:`ApplicationException <nablarch.core.message.ApplicationException>` が送出される。
 
-Webアプリケーションの場合
-    ウェブアプリケーションで明示的にバリデーションを実行する場合、リクエストパラメータに含まれる入力値をBeanに変換する必要がある。
+Web应用の場合
+    ウェブ应用で明示的にバリデーションを実行する場合、リクエストパラメータに含まれる入力値をBeanに変換する必要がある。
 
     Beanに変換するためには、バリデーション前のリクエストパラメータを :java:extdoc:`HttpRequest#getParamMap <nablarch.fw.web.HttpRequest.getParamMap()>`  から取得する必要がある。
-    しかし、バリデーション前の入力値をアプリケーションプログラマが自由に扱えてしまうとバリデーションされないまま業務ロジックを実行し、場合によっては障害につながる危険がある。
+    しかし、バリデーション前の入力値を应用プログラマが自由に扱えてしまうとバリデーションされないまま業務ロジックを実行し、場合によっては障害につながる危険がある。
 
     そのため、リクエストパラメータを取得する :java:extdoc:`HttpRequest#getParamMap <nablarch.fw.web.HttpRequest.getParamMap()>` はアーキテクト向けの公開APIとし、Actionクラスで使うことは禁止している。
 
-    ウェブアプリケーションで明示的にバリデーションを実行する必要がある場合には、共通基盤部品として以下のようなユーティリティクラスの作成を推奨する。
+    ウェブ应用で明示的にバリデーションを実行する必要がある場合には、共通基盤部品として以下のようなユーティリティクラスの作成を推奨する。
 
   .. code-block:: java
 

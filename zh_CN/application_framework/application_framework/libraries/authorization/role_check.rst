@@ -7,7 +7,7 @@
   :depth: 3
   :local:
 
-この機能は、 :doc:`permission_check` と同様にアプリケーションが提供する機能に対して認可チェックを行う。
+この機能は、 :doc:`permission_check` と同様に应用が提供する機能に対して認可チェックを行う。
 
 
 機能概要

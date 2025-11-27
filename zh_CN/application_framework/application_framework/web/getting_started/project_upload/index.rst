@@ -2,7 +2,7 @@
 
 アップロードを用いた一括登録機能の作成
 ==========================================
-Exampleアプリケーションを元に、CSVファイルをアップロードして一括登録する機能を解説する。
+Example应用を元に、CSVファイルをアップロードして一括登録する機能を解説する。
 
 作成する機能の説明
   1. ヘッダメニューの「プロジェクト一括登録」を押下する。
@@ -195,7 +195,7 @@ Exampleアプリケーションを元に、CSVファイルをアップロード�
         ただし、ファイルの移送は :ref:`ファイルパス管理<file_path_management>` を使用してファイルやディレクトリの入出力を管理している場合のみ可能である。
       * ファイルの移送には :java:extdoc:`UploadHelper#moveFileTo<nablarch.fw.web.upload.util.UploadHelper.moveFileTo(java.lang.String,java.lang.String)>` メソッドを使用する。
         第一引数には、設定ファイルに登録されたファイル格納ディレクトリのキー名を指定する。
-        Exampleアプリケーションでは下記ファイルに設定が記載されている。
+        Example应用では下記ファイルに設定が記載されている。
 
         filepath-for-webui.xml
           .. code-block:: xml

@@ -26,7 +26,7 @@
 ------------
 概要
 ------------
-ウェブアプリケーションにおけるユーザの認証(ユーザIDとパスワードによる認証)を行う機能の実装サンプルを提供する。
+ウェブ应用におけるユーザの認証(ユーザIDとパスワードによる認証)を行う機能の実装サンプルを提供する。
 
 本サンプルは、ログイン処理を実行する業務処理 [#auth_action]_ の中で使用することを想定している。
 
@@ -95,7 +95,7 @@ PasswordEncryptor     パスワードを暗号化するインタフェース。
   =============================== ==========================================================================
   クラス名                        概要
   =============================== ==========================================================================
-  AuthenticationUtil              システムリポジトリから PasswordAuthenticator および PasswordEncryptor を
+  AuthenticationUtil              System Repositoryから PasswordAuthenticator および PasswordEncryptor を
                                   取得して、ユーザ認証およびパスワード暗号化を行うユーティリティ。
   =============================== ==========================================================================
 
@@ -191,9 +191,9 @@ PasswordEncryptor     パスワードを暗号化するインタフェース。
 * 暗号化されたパスワードを使用して認証する。本機能は、デフォルトでPBKDF2を使用したパスワードの暗号化を提供する。
 * 最終ログイン日時を記録する。認証に成功した場合のみシステム日時を使用して最終ログイン日時を更新する。
 
-また、 PasswordAuthenticator および PasswordEncryptor は、Nablarchのシステムリポジトリから取得して使用する想定となっている。
-業務機能で使用する各箇所でシステムリポジトリからコンポーネントを取得して使用するべきではないため、
-本機能では、システムリポジトリからのコンポーネントの取得と、パスワード認証およびパスワード暗号化処理をラップした
+また、 PasswordAuthenticator および PasswordEncryptor は、NablarchのSystem Repositoryから取得して使用する想定となっている。
+業務機能で使用する各箇所でSystem Repositoryからコンポーネントを取得して使用するべきではないため、
+本機能では、System Repositoryからのコンポーネントの取得と、パスワード認証およびパスワード暗号化処理をラップした
 AuthenticationUtil を提供している。
 
 プロジェクトで実装するログイン機能やユーザ登録機能などからは、 AuthenticationUtil を使用すること。
@@ -240,8 +240,8 @@ dbManager(必須)                                                       デー�
                                                                       nablarch.core.db.transaction.SimpleDbTransactionManagerクラスのインスタンスを指定する。
 
                                                                       .. important::
-                                                                         SystemAccountAuthenticatorのトランザクション制御が個別アプリケーションの処理に影響を与えないように、個別アプリケーションとは別のトランザクションを使用するように設定すること。
-                                                                         設定例では、dbTransactionNameに"authenticator"という名前を指定しているので、個別アプリケーションでは同じ名前を使用しないように設定する。
+                                                                         SystemAccountAuthenticatorのトランザクション制御が個別应用の処理に影響を与えないように、個別应用とは別のトランザクションを使用するように設定すること。
+                                                                         設定例では、dbTransactionNameに"authenticator"という名前を指定しているので、個別应用では同じ名前を使用しないように設定する。
 
 failedCountToLock                                                     ユーザIDをロックする認証失敗回数。
 
@@ -254,17 +254,17 @@ AuthenticaionUtilの使用方法
 
 AuthenticaionUtilの使用方法について解説する。
 
-AuthenticationUtilでは、以下のユーティリティメソッドを実装している。なお、システムリポジトリからコンポーネントを取得する際の
+AuthenticationUtilでは、以下のユーティリティメソッドを実装している。なお、System Repositoryからコンポーネントを取得する際の
 コンポーネント名は、上記の :ref:`passwordAuth-settings-label` で登録しているそれぞれのコンポーネント名と
 あわせる必要があるため、上記の設定例と異なるコンポーネント名で登録している場合にはソースコードを修正すること。
 
 ================== ==============================================================================================
 メソッド
 ================== ==============================================================================================
-encryptPassword    システムリポジトリから、 passwordEncryptor というコンポーネント名で PasswordEncryptor を取得し、
+encryptPassword    System Repositoryから、 passwordEncryptor というコンポーネント名で PasswordEncryptor を取得し、
                    PasswordEncryptor#encrypt(String, String) を呼び出す。
 
-authenticate       システムリポジトリから、 authenticator というコンポーネント名で PasswordAuthenticator を取得し、
+authenticate       System Repositoryから、 authenticator というコンポーネント名で PasswordAuthenticator を取得し、
                    PasswordAuthenticator#authenticate(String, String) を呼び出す。
 ================== ==============================================================================================
 

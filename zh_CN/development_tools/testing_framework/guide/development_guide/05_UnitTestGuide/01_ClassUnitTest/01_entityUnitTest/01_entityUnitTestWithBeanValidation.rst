@@ -8,7 +8,7 @@ Bean Validationに対応したForm/Entityのクラス単体テスト
 
 .. tip::
    Form、Entityの責務については、各処理方式の責務配置を参照すること。
-   例： :ref:`ウェブアプリケーションの責務配置<application_design>` 、 :ref:`Nablarch Batch应用の責務配置<nablarch_batch-application_design>`
+   例： :ref:`ウェブ应用の責務配置<application_design>` 、 :ref:`Nablarch Batch应用职责配置<nablarch_batch-application_design>`
 
 -----------------------------
 Form/Entity単体テストの書き方
@@ -583,10 +583,10 @@ setter、getterに対するテストでは、setterで設定した値とgetter�
 
 .. tip::
    
-   Entityは自動生成されるため、アプリケーションで使用されないsetter/getterが生成される可能性がある。\
+   Entityは自動生成されるため、应用で使用されないsetter/getterが生成される可能性がある。\
    その場合リクエスト単体テストではテストできないため、Entity単体テストでsetter/getterに対するテストを必ず行うこと。
    
-   一方、一般的なFormの場合、アプリケーションで使用するsetter/getterのみを作成する。\
+   一方、一般的なFormの場合、应用で使用するsetter/getterのみを作成する。\
    したがって、リクエスト単体テストでsetter/getterのテストを行うことができる。\
    そのため、一般的なFormについては、クラス単体テストでsetter/getterのテストを行う必要はない。
 

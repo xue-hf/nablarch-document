@@ -92,7 +92,7 @@ Java EEがEclipse Foundationに移管され各仕様の名称が変更された�
      - :doc:`../application_framework/application_framework/libraries/tag`
    * - JSP静的解析ツール
      - :doc:`../development_tools/toolbox/JspStaticAnalysis/index`
-   * - JSR352に準拠したバッチアプリケーション
+   * - JSR352に準拠したバッチ应用
      - :doc:`../application_framework/application_framework/batch/jsr352/index`
 
 .. [#jaxr_rs_bean_validation_handler_footnote]

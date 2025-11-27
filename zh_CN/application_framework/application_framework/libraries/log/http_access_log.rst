@@ -8,7 +8,7 @@ HTTPアクセスログの出力
   :local:
 
 HTTPアクセスログは、フレームワークが提供するハンドラを使用して出力する。
-アプリケーションでは、ハンドラを設定することでHTTPアクセスログを出力する。
+应用では、ハンドラを設定することでHTTPアクセスログを出力する。
 
 HTTPアクセスログの出力に必要となるハンドラは以下のとおり。
 
@@ -23,11 +23,11 @@ HTTPアクセスログの出力に必要となるハンドラは以下のとお�
   ディスパッチ先クラス決定後のログ出力を行う。
 
 リクエストパラメータを含めたリクエスト情報を出力することで、
-個別アプリケーションの証跡ログの要件を満たせる場合は、HTTPアクセスログと証跡ログを兼用することも想定している。
+個別应用の証跡ログの要件を満たせる場合は、HTTPアクセスログと証跡ログを兼用することも想定している。
 
 HTTPアクセスログの出力方針
 --------------------------------------------------
-HTTPアクセスログは、アプリケーション全体のログ出力を行うアプリケーションログに出力する。
+HTTPアクセスログは、应用全体のログ出力を行う应用ログに出力する。
 
 .. list-table:: HTTPアクセスログの出力方針
    :header-rows: 1
@@ -47,7 +47,7 @@ log.propertiesの設定例
 
   writerNames=appLog
 
-  # アプリケーションログの出力先
+  # 应用ログの出力先
   writer.appLog.className=nablarch.core.log.basic.FileLogWriter
   writer.appLog.filePath=/var/log/app/app.log
   writer.appLog.encoding=UTF-8
@@ -57,7 +57,7 @@ log.propertiesの設定例
 
   availableLoggersNamesOrder=ACC,ROO
 
-  # アプリケーションログの設定
+  # 应用ログの設定
   loggers.ROO.nameRegex=.*
   loggers.ROO.level=INFO
   loggers.ROO.writerNames=appLog
@@ -153,7 +153,7 @@ HTTPアクセスログの設定は、 :ref:`log-app_log_setting` で説明した
    これらの取得元が :java:extdoc:`ThreadContext <nablarch.core.ThreadContext>` なので、
    ハンドラ構成に :ref:`thread_context_handler` が含まれている必要がある。
    特にユーザIDについては、 :ref:`thread_context_handler-user_id_attribute_setting` を参照して
-   アプリケーションでセッションに値を設定する必要がある。
+   应用でセッションに値を設定する必要がある。
 
  httpAccessLogFormatter.parametersFormat
   hiddenパラメータ復号後のログ出力に使用するフォーマット。

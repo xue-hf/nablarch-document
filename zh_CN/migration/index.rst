@@ -28,7 +28,7 @@ Jakarta EEとは、Java EEがEclipse Foundationに移管された後の名前で
 
 したがって、Nablarch 5で作られたプロジェクトでNablarch 6へ移行するためには、NablarchのバージョンアップだけでなくプロジェクトもJakarta EE 10に対応する必要がある。
 
-また、名前空間の変更などにより後方互換性が維持されないため、アプリケーションサーバ上で動作させるにはJakarta EE 10に対応しているアプリケーションサーバが必要となる。
+また、名前空間の変更などにより後方互換性が維持されないため、应用サーバ上で動作させるにはJakarta EE 10に対応している应用サーバが必要となる。
 
 --------------------------------------------------------------------
 動作に必要なJavaの最低バージョンを17に変更
@@ -44,7 +44,7 @@ Nablarch 6のモジュールはJava 17でコンパイルされているため、
 古いバージョンで作られたプロジェクトは、まずはNablarch 5の最新版へのバージョンアップを済ませてからNablarch 6への移行を行うこと。
 Nablarch 5の最新版へのバージョンアップに必要となる修正内容については、 `Nablarch 5のリリースノート <https://nablarch.github.io/docs/5-LATEST/doc/releases/index.html>`_ を参照のこと。
 
-また、前述のとおり動作させるにはJava 17以上およびJakarta EE 10に対応しているアプリケーションサーバが必要であるため、これらに対応した環境にて動作させるものとする。
+また、前述のとおり動作させるにはJava 17以上およびJakarta EE 10に対応している应用サーバが必要であるため、これらに対応した環境にて動作させるものとする。
 
 .. tip::
   Nablarch 5の最新版へのバージョンアップの他に、Java 17以上で使用するための対応も必要となる。
@@ -275,7 +275,7 @@ Common Annotations for the Java Platform → Jakarta Annotations
 Java EE仕様の実装ライブラリを更新する
 -----------------------------------------------------------------
 
-Java EE仕様の実装ライブラリをアプリケーションに組み込んでいる場合は、これらをJakarta EEのものに置き換える。
+Java EE仕様の実装ライブラリを应用に組み込んでいる場合は、これらをJakarta EEのものに置き換える。
 
 どの ``dependency`` がJava EE仕様の実装ライブラリであるのかは、それぞれの ``dependency`` ごとに個別に調査する必要がある。
 また、Java EE仕様の実装ライブラリであることが分かった場合、Jakarta EE対応版の ``dependency`` が何になるかは実装ライブラリごとに異なる。
@@ -288,7 +288,7 @@ Java EE仕様の実装ライブラリをアプリケーションに組み込ん�
 
 .. tip::
   Nablarch 6はJava 17以上を前提としているため、Java 17以上で必要となるモジュールを新たに組み込んでいる。
-  そのため `Nablarch 5のセットアップ手順 <https://nablarch.github.io/docs/5-LATEST/doc/application_framework/application_framework/blank_project/FirstStep.html>`_ にてJava 17以上で動作させるため依存関係に追加したモジュールは、アプリケーションによって追加不要になっている場合がある。
+  そのため `Nablarch 5のセットアップ手順 <https://nablarch.github.io/docs/5-LATEST/doc/application_framework/application_framework/blank_project/FirstStep.html>`_ にてJava 17以上で動作させるため依存関係に追加したモジュールは、应用によって追加不要になっている場合がある。
   `dependency:tree <https://maven.apache.org/plugins/maven-dependency-plugin/tree-mojo.html>`_ 等により依存関係を確認し、更新もしくは削除を判断すること。
 
 
@@ -441,7 +441,7 @@ JMS → Jakarta Messaging
 Domaアダプタを更新する
 -----------------------------------------------------------------
 
-Domaアダプタをアプリケーションに組み込んでいる場合は、依存関係の設定が必要となる。
+Domaアダプタを应用に組み込んでいる場合は、依存関係の設定が必要となる。
 詳細については :ref:`doma_dependency` を参照のこと。
 
 また、新しいバージョンで推奨する実装方法についても案内しているため、必要に応じて対応する。
@@ -450,7 +450,7 @@ Domaアダプタをアプリケーションに組み込んでいる場合は、�
 Micrometerアダプタを更新する
 -----------------------------------------------------------------
 
-Micrometerアダプタをアプリケーションに組み込んで監視サービスと連携している場合は、依存関係に追加しているMicrometerモジュールのバージョン更新が必要となる。
+Micrometerアダプタを应用に組み込んで監視サービスと連携している場合は、依存関係に追加しているMicrometerモジュールのバージョン更新が必要となる。
 詳細については :ref:`micrometer_collaboration` を参照のこと。
 
 gsp-dba-maven-pluginを更新する
@@ -483,7 +483,7 @@ gsp-dba-maven-pluginは5.1.0でJakarta EEおよびNablarch 6u2へ対応したの
 waitt-maven-pluginをjetty-ee10-maven-pluginに変更する
 -----------------------------------------------------------------
 
-nablarch-example-webをはじめ、アーキタイプから作ったウェブアプリケーションのプロジェクトには `waitt-maven-plugin (外部サイト、英語) <https://github.com/kawasima/waitt>`_ があらかじめ組み込まれている。
+nablarch-example-webをはじめ、アーキタイプから作ったウェブ应用のプロジェクトには `waitt-maven-plugin (外部サイト、英語) <https://github.com/kawasima/waitt>`_ があらかじめ組み込まれている。
 このプラグインは、プロジェクトのコードを組み込みサーバ(Tomcatなど)にデプロイして簡単に実行できる機能を提供している。
 しかし、このプラグインはJakarta EE対応がされていないので、同様の機能を提供していてJakarta EEにも対応しているjetty-ee10-maven-pluginに変更する。
 
@@ -520,7 +520,7 @@ nablarch-example-webをはじめ、アーキタイプから作ったウェブア
     <version>12.0.12</version>
   </plugin>
 
-これで、アプリケーションのコードをJettyにデプロイして実行できるようになる。
+これで、应用のコードをJettyにデプロイして実行できるようになる。
 
 実際に動かしたい場合は、以下のコマンドでJettyを起動できる。
 
@@ -533,7 +533,7 @@ nablarch-example-webをはじめ、アーキタイプから作ったウェブア
 nablarch-testing-jetty6をnablarch-testing-jetty12に変更する
 -----------------------------------------------------------------
 
-ウェブアプリケーションのプロジェクトでNTF (Nablarch Testing Framework)を使用している場合、JUnitのテストで組み込みサーバを実行するために ``nablarch-testing-jetty6`` というモジュールを使用する。
+ウェブ应用のプロジェクトでNTF (Nablarch Testing Framework)を使用している場合、JUnitのテストで組み込みサーバを実行するために ``nablarch-testing-jetty6`` というモジュールを使用する。
 このモジュールで起動するJetty 6はJakarta EEに対応していない。
 JettyがJakarta EE 10に対応したのはJetty 12なので、Jetty 12を起動できる ``nablarch-testing-jetty12`` を使うように変更する必要がある。
 
@@ -571,7 +571,7 @@ nablarch-example-webの場合は、 ``src/test/resources/unit-test.xml`` に上�
 javax名前空間をjakarta名前空間に変更する
 -----------------------------------------------------------------
 
-Jakarta EE 9で入った名前空間の変更の対応を、アプリケーションのコードにも実施する。
+Jakarta EE 9で入った名前空間の変更の対応を、应用のコードにも実施する。
 名前空間の変更対応の大まかな流れを以下に記載する。
 
 1. ``javax`` 名前空間で ``import`` している部分等がコンパイルエラーになるため、 ``jakarta`` 名前空間に変更する
@@ -665,14 +665,14 @@ Jakarta EE 10で提供されているネームスペースは、 `Jakarta Standa
   <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 
 
-JSR352に準拠したバッチアプリケーションの移行手順
+JSR352に準拠したバッチ应用の移行手順
 =========================================================================
 
 Nablarchが提供する実行制御基盤は、いずれも前節で説明した手順で移行できる。
 
 ただし :doc:`../application_framework/application_framework/batch/jsr352/index` のみ、JSR352に準拠した実装として使用しているJBeretと関連するライブラリの更新が複雑であるため、ここで追加で説明する。
 
-JSR352に準拠したバッチアプリケーションをアーキタイプから生成した場合、Nablarch 5までは以下のように ``dependency`` が ``pom.xml`` に設定されている。
+JSR352に準拠したバッチ应用をアーキタイプから生成した場合、Nablarch 5までは以下のように ``dependency`` が ``pom.xml`` に設定されている。
 
 **修正前**
 

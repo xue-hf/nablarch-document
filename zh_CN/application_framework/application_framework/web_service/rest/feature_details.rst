@@ -6,7 +6,7 @@
 
 Nablarchの初期化
 ----------------------------------------
-:ref:`ウェブアプリケーションのNablarchの初期化 <web_feature_details-nablarch_initialization>` を参照。
+:ref:`ウェブ应用のNablarchの初期化 <web_feature_details-nablarch_initialization>` を参照。
 
 .. _rest-request_validation:
  
@@ -81,7 +81,7 @@ URIとリソース(アクション)クラスのマッピング
 * :ref:`jaxrs_response_handler-individually_error_response`
 
 
-Webアプリケーションのスケールアウト設計
+Web应用のスケールアウト設計
 ---------------------------------------
 
 * :ref:`stateless_web_app`

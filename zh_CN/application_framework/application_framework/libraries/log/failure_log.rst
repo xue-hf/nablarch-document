@@ -8,13 +8,13 @@
   :local:
 
 フレームワークでは、処理方式毎の例外ハンドラにおいて出力する。
-アプリケーションでは、バッチ処理の障害発生時に後続処理を継続する場合などに出力する。
+应用では、バッチ処理の障害発生時に後続処理を継続する場合などに出力する。
 
 障害ログの出力方針
 --------------------------------------------------
 障害通知ログは、ログ監視ツールから監視することで障害を検知することを想定しているので、
 ロガー名を付けて障害通知専用のファイルに出力する。
-障害解析ログは、アプリケーション全体のログ出力を行うアプリケーションログに出力する。
+障害解析ログは、应用全体のログ出力を行う应用ログに出力する。
 
 .. list-table:: 障害ログの出力方針
    :header-rows: 1
@@ -46,7 +46,7 @@ log.propertiesの設定例
   writer.monitorLog.formatter.className=nablarch.core.log.basic.BasicLogFormatter
   writer.monitorLog.formatter.format=$date$ -$logLevel$- $runtimeLoggerName$ [$executionId$] boot_proc = [$bootProcess$] proc_sys = [$processingSystem$] req_id = [$requestId$] usr_id = [$userId$] $message$
 
-  # アプリケーションログの出力先
+  # 应用ログの出力先
   writer.appLog.className=nablarch.core.log.basic.FileLogWriter
   writer.appLog.filePath=/var/log/app/app.log
   writer.appLog.maxFileSize=10000
@@ -55,7 +55,7 @@ log.propertiesの設定例
 
   availableLoggersNamesOrder=MON,ROO
 
-  # アプリケーションログの設定
+  # 应用ログの設定
   loggers.ROO.nameRegex=.*
   loggers.ROO.level=INFO
   loggers.ROO.writerNames=appLog

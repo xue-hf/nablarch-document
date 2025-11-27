@@ -495,7 +495,7 @@ OpenAPIでのデータ型( ``type`` )     OpenAPIでのフォーマット( ``for
 OpenAPI仕様の規定範囲では項目単位や相関バリデーションの要求を満たせない場合の注意点
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-OpenAPI仕様で規定されているバリデーションは必須定義と長さチェック、正規表現によるチェックのみのため、業務アプリケーションが求めるものとしては不足することも想定される。
+OpenAPI仕様で規定されているバリデーションは必須定義と長さチェック、正規表現によるチェックのみのため、業務应用が求めるものとしては不足することも想定される。
 
 また自動生成されたソースコードを直接修正することは望ましくないため、ドメインバリデーションを使用しても生成されたモデルに相関バリデーションを実装できない。
 
@@ -646,7 +646,7 @@ OpenAPIドキュメント例
        *
        * @param projectCreateRequest プロジェクト登録情報
        * @param jaxRsHttpRequest HTTPリクエスト
-       * @param context ハンドラ実行コンテキスト
+       * @param context ハンドラ运行上下文
        * @return 登録したプロジェクト情報
        */
       @POST
@@ -660,7 +660,7 @@ OpenAPIドキュメント例
        * プロジェクトIDを指定してプロジェクトを取得する
        *
        * @param jaxRsHttpRequest HTTPリクエスト
-       * @param context ハンドラ実行コンテキスト
+       * @param context ハンドラ运行上下文
        * @return 取得したプロジェクト情報
        * @return プロジェクトが見つからなかった場合
        */
@@ -900,7 +900,7 @@ OpenAPIドキュメント例
        *
        * @param projectCreateRequest プロジェクト登録情報
        * @param jaxRsHttpRequest HTTPリクエスト
-       * @param context ハンドラ実行コンテキスト
+       * @param context ハンドラ运行上下文
        * @return project created
        */
       @POST
@@ -1156,7 +1156,7 @@ OpenAPIドキュメント例
        * 顧客CSVファイルをアップロードして顧客情報を取り込む
        *
        * @param jaxRsHttpRequest HTTPリクエスト
-       * @param context ハンドラ実行コンテキスト
+       * @param context ハンドラ运行上下文
        * @return 顧客CSVファイルアップロード取り込み結果
        */
       @POST
@@ -1206,7 +1206,7 @@ OpenAPIドキュメント例
        * 顧客情報をCSVファイルとしてダウンロードする
        *
        * @param jaxRsHttpRequest HTTPリクエスト
-       * @param context ハンドラ実行コンテキスト
+       * @param context ハンドラ运行上下文
        * @return 顧客CSVファイル
        */
       @GET

@@ -2,7 +2,7 @@
 
 対象テーブルのデータを削除するバッチの作成(Batchletステップ)
 ================================================================
-Exampleアプリケーションを元に、 :ref:`batchletステップ<jsr352-batch_type_Batchlet>` で対象テーブルのデータを削除するバッチを解説する。
+Example应用を元に、 :ref:`batchletステップ<jsr352-batch_type_Batchlet>` で対象テーブルのデータを削除するバッチを解説する。
 
 作成する機能の説明
   1. 現在のDBの状態の確認
@@ -22,7 +22,7 @@ Exampleアプリケーションを元に、 :ref:`batchletステップ<jsr352-ba
 
     .. code-block:: bash
 
-      $cd {nablarch-example-batch-eeシステムリポジトリ}
+      $cd {nablarch-example-batch-eeSystem Repository}
       $mvn generate-resources
 
     H2のコンソールから下記SQLを実行してデータが登録されたことを確認する。
@@ -38,7 +38,7 @@ Exampleアプリケーションを元に、 :ref:`batchletステップ<jsr352-ba
 
     .. code-block:: bash
 
-      $cd {nablarch-example-batch-eeシステムリポジトリ}
+      $cd {nablarch-example-batch-eeSystem Repository}
       $mvn exec:java -Dexec.mainClass=nablarch.fw.batch.ee.Main ^
           -Dexec.args=zip-code-truncate-table
 
@@ -83,7 +83,7 @@ Batchletの作成
   .. tip::
 
     バッチ処理は、上記のインタフェースの実装に加えて、トランザクション制御などの共通的な処理を提供するリスナーによって構成する。
-    リスナーの詳細は :ref:`バッチアプリケーションで使用するリスナー<jsr352-listener>` 及び :ref:`リスナーの指定方法<jsr352-listener_definition>` を参照。
+    リスナーの詳細は :ref:`バッチ应用で使用するリスナー<jsr352-listener>` 及び :ref:`リスナーの指定方法<jsr352-listener_definition>` を参照。
 
   TruncateTableBatchlet.java
     .. code-block:: java

@@ -99,14 +99,14 @@ Jakarta RESTful Web Servicesサポート/Jakarta RESTful Web Services/HTTPメッ
      - －
 
 .. [1] HTTPメッセージングはRESTを考慮した作りになっていない。RESTfulウェブサービスには、Jakarta RESTful Web Servicesサポートを使用する。
-.. [2] Jakarta RESTful Web ServicesサポートとHTTPメッセージングは、Nablarchのウェブアプリケーションとして動作するため、Jakarta Contexts and Dependency Injectionは使用できない。
+.. [2] Jakarta RESTful Web ServicesサポートとHTTPメッセージングは、Nablarchのウェブ应用として動作するため、Jakarta Contexts and Dependency Injectionは使用できない。
 .. [3] リクエスト/レスポンスに対するフィルタを作りたい場合は、ハンドラを作成する。
 .. [4] ボディの読み書きに対するインターセプタを作りたい場合は、Jakarta RESTful Web ServicesサポートのBodyConverterを作成する。
 .. [5] ボディの読み書きにはNablarchのデータフォーマットを使用している。変更したい場合は、データフォーマットのDataRecordFormatterを作成する。
 .. [6] Jakarta RESTful Web Servicesクライアントが必要な場合は、Jakarta RESTful Web Servicesの実装(JerseyやRESTEasyなど)を使用する。
 .. [7] サーバサイドで非同期処理が必要になる要件がないと想定している。要望があれば対応を検討する。
-.. [8] ウェブサーバやアプリケーションサーバにあるリクエストサイズをチェックする機能を使用する。
-.. [9] アプリケーションごとに要件が異なると想定している。アプリケーションで設計/実装する。
-.. [10] Nablarchにあるサービス提供可否チェックがアプリケーションの要件にマッチする場合はそれを使用する。マッチしない場合は、アプリケーションで設計/実装する。
+.. [8] ウェブサーバや应用サーバにあるリクエストサイズをチェックする機能を使用する。
+.. [9] 应用ごとに要件が異なると想定している。应用で設計/実装する。
+.. [10] Nablarchにあるサービス提供可否チェックが应用の要件にマッチする場合はそれを使用する。マッチしない場合は、应用で設計/実装する。
 .. [11] Nablarchにあるトランザクション管理を使用する。
 .. [12] エラー処理は共通化し、JaxRsResponseHandlerをカスタマイズすることを想定している。業務処理で個別にエラー処理をしたい場合は、リソースメソッドにてtry/catchを使用する。

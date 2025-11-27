@@ -8,11 +8,11 @@
   :local:
 
 メッセージングログは、 :ref:`system_messaging` の中でメッセージ送受信時に出力する。
-アプリケーションでは、ログ出力を設定することにより出力する。
+应用では、ログ出力を設定することにより出力する。
 
 メッセージングログの出力方針
 --------------------------------------------------
-メッセージングログは、アプリケーション全体のログ出力を行うアプリケーションログに出力する。
+メッセージングログは、应用全体のログ出力を行う应用ログに出力する。
 
 .. list-table:: メッセージングログの出力方針
    :header-rows: 1
@@ -32,7 +32,7 @@ log.propertiesの設定例
 
   writerNames=appLog
 
-  # アプリケーションログの出力先
+  # 应用ログの出力先
   writer.appLog.className=nablarch.core.log.basic.FileLogWriter
   writer.appLog.filePath=/var/log/app/app.log
   writer.appLog.encoding=UTF-8
@@ -42,7 +42,7 @@ log.propertiesの設定例
 
   availableLoggersNamesOrder=MESSAGING,ROO
 
-  # アプリケーションログの設定
+  # 应用ログの設定
   loggers.ROO.nameRegex=.*
   loggers.ROO.level=INFO
   loggers.ROO.writerNames=appLog

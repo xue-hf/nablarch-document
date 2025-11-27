@@ -8,7 +8,7 @@
 概要
 ------------
 
-業務アプリケーションにて使用するファイルを、DBで一元管理するための機能の実装サンプルを提供する。
+業務应用にて使用するファイルを、DBで一元管理するための機能の実装サンプルを提供する。
 
 `ソースコード <https://github.com/nablarch/nablarch-biz-sample-all/tree/main/nablarch-db-file-management>`_
 

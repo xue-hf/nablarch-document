@@ -1,14 +1,14 @@
 .. _nablarch_batch_pessimistic_lock:
 
-Nablarch Batch应用の悲観的ロック
+Nablarch Batch应用的悲观锁
 ============================================================
-本項では、Nablarch Batch应用で悲観的ロックを行うための実装例を示す。
-以下に示す例を参考に実装することで、ロック時間が短縮され他プロセスへの影響を抑えることができる。
+本章节给出了在Nablarch Batch应用中使用悲观锁的实现示例。
+参考以下示例进行实现，可以缩短锁定时间，减少对其他进程的影响。
 
-ポイント
- * データリーダでは処理対象レコードの主キーのみ取得する。
- * `handle` メソッド内で悲観的ロックを行う。
-   :ref:`universal_dao` を使用した悲観的ロックについては :ref:`universal_dao_jpa_pessimistic_lock` を参照。
+要点
+ * 数据读取器只获取数据的主键。
+ * 在 `handle` 方法内为数据加悲观锁。
+   使用 :ref:`universal_dao` 为数据加悲观锁请参考 :ref:`universal_dao_jpa_pessimistic_lock` 。
 
 .. code-block:: java
 
@@ -21,7 +21,7 @@ Nablarch Batch应用の悲観的ロック
                   .prepareParameterizedSqlStatementBySqlId(
                           Project.class.getName() + "#GET_ID");
 
-          // 検索条件の取得処理は省略
+          // 省略设置检索条件
 
           reader.setStatement(statement, condition);
           return reader;
@@ -32,7 +32,7 @@ Nablarch Batch应用の悲観的ロック
           final Project project =
                   UniversalDao.findBySqlFile(Project.class, "FIND_BY_ID_WITH_LOCK", inputData);
 
-          // 業務処理のため省略
+          // 省略业务处理
 
           UniversalDao.update(project);
           return new Success();

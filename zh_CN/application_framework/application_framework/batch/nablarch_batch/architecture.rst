@@ -26,7 +26,7 @@ Nablarch Barch应用分为了以下两种。
  驻留型Batch在多线程处理时，因为其他的线程被阻塞住，等待最慢的线程执行完毕，
  可能会发生请求数据的读入存在延迟的情况。
 
- 因此，从头开发的项目不建议使用驻留型Batch，以避免发生上面的问题。
+ 因此，从头开发的项目不建议使用驻留型Batch，以避免发生上述的问题。
  推荐使用 :ref:`db_messaging`
 
  此外，如果是已经使用了驻留型Batch的项目，虽然驻留型Batch本身仍然是可用的，
@@ -45,7 +45,7 @@ Nablarch 批处理应用程序作为独立应用程序，
 
 :ref:`main` (Main)
  Nablarch Batch应用的起始Main Class。
- 通过Java命令直接启动，初始化系统仓库和日志服务，
+ 通过Java命令直接启动，初始化System Repository(系统仓库)和日志服务，
  并执行handler队列。
 
 .. _nablarch_batch-resolve_action:
@@ -82,7 +82,7 @@ Nablarch Batch应用从读取数据开始到返回处理结果的流程如下所
    :java:extdoc:`分发handler(DispatchHandler) <nablarch.fw.handler.DispatchHandler>`
    根据命令行参数(-requestPath)指定的请求路径确定应该执行的Action类(action class)，
    并追加到队列末尾。
-4. Action类(action class)使用表单类(form class)或实体类(entity class)，
+4. Action类(action class)使用Form类(表单类)或Entity类(实体类)，
    对每条数据记录执行相应的业务逻辑(business logic)。
 5. Action类(action class)返回代表处理结果的 :java:extdoc:`Result <nablarch.fw.Result>` 。
 6. 在处理对象数据被全部处理之前循环执行2～5。
@@ -118,7 +118,7 @@ Nablarch提供了若干构建Batch应用所需的handler。
   * :ref:`database_connection_management_handler`
   * :ref:`transaction_management_handler`
 
-错误处理相关的handler
+异常处理相关的handler
   * :ref:`global_error_handler`
 
 其他
@@ -163,7 +163,7 @@ Nablarch提供了若干构建Batch应用所需的handler。
 
    * - 3
      - :ref:`database_connection_management_handler`
-       (初始化处理/终止处理用)
+       (初始化处理/关闭处理用)
      - 主线程
      - 获取数据库连接。
      - 释放数据库连接。
@@ -171,7 +171,7 @@ Nablarch提供了若干构建Batch应用所需的handler。
 
    * - 4
      - :ref:`transaction_management_handler`
-       (初始化处理/终止处理用)
+       (初始化处理/关闭处理用)
      - 主线程
      - 开启事务。
      - 提交事务。
@@ -277,7 +277,7 @@ Nablarch提供了若干构建Batch应用所需的handler。
 构建驻留型BatchBatch时最低限度的handler队列如下所示，
 在这基础之上，根据项目需求追加Nablarch标准handler或自定义的handler。
 
-驻留型Batch的最低限度handler配置除了需要在主线程中追加一下的handler意外，其他的与每次启动型Batch相同。
+驻留型Batch的最低限度handler配置除了需要在主线程中追加一下的handler以外，其他的与每次启动型Batch相同。
 
 * :ref:`thread_context_handler` ( 为 :ref:`process_stop_handler` 所必需)
 * :ref:`thread_context_clear_handler` 
@@ -335,35 +335,35 @@ Nablarch提供了若干构建Batch应用所需的handler。
    * - 6
      - :ref:`process_resident_handler`
      - 主线程
-     - データ監視間隔ごとに後続のハンドラを繰り返し実行する。
-     - ループを継続する。
-     - ログ出力を行い、実行時例外が送出された場合はリトライ可能例外にラップして送出する。
-       エラーが送出された場合はそのまま再送出する。
+     - 按照设定的数据监控间隔循环执行后续handler。
+     - 继续执行循环。
+     - 输出日志，若在执行过程中抛出异常(Exception)，则包装(wrap)为可重试异常再次抛出。
+       如果在执行过程中抛出错误(Error)，则原样再次抛出。
 
    * - 7
      - :ref:`process_stop_handler`
      - 主线程
-     - リクエストテーブル上の処理停止フラグがオンであった場合は、後続ハンドラの処理は行なわずにプロセス停止例外(
+     - 如果请求表(数据库表)的处理停止标志位被设定为on、则不执行后续handler，直接抛出进程停止异常。(
        :java:extdoc:`ProcessStop <nablarch.fw.handler.ProcessStopHandler.ProcessStop>`
-       )を送出する。
+       )
      -
      -
 
    * - 8
      - :ref:`database_connection_management_handler`
-       (初期処理/終了処理用)
+       (初始化处理/关闭处理用)
      - 主线程
-     - DB接続を取得する。
-     - DB接続を解放する。
+     - 获取数据库连接。
+     - 释放数据库连接。
      -
 
    * - 9
      - :ref:`transaction_management_handler`
-       (初期処理/終了処理用)
+       (初始化处理/关闭处理用)
      - 主线程
-     - トランザクションを開始する。
-     - トランザクションをコミットする。
-     - トランザクションをロールバックする。
+     - 开启事务。
+     - 提交事务。
+     - 回滚事务。
 
    * - 10
      - :ref:`request_path_java_package_mapping`
@@ -375,65 +375,65 @@ Nablarch提供了若干构建Batch应用所需的handler。
    * - 11
      - :ref:`multi_thread_execution_handler`
      - 主线程
-     - サブスレッドを作成し、後続ハンドラの処理を並行実行する。
-     - 全スレッドの正常終了まで待機する。
-     - 処理中のスレッドが完了するまで待機し起因例外を再送出する。
+     - 创建子线程，并行处理后续handler。
+     - 直到所有线程全部正常结束前保持阻塞。
+     - 等待当前线程处理完成，并将异常再次抛出。
 
    * - 12
      - :ref:`database_connection_management_handler`
        (業務処理用)
      - 子线程
-     - DB接続を取得する。
-     - DB接続を解放する。
+     - 获取数据库连接。
+     - 释放数据库连接。
      -
 
    * - 13
      - :ref:`loop_handler`
      - 子线程
-     - 業務トランザクションを開始する。
-     - コミット間隔毎に業務トランザクションをコミットする。
-       また、データリーダ上に処理対象データが残っていればループを継続する。
-     - 業務トランザクションをロールバックする。
+     - 开启业务事务。
+     - 根据commit间隔提交业务事务。
+       此外，如果数据读取器上仍有待处理的数据，则继续循环。
+     - 回滚业务事务。
 
    * - 14
      - :ref:`data_read_handler`
      - 子线程
-     - データリーダを使用してレコードを1件読み込み、後続ハンドラの引数として渡す。
-       また :ref:`実行時ID<log-execution_id>` を採番する。
+     - 使用数据读取器读取一条记录，并作为参数传递给后续的handler。
+       此外分配 :ref:`执行时ID<log-execution_id>` 。
      -
-     - 読み込んだレコードをログ出力した後、元例外を再送出する。
+     - 将读取的数据输出日志之后，再将原始异常抛出。
 
 .. _nablarch_batch-data_reader:
 
-Nablarch Batch应用で使用するデータリーダ
+Nablarch Batch应用使用的数据读取器
 ------------------------------------------------------
-Nablarchでは、バッチアプリケーションを構築するために必要なデータリーダを標準で幾つか提供している。
-各データリーダの詳細は、リンク先を参照すること。
+Nablarch默认提供了数个可以用来构建Batch应用的数据读取器。
+各个数据读取器的详细信息可以参照下面的链接。
 
-* :java:extdoc:`DatabaseRecordReader (データベース読み込み) <nablarch.fw.reader.DatabaseRecordReader>`
-* :java:extdoc:`FileDataReader (ファイル読み込み)<nablarch.fw.reader.FileDataReader>`
-* :java:extdoc:`ValidatableFileDataReader (バリデージョン機能付きファイル読み込み)<nablarch.fw.reader.ValidatableFileDataReader>`
-* :java:extdoc:`ResumeDataReader (レジューム機能付き読み込み)<nablarch.fw.reader.ResumeDataReader>`
+* :java:extdoc:`DatabaseRecordReader (数据库读取) <nablarch.fw.reader.DatabaseRecordReader>`
+* :java:extdoc:`FileDataReader (文件读取)<nablarch.fw.reader.FileDataReader>`
+* :java:extdoc:`ValidatableFileDataReader (带校验功能的文件读取)<nablarch.fw.reader.ValidatableFileDataReader>`
+* :java:extdoc:`ResumeDataReader (带断点续读的读取)<nablarch.fw.reader.ResumeDataReader>`
 
 .. tip::
- 上記のデータリーダでプロジェクトの要件を満たせない場合は、
- :java:extdoc:`DataReader <nablarch.fw.DataReader>` インタフェースを実装したクラスを
- プロジェクトで作成して対応する。
+ 当上述的数据读取器无法满足项目的需求的时候，
+ 可以通过实现:java:extdoc:`DataReader <nablarch.fw.DataReader>`
+ 自行满足项目需求。
 
 .. important::
- 標準で提供している :java:extdoc:`FileDataReader (ファイル読み込み)<nablarch.fw.reader.FileDataReader>` 、 :java:extdoc:`ValidatableFileDataReader (バリデージョン機能付きファイル読み込み)<nablarch.fw.reader.ValidatableFileDataReader>` では、データへのアクセスに :ref:`data_format` を使用している。データへのアクセスに :ref:`data_bind` を使用する場合は、これらのデータリーダを使用しないこと。
+ 系统默认提供的 :java:extdoc:`FileDataReader (文件读取)<nablarch.fw.reader.FileDataReader>` 、 :java:extdoc:`ValidatableFileDataReader (带校验功能的文件读取)<nablarch.fw.reader.ValidatableFileDataReader>` 均使用 :ref:`data_format` 进行数据访问。若需使用 :ref:`data_bind` 进行数据访问时，则不应使用上述这些数据读取器。
 
 .. _nablarch_batch-action:
 
-Nablarch Batch应用で使用するアクション
+Nablarch Batch应用使用的Action类
 ---------------------------------------------------------------------------------
-Nablarchでは、バッチアプリケーションを構築するために必要なAction类を標準で幾つか提供している。
-各Action类の詳細は、リンク先を参照すること。
+Nablarch默认提供了数个可以用来构建Batch应用的Action类。
+各个Action类的详细信息可以参照下面的链接。
 
-* :java:extdoc:`BatchAction (汎用的なバッチアクションのテンプレートクラス)<nablarch.fw.action.BatchAction>`
-* :java:extdoc:`FileBatchAction (ファイル入力のバッチアクションのテンプレートクラス)<nablarch.fw.action.FileBatchAction>`
-* :java:extdoc:`NoInputDataBatchAction (入力データを使用しないバッチアクションのテンプレートクラス)<nablarch.fw.action.NoInputDataBatchAction>`
-* :java:extdoc:`AsyncMessageSendAction (応答不要メッセージ送信用のAction类)<nablarch.fw.messaging.action.AsyncMessageSendAction>`
+* :java:extdoc:`BatchAction (通用的Batch Action类模板)<nablarch.fw.action.BatchAction>`
+* :java:extdoc:`FileBatchAction (输入文件的Batch Action类模板)<nablarch.fw.action.FileBatchAction>`
+* :java:extdoc:`NoInputDataBatchAction (无数据输入的Batch Action类模板)<nablarch.fw.action.NoInputDataBatchAction>`
+* :java:extdoc:`AsyncMessageSendAction (异步消息发送用的Action类)<nablarch.fw.messaging.action.AsyncMessageSendAction>`
 
 .. important::
- 標準で提供している :java:extdoc:`FileBatchAction (ファイル入力のバッチアクションのテンプレートクラス)<nablarch.fw.action.FileBatchAction>` では、データへのアクセスに :ref:`data_format` を使用している。データへのアクセスに :ref:`data_bind` を使用する場合は、他のAction类を使用すること。
+ 系统默认提供的 :java:extdoc:`FileBatchAction (输入文件的Batch Action类模板)<nablarch.fw.action.FileBatchAction>` 均使用 :ref:`data_format` 进行数据访问。若需使用 :ref:`data_bind` 进行数据访问时，则应该使用其他Action类。

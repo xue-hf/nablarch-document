@@ -29,7 +29,7 @@ JDBCを使用してデータベースに対してSQL文を実行する機能を�
 データベースの方言を意識することなく使用できる
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 使用するデータベース製品に対応した :java:extdoc:`Dialect <nablarch.core.db.dialect.Dialect>` を設定することで、
-製品ごとの方言を意識せずにアプリケーションを実装できる。
+製品ごとの方言を意識せずに应用を実装できる。
 
 :java:extdoc:`Dialect <nablarch.core.db.dialect.Dialect>` は、以下の機能を提供する。
 
@@ -123,7 +123,7 @@ SQLのクエリ結果をキャッシュできる
 データベースに対する接続設定は、以下の2通りから選択できる。
 
 * :java:extdoc:`javax.sql.DataSource` を使ったデータベース接続の生成
-* アプリケーションサーバなどに登録されたデータソースを使ったデータベース接続の生成
+* 应用サーバなどに登録されたデータソースを使ったデータベース接続の生成
 
 上記以外の接続方法を使用したい場合(例えばOSSのコネクションプーリングライブラリを使う場合など)は、
 :ref:`database-add_connection_factory` を参照し、データベースに接続する実装を追加すること。
@@ -136,7 +136,7 @@ SQLのクエリ結果をキャッシュできる
         <!-- 設定値の詳細はJavadocを参照すること -->
       </component>
 
-  アプリケーションサーバのデータソースからデータベース接続の生成
+  应用サーバのデータソースからデータベース接続の生成
     .. code-block:: xml
 
       <component class="nablarch.core.db.connection.BasicDbConnectionFactoryForJndi">
@@ -449,7 +449,7 @@ SQL例
 データベースアクセス(JDBCラッパー)は、データベースとの入出力に使用する変数の型変換をJDBCドライバに委譲する。
 よって、入出力に使用する変数の型は、データベースの型及び使用するJDBCドライバの仕様に応じて定義する必要がある。
 
-任意の型変換が必要な場合は、データベースとの入出力に使用する変数に対して、アプリケーション側で型変換することとなる。
+任意の型変換が必要な場合は、データベースとの入出力に使用する変数に対して、应用側で型変換することとなる。
 
 - 入力にBeanを使用する場合はBeanのプロパティに値を設定する際、出力にBeanを使用する場合はプロパティから値を取り出した後に型変換する。
 - 入力にMapを使用する場合はMapに値を設定する際、出力にMapを使用する場合は値を取り出した後に型変換する。
@@ -659,7 +659,7 @@ like検索時のエスケープ文字及びエスケープ対象文字を定義�
 
   .. important::
 
-    この機能は、ウェブアプリケーションの検索画面のようにユーザの入力内容によって検索条件が変わるような場合に使うものである。
+    この機能は、ウェブ应用の検索画面のようにユーザの入力内容によって検索条件が変わるような場合に使うものである。
     条件だけが異なる複数のSQLを共通化するために使用するものではない。
     安易に共通化した場合、SQLを変更した場合に思わぬ不具合を埋め込む原因にもなるため、必ずSQLを複数定義すること。
 
@@ -1028,8 +1028,8 @@ SQL実行時の例外が一意制約違反の場合の例外
 個別トランザクションを使用するには、以下の手順が必要となる。
 
 #. コンポーネント設定ファイルに :java:extdoc:`SimpleDbTransactionManager <nablarch.core.db.transaction.SimpleDbTransactionManager>` を定義する。
-#. :java:extdoc:`SimpleDbTransactionManager <nablarch.core.db.transaction.SimpleDbTransactionManager>` をシステムリポジトリから取得し、新たなトランザクションでSQLを実行する。
-   （システムリポジトリから取得するのではなく、 :java:extdoc:`SimpleDbTransactionManager <nablarch.core.db.transaction.SimpleDbTransactionManager>` を設定して使用してもよい)
+#. :java:extdoc:`SimpleDbTransactionManager <nablarch.core.db.transaction.SimpleDbTransactionManager>` をSystem Repositoryから取得し、新たなトランザクションでSQLを実行する。
+   （System Repositoryから取得するのではなく、 :java:extdoc:`SimpleDbTransactionManager <nablarch.core.db.transaction.SimpleDbTransactionManager>` を設定して使用してもよい)
 
 以下に使用例を示す。
 
@@ -1063,7 +1063,7 @@ SQL実行時の例外が一意制約違反の場合の例外
 
   .. code-block:: java
 
-    // システムリポジトリからSimpleDbTransactionManagerを取得する
+    // System RepositoryからSimpleDbTransactionManagerを取得する
     SimpleDbTransactionManager dbTransactionManager =
         SystemRepository.get("update-login-failed-count-transaction");
 
@@ -1099,13 +1099,13 @@ SQL実行時の例外が一意制約違反の場合の例外
     通常、 :java:extdoc:`java.sql.ResultSet` や :java:extdoc:`java.sql.Connection` がクローズされた時点でアクセスできなくなる。
     このため、 `ResultSet` や `Connection` よりも生存期間が長いキャッシュにはBLOB、CLOB型を含めることができない。
 
-  アプリケーションの冗長化について
+  应用の冗長化について
     デフォルトで提供するキャッシュを保持するコンポーネントはJVMのヒープ上にキャッシュを保持する。
-    このため、アプリケーションを冗長化構成とした場合、アプリケーションごとに検索結果がキャッシュされることになる。
+    このため、应用を冗長化構成とした場合、应用ごとに検索結果がキャッシュされることになる。
 
-    このため、キャッシュタイミングが異なるため、それぞれのアプリケーションで異なるキャッシュを保持する可能性がある。
+    このため、キャッシュタイミングが異なるため、それぞれの应用で異なるキャッシュを保持する可能性がある。
 
-    アプリケーションサーバを冗長化している場合で、ラウンドロビンでロードバランサを行う場合は、
+    应用サーバを冗長化している場合で、ラウンドロビンでロードバランサを行う場合は、
     毎回異なるサーバにアクセスする可能性がある。
     もし、サーバごとに異なるキャッシュを保持していた場合、リクエストの都度異なる結果が画面表示される可能性があるので注意すること。
 

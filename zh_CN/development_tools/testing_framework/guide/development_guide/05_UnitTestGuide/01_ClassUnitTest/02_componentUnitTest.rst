@@ -254,9 +254,9 @@ sysAcctEntityのuseCaseIdはuseCaseIdプロパティに設定される値その�
 
 テストデータ(想定結果)の作成
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-想定結果をテストケースごとに用意する。アプリケーションで設定する項目だけでなく、自動設定項目(\ :ref:`database-common_bean`\ 参照)も想定結果を用意する。検証には"assertTableEquals"メソッドを用いる。
+想定結果をテストケースごとに用意する。应用で設定する項目だけでなく、自動設定項目(\ :ref:`database-common_bean`\ 参照)も想定結果を用意する。検証には"assertTableEquals"メソッドを用いる。
 
-サンプルアプリケーションでは、グループID(\ :ref:`tips_groupId`\ 参照)を定義したデータ(expected)を用意し、これをassertTableEqualsの\
+サンプル应用では、グループID(\ :ref:`tips_groupId`\ 参照)を定義したデータ(expected)を用意し、これをassertTableEqualsの\
 引数に渡すことで、複数の想定結果に対応している。
 
 .. image:: ./_image/componentUnitTest_expectedDataNormal.png

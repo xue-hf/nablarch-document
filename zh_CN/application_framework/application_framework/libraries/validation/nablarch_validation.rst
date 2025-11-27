@@ -252,7 +252,7 @@ Nablarchが提供しているバリデータ及びコンバータについては
 
         <!--
           DomainValidatorはここには設定しないこと。設定すると循環参照となり、
-          システムリポジトリ初期化時にエラーとなる。
+          System Repository初期化時にエラーとなる。
         -->
         <property name="validators">
           <list>
@@ -401,7 +401,7 @@ Nablarchが提供しているバリデータ及びコンバータについては
     }
 
   上記のBeanを使って入力値の `request` をバリデーションするには、以下のように  :java:extdoc:`ValidationUtil <nablarch.core.validation.ValidationUtil>` を使用する。
-  なお、ウェブアプリケーションの場合には `ウェブアプリケーションのユーザ入力値のチェックを行う`_ でより簡易的にバリデーションが行える。
+  なお、ウェブ应用の場合には `ウェブ应用のユーザ入力値のチェックを行う`_ でより簡易的にバリデーションが行える。
 
   .. code-block:: java
 
@@ -683,9 +683,9 @@ Nablarchが提供しているバリデータ及びコンバータについては
 
 業務アクションで行う理由は、:ref:`Bean Validationのデータベースとの相関バリデーション <bean_validation-database_validation>` を参照。
 
-ウェブアプリケーションのユーザ入力値のチェックを行う
+ウェブ应用のユーザ入力値のチェックを行う
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-ウェブアプリケーションのユーザ入力値のチェックは :ref:`inject_form_interceptor` を使用して行う。
+ウェブ应用のユーザ入力値のチェックは :ref:`inject_form_interceptor` を使用して行う。
 詳細は、 :ref:`inject_form_interceptor` を参照
 
 拡張例

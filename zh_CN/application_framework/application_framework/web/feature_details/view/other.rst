@@ -13,4 +13,4 @@ Servletを提供していないテンプレートエンジンの場合には、
 実装方法や設定方法などの詳細は、以下の解説書やソースコードを参照すること。
 
 * :ref:`web_thymeleaf_adaptor` 
-* `ウェブアプリケーション Thymeleafアダプタのソースコード <https://github.com/nablarch/nablarch-web-thymeleaf-adaptor>`_
+* `ウェブ应用 Thymeleafアダプタのソースコード <https://github.com/nablarch/nablarch-web-thymeleaf-adaptor>`_

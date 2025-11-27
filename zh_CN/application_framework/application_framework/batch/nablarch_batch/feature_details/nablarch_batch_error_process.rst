@@ -1,6 +1,6 @@
 .. _nablarch_batch_error_process:
 
-Nablarch Batch应用のエラー処理
+Nablarch Batch应用的异常处理
 ============================================================
 .. contents:: 目录
   :depth: 3
@@ -8,49 +8,47 @@ Nablarch Batch应用のエラー処理
 
 .. _nablarch_batch_error_process-rerun:
 
-バッチ処理をリランできるようにする
+使Batch处理可重试
 --------------------------------------------------
-Nablarch Batch应用では、ファイル入力を除き、
-バッチ処理をリランできるようにする機能を提供していない。
+在 Nablarch Batch 应用中，
+除文件输入外，未提供使Batch能够重新运行的功能。
 
-そのため、処理対象レコードにステータスを持たせ、
-処理成功や失敗時にステータスを変更するといった、
-アプリケーションでの設計と実装が必要となる。
-処理成功や失敗時のステータス変更の実装方法については、
-:ref:`loop_handler-callback` を参照。
+因此，需要在应用的设计与实现上，
+为待处理记录设置状态，并在处理成功或者失败的时候更新状态。
+关于处理成功或者失败时如何变更状态，请参考 :ref:`loop_handler-callback`
 
-ファイル入力については、
-:java:extdoc:`ResumeDataReader (レジューム機能付き読み込み)<nablarch.fw.reader.ResumeDataReader>`
-を使用することで、障害発生ポイントからの再実行ができる。
+关于输入文件可以使用
+:java:extdoc:`ResumeDataReader (带断点续读的读取)<nablarch.fw.reader.ResumeDataReader>`
+使得Batch可以从上次故障发生的断点开始继续执行。
 
 .. _nablarch_batch_error_process-continue:
 
-バッチ処理でエラー発生時に処理を継続する
+在发生错误时继续进行Batch处理
 --------------------------------------------------
-エラー発生時の処理継続は、 :ref:`驻留型Batch<nablarch_batch-resident_batch>` のみ対応している。
-:ref:`每次启动型Batch<nablarch_batch-each_time_batch>` は対応していない。
+在发生错误时继续进行Batch处理的功能只在 :ref:`驻留型Batch<nablarch_batch-resident_batch>` 中支持。
+:ref:`每次启动型Batch<nablarch_batch-each_time_batch>` 不支持。
 
-:ref:`驻留型Batch<nablarch_batch-resident_batch>` では、
+在 :ref:`驻留型Batch<nablarch_batch-resident_batch>` 中，若抛出
 :java:extdoc:`TransactionAbnormalEnd<nablarch.fw.results.TransactionAbnormalEnd>`
-を送出すると、 :ref:`retry_handler` により処理が継続される。
-ただし、 :ref:`nablarch_batch_error_process-rerun` に記載した内容で、
-バッチ処理がリランできるようになっている必要がある。
+则处理将由 :ref:`retry_handler` 继续执行。
+但是为了确保Batch能够重新运行，需要满足 :ref:`nablarch_batch_error_process-rerun` 中记载的条件
+（如记录状态管理、可重入设计等）。
 
 .. tip::
- :ref:`每次启动型Batch<nablarch_batch-each_time_batch>` で
+ :ref:`每次启动型Batch<nablarch_batch-each_time_batch>` 送出了
  :java:extdoc:`TransactionAbnormalEnd<nablarch.fw.results.TransactionAbnormalEnd>`
- が送出されると、バッチ処理が異常終了となる。
+ 时，Batch会异常结束。
 
 .. _nablarch_batch_error_process-abnormal_end:
 
-バッチ処理を異常終了にする
+使Batch处理异常终止
 --------------------------------------------------
-アプリケーションでエラーを検知した場合に、
-処理を継続せずにバッチ処理を異常終了させたい場合がある。
+当应用中发生错误时，
+有时希望不继续处理，而是直接使Batch异常终止。
 
-Nablarch Batch应用では、
+在 Nablarch Batch 应用中，通过抛出
 :java:extdoc:`ProcessAbnormalEnd<nablarch.fw.launcher.ProcessAbnormalEnd>`
-を送出すると、バッチ処理を異常終了にできる。
-:java:extdoc:`ProcessAbnormalEnd<nablarch.fw.launcher.ProcessAbnormalEnd>`
-が送出された場合、プロセス終了コードはこのクラスに指定された値となる。
+，即可实现批处理的异常终止。
+一旦抛出 :java:extdoc:`ProcessAbnormalEnd<nablarch.fw.launcher.ProcessAbnormalEnd>`
+，进程终止代码将采用该类中指定的值。
 

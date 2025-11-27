@@ -40,7 +40,7 @@ Redisストア(Lettuce)アダプタ
 設定内容
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-最小構成でRedisストアを使い始めるには、アプリケーションのコンポーネント定義と環境設定値を修正する必要がある。
+最小構成でRedisストアを使い始めるには、应用のコンポーネント定義と環境設定値を修正する必要がある。
 
 .. _redisstore_minimum_settings_how_modify_component_definition:
 
@@ -65,8 +65,8 @@ Redisストア(Lettuce)アダプタ
 
 ``redisstore-lettuce.config`` には、 ``redisstore-lettuce.xml`` で使用しているプレースホルダのデフォルト値が宣言されている。
 
-アプリケーションで用意している環境設定ファイル（``env.properties`` など）がある場合、 ``redisstore-lettuce.config`` はそれよりも前に読み込むようにする。
-こうすることで、必要に応じてデフォルトのプレースホルダの値をアプリケーションの環境設定ファイルで上書きできるようになる。
+应用で用意している環境設定ファイル（``env.properties`` など）がある場合、 ``redisstore-lettuce.config`` はそれよりも前に読み込むようにする。
+こうすることで、必要に応じてデフォルトのプレースホルダの値を应用の環境設定ファイルで上書きできるようになる。
 
 さらに、 :ref:`repository-overwrite_environment_configuration_by_os_env_var` で説明している方法を用いることで、実行環境ごとに接続先のRedisを切り替えることができるようになる。
 
@@ -169,7 +169,7 @@ Redis の構成に合わせて設定する
 :java:extdoc:`LettuceClusterRedisClient<nablarch.integration.redisstore.lettuce.LettuceClusterRedisClient>`
   Cluster構成のRedisインスタンスに接続する場合に使用するクラス。
 
-アプリケーションで使用するRedisの構成に合わせて、これらの中から使用するクライアントクラスを設定する必要がある。
+应用で使用するRedisの構成に合わせて、これらの中から使用するクライアントクラスを設定する必要がある。
 
 .. tip::
 
@@ -191,7 +191,7 @@ Redis の構成に合わせて設定する
 ``cluster``       ``LettuceClusterRedisClient``
 ================= ======================================
 
-したがって、アプリケーションの環境設定ファイルで次のように設定することで、Cluster構成のRedisに接続できるようになる。
+したがって、应用の環境設定ファイルで次のように設定することで、Cluster構成のRedisに接続できるようになる。
 
 .. code-block:: properties
 
@@ -389,7 +389,7 @@ LettuceでClusterのトポロジ更新を監視できるようにするには、
 -----------------------------------------------------------------------------------------------
 
 各クライアントクラスは :java:extdoc:`Disposable<nablarch.core.repository.disposal.Disposable>` を実装しており、 ``dispose()`` メソッドを実行することでRedisへの接続が閉じられる。
-したがって、使用するクライアントクラスのコンポーネントを :java:extdoc:`BasicApplicationDisposer<nablarch.core.repository.disposal.BasicApplicationDisposer>` の ``disposableList`` プロパティに設定することで、アプリケーション終了時にRedisとの接続を閉じることができる。
+したがって、使用するクライアントクラスのコンポーネントを :java:extdoc:`BasicApplicationDisposer<nablarch.core.repository.disposal.BasicApplicationDisposer>` の ``disposableList`` プロパティに設定することで、应用終了時にRedisとの接続を閉じることができる。
 
 .. code-block:: xml
 

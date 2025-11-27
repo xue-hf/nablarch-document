@@ -6,8 +6,8 @@
   :depth: 3
   :local:
 
-本ハンドラは、アプリケーションのヘルスチェックを行うための機能を提供する。
-本ハンドラを使用して、 :ref:`Webアプリケーション<web_application>` と :ref:`RESTfulウェブサービス<restful_web_service>`
+本ハンドラは、应用のヘルスチェックを行うための機能を提供する。
+本ハンドラを使用して、 :ref:`Web应用<web_application>` と :ref:`RESTfulウェブサービス<restful_web_service>`
 のヘルスチェックを行うエンドポイントを実現できる。
 
 ヘルスチェックのデフォルト実装として :java:extdoc:`DB <nablarch.fw.web.handler.health.DbHealthChecker>` と

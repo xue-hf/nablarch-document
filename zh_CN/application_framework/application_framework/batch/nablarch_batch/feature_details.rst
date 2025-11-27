@@ -1,40 +1,40 @@
-機能詳細
+功能详细
 ========================================
 .. contents:: 目录
   :depth: 3
   :local:
 
-バッチアプリケーションの起動方法
+Batch 应用的启动方法
 --------------------------------------------------
-* :ref:`Nablarch Batch应用の起動方法<main-run_application>`
+* :ref:`Nablarch Batch应用的启动方法<main-run_application>`
 
-システムリポジトリの初期化
+System Repository(系统仓库)初始化
 --------------------------------------------------
-システムリポジトリの初期化は、アプリケーション起動時にシステムリポジトリの設定ファイルのパスを指定することで行う。
-詳細は、:ref:`Nablarch Batch应用の起動方法<main-run_application>` を参照。
+System Repository是通过在应用启动时加载指定的System Repository配置文件进行的。
+相信信息可以参考 :ref:`Nablarch Batch应用的启动方法<main-run_application>` 。
 
-入力値のチェック
+输入值校验
 --------------------------------------------------
-* :ref:`入力値のチェック <validation>`
+* :ref:`输入值校验 <validation>`
 
-データベースアクセス
+数据库访问
 --------------------------------------------------
-* :ref:`データベースアクセス <database_management>`
-* 標準提供のデータリーダ
+* :ref:`数据库访问 <database_management>`
+* 默认提供的数据读取器
 
-  * :java:extdoc:`DatabaseRecordReader (データベース読み込み) <nablarch.fw.reader.DatabaseRecordReader>`
+  * :java:extdoc:`DatabaseRecordReader (数据库读取) <nablarch.fw.reader.DatabaseRecordReader>`
 
-ファイル入出力
+文件输入输出
 --------------------------------------------------
-* :ref:`ファイル入出力<data_converter>`
+* :ref:`文件输入输出<data_converter>`
 
-* 標準提供のデータリーダ
+* 默认提供的数据读取器
 
-  * :java:extdoc:`FileDataReader (ファイル読み込み)<nablarch.fw.reader.FileDataReader>`
-  * :java:extdoc:`ValidatableFileDataReader (バリデージョン機能付きファイル読み込み)<nablarch.fw.reader.ValidatableFileDataReader>`
-  * :java:extdoc:`ResumeDataReader (レジューム機能付き読み込み)<nablarch.fw.reader.ResumeDataReader>`
+  * :java:extdoc:`FileDataReader (文件读取)<nablarch.fw.reader.FileDataReader>`
+  * :java:extdoc:`ValidatableFileDataReader (带校验功能的文件读取)<nablarch.fw.reader.ValidatableFileDataReader>`
+  * :java:extdoc:`ResumeDataReader (带断点续读的读取)<nablarch.fw.reader.ResumeDataReader>`
 
-排他制御
+数据库锁控制
 --------------------------------------------------
 .. toctree::
     :maxdepth: 1
@@ -42,16 +42,16 @@
 
     feature_details/nablarch_batch_pessimistic_lock
 
-排他制御は、以下の2種類の方法を提供しているが、
-:ref:`UniversalDaoを推奨する理由 <exclusive_control-deprecated>` に記載がある通り、
-:ref:`universal_dao` の使用を推奨する。
+关于数据库锁控制，Nablarch提供了以下两种方式，
+根据 :ref:`推荐UniversalDao的理由 <exclusive_control-deprecated>` ，
+推荐使用 :ref:`universal_dao` 。
 
 * :ref:`exclusive_control`
 * :ref:`universal_dao`
 
-  * :ref:`悲観的ロック<nablarch_batch_pessimistic_lock>`
+  * :ref:`悲观锁<nablarch_batch_pessimistic_lock>`
 
-バッチ処理の実行制御
+Batch处理的执行控制
 --------------------------------------------------
 .. toctree::
   :maxdepth: 1
@@ -60,19 +60,19 @@
   feature_details/nablarch_batch_error_process
   feature_details/nablarch_batch_retention_state
 
-* :ref:`バッチ処理のプロセス終了コード<status_code_convert_handler-rules>`
-* :ref:`バッチ処理のエラー処理<nablarch_batch_error_process>`
-* :ref:`バッチ処理の並列実行(マルチスレッド化)<multi_thread_execution_handler>`
-* :ref:`バッチ処理のコミット間隔の制御 <loop_handler-commit_interval>`
-* :ref:`1回のバッチ処理の処理件数制限 <data_read_handler-max_count>`
-  |br| (大量データを処理するバッチ処理を数日に分けて処理させる場合など)
+* :ref:`Batch处理的进程终止代码<status_code_convert_handler-rules>`
+* :ref:`Batch处理的异常处理<nablarch_batch_error_process>`
+* :ref:`多线程的Batch处理<multi_thread_execution_handler>`
+* :ref:`Batch处理的commit间隔控制 <loop_handler-commit_interval>`
+* :ref:`单次Batch处理的数据量限制 <data_read_handler-max_count>`
+  |br| (例如，需将处理大量数据的批处理任务分摊到数天内完成的情况。)
 
-MOMメッセージ送信
+发送MOM消息
 ----------------------------------------
-* :ref:`同期応答メッセージ送信<mom_system_messaging-sync_message_send>`
-* :ref:`応答不要メッセージ送信<mom_system_messaging-async_message_send>`
+* :ref:`发送同步消息<mom_system_messaging-sync_message_send>`
+* :ref:`发送异步消息<mom_system_messaging-async_message_send>`
 
-バッチ実行中の状態の保持
+在Batch应用的运行过程中保存状态
 ----------------------------------------
 .. toctree::
   :maxdepth: 1
@@ -82,7 +82,7 @@ MOMメッセージ送信
 
 * :ref:`nablarch_batch_retention_state`
 
-驻留型Batchのマルチプロセス化
+驻留型Batch的多Process化
 ----------------------------------------
 .. toctree::
   :maxdepth: 1

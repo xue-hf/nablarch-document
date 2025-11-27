@@ -6,7 +6,7 @@
   :depth: 3
   :local:
 
-本ハンドラは、アプリケーションの機能ごとに行う処理を記載するアクションに処理を委譲する。
+本ハンドラは、应用の機能ごとに行う処理を記載するアクションに処理を委譲する。
 本ハンドラは、主に :ref:`メッセージング <messaging>` の機能で、任意のアクションにディスパッチする目的で使用する。
 
 本ハンドラでは、 :java:extdoc:`Request#getRequestPath() <nablarch.fw.Request.getRequestPath()>` で取得した

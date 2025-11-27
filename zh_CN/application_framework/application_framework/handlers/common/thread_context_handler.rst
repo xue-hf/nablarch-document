@@ -128,7 +128,7 @@
 ユーザIDを設定する
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 :java:extdoc:`UserIdAttributeInSessionStore <nablarch.common.web.handler.threadcontext.UserIdAttributeInSessionStore>` は、デフォルトではセッションストアからユーザIDを取得する。
-セッションストアへの設定はフレームワークでは実施しないため、ログイン時などにアプリケーションで設定する必要がある。
+セッションストアへの設定はフレームワークでは実施しないため、ログイン時などに应用で設定する必要がある。
 セッションストアに設定する際のキーはデフォルトでは"user.id"が使用される。
 上書きする場合は、 :java:extdoc:`UserIdAttribute#sessionKey <nablarch.common.handler.threadcontext.UserIdAttribute.setSessionKey(java.lang.String)>` に値を設定する。
 "login_id"に上書きする例を以下に示す。
@@ -158,7 +158,7 @@
 その場合は以下のように :java:extdoc:`UserIdAttribute#getUserIdSession <nablarch.common.handler.threadcontext.UserIdAttribute.getUserIdSession(nablarch.fw.ExecutionContext,java.lang.String)>` 
 をオーバーライドすることで任意の取得元からユーザIDを取得することが可能となる。
 "userContext"というキーでセッションストアに設定したオブジェクトからユーザIDを取得する場合の実装例を以下に示す。
-下記の場合も、アプリケーションでセッションストアへオブジェクトを設定する必要がある。
+下記の場合も、应用でセッションストアへオブジェクトを設定する必要がある。
 
 .. code-block:: java
 

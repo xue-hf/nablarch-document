@@ -8,7 +8,7 @@ Nablarchサーブレットコンテキスト初期化リスナー
   :local:
 
 本クラスはサーブレットコンテキストリスナーとして定義されており、
-ウェブアプリケーションの起動時、終了時に以下の処理を行う。
+ウェブ应用の起動時、終了時に以下の処理を行う。
 
 起動時
  * :ref:`repository` の初期化処理
@@ -38,10 +38,10 @@ Nablarchサーブレットコンテキスト初期化リスナー
     <artifactId>nablarch-core-applog</artifactId>
   </dependency>
 
-システムリポジトリを初期化する
+System Repositoryを初期化する
 --------------------------------------------------
 
-システムリポジトリの初期化を行うには、以下のとおり設定する必要がある。
+System Repositoryの初期化を行うには、以下のとおり設定する必要がある。
 
 * サーブレットコンテキストリスナーとして、本クラスを登録する。
 * サーブレットコンテキストの初期化パラメータとして、コンポーネント設定ファイルのパスを設定する。
@@ -68,10 +68,10 @@ Nablarchサーブレットコンテキスト初期化リスナー
 本クラスの初期化に成功したか否かは、:java:extdoc:`NablarchServletContextListener#isInitializationCompleted <nablarch.fw.web.servlet.NablarchServletContextListener.isInitializationCompleted()>` を使用して取得できる。
 初期化に成功した場合は上記メソッドは ``true`` を返却する。
 
-本クラスの初期化に失敗するとアプリケーションの起動も失敗するが、サーブレットコンテキストリスナーを複数登録していた場合は、
+本クラスの初期化に失敗すると应用の起動も失敗するが、サーブレットコンテキストリスナーを複数登録していた場合は、
 本クラスの後続のサーブレットコンテキストリスナーの処理が実行されることがある。
 この機能を使用することで本クラスの後続のサーブレットコンテキストリスナーにおいて、
-以下のようにシステムリポジトリの初期化に成功した場合だけ処理を続行するといった分岐が可能となる。
+以下のようにSystem Repositoryの初期化に成功した場合だけ処理を続行するといった分岐が可能となる。
 
 .. code-block:: java
 
@@ -79,12 +79,12 @@ Nablarchサーブレットコンテキスト初期化リスナー
       @Override
       public void contextInitialized(ServletContextEvent sce) {
           if(NablarchServletContextListener.isInitializationCompleted()){
-            // システムリポジトリを使用した処理
+            // System Repositoryを使用した処理
           }
       }
 
 なお、サーブレットコンテキストリスナーの実行順は `web.xml` に記載した順序となる。
-システムリポジトリを使用するサーブレットコンテキストリスナーを登録する場合は、
+System Repositoryを使用するサーブレットコンテキストリスナーを登録する場合は、
 以下のように本クラスより後に `web.xml` に記載する必要がある。
 また、 ``@WebListener`` アノテーションによるサーブレットコンテキストリスナーの登録では実行順序は保証されないため、
 必ず `web.xml` で定義すること。

@@ -9,7 +9,7 @@
 
 パフォーマンスログは、任意の処理範囲に対する実行時間とメモリ使用量を出力し、
 開発時のパフォーマンスチューニングに使用する。
-アプリケーションでは、ソースコード上でフレームワークが提供するAPIを呼び出し、計測対象の処理範囲を指定して出力する。
+应用では、ソースコード上でフレームワークが提供するAPIを呼び出し、計測対象の処理範囲を指定して出力する。
 
 パフォーマンスログの出力方針
 --------------------------------------------------
@@ -34,7 +34,7 @@ log.propertiesの設定例
 
   writerNames=appLog
 
-  # アプリケーションログの出力先
+  # 应用ログの出力先
   writer.appLog.className=nablarch.core.log.basic.FileLogWriter
   writer.appLog.filePath=/var/log/app/app.log
   writer.appLog.encoding=UTF-8
@@ -44,7 +44,7 @@ log.propertiesの設定例
 
   availableLoggersNamesOrder=PER,ROO
 
-  # アプリケーションログの設定
+  # 应用ログの設定
   loggers.ROO.nameRegex=.*
   loggers.ROO.level=INFO
   loggers.ROO.writerNames=appLog

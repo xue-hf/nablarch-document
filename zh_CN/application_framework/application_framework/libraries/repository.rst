@@ -1,13 +1,13 @@
 .. _repository:
 
-システムリポジトリ
+System Repository
 ==================================================
 
 .. contents:: 目录
   :depth: 3
   :local:
 
-アプリケーションを実装する際に様々な箇所で使用されるオブジェクトや、設定値などを管理する機能を提供する。
+应用を実装する際に様々な箇所で使用されるオブジェクトや、設定値などを管理する機能を提供する。
 
 この機能では、以下の事ができる。
 
@@ -32,7 +32,7 @@ DIコンテナ機能では、以下のことができる。
 * :ref:`アノテーションを付与したクラスのオブジェクトが構築できる。 <repository-inject-annotation-component>`
 * :ref:`環境依存値を管理できる。 <repository-environment_configuration>`
 
-アプリケーションからはDIコンテナに直接アクセスするのではなく、システムリポジトリ経由でアクセスする。
+应用からはDIコンテナに直接アクセスするのではなく、System Repository経由でアクセスする。
 詳細は、 :ref:`repository-use_system_repository` を参照。
 
 オブジェクトの初期化ができる
@@ -130,13 +130,13 @@ Java Beansオブジェクトは、component要素を用いて定義する。
   生成されるインスタンスはシングルトンとなる。このため、以下の点に注意すること。
 
   - インスタンスはシングルトンとなるため、取得の度に生成されるのではない（プロトタイプでない）。
-  - アプリケーションが終了するまでインスタンスは破棄されない。
+  - 应用が終了するまでインスタンスは破棄されない。
   
   この理解を誤ると、深刻な不具合を埋め込むこととなるので特に注意が必要である。
   例えば、生成されるインスタンスをプロトタイプと勘違いした場合、あるリクエストでユーザAの入力値をコンポーネントに設定し、
   別のユーザBのリクエストでその値を使用してしまう、というような重大な不具合を起こす可能性がある。
   
-  意図的にアプリケーション全体でコンポーネントの状態を変更、共有する場合は、そのコンポーネントはスレッドセーフでなければならない。
+  意図的に应用全体でコンポーネントの状態を変更、共有する場合は、そのコンポーネントはスレッドセーフでなければならない。
 
 
 .. tip::
@@ -549,7 +549,7 @@ DIコンテナで管理するオブジェクトに対して環境依存値を設
 環境依存値は、システムプロパティ( `java.lang.System#getProperties()` で取得できる値)で上書きできる。
 システムプロパティは、環境設定ファイルに設定した値より優先されるため、vmオプションで容易に設定値を上書きできる。
 
-例えば、特定のバッチアプリケーションだけ設定値を変えたいといった場合に、システムプロパティを使用して環境依存値を上書きするといったことができる。
+例えば、特定のバッチ应用だけ設定値を変えたいといった場合に、システムプロパティを使用して環境依存値を上書きするといったことができる。
 
 以下に例を示す。
 
@@ -626,9 +626,9 @@ OS環境変数の名前について
 ファクトリクラスで生成したオブジェクトをインジェクションする
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Java Beansとして実装されているクラスであれば、setterインジェクションを使用して値を設定しオブジェクトを生成できる。
-しかし、ベンダー提供やOSSなどのJava Beansとして実装されていないオブジェクトをシステムリポジトリで管理したい場合がある。
+しかし、ベンダー提供やOSSなどのJava Beansとして実装されていないオブジェクトをSystem Repositoryで管理したい場合がある。
 
-この場合は、ファクトリクラスを作成しファクトリクラス経由でオブジェクトを生成することで、これらのクラスをシステムリポジトリで管理できるようになる。
+この場合は、ファクトリクラスを作成しファクトリクラス経由でオブジェクトを生成することで、これらのクラスをSystem Repositoryで管理できるようになる。
 
 以下に手順を示す。
 
@@ -698,12 +698,12 @@ Java Beansとして実装されているクラスであれば、setterインジ�
 
 .. important::
 
-  本機能は、クラスパス配下のリソースを独自のファイルシステムで管理している一部のウェブアプリケーションサーバでは使用できない。
+  本機能は、クラスパス配下のリソースを独自のファイルシステムで管理している一部のウェブ应用サーバでは使用できない。
 
   例えば、JbossやWildflyでは、vfsと呼ばれるバーチャルファイルシステムで
   クラスパス配下のリソースが管理されるため、 ``SystemRepositoryComponent`` アノテーションで注釈されたクラスの検索ができない。
 
-  そのようなウェブアプリケーションサーバを使用する場合は、コンポーネントの定義は従来通り :ref:`XMLに定義 <repository-definition_bean>` すること。
+  そのようなウェブ应用サーバを使用する場合は、コンポーネントの定義は従来通り :ref:`XMLに定義 <repository-definition_bean>` すること。
 
 使用方法
 **********
@@ -818,13 +818,13 @@ ActionクラスをDIコンテナで管理する
 Nablarchで用意されたディスパッチハンドラ（ :ref:`ルーティングアダプタ <router_adaptor>` 、 :ref:`リクエストディスパッチハンドラ <request_path_java_package_mapping>` 、
 :ref:`HTTPリクエストディスパッチハンドラ <http_request_java_package_mapping>` ）では
 ディスパッチ先のクラスはディスパッチハンドラ内でインスタンス化される。
-そのため、ActionクラスをDIコンテナに登録する場合は、ディスパッチ先のクラスをシステムリポジトリから取得するよう :java:extdoc:`DelegateFactory <nablarch.fw.handler.DelegateFactory>` を
+そのため、ActionクラスをDIコンテナに登録する場合は、ディスパッチ先のクラスをSystem Repositoryから取得するよう :java:extdoc:`DelegateFactory <nablarch.fw.handler.DelegateFactory>` を
 差し替える必要がある。差し替えは以下のように :java:extdoc:`DispatchHandler#setDelegateFactory <nablarch.fw.handler.DispatchHandler.setDelegateFactory(nablarch.fw.handler.DelegateFactory)>` にて設定する。
 
   .. code-block:: xml
 
     <component name="packageMapping" class="nablarch.integration.router.RoutesMapping">
-      <!-- ディスパッチ先をシステムリポジトリから取得するDelegateFactory -->
+      <!-- ディスパッチ先をSystem Repositoryから取得するDelegateFactory -->
       <property name="delegateFactory">
           <component class="nablarch.fw.handler.SystemRepositoryDelegateFactory"/>
       </property>
@@ -977,13 +977,13 @@ Closeableオブジェクトを廃棄対象リストに設定する
 
 .. _repository-use_system_repository:
 
-DIコンテナの情報をシステムリポジトリに設定する
+DIコンテナの情報をSystem Repositoryに設定する
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-DIコンテナの情報をシステムリポジトリにロードすることで、アプリケーション内の全ての箇所からDIコンテナ上のオブジェクトにアクセスできる。
+DIコンテナの情報をSystem Repositoryにロードすることで、应用内の全ての箇所からDIコンテナ上のオブジェクトにアクセスできる。
 
-コンポーネント設定ファイルをロードし、システムリポジトリに設定する例を以下に示す。
+コンポーネント設定ファイルをロードし、System Repositoryに設定する例を以下に示す。
 
-この例では、 ``web-boot.xml`` を元に構築されたDIコンテナの情報がシステムリポジトリに設定される。
+この例では、 ``web-boot.xml`` を元に構築されたDIコンテナの情報がSystem Repositoryに設定される。
 
 .. code-block:: java
 
@@ -993,19 +993,19 @@ DIコンテナの情報をシステムリポジトリにロードすることで
 
 .. important::
 
-  DIコンテナの情報をシステムリポジトリへ登録する処理は、Nablarchが提供する以下のクラスで実施される。
+  DIコンテナの情報をSystem Repositoryへ登録する処理は、Nablarchが提供する以下のクラスで実施される。
   このため、個別に実装することは基本的にない。
 
   * ServletContextListenerの実装クラス
-  * 独立型アプリケーションの起動クラス
+  * 独立型应用の起動クラス
 
 .. _repository-get_object:
 
-システムリポジトリからオブジェクトを取得する
+System Repositoryからオブジェクトを取得する
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-システムリポジトリ上からオブジェクトを取得する場合には、 :java:extdoc:`SystemRepository <nablarch.core.repository.SystemRepository>` クラスを使用する。
+System Repository上からオブジェクトを取得する場合には、 :java:extdoc:`SystemRepository <nablarch.core.repository.SystemRepository>` クラスを使用する。
 
-なお、システムリポジトリには事前にDIコンテナの情報を設定しておく必要がある。
+なお、System Repositoryには事前にDIコンテナの情報を設定しておく必要がある。
 詳細は、 :ref:`repository-use_system_repository` を参照。
 
 以下のように、component要素(listやmap要素を含む)に設定したname属性の値を指定して、オブジェクトを取得できる。

@@ -7,18 +7,18 @@
   :depth: 3
   :local:
 
-スタンドアロンで起動するアプリケーションの起点となるハンドラ。
+スタンドアロンで起動する应用の起点となるハンドラ。
 
-javaコマンドから直接起動することで、システムリポジトリの初期化を行い、そこに定義されたhandler队列を実行させることができる。
+javaコマンドから直接起動することで、System Repositoryの初期化を行い、そこに定義されたhandler队列を実行させることができる。
 
 本ハンドラでは、以下の処理を行う。
 処理の詳細は、カッコ内のJavadocを参照。
 
 * コマンドライン引数のパース( :java:extdoc:`CommandLine<nablarch.fw.launcher.CommandLine>` )
 * 起動ログの出力( :java:extdoc:`LauncherLogFormatter#getStartLogFormat<nablarch.fw.launcher.logging.LauncherLogFormatter.getStartLogFormat()>` )
-* システムリポジトリの初期化
-* 実行コンテキストの初期化( :java:extdoc:`Main#setupExecutionContext <nablarch.fw.launcher.Main.setupExecutionContext(nablarch.fw.launcher.CommandLine,nablarch.fw.ExecutionContext)>` )
-* アプリケーション設定ログの出力( :java:extdoc:`ApplicationSettingLogFormatter<nablarch.core.log.app.ApplicationSettingLogFormatter>` )
+* System Repositoryの初期化
+* 运行上下文の初期化( :java:extdoc:`Main#setupExecutionContext <nablarch.fw.launcher.Main.setupExecutionContext(nablarch.fw.launcher.CommandLine,nablarch.fw.ExecutionContext)>` )
+* 应用設定ログの出力( :java:extdoc:`ApplicationSettingLogFormatter<nablarch.core.log.app.ApplicationSettingLogFormatter>` )
 * handler队列の実行
 * 例外及びエラーに応じたログの出力
 * 終了ログの出力( :java:extdoc:`LauncherLogFormatter#getEndLogFormat<nablarch.fw.launcher.logging.LauncherLogFormatter.getEndLogFormat()>` )
@@ -42,16 +42,16 @@ javaコマンドから直接起動することで、システムリポジトリ�
 
 .. _main-run_application:
 
-アプリケーションを起動する
+应用を起動する
 --------------------------------------------------
-javaコマンドで :java:extdoc:`Mainクラス<nablarch.fw.launcher.Main>` を指定してアプリケーションを起動する。
+javaコマンドで :java:extdoc:`Mainクラス<nablarch.fw.launcher.Main>` を指定して应用を起動する。
 
 フレームワークの動作に必要となる以下の3つのオプションは、必ず指定する必要がある。
 以下のオプションのうちいずれかが欠けていた場合は、即座に異常終了する。(終了コード = 127)
 
 \-diConfig
- システムリポジトリの設定ファイルのパスを指定する。
- このオプションで指定されたパスを使ってシステムリポジトリを初期化する。
+ System Repositoryの設定ファイルのパスを指定する。
+ このオプションで指定されたパスを使ってSystem Repositoryを初期化する。
 
 \-requestPath
  実行するアクションとリクエストIDを指定する。
@@ -81,7 +81,7 @@ javaコマンドで :java:extdoc:`Mainクラス<nablarch.fw.launcher.Main>` を�
 
 .. _main-option_parameter:
 
-アプリケーション起動に任意のオプションを設定する
+应用起動に任意のオプションを設定する
 --------------------------------------------------
 :java:extdoc:`Mainクラス<nablarch.fw.launcher.Main>` 起動時に、任意のオプションパラメータを指定することが出来る。
 
@@ -94,7 +94,7 @@ javaコマンドで :java:extdoc:`Mainクラス<nablarch.fw.launcher.Main>` を�
  java nablarch.fw.launcher.Main \
    -optionName optionValue
 
-アプリケーションでオプションを使用する場合は、 :java:extdoc:`ExecutionContext <nablarch.fw.ExecutionContext>` から取得する。
+应用でオプションを使用する場合は、 :java:extdoc:`ExecutionContext <nablarch.fw.ExecutionContext>` から取得する。
 
 .. code-block:: java
 
@@ -110,7 +110,7 @@ javaコマンドで :java:extdoc:`Mainクラス<nablarch.fw.launcher.Main>` を�
 
 .. tip::
 
-  アプリケーション起動時に必ず指定する必要があるオプションは、 :ref:`main-run_application` を参照
+  应用起動時に必ず指定する必要があるオプションは、 :ref:`main-run_application` を参照
 
 例外及びエラーに応じた処理内容
 --------------------------------------------------

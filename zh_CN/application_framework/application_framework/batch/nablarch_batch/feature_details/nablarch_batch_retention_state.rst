@@ -1,28 +1,28 @@
 .. _nablarch_batch_retention_state:
 
-バッチアプリケーションで実行中の状態を保持する
+在Batch应用的运行过程中保存状态
 ==================================================
-バッチアプリケーションの実行中の状態を保持したい場合がある。
-例えば、バッチアクションで行った登録件数や更新件数を保持したい場合などが該当する。
-このような場合は、バッチアクション内で状態を保持しすることで対応する。
+在Batch应用运行过程中会存在需要保存状态的情况。
+例如，Batch Action执行过程中需要保存登录条目数和更新条目数的情况。
+这种情况下，可通过在Batch Action内部保持状态来实现。
 
-以下に、登録件数を保持するアクションの実装例を示す。
+下面是一个保存了登录条目数的Action样例。
 
-マルチスレッドで実行されるバッチについては、アプリケーション側でスレッドセーフであることを保証する必要がある。
-この例では、 :java:extdoc:`AtomicInteger <java.util.concurrent.atomic.AtomicInteger>` を使用して保証している。
+对于以多线程方式执行的批处理，需要由应用侧确保其线程安全。
+在本例中，使用 :java:extdoc:`AtomicInteger <java.util.concurrent.atomic.AtomicInteger>` 以实现保证。
 
 .. code-block:: java
 
   public class BatchActionSample extends BatchAction<Object> {
       
-      /** 登録件数 */
+      /** 登录条目数 */
       private AtomicInteger insertedCount = new AtomicInteger(0);
 
       @Override
       public Result handle(final Object inputData, final ExecutionContext ctx) {
-          // 業務処理
+          // 业务处理
           
-          // 登録件数のインクリメント
+          // 增加登录条目数
           insertedCount.incrementAndGet();
           
           return new Result.Success();
@@ -31,13 +31,13 @@
 
 .. tip::
 
-  :java:extdoc:`ExecutionContext <nablarch.fw.ExecutionContext>` のスコープを使用して、上記実装例と同じことが実現できる。
-  ただし、 :java:extdoc:`ExecutionContext <nablarch.fw.ExecutionContext>` を使用した場合、
-  どのような値を保持しているかが分かりづらいデメリットがある。
-  このため、 :java:extdoc:`ExecutionContext <nablarch.fw.ExecutionContext>` を使用するのではなく、上記実装例のようにバッチアクション側で状態を保持することを推奨する。
+  使用 :java:extdoc:`ExecutionContext <nablarch.fw.ExecutionContext>` 的scope(作用域)同样能实现上面的效果。
+  但是使用 :java:extdoc:`ExecutionContext <nablarch.fw.ExecutionContext>` 时、
+  存在难以明确其保存了哪些值的缺点。
+  因此，建议不要使用 :java:extdoc:`ExecutionContext <nablarch.fw.ExecutionContext>` 而是像上述实现示例那样，在Batch Action保持状态。
 
-  なお、 :java:extdoc:`ExecutionContext <nablarch.fw.ExecutionContext>` を使用した場合、スコープの考え方は以下のようになる。
+  此外，使用 :java:extdoc:`ExecutionContext <nablarch.fw.ExecutionContext>` 的时候、其作用域可以参照下方理解：
 
-  :リクエストスコープ: スレッドごとに状態を保持する領域
-  :セッションスコープ: バッチ全体の状態を保持する領域
+  :请求作用域(request scope): 每个线程单独保存状态的区域
+  :会话作用域(session scope): 保存Batch整体状态的区域
 

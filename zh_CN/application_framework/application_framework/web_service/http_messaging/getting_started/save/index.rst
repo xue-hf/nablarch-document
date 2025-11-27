@@ -154,7 +154,7 @@
            * にて応答電文を設定する。
            * 
            * @param requestMessage   受信したメッセージ
-           * @param executionContext 実行コンテキスト
+           * @param executionContext 运行上下文
            * @return 応答電文
            */
           @Override

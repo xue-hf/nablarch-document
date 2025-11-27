@@ -13,7 +13,7 @@
 
    01_ClassUnitTest/index
 
-*ウェブアプリケーション*
+*ウェブ应用*
 
 
 .. toctree::
