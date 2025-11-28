@@ -1,17 +1,17 @@
 .. _web_front_controller:
 
-Webフロントコントローラ
+Web前端控制器
 ==================================================
 
 .. contents:: 目录
   :depth: 3
   :local:
 
-ウェブ应用におけるhandler队列の実行の起点となるクラス。
+Web应用中作为Handler队列执行起点的类。
 
-本クラスを使用することで、クライアントから受け取ったリクエストに対する処理をhandler队列に委譲できる。
+通过使用本类，可以将客户端接收到的请求处理委托给handler队列。
 
-モジュール一覧
+模块一览
 --------------------------------------------------
 .. code-block:: xml
 
@@ -20,19 +20,19 @@ Webフロントコントローラ
     <artifactId>nablarch-fw-web</artifactId>
   </dependency>
 
-handler队列を設定する
+配置handler队列
 --------------------------------------------------
-リクエストに対する処理をhandler队列に委譲するための手順を示す。
+说明将请求处理委托给handler队列的步骤。
 
-コンポーネント設定ファイルに設定する
-  :java:extdoc:`WebFrontController <nablarch.fw.web.servlet.WebFrontController>` をコンポーネント設定ファイルに設定し、
-  :java:extdoc:`handlerQueue <nablarch.fw.HandlerQueueManager.setHandlerQueue(java.util.Collection)>` プロパティに
-  应用で使用するハンドラを順番に追加していく。
+在组件配置文件中进行设置
+  将 :java:extdoc:`WebFrontController <nablarch.fw.web.servlet.WebFrontController>` 配置到组件配置文件中，
+  并在 :java:extdoc:`handlerQueue <nablarch.fw.HandlerQueueManager.setHandlerQueue(java.util.Collection)>` 属性中
+  按顺序添加应用中使用的handler。`
 
-  コンポーネント設定ファイルの設定例を以下に示す。
+  组件配置文件的设置示例如下。
 
-  ポイント
-   * コンポーネント名は **webFrontController** とすること。
+  要点
+   * 组件名称必须为 **webFrontController**。
 
   .. code-block:: xml
 
@@ -48,15 +48,15 @@ handler队列を設定する
       </property>
     </component>
 
-サーブレットフィルタを設定する
-  :java:extdoc:`RepositoryBasedWebFrontController <nablarch.fw.web.servlet.RepositoryBasedWebFrontController>`
-  をサーブレットフィルタとして `web.xml` に設定する。
-  このフィルタによって、クライアントから受け取ったリクエストに対する処理は、先ほどSystem Repositoryに登録したhandler队列へ委譲される。
+设置Servlet过滤器
+  将 :java:extdoc:`RepositoryBasedWebFrontController <nablarch.fw.web.servlet.RepositoryBasedWebFrontController>`
+  作为Servlet过滤器在 `web.xml` 中进行设置。
+  通过该过滤器，客户端接收到的请求处理将被委托给之前在System Repository中注册的handler队列。
 
-  `web.xml` への設定例を以下に示す。
+  在 `web.xml` 中的设置示例如下。
 
-  ポイント
-   * System Repositoryを初期化するため、 :ref:`nablarch_servlet_context_listener` をリスナーとして設定すること。
+  要点
+   * 为初始化System Repository，需将 :ref:`nablarch_servlet_context_listener` 设置为监听器。
 
   .. code-block:: xml
 
@@ -81,20 +81,20 @@ handler队列を設定する
 
 .. _change_web_front_controller_name:
 
-委譲するWebフロントコントローラの名前を変更する
+更改被委托的Web前端控制器名称
 --------------------------------------------------
 
-  ウェブ应用をベースとした应用において一部のリクエストをRESTfulウェブサービスとして処理したい場合など、
-  ウェブ应用とウェブサービスを併用したい場合が考えられる。
-  そのような場合は、ハンドラ構成の異なるWebフロントコントローラを複数個定義する必要がある。
-  :java:extdoc:`RepositoryBasedWebFrontController <nablarch.fw.web.servlet.RepositoryBasedWebFrontController>` はデフォルトでは
-  ``webFrontController`` という名前でSystem Repositoryが委譲するWebフロントコントローラを取得する。
-  `web.xml` に初期化パラメータを設定することで、System Repositoryから取得するWebフロントコントローラの名前を変更することができる。
+  在基于Web应用的系统中，有时需要将部分请求作为RESTful Web服务进行处理，
+  从而同时使用Web应用和Web服务。
+  在这种情况下，需要定义多个具有不同Handler结构的Web前端控制器。
+  :java:extdoc:`RepositoryBasedWebFrontController <nablarch.fw.web.servlet.RepositoryBasedWebFrontController>` 默认会
+  以 ``webFrontController`` 这个名称从System Repository获取被委托的Web前端控制器。
+  通过在 `web.xml` 中设置初始化参数，可以更改从System Repository获取的Web前端控制器的名称。
 
-  ウェブ应用用とRESTfulウェブサービス用2つのハンドラ構成を持つWebフロントコントローラの設定例を以下に示す。
+  以下为配置两个分别用于Web应用和RESTful Web服务、具有不同Handler结构的Web前端控制器的示例。
 
-  まず、コンポーネント定義で、ウェブ应用用のハンドラ構成をもったWebフロントコントローラを ``webFrontController`` という名前で定義し、
-  RESTfulウェブサービス用のハンドラ構成をもったWebフロントコントローラを ``webFrontController`` と異なるコンポーネント名で定義する。
+  首先，在组件定义中，将具有Web应用Handler结构的Web前端控制器定义为 ``webFrontController``，
+  而将具有RESTful Web服务Handler结构的Web前端控制器以不同于 ``webFrontController`` 的组件名称进行定义。
 
   .. code-block:: xml
 
@@ -102,7 +102,7 @@ handler队列を設定する
               class="nablarch.fw.web.servlet.WebFrontController">
       <property name="handlerQueue">
         <list>
-          <!-- ウェブ应用用のハンドラ構成 -->
+          <!-- Web应用用的Handler结构 -->
         </list>
       </property>
     </component>
@@ -111,16 +111,16 @@ handler队列を設定する
               class="nablarch.fw.web.servlet.WebFrontController">
       <property name="handlerQueue">
         <list>
-          <!-- RESTfulウェブサービス用のハンドラ構成 -->
+          <!-- RESTful Web服务用的Handler结构 -->
         </list>
       </property>
     </component>
 
-  次に `web.xml` に上記で設定したWebフロントコントローラを使用するためのサーブレットフィルタを設定する。
+  接着，在 `web.xml` 中设置Servlet过滤器，用于使用上述配置的Web前端控制器。
 
-  ポイント
-   * ``<init-param>`` を使い ``controllerName`` というパラメータにSystem Repositoryから取得する際のコントローラ名を設定する。
-   * ``<filter-mapping>`` でそれぞれのWebフロントコントローラが処理対象とするURLのパターンを設定する。
+  要点
+   * 使用 ``<init-param>``，通过参数名为 ``controllerName`` 的参数设置从System Repository获取的控制器名称。
+   * 在 ``<filter-mapping>`` 中设置每个Web前端控制器所处理的URL模式。
 
   .. code-block:: xml
 

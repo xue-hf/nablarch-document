@@ -1,28 +1,28 @@
 .. _message_reply_handler:
 
-電文応答制御ハンドラ
+电文应答控制handler
 ==================================================
 .. contents:: 目录
   :depth: 3
   :local:
 
-本ハンドラでは、後続ハンドラの処理結果である :java:extdoc:`ResponseMessage <nablarch.fw.messaging.ResponseMessage>` オブジェクトの内容をもとに、
-応答電文を作成し接続先システムに返却(送信)する。
+此handler基于后续handler的处理结果，即 :java:extdoc:`ResponseMessage <nablarch.fw.messaging.ResponseMessage>` 对象的内容，
+创建应答电文并返回(发送)给连接的目标系统。
 
-本ハンドラでは、以下の処理を行う。
+此handler执行以下处理。
 
-* 応答電文の送信処理を行う
+* 执行应答电文的发送处理
 
-処理の流れは以下のとおり。
+处理流程如下。
 
 .. image:: ../images/MessageReplyHandler/flow.png
   :scale: 75
   
-ハンドラクラス名
+handler类名
 --------------------------------------------------
 * :java:extdoc:`nablarch.fw.messaging.handler.MessageReplyHandler`
 
-モジュール一覧
+模块列表
 --------------------------------------------------
 .. code-block:: xml
 
@@ -31,36 +31,36 @@
     <artifactId>nablarch-fw-messaging</artifactId>
   </dependency>
 
-制約
+约束
 ------------------------------
-:ref:`messaging_context_handler` よりも後ろに設定すること
-  本ハンドラは、応答電文を送信(メッセージキューへのプット)する。
-  このため、MQへの接続を確立する :ref:`messaging_context_handler` より後ろに本ハンドラを設定する必要がある。
+请设置在 :ref:`messaging_context_handler` 之后
+  此handler发送应答电文(放入消息队列)。
+  因此，需要将此handler设置在建立MQ连接的 :ref:`messaging_context_handler` 之后。
 
-:ref:`transaction_management_handler` との位置関係について
-  :ref:`transaction_management_handler` との位置関係は、2相コミットを使用するか否かで変わる。
+与 :ref:`transaction_management_handler` 的位置关系
+  与 :ref:`transaction_management_handler` 的位置关系取决于是否使用两阶段提交。
 
-  2相コミットを使用する場合
-    データベースのトランザクションとメッセージキュー(Jakarta Messaging)のトランザクションを、トランザクションマネージャで纏めてコミットする。
-    このため、トランザクション制御前に応答電文を送信する必要があり、 :ref:`transaction_management_handler` より後ろに本ハンドラを設定する必要がある。
+  使用两阶段提交时
+    通过事务管理器将数据库事务和消息队列(Jakarta Messaging)事务一起提交。
+    因此，需要在事务控制前发送应答电文，必须将此handler设置在 :ref:`transaction_management_handler` 之后。
 
-  2相コミットを使用しない場合
-    本ハンドラが応答を送信する前に業務処理の結果を確定させる必要がある。
-    このため、 :ref:`transaction_management_handler` は、本ハンドラより後ろに設定する必要がある。
+  不使用两阶段提交时
+  此handler在发送应答前需要确定业务处理的结果。
+  因此，需要将 :ref:`transaction_management_handler` 设置在此handler之后。
 
-フレームワーク制御ヘッダの設定
+框架控制头的设置
 --------------------------------------------------
-応答電文内のフレームワーク制御ヘッダの定義を変更する場合には、プロジェクトで拡張したフレームワーク制御ヘッダの定義を設定する必要がある。
-設定しない場合は、デフォルトの :java:extdoc:`StandardFwHeaderDefinition <nablarch.fw.messaging.StandardFwHeaderDefinition>` が使用される。
+如需更改应答电文内的框架控制头定义，需要设置项目中扩展的框架控制头定义。
+未设置时，将使用默认的 :java:extdoc:`StandardFwHeaderDefinition <nablarch.fw.messaging.StandardFwHeaderDefinition>`。
 
-フレームワーク制御ヘッダの詳細は、 :ref:`フレームワーク制御ヘッダ <mom_system_messaging-fw_header>` を参照。
+关于框架控制头的详细信息，请参考 :ref:`框架控制头 <mom_system_messaging-fw_header>`。
 
-以下に設定例を示す。
+以下为配置示例。
 
 .. code-block:: xml
 
   <component class="nablarch.fw.messaging.handler.MessageReplyHandler">
-    <!-- フレームワーク制御ヘッダの設定 -->
+    <!-- 框架控制头的设置 -->
     <property name="fwHeaderDefinition">
       <component class="sample.SampleFwHeaderDefinition" />
     </property>

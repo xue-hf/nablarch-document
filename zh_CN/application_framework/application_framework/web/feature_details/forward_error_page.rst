@@ -1,22 +1,21 @@
-エラー時の遷移先の指定方法
+错误时的跳转目标设置方法  
 ==================================================
 
 .. _forward_error_page-handler:
 
-ハンドラで共通の振る舞いを定義する
---------------------------------------------------
-エラー発生時の遷移先は、基本的にアクションのメソッドに対して :ref:`on_error_interceptor` や :ref:`on_errors_interceptor` を設定して指定する。
+在handler中定义通用处理行为  
+--------------------------------------------------  
+通常，错误发生时的跳转目标是通过在各个Action方法上设置 :ref:`on_error_interceptor` 或 :ref:`on_errors_interceptor` 注解来指定的。
 
-しかし、システム全体で遷移先の画面を統一したい場合に、個別のアクションメソッドに対してアノテーションを指定するやり方では、
-漏れが発生したり遷移先のページの指定ミスが発生する可能性がある。
-また、誤りを検知するには全機能に対して遷移先が正しいことを確認する必要があり、非常にコストが高くなる(またこれは現実的ではない)。
+然而，当希望在整个系统中统一错误跳转页面时，如果仅依靠为每个Action方法单独添加注解的方式，可能会导致遗漏或跳转页面配置错误。  
+此外，要验证是否所有功能都正确配置了跳转目标，需要逐一检查，这将带来极高的维护成本（且在实践中难以实现）。
 
-このため、システムで共通のエラーページに遷移させる場合には、個別のアクションに対して遷移先を指定するのではなく、
-エラー時の遷移先を制御するハンドラを追加して対応すると良い。
+因此，在需要系统级统一跳转至通用错误页面的情况下，建议不要在各个Action中单独指定跳转目标，  
+而是通过添加一个专门处理错误跳转的handler来统一管理。
 
-以下に例を示す。
-
-この例では、 :java:extdoc:`NoDataException <nablarch.common.dao.NoDataException>` と :java:extdoc:`jakarta.persistence.OptimisticLockException` が発生した場合に、専用のエラー画面へ遷移させている。
+以下为示例：  
+本例中，当抛出 :java:extdoc:`NoDataException <nablarch.common.dao.NoDataException>` 或 :java:extdoc:`jakarta.persistence.OptimisticLockException` 时，  
+将跳转至专用的错误页面。
 
 .. code-block:: java
 
@@ -27,13 +26,13 @@
       try{
         return context.handleNext(data);
       } catch (NoDataException e){
-        // ユニバーサルDAOで対象データなしエラーが発生した場合は、
-        // not foundを表すページに遷移する。
+        // 当使用Universal DAO时若未找到目标数据，
+        // 则跳转至表示“未找到”的错误页面。
         throw  new HttpErrorResponse(
             404, "/WEB-INF/view/common/errorPages/pageNotFoundError.jsp", e);
       } catch (OptimisticLockException e){
-        // 楽観ロックエラーが発生した場合は、他のユーザに更新されたため処理が
-        // 完了できなかったことを通知する画面に遷移する。
+        // 当发生乐观锁异常时，
+        // 跳转至通知用户“数据已被其他用户修改，无法完成操作”的页面。
         throw  new HttpErrorResponse(
             400, "/WEB-INF/view/common/errorPages/optimisticLockError.jsp", e);
       }
@@ -42,15 +41,15 @@
 
 .. _forward_error_page-try_catch:
 
-1つの例外クラスに対して複数の遷移先がある場合の実装方法
+为一个异常定义多个跳转目标
 ---------------------------------------------------------
-業務例外( :java:extdoc:`ApplicationException <nablarch.core.message.ApplicationException>` )が発生した箇所によって、エラー時の遷移先画面を切り替えたい場合がる。
-しかし、 :ref:`on_error_interceptor` では、例外クラスに対して1つの遷移先しか指定できないため、
-:java:extdoc:`ApplicationException <nablarch.core.message.ApplicationException>` に対して複数の遷移先の画面を指定できない。
+有时需要根据 :java:extdoc:`ApplicationException <nablarch.core.message.ApplicationException>` （业务异常）抛出的具体位置，动态决定错误时的跳转页面。
+但由于 :ref:`on_error_interceptor` 机制仅支持为每个异常类配置单一跳转目标，
+因此无法直接为 :java:extdoc:`ApplicationException <nablarch.core.message.ApplicationException>` 配置多个不同跳转路径。
 
-このような場合は、アクションのメソッド内で ``try-catch`` を用いて、例外を捕捉しエラー時の遷移先画面を設定する必要がある。
+在这种情况下，应通过在Action方法中使用 ``try-catch`` 块捕获异常，并手动设置不同的跳转目标。
 
-以下に例を示す。
+以下为示例：
 
 .. code-block:: java
 
@@ -63,8 +62,8 @@
       try {
         service.save(entity);
       } catch (ApplicationException e) {
-        // saveで発生したApplicationExceptionは、
-        // 他の箇所で発生した時とは異なる画面に遷移させる
+        // 若在save操作中抛出ApplicationException，
+        // 则跳转至与其他情况不同的页面。
         throw new HttpErrorResponse("forward://index", e);
       }
 

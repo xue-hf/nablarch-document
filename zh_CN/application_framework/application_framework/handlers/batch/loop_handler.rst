@@ -1,28 +1,28 @@
 .. _loop_handler:
 
-トランザクションループ制御ハンドラ
+事务循环控制handler
 ==================================================
 .. contents:: 目录
   :depth: 3
   :local:
 
-本ハンドラは、データリーダ上に処理対象のデータが存在する間、後続ハンドラの処理を繰り返し実行する。実行中はトランザクションを制御し、一定の繰り返し回数ごとにトランザクションをコミットする。
-トランザクションのコミット間隔を大きくすることで、バッチ処理のスループットを向上させることができる。
+本handler在数据读取器上存在处理对象数据期间，重复执行后续handler的处理。执行时控制事务，每隔一定的重复次数commit事务。
+通过增大事务的commit间隔，可以提高Batch的吞吐量。
 
-* トランザクションの開始
-* トランザクションの終了(コミットやロールバック)
-* トランザクションの終了時のコールバック
+* 事务的开始
+* 事务的结束(commit或回滚)
+* 事务结束时的回调
 
-処理の流れは以下のとおり。
+处理流程如下。
 
 .. image:: ../images/LoopHandler/flow.png
   :scale: 80
 
-ハンドラクラス名
+handler类名
 --------------------------------------------------
 * :java:extdoc:`nablarch.fw.handler.LoopHandler`
 
-モジュール一覧
+模块列表
 --------------------------------------------------
 
 .. code-block:: xml
@@ -37,93 +37,93 @@
     <artifactId>nablarch-core-transaction</artifactId>
   </dependency>
 
-  <!-- データベースに対するトランザクションを制御する場合のみ -->
+  <!-- 仅在控制对数据库的事务时 -->
   <dependency>
     <groupId>com.nablarch.framework</groupId>
     <artifactId>nablarch-core-jdbc</artifactId>
   </dependency>
 
-制約
+约束
 ------------------------------
-:ref:`database_connection_management_handler` より後ろに設定すること
-  データベースに対するトランザクションを制御する場合には、トランザクション管理対象のデータベース接続がスレッド上に存在している必要がある。
+必须在 :ref:`database_connection_management_handler` 之后设置
+  在控制对数据库的事务时，需要在线程上存在事务管理对象的数据库连接。
 
-トランザクション制御対象を設定する
+设置事务控制对象
 --------------------------------------------------
-このハンドラは、 :java:extdoc:`transactionFactory <nablarch.fw.handler.LoopHandler.setTransactionFactory(nablarch.core.transaction.TransactionFactory)>`
-プロパティに設定されたファクトリクラス( :java:extdoc:`TransactionFactory <nablarch.core.transaction.TransactionFactory>` の実装クラス)を使用してトランザクションの制御対象を取得しスレッド上で管理する。
+此handler使用通过 :java:extdoc:`transactionFactory <nablarch.fw.handler.LoopHandler.setTransactionFactory(nablarch.core.transaction.TransactionFactory)>`
+属性中设置的工厂类(:java:extdoc:`TransactionFactory <nablarch.core.transaction.TransactionFactory>` 的实现类)获取事务控制对象并在线程上管理。
 
-スレッド上で管理する際には、トランザクションを識別するための名前を設定する。
-デフォルトでは、 ``transaction`` が使用されるが、任意の名前を使用する場合は、 :java:extdoc:`transactionName <nablarch.fw.handler.LoopHandler.setTransactionName(java.lang.String)>` プロパティに設定すること。
+在线程上管理时，设置用于识别事务的名称。
+默认使用 ``transaction``，但使用任意名称时，需要在 :java:extdoc:`transactionName <nablarch.fw.handler.LoopHandler.setTransactionName(java.lang.String)>` 属性中设置。
 
 .. tip::
 
-  :ref:`database_connection_management_handler` で設定したデータベースに対してトランザクションを制御する場合は、
-  :java:extdoc:`DbConnectionManagementHandler#connectionName <nablarch.common.handler.DbConnectionManagementHandler.setConnectionName(java.lang.String)>` に設定した値と同じ値を
-  :java:extdoc:`transactionName <nablarch.fw.handler.LoopHandler.setTransactionName(java.lang.String)>` プロパティに設定すること。
+  在对 :ref:`database_connection_management_handler` 设置的数据库进行事务控制时，
+  需要在 :java:extdoc:`transactionName <nablarch.fw.handler.LoopHandler.setTransactionName(java.lang.String)>` 属性中设置与
+  :java:extdoc:`DbConnectionManagementHandler#connectionName <nablarch.common.handler.DbConnectionManagementHandler.setConnectionName(java.lang.String)>` 设置的值相同的值。
 
-  なお、 :java:extdoc:`DbConnectionManagementHandler#connectionName <nablarch.common.handler.DbConnectionManagementHandler.setConnectionName(java.lang.String)>` に値を設定していない場合は、
-  :java:extdoc:`transactionName <nablarch.fw.handler.LoopHandler.setTransactionName(java.lang.String)>` への設定は省略して良い。
+  另外，如果未在 :java:extdoc:`DbConnectionManagementHandler#connectionName <nablarch.common.handler.DbConnectionManagementHandler.setConnectionName(java.lang.String)>` 中设置值，
+  则可以省略对 :java:extdoc:`transactionName <nablarch.fw.handler.LoopHandler.setTransactionName(java.lang.String)>` 的设置。
 
-以下の設定ファイル例を参考にし、このハンドラを設定すること。
+参考以下配置文件示例，设置此handler。
 
 .. code-block:: xml
 
-  <!-- トランザクション制御ハンドラ -->
+  <!-- 事务控制handler -->
   <component class="nablarch.fw.handler.LoopHandler">
     <property name="transactionFactory" ref="databaseTransactionFactory" />
     <property name="transactionName" value="name" />
   </component>
 
-  <!-- データベースに対するトランザクション制御を行う場合には、JdbcTransactionFactoryを設定する -->
+  <!-- 在控制对数据库的事务时，设置JdbcTransactionFactory -->
   <component name="databaseTransactionFactory"
       class="nablarch.core.db.transaction.JdbcTransactionFactory">
-    <!-- プロパティの設定は省略 -->
+    <!-- 其他属性设置省略 -->
   </component>
 
 .. _loop_handler-commit_interval:
 
-コミット間隔を指定する
+指定commit间隔
 --------------------------------------------------
-バッチ処理のコミット間隔は、 :java:extdoc:`commitInterval <nablarch.fw.handler.LoopHandler.setCommitInterval(int)>` プロパティに設定する。
-概要で述べたように、コミット間隔を調整することで、バッチ処理のスループットを向上させることができる。
+Batch的commit间隔在 :java:extdoc:`commitInterval <nablarch.fw.handler.LoopHandler.setCommitInterval(int)>` 属性中设置。
+如概述所述，通过调整commit间隔，可以提高Batch的吞吐量。
 
-以下に設定例を示す。
+以下为设置示例。
 
 .. code-block:: xml
 
   <component class="nablarch.fw.handler.LoopHandler">
-    <!-- コミット間隔に1000を指定 -->
+    <!-- 将commit间隔设定为1000 -->
     <property name="commitInterval" value="1000" />
   </component>
 
 .. _loop_handler-callback:
 
-トランザクション終了時に任意の処理を実行したい
+事务结束时执行任意处理
 --------------------------------------------------
-このハンドラでは、後続のハンドラの処理実行後にコールバック処理を行う。
+此handler在后续handler的处理执行后进行回调处理。
 
-コールバックされる処理は、このハンドラより後続に設定されたハンドラの中で、 :java:extdoc:`TransactionEventCallback <nablarch.fw.TransactionEventCallback>` を実装しているものとなる。
-もし、複数のハンドラが  :java:extdoc:`TransactionEventCallback <nablarch.fw.TransactionEventCallback>` を実装している場合は、より手前に設定されているハンドラから順次コールバック処理を実行する。
+被回调的处理是在此handler后续设置的handler中，实现 :java:extdoc:`TransactionEventCallback <nablarch.fw.TransactionEventCallback>` 的handler。
+如果有多个handler实现 :java:extdoc:`TransactionEventCallback <nablarch.fw.TransactionEventCallback>`，则从设置在前面的handler开始依次执行回调处理。
 
-後続ハンドラが正常に処理を終えた場合のコールバック処理は、後続ハンドラと同一のトランザクションで実行される。
-コールバック処理で行った処理は、次回のコミットタイミングで一括コミットされる。
+后续handler正常结束处理时的回调处理，在与后续handler的主处理相同的事务中执行。
+在回调处理中进行的处理，将在下次commit时机一并commit。
 
-後続のハンドラで例外及びエラーが発生し、トランザクションをロールバックする場合には、ロールバック後にコールバック処理を実行する。
-このため、コールバック処理は新しいトランザクションで実行され、コールバックが正常に終了するとコミットされる。
+在后续handler中发生异常及错误，回滚事务时，在回滚后执行回调处理。
+因此，回调处理会在新的事务中执行，回调正常结束时也能commit。
 
 .. important::
 
-  複数のハンドラがコールバック処理を実装していた場合で、コールバック処理中にエラーや例外が発生した場合は、
-  残りのハンドラに対するコールバック処理は実行しないため注意すること。
+  请注意：在多个handler实现回调处理的情况下，如果在回调处理中发生错误或异常，
+  则不对剩余的handler执行回调处理。
 
-以下に例を示す。
+以下为示例。
 
-コールバック処理を行うハンドラの作成
-  以下実装例のように、  :java:extdoc:`TransactionEventCallback <nablarch.fw.TransactionEventCallback>` を実装したハンドラを作成する。
+创建执行回调处理的handler
+  如以下实现示例，创建实现 :java:extdoc:`TransactionEventCallback <nablarch.fw.TransactionEventCallback>` 的handler。
 
-  :java:extdoc:`transactionNormalEnd <nablarch.fw.TransactionEventCallback.transactionNormalEnd(TData,nablarch.fw.ExecutionContext)>` にトランザクションコミット時のコールバック処理を実装し、
-  :java:extdoc:`transactionAbnormalEnd <nablarch.fw.TransactionEventCallback.transactionAbnormalEnd(java.lang.Throwable,TData,nablarch.fw.ExecutionContext)>` にトランザクションロールバック時のコールバック処理を実装する。
+  在 :java:extdoc:`transactionNormalEnd <nablarch.fw.TransactionEventCallback.transactionNormalEnd(TData,nablarch.fw.ExecutionContext)>` 中实现事务commit时的回调处理，
+  在 :java:extdoc:`transactionAbnormalEnd <nablarch.fw.TransactionEventCallback.transactionAbnormalEnd(java.lang.Throwable,TData,nablarch.fw.ExecutionContext)>` 中实现事务回滚时的回调处理。
 
   .. code-block:: java
 
@@ -132,32 +132,32 @@
 
       @Override
       public Object handle(Object o, ExecutionContext context) {
-        // ハンドラの処理を実装する
+        // 实现handler的处理
         return context.handleNext(o);
       }
 
       @Override
       public void transactionNormalEnd(Object o, ExecutionContext ctx) {
-        // 後続ハンドラが正常終了した場合のコールバック処理を実装する
+        // 实现后续handler正常结束时的回调处理
       }
 
       @Override
       public void transactionAbnormalEnd(Throwable e, Object o, ExecutionContext ctx) {
-        // トランザクションロールバック時のコールバック処理を実装する
+        // 实现事务回滚时的回调处理
       }
     }
 
-handler队列を構築する
-  以下のように、このハンドラの後続ハンドラにコールバック処理を実装したハンドラを設定する。
+构建handler队列
+  如下所示，在此handler的后续handler中设置实现回调处理的handler。
 
   .. code-block:: xml
 
     <list name="handlerQueue">
-      <!-- トランザクション制御ハンドラ -->
+      <!-- 事务控制handler -->
       <component class="nablarch.fw.handler.LoopHandler">
-        <!-- プロパティへの設定は省略 -->
+        <!-- 属性设置省略 -->
       </component>
 
-      <!-- コールバック処理を実装したハンドラ -->
+      <!-- 实现回调处理的handler -->
       <component class="sample.SampleHandler" />
     </list>

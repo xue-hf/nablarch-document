@@ -1,39 +1,38 @@
 .. _thread_context_handler:
 
-スレッドコンテキスト変数管理ハンドラ
+线程上下文变量管理handler
 =======================================
 
 .. contents:: 目录
   :depth: 3
   :local:
 
-スレッドコンテキストの各属性値について、リクエスト毎に初期化処理を行うハンドラ。
+用于对线程上下文的各属性值进行以请求为单位的初始化处理的handler。
 
-スレッドコンテキストとは、リクエストIDやユーザIDなど、
-同一の処理スレッド内で共有する値をスレッドローカル領域上に保持するための仕組みである。
+线程上下文是一种将请求ID、用户ID等同一处理线程内共享的值保持在线程本地存储(Thread Local Storage)的机制。
 
 .. important::
-  本ハンドラで設定したスレッドローカル上の値は、 :ref:`thread_context_clear_handler` を使用して、復路処理で削除すること。
-  往路処理にて本ハンドラより手前のハンドラでスレッドコンテキストにアクセスした場合、
-  値を取得できないため本ハンドラより手前ではスレッドコンテキストにアクセスしないよう注意すること。
+  通过此handler设置的线程本地上的值，需要使用 :ref:`thread_context_clear_handler` 在后处理中删除。
+  本handler的前处理中无法获得前面的handler从线程上下文中获取的值，
+  因此请注意不要在本handler之前访问线程上下文。
 
 .. tip::
- スレッドコンテキストの属性値の多くは、本ハンドラによって設定されるが、
- 本ハンドラ以外のハンドラや業務アクションから任意の変数を設定可能である。
+ 线程上下文的属性值大多通过此handler设置，
+ 但也可以从此handler以外的handler或业务动作中设置任意变量。
 
-本ハンドラでは、以下の処理を行う。
+本handler执行以下处理。
 
 * :ref:`thread_context_handler-initialization`
 
-処理の流れは以下のとおり。
+处理流程如下。
 
 .. image:: ../images/ThreadContextHandler/ThreadContextHandler_flow.png
 
-ハンドラクラス名
+handler类名
 --------------------------------------------------
 * :java:extdoc:`nablarch.common.handler.threadcontext.ThreadContextHandler`
 
-モジュール一覧
+模块列表
 --------------------------------------------------
 .. code-block:: xml
 
@@ -42,15 +41,15 @@
     <artifactId>nablarch-fw</artifactId>
   </dependency>
 
-  <!-- 国際化対応により、言語やタイムゾーンを選択できる画面を作る場合のみ  -->
+  <!-- 仅在创建可通过国际化支持选择语言和时区的画面时  -->
   <dependency>
     <groupId>com.nablarch.framework</groupId>
     <artifactId>nablarch-fw-web</artifactId>
   </dependency>
 
-制約
+约束
 ---------------------------------------
-なし。
+无。
 
 .. _thread_context_handler-initialization:
 

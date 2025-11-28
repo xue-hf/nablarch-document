@@ -1,3 +1,6 @@
+暂时跳过Web服务的Get started部分  
+晚些时间交给AI翻译
+
 # nablarch-document
 OSS版Nablarchドキュメントです。
 

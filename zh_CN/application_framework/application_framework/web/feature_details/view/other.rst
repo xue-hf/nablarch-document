@@ -1,16 +1,16 @@
 .. _view_other:
 
-その他のテンプレートエンジンを使用した画面開発
+使用其他模板引擎进行页面开发
 ==================================================
-:ref:`web_thymeleaf_adaptor` 以外のテンプレートエンジンを使用したい場合の対応方法を説明する。
+说明使用 :ref:`web_thymeleaf_adaptor` 以外的模板引擎的应对方法。
 
-使用するテンプレートエンジンが、Servlet forwardを使用してクライアントにレスポンスを返すためのServletを提供している場合には、
-``web.xml`` にServletを登録するだけで対応できる。
+如果使用的模板引擎提供了通过 Servlet forward 向客户端返回响应的 Servlet，
+则只需在 ``web.xml`` 中注册该Servlet即可。
 
-Servletを提供していないテンプレートエンジンの場合には、
-:ref:`web_thymeleaf_adaptor` と同じように :java:extdoc:`CustomResponseWriter <nablarch.fw.web.handler.responsewriter.CustomResponseWriter>` の実装クラスを作成することで対応できる。
+对于不提供Servlet的模板引擎，
+可以像 :ref:`web_thymeleaf_adaptor` 一样，实现 :java:extdoc:`CustomResponseWriter <nablarch.fw.web.handler.responsewriter.CustomResponseWriter>` 接口来完成适配。
 
-実装方法や設定方法などの詳細は、以下の解説書やソースコードを参照すること。
+有关具体实现方法和配置方法的详细信息，请参考以下文档和源码：
 
-* :ref:`web_thymeleaf_adaptor` 
-* `ウェブ应用 Thymeleafアダプタのソースコード <https://github.com/nablarch/nablarch-web-thymeleaf-adaptor>`_
+* :ref:`web_thymeleaf_adaptor`
+* `Web应用 Thymeleaf适配器的源码 <https://github.com/nablarch/nablarch-web-thymeleaf-adaptor>`_

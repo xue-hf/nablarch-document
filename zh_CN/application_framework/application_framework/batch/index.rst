@@ -24,7 +24,7 @@ Nablarch的Batch应用框架提供了一下两种批处理应用的框架。
 
 .. tip::
 
-  :ref:`jsr352_batch` と :ref:`nablarch_batch` 提供的功能上的区别可以参考 :ref:`batch-functional_comparison` 。
+  :ref:`jsr352_batch` 和 :ref:`nablarch_batch` 提供的功能上的区别可以参考 :ref:`batch-functional_comparison` 。
 
 
 .. toctree::

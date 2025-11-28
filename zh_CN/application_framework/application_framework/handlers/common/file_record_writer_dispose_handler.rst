@@ -1,45 +1,45 @@
 .. _file_record_writer_dispose_handler:
 
-出力ファイル開放ハンドラ
+输出文件释放handler
 ========================================
 
 .. contents:: 目录
   :depth: 3
   :local:
 
-業務アクションやハンドラで開いた出力ファイルを閉じる(リソースの解放)ハンドラ。
+用于关闭(释放资源)在业务操作或handler中打开的输出文件的handler。
 
 .. important::
 
-  このハンドラで解放対象となるのは、 :java:extdoc:`FileRecordWriterHolder <nablarch.common.io.FileRecordWriterHolder>` を使用して開いた出力ファイルとなる。
-  それ以外のAPI(例えば、 `java.io` パッケージ)を使って開いたリソースについては、個別にクローズ処理を行うこと。
+  此handler的释放对象是使用 :java:extdoc:`FileRecordWriterHolder <nablarch.common.io.FileRecordWriterHolder>` 打开的输出文件。
+  对于使用其他API(例如，`java.io`包)打开的资源，需要单独进行关闭处理。
 
-処理の流れは以下のとおり。
+处理流程如下。
 
 .. image:: ../images/FileRecordWriterDisposeHandler/flow.png
 
-ハンドラクラス名
+handler类名
 --------------------------------------------------
 * :java:extdoc:`nablarch.common.io.FileRecordWriterDisposeHandler`
 
-モジュール一覧
+模块列表
 --------------------------------------------------
 .. code-block:: xml
 
-  <!-- 汎用データフォーマット -->
+  <!-- 通用数据模板 -->
   <dependency>
     <groupId>com.nablarch.framework</groupId>
     <artifactId>nablarch-core-dataformat</artifactId>
   </dependency>
 
-制約
+约束
 ------------------------------
-なし。
+无。
 
-handler队列への設定について
+关于在handler队列中的设置
 --------------------------------------------------
-このハンドラは、handler队列上に設定するだけで、後続のハンドラや業務アクションで開いた出力ファイルを自動的にクローズする。
-このため、ファイルを出力する全てのハンドラより手前に設定する必要がある。
+只需将此handler设置在handler队列上，即可自动关闭在后续handler或业务操作中打开的输出文件。
+因此，必须将此handler设置在所有输出文件的handler之前。
 
 
 

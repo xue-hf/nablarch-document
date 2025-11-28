@@ -1,23 +1,23 @@
 .. _global_error_handler:
 
-グローバルエラーハンドラ
+全局错误handler
 ========================================
 .. contents:: 目录
   :depth: 3
   :local:
 
-後続ハンドラで発生した未捕捉の例外及びエラーを捕捉し、ログ出力及び結果を返すハンドラ。
+用于捕获后续handler中发生的未捕获异常和错误，并输出日志和返回结果的handler。
 
-処理の流れは以下のとおり。
+处理流程如下。
 
 
 .. image:: ../images/GlobalErrorHandler/flow.png
 
-ハンドラクラス名
+handler类名
 --------------------------------------------------
 * :java:extdoc:`nablarch.fw.handler.GlobalErrorHandler`
 
-モジュール一覧
+模块列表
 --------------------------------------------------
 .. code-block:: xml
 
@@ -26,116 +26,116 @@
     <artifactId>nablarch-fw</artifactId>
   </dependency>
 
-制約
+约束
 --------------------------------------------------
 
-できるだけhandler队列の先頭に配置すること
-  このハンドラは未捕捉例外を処理するため、特に理由がない限り、できるだけhandler队列の先頭に配置すること。
+尽可能配置在handler队列的开头
+  此handler用于处理未捕获异常，因此除非有特殊理由，否则应尽可能配置在handler队列的开头。
   
-  もし、このハンドラより手前のハンドラで例外が発生した場合は、ウェブ应用サーバやJVMにより例外処理が行われる。
+  如果在此handler之前的handler中发生异常，则由Web应用服务器或JVM进行异常处理。
 
-  例外を捕捉した際にスレッドコンテキストの情報をログに出力したい場合は、 :ref:`thread_context_clear_handler` より後に配置すること。
+  如果希望在捕获异常时将线程上下文信息输出到日志中，请将其配置在 :ref:`thread_context_clear_handler` 之后。
 
-例外及びエラーに応じた処理内容
+根据异常和错误的处理内容
 --------------------------------------------------
-このハンドラでは捕捉した例外及びエラーの内容に応じて、以下の処理を行い結果を生成する。
+此handler根据捕获的异常和错误内容，执行以下处理并生成结果。
 
-例外に応じた処理内容
+根据异常的处理内容
   .. list-table::
     :header-rows: 1
     :class: white-space-normal
     :widths: 25 75
 
-    * - 例外クラス
-      - 処理内容
+    * - 异常类
+      - 处理内容
 
     * - :java:extdoc:`ServiceError <nablarch.fw.results.ServiceError>` 
       
-        (サブクラス含む)
+        (包括子类)
 
-      - :java:extdoc:`ServiceError#writeLog <nablarch.fw.results.ServiceError.writeLog(nablarch.fw.ExecutionContext)>` を呼び出し、ログを出力する。
+      - 调用 :java:extdoc:`ServiceError#writeLog <nablarch.fw.results.ServiceError.writeLog(nablarch.fw.ExecutionContext)>` 并输出日志。
 
-        ログレベルは、 :java:extdoc:`ServiceError <nablarch.fw.results.ServiceError>` の実装クラスにより異なる。
+        日志级别根据 :java:extdoc:`ServiceError <nablarch.fw.results.ServiceError>` 的实现类而有所不同。
 
-        ログ出力後、ハンドラの処理結果として、 :java:extdoc:`ServiceError <nablarch.fw.results.ServiceError>` を返却する。
+        日志输出后，将 :java:extdoc:`ServiceError <nablarch.fw.results.ServiceError>` 作为handler的处理结果返回。
 
     * - :java:extdoc:`Result.Error <nablarch.fw.Result.Error>`
 
-        (サブクラス含む)
+        (包括子类)
 
-      - FATALレベルのログを出力する。
+      - 输出FATAL级别的日志。
 
-        ログ出力後、ハンドラの処理結果として、 :java:extdoc:`Result.Error <nablarch.fw.Result.Error>` を返却する。
+        日志输出后，将 :java:extdoc:`Result.Error <nablarch.fw.Result.Error>` 作为handler的处理结果返回。
 
-    * - 上記以外の例外クラス
+    * - 上述以外的异常类
 
-      - FATALレベルのログを出力する。
+      - 输出FATAL级别的日志。
         
-        ログ出力後、捕捉した例外を原因に持つ :java:extdoc:`InternalError <nablarch.fw.results.InternalError>` を生成し、ハンドラの処理結果として返却する。
+        日志输出后，生成以捕获的异常为原因的 :java:extdoc:`InternalError <nablarch.fw.results.InternalError>`，并将其作为handler的处理结果返回。
 
-エラーに応じた処理内容
+根据错误的处理内容
   .. list-table::
     :header-rows: 1
     :class: white-space-normal
     :widths: 25 75
 
-    * - エラークラス
-      - 処理内容
+    * - 错误类
+      - 处理内容
 
     * - :java:extdoc:`ThreadDeath <java.lang.ThreadDeath>`
 
-        (サブクラス含む)
+        (包括子类)
 
-      - INFOレベルのログ出力を行う。
+      - 输出INFO级别的日志。
 
-        ログ出力後、捕捉したエラーをリスローする。
+        日志输出后，重新抛出捕获的错误。
 
     * - :java:extdoc:`StackOverflowError <java.lang.StackOverflowError>`
 
-        (サブクラス含む)
+        (包括子类)
 
-      - FATALレベルのログ出力を行う。
+      - 输出FATAL级别的日志。
         
-        ログ出力後、捕捉したエラーを原因に持つ :java:extdoc:`InternalError <nablarch.fw.results.InternalError>` を生成し、ハンドラの処理結果として返却する。
+        日志输出后，生成以捕获的错误为原因的 :java:extdoc:`InternalError <nablarch.fw.results.InternalError>`，并将其作为handler的处理结果返回。
 
     * - :java:extdoc:`OutOfMemoryError <java.lang.OutOfMemoryError>`
 
-        (サブクラス含む)
+        (包括子类)
 
-      - FATALレベルのログ出力を行う。
+      - 输出FATAL级别的日志。
 
-        なお、FATALレベルのログ出力に失敗する可能性(再度 `OutOfMemoryError` が発生する可能性)があるため、
-        ログ出力前に標準エラー出力に `OutOfMemoryError` が発生したことを出力する。
+        由于FATAL级别的日志输出可能会失败(可能再次发生 `OutOfMemoryError`)，
+        因此在日志输出前向标准错误输出输出发生了 `OutOfMemoryError` 的信息。
 
-        ログ出力後、捕捉したエラーを原因に持つ :java:extdoc:`InternalError <nablarch.fw.results.InternalError>` を生成し、ハンドラの処理結果として返却する。
+        日志输出后，生成以捕获的错误为原因的 :java:extdoc:`InternalError <nablarch.fw.results.InternalError>`，并将其作为handler的处理结果返回。
 
     * - :java:extdoc:`VirtualMachineError <java.lang.VirtualMachineError>`
 
-        (サブクラス含む)
+        (包括子类)
 
-      - FATALレベルのログ出力を行う。
+      - 输出FATAL级别的日志。
 
-        ログ出力後、捕捉したエラーをリスローする。
+        日志输出后，重新抛出捕获的错误。
 
         .. tip::
           
-          :java:extdoc:`StackOverflowError <java.lang.StackOverflowError>` 及び :java:extdoc:`OutOfMemoryError <java.lang.OutOfMemoryError>` 以外が対象となる。
+          对象为 :java:extdoc:`StackOverflowError <java.lang.StackOverflowError>` 和 :java:extdoc:`OutOfMemoryError <java.lang.OutOfMemoryError>` 以外的错误。
 
-    * - 上記以外のエラークラス
+    * - 上述以外的错误类
 
-      - FATALレベルのログ出力を行う。
+      - 输出FATAL级别的日志。
         
-        ログ出力後、捕捉したエラーを原因に持つ :java:extdoc:`InternalError <nablarch.fw.results.InternalError>` を生成し、ハンドラの処理結果として返却する。
+        日志输出后，生成以捕获的错误为原因的 :java:extdoc:`InternalError <nablarch.fw.results.InternalError>`，并将其作为handler的处理结果返回。
 
 
 
-グローバルエラーハンドラでは要件を満たせない場合
+当全局错误handler无法满足需求时
 --------------------------------------------------
-このハンドラは、設定などで実装を切り替えることはできない。
-このため、この実装で要件を満たすことができない場合は、
-プロジェクト固有のエラー処理用ハンドラを作成し対応すること。
+此handler无法通过设置等方式切换实现。
+因此，如果此实现无法满足需求，
+需要创建项目专用的错误处理handler来应对。
 
-例えば、ログレベルを細かく切り替えたい場合などは、このハンドラを使用するのではなく、ハンドラを新たに作成すると良い。
+例如：如果需要详细切换日志级别等，最好不要使用此handler，而是创建新的handler。
 
 
 

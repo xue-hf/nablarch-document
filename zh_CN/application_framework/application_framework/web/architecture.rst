@@ -1,52 +1,54 @@
-アーキテクチャ概要
+架构概要
 ==============================
 
 .. contents:: 目录
   :depth: 3
   :local:
 
-Nablarchでは、HTMLをベースとした画面UIを持つウェブ应用を構築するための機能を提供している。
+Nablarch提供了用于构建具有基于HTML的页面UI的Web应用的功能。
 
 .. _web_application-structure:
 
-ウェブ应用の構成
+Web应用的构成
 ----------------------------------------
-Nablarchではウェブ应用を構築する場合、ServletAPIの使用を前提としている。
-以下にNablarchにおけるウェブ应用の構成を示す。
+在Nablarch中，构建Web应用时以使用Servlet API为前提。
+以下是Nablarch中Web应用的构成。
 
 .. image:: images/application_structure.png
 
 :ref:`nablarch_servlet_context_listener` (NablarchServletContextListener)
-  System Repositoryやログの初期化処理を行うサーブレットコンテキストリスナー。
+  负责执行System Repository和日志的初始化处理的Servlet上下文监听器。
 
 :ref:`web_front_controller` (WebFrontController)
-  受け取ったリクエストに対する処理をhandler队列に委譲するサーブレットフィルタ。
+  对接收到的请求处理委派给handler队列的Servlet过滤器。
 
-ウェブ应用の処理の流れ
+Web应用的处理流程
 ----------------------------------------
-ウェブ应用がリクエストを処理し、レスポンスを返却するまでの処理の流れを以下に示す。
+Web应用从请求开始处理到返回响应之间的所有流程如下图所示。
 
 .. image:: images/web-design.png
   :scale: 80
 
-1. :ref:`web_front_controller` ( `jakarta.servlet.Filter` の実装クラス)がrequestを受信する。
-2. :ref:`web_front_controller` は、requestに対する処理をhandler队列(handler queue)に委譲する。
-3. handler队列に設定されたディスパッチハンドラ(`DispatchHandler`) が、URIを元に処理すべきaction classを特定しhandler队列の末尾に追加する。
-4. Action类(action class)は、フォームクラス(form class)やエンティティクラス(entity class)を使用して業務ロジック(business logic) を実行する。
-   各クラスの詳細は、 :doc:`application_design` を参照。
+1. :ref:`web_front_controller` ( `jakarta.servlet.Filter` 的实现类)接收到了请求。
+2. :ref:`web_front_controller` 将针对请求的处理委托给handler队列。
+3. 由配置在handler队列中的 :java:extdoc:`分发handler(DispatchHandler) <nablarch.fw.handler.DispatchHandler>`
+   根据URI确定应该执行的Action类(action class)，
+   并追加到队列末尾。
+4. Action类(action class)使用Form类(表单类)或Entity类(实体类)，对请求执行相应的业务逻辑(business logic)。
+   各个类的详细信息请参考 :doc:`application_design`
 
-5. action classは、処理結果を示す `HttpResponse` を作成し返却する。
-6. handler队列内のHTTPレスポンスハンドラ(`HttpResponseHandler`)が、 `HttpResponse` をクライアントに返却するレスポンスに変換する。例えば、JSPのServlet Forwardなど。
-7. responseが返却される。
+5. Action类会创建并返回表示处理结果的 `HttpResponse`。
+6. 处理器队列中的HTTP响应处理器（`HttpResponseHandler`）将 `HttpResponse` 转换为返回给客户端的响应。例如，通过JSP进行Servlet转发等操作。
+7. 返回响应。
 
-ウェブ应用で使用するハンドラ
+Nablarch Batch应用使用的handler
 --------------------------------------------------
-Nablarchでは、ウェブ应用を構築するために必要なハンドラを標準で幾つか提供している。
-プロジェクトの要件に従い、handler队列を構築すること。(要件によっては、プロジェクトカスタムなハンドラを作成することになる)
+Nablarch提供了若干构建Web应用所需的handler。
+根据项目需求构建handler队列。(根据需求，可能需要创建项目需要的自定义handler)
 
-各ハンドラの詳細は、リンク先を参照すること。
+各个handler的详细信息请参考下面的链接。
 
-リクエストやレスポンスの変換を行うハンドラ
+执行请求和响应转换的handler
   * :ref:`http_character_encoding_handler`
   * :ref:`http_response_handler`
   * :ref:`forwarding_handler`
@@ -55,22 +57,22 @@ Nablarchでは、ウェブ应用を構築するために必要なハンドラを
   * :ref:`normalize_handler`
   * :ref:`secure_handler`
 
-リクエストのフィルタリングを行うハンドラ
+过滤请求的handler
   * :ref:`service_availability`
   * :ref:`permission_check_handler`
 
-データベースに関連するハンドラ
+数据库相关的handler
   * :ref:`database_connection_management_handler`
   * :ref:`transaction_management_handler`
 
-リクエストの検証を行うハンドラ
+验证请求的handler
   * :ref:`csrf_token_verification_handler`
 
-エラー処理に関するハンドラ
+异常处理相关的handler
   * :ref:`http_error_handler`
   * :ref:`global_error_handler`
 
-その他
+其他
   * :ref:`http_request_java_package_mapping`
   * :ref:`nablarch_tag_handler`
   * :ref:`thread_context_handler`
@@ -79,25 +81,25 @@ Nablarchでは、ウェブ应用を構築するために必要なハンドラを
   * :ref:`file_record_writer_dispose_handler`
   * :ref:`health_check_endpoint_handler`
 
-最小ハンドラ構成
+最低限度handler配置
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Nablarchでウェブ应用を構築する際の、必要最小限のhandler队列を以下に示す。
-これをベースに、プロジェクト要件に従ってNablarchの標準ハンドラやプロジェクトで作成したカスタムハンドラを追加する。
+构建Web应用时最低限度的handler队列如下所示，
+在这基础之上，根据项目需求追加Nablarch标准handler或自定义的handler。
 
-.. list-table:: 最小ハンドラ構成
+.. list-table:: 最低限度handler配置
    :header-rows: 1
    :class: white-space-normal
    :widths: 4,24,24,24,24
 
    * - No.
-     - ハンドラ
-     - 往路処理
-     - 復路処理
-     - 例外処理
+     - handler
+     - 前处理
+     - 后处理
+     - 异常处理
 
    * - 1
      - :ref:`http_character_encoding_handler`
-     - リクエストとレスポンスに文字エンコーディングを設定する。
+     - 设定请求与响应的文字编码。
      -
      -
 
@@ -105,71 +107,71 @@ Nablarchでウェブ应用を構築する際の、必要最小限のhandler队�
      - :ref:`global_error_handler`
      -
      -
-     - 実行時例外、またはエラーの場合、ログ出力を行う。
+     - 输出执行时发生的异常或错误的日志。
 
    * - 3
      - :ref:`http_response_handler`
      -
-     - サーブレットフォーワード、リダイレクト、レスポンス書き込みのいずれかを行う。
-     - 実行時例外、またはエラーの場合、既定のエラーページを表示する。
+     - Servlet转发、重定向或执行响应写入。
+     - 当运行时发生了异常或者错误时，显示指定的错误画面。
 
    * - 4
      - :ref:`secure_handler`
      -
-     - レスポンスオブジェクト(:java:extdoc:`HttpResponse <nablarch.fw.web.HttpResponse>`)にセキュリティ関連のレスポンスヘッダを設定する。
+     - 向响应对象(:java:extdoc:`HttpResponse <nablarch.fw.web.HttpResponse>`)中设定与安全相关的响应头。
      - 
 
    * - 5
      - :ref:`multipart_handler`
-     - リクエストがマルチパート形式の場合、その内容を一時ファイルに保存する。
-     - 保存した一時ファイルを削除する。
+     - 请求是``multipart``格式时，将该内容保存到临时文件。
+     - 删除保存的临时文件。
      -
 
    * - 6
      - :ref:`session_store_handler`
-     - セッションストアから内容を読み込む。
-     - セッションストアに内容を書き込む。
+     - 从session存储中读取内容。
+     - 向session存储中写入内容。
      -
 
    * - 7
      - :ref:`normalize_handler`
-     - リクエストパラメータのノーマライズ処理を行う。
+     - 请求参数规范化处理。
      - 
      -
 
    * - 8
      - :ref:`forwarding_handler`
      -
-     - 遷移先が内部フォーワードの場合、後続のハンドラを再実行する。
+     - 如果目标页面为内部转发，则重新执行后续的handler。
      -
 
    * - 9
      - :ref:`http_error_handler`
      -
      -
-     - 例外の種類に応じたログ出力とレスポンスの生成を行う。
+     - 根据异常种类输出日志，并生成响应。
 
    * - 10
      - :ref:`nablarch_tag_handler`
-     - Nablarchカスタムタグの動作に必要な事前処理を行う。
+     - 保证Nablarch自定义tag正常运行的前置处理。
      -
      -
 
    * - 11
      - :ref:`database_connection_management_handler`
-     - DB接続を取得する。
-     - DB接続を解放する。
+     - 获取数据库连接。
+     - 释放数据库连接。
      -
 
    * - 12
      - :ref:`transaction_management_handler`
-     - トランザクションを開始する。
-     - トランザクションをコミットする。
-     - トランザクションをロールバックする。
+     - 开启事务。
+     - 提交事务。
+     - 回滚事务。
 
    * - 13
      - :ref:`router_adaptor`
-     - リクエストパスをもとに呼び出すアクションを決定する。
+     - 根据请求路径确定要调用的Action。
      -
      -
 

@@ -1,35 +1,35 @@
 .. _database_connection_management_handler:
 
-データベース接続管理ハンドラ
+数据库连接管理handler
 ==================================================
 
 .. contents:: 目录
   :depth: 3
   :local:
 
-後続のハンドラ及びライブラリで使用するためのデータベース接続を、スレッド上で管理するハンドラ。
+用于在后续handler和库中使用的数据库连接，在线程上进行管理的handler。
 
-データベースアクセスの詳細は、 :ref:`database` を参照。
+有关数据库访问的详细信息，请参考 :ref:`database`。
 
 .. important::
 
-  このハンドラを使用する場合は、 :ref:`transaction_management_handler` をセットで設定すること。
-  トランザクション制御ハンドラが設定されていない場合、トランザクション制御が実施されないため後続で行ったデータベースへの変更は全て破棄される。
+  使用此handler时，必须与 :ref:`transaction_management_handler` 一起设置。
+  如果未设置事务控制handler，则不会执行事务控制，后续对数据库的所有更改都将被丢弃。
 
-本ハンドラでは、以下の処理を行う。
+本handler执行以下处理。
 
-* データベース接続の取得
-* データベース接続の解放
+* 获取数据库连接
+* 释放数据库连接
 
-処理の流れは以下のとおり。
+处理流程如下。
 
 .. image:: ../images/DbConnectionManagementHandler/DbConnectionManagementHandler_flow.png
 
-ハンドラクラス名
+handler类名
 --------------------------------------------------
 * :java:extdoc:`nablarch.common.handler.DbConnectionManagementHandler`
 
-モジュール一覧
+模块列表
 --------------------------------------------------
 .. code-block:: xml
 
@@ -42,78 +42,78 @@
     <artifactId>nablarch-common-jdbc</artifactId>
   </dependency>
 
-制約
+约束
 ------------------------------
-なし。
+无。
 
-データベースの接続先を設定する
+设置数据库连接目标
 --------------------------------------------------
-このハンドラは、 :java:extdoc:`connectionFactory <nablarch.common.handler.DbConnectionManagementHandler.setConnectionFactory(nablarch.core.db.connection.ConnectionFactory)>`
-プロパティに設定されたファクトリクラス( :java:extdoc:`ConnectionFactory <nablarch.core.db.connection.ConnectionFactory>` 実装クラス )を使用してデータベース接続を取得する。
+本handler使用通过 :java:extdoc:`connectionFactory <nablarch.common.handler.DbConnectionManagementHandler.setConnectionFactory(nablarch.core.db.connection.ConnectionFactory)>`
+属性中设置的工厂类( :java:extdoc:`ConnectionFactory <nablarch.core.db.connection.ConnectionFactory>` 实现类)来获取数据库连接。
 
-以下の設定ファイル例を参考にし、  :java:extdoc:`connectionFactory <nablarch.common.handler.DbConnectionManagementHandler.setConnectionFactory(nablarch.core.db.connection.ConnectionFactory)>`
-プロパティにファクトリクラスを設定すること。
+请参考以下配置文件示例，在 :java:extdoc:`connectionFactory <nablarch.common.handler.DbConnectionManagementHandler.setConnectionFactory(nablarch.core.db.connection.ConnectionFactory)>`
+属性中设置工厂类。
 
 .. code-block:: xml
 
-  <!-- データベース接続管理ハンドラ -->
+  <!-- 数据库连接管理handler -->
   <component class="nablarch.common.handler.DbConnectionManagementHandler">
     <property name="connectionFactory" ref="connectionFactory" />
   </component>
 
-  <!-- データベース接続オブジェクトを取得するファクトリクラスの設定 -->
+  <!-- 获取数据库连接对象的工厂类的设置 -->
   <component name="connectionFactory"
       class="nablarch.core.db.connection.BasicDbConnectionFactoryForDataSource">
-    <!-- プロパティの設定は省略 -->
+    <!-- 省略其他属性设置 -->
   </component>
 
 .. important::
 
-  データベース接続オブジェクトを取得するためのファクトリクラスの詳細は、 :ref:`database-connect` を参照。
+  有关获取数据库连接对象的工厂类的详细信息，请参考 :ref:`database-connect`。
 
-应用で複数のデータベース接続（トランザクション）を使用する
+在应用中使用多个数据库连接（事务）
 ----------------------------------------------------------------------------------------------------
-1つの应用で複数のデータベース接続が必要となるケースが考えられる。
-この場合は、このハンドラをhandler队列上に複数設定することで対応する。
+在一个应用中可能需要多个数据库连接。
+这种情况下，可以通过在handler队列上设置多个此handler来应对。
 
-このハンドラは、データベース接続オブジェクトをスレッド上で管理する際に、データベース接続名をつけて管理している。
-データベース接続名は、スレッド内で一意とする必要がある。
+此handler在管理线程上的数据库连接对象时，使用数据库连接名进行管理。
+但注意，数据库连接名在线程内必须是唯一的。
 
-データベース接続名は、このハンドラの :java:extdoc:`connectionName <nablarch.common.handler.DbConnectionManagementHandler.setConnectionName(java.lang.String)>` プロパティに設定する。
-:java:extdoc:`connectionName <nablarch.common.handler.DbConnectionManagementHandler.setConnectionName(java.lang.String)>` への設定を省略した場合、その接続はデフォルトのデータベース接続となり簡易的に使用できる。
-このため、最もよく使うデータベース接続をデフォルトとし、それ以外のデータベース接続に対して任意の名前をつけると良い。
+数据库连接名在此handler的 :java:extdoc:`connectionName <nablarch.common.handler.DbConnectionManagementHandler.setConnectionName(java.lang.String)>` 属性中设置。
+如果省略在 :java:extdoc:`connectionName <nablarch.common.handler.DbConnectionManagementHandler.setConnectionName(java.lang.String)>` 中的设置，则该连接将成为默认数据库连接，可以简便使用。
+因此，最好将最常用的数据库连接设为默认，并为其他数据库连接指定任意名称。
 
-以下にデータベース接続名の設定例を示す。
+以下是数据库连接名的设置示例。
 
 .. code-block:: xml
 
-  <!-- データベース接続を取得するファクトリの設定は省略 -->
+  <!-- 省略获取数据库连接的工厂的设置 -->
 
-  <!-- デフォルトのデータベース接続を設定 -->
+  <!-- 设置默认数据库连接 -->
   <component class="nablarch.common.handler.DbConnectionManagementHandler">
     <property name="connectionFactory" ref="connectionFactory" />
   </component>
 
-  <!-- userAccessLogという名前でデータベース接続を登録 -->
+  <!-- 以userAccessLog名称注册数据库连接 -->
   <component class="nablarch.common.handler.DbConnectionManagementHandler">
     <property name="connectionFactory" ref="userAccessLogConnectionFactory" />
     <property name="connectionName" value="userAccessLog" />
   </component>
 
-上記のハンドラ設定の場合の、应用からのデータベースアクセス例を以下に示す。
-なお、データベースアクセス部品の詳細な使用方法は、 :ref:`database` を参照。
+以下是上述handler设置情况下，从应用访问数据库的示例。
+有关数据库访问组件的详细使用方法，请参考 :ref:`database`。
 
-デフォルトのデータベース接続を使用する
-  :java:extdoc:`DbConnection#getConnection <nablarch.core.db.connection.DbConnectionContext.getConnection()>` 呼び出し時に引数を指定する必要が無い。
-  引数を指定しないと、自動的にデフォルトのデータベース接続が戻される。
+使用默认数据库连接
+  调用 :java:extdoc:`DbConnection#getConnection <nablarch.core.db.connection.DbConnectionContext.getConnection()>` 时无需指定参数。
+  如果不指定参数，将自动返回默认数据库连接。
 
   .. code-block:: java
 
     AppDbConnection connection = DbConnectionContext.getConnection();
 
-userAccessLogデータベース接続を使用する
-  :java:extdoc:`DbConnection#getConnection(String) <nablarch.core.db.connection.DbConnectionContext.getConnection(java.lang.String)>` を使用し、引数にデータベース接続名を指定する。
-  データベース接続名は :java:extdoc:`connectionName <nablarch.common.handler.DbConnectionManagementHandler.setConnectionName(java.lang.String)>` プロパティに設定した値と一致させる必要がある。
+使用userAccessLog数据库连接
+  使用 :java:extdoc:`DbConnection#getConnection(String) <nablarch.core.db.connection.DbConnectionContext.getConnection(java.lang.String)>`，在参数中指定数据库连接名。
+  数据库连接名必须与在 :java:extdoc:`connectionName <nablarch.common.handler.DbConnectionManagementHandler.setConnectionName(java.lang.String)>` 属性中设置的值一致。
 
   .. code-block:: java
 

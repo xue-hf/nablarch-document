@@ -22,11 +22,11 @@ Action类(action class)
   - 返回 :java:extdoc:`Success<nablarch.fw.Result.Success>` 作为处理结果。
 
 Form类(表单类)
-  将 :java:extdoc:`DataReader<nablarch.fw.DataReader>`
-  读取的数据记录进行映射的类。
+  用于映射来自 :java:extdoc:`DataReader<nablarch.fw.DataReader>`
+  读取的数据记录的类。
 
   具备用于数据记录验证的注解配置以及相关性验证的逻辑。
-  根据来自外部的输入数据，有时可能会形成层次结构（即 Form 包含其他 Form）。
+  根据来自外部的输入数据，有时可能会形成层次结构（即Form包含其他Form）。
 
   Form类的所有属性都定义为 `String`
     将属性定义为 `String` 的理由请参考 :ref:`Bean Validation <bean_validation-form_property>` 。
@@ -39,4 +39,4 @@ Form类(表单类)
    直接将数据记录映射为Entity类也是可以的。
 
 Entity类(实体类)
-  与数据表中的记录进行映射的类。属性定义与表字段类型一致。
+  用于映射来自与数据表中的记录的类。属性定义与表字段类型一致。

@@ -71,7 +71,7 @@ Nablarch会对收到的请求按照handler队列中定义的handler顺序，从�
 拦截器是指在程序运行时动态添加到handler队列中的handler。
 
 例如：在仅针对特定请求需要添加处理(handler)时，
-或者需要根据不同请求切换配置参数来执行处理(handler)的情况下，使用拦截器就比使用处理器更为合适。
+或者需要根据不同请求切换配置参数来执行处理(handler)的情况下，使用拦截器就比使用handler更为合适。
 
 .. tip::
   拦截器的执行方式与 Jakarta EE 中由 Jakarta Contexts and Dependency Injection（Jakarta 上下文和依赖注入）定义的拦截器相同。

@@ -1,53 +1,53 @@
 .. _`client_create`:
 
-登録機能の作成(ハンズオン形式)
+创建登录功能（实战教程）
 ==========================================
-Nablarchを使用したウェブ应用での登録機能の開発方法を、
-Example应用へ顧客情報の登録機能の実装を実際に行いながら解説する。
+本节将通过实际为示例应用实现客户信息登录功能，  
+详细介绍使用 Nablarch 开发 Web 应用登录功能的方法。
 
-作成する機能の説明
-  1. ヘッダメニューの「顧客登録」リンクを押下する。
+功能说明
+  1. 点击页面头部菜单中的「客户登录」链接。
 
     .. image:: ../images/client_create/header_menu.png
 
-  2. 顧客登録画面が表示される。
+  2. 显示客户登录页面。
 
     .. image:: ../images/client_create/input_display.png
 
-  3. 顧客名に全角文字列を入力し、業種プルダウンで任意の値を選択して「登録」ボタンを押下する。
+  3. 在客户名称中输入全角字符串，从行业下拉框中选择任意值，然后点击「登录」按钮。
 
     .. image:: ../images/client_create/input_name_select.png
 
-  4. 登録確認画面が表示される。
+  4. 显示登录确认页面。
 
     .. image:: ../images/client_create/confirm_display.png
 
-  5. 「確定」ボタンを押下し、データベースに顧客を登録して完了画面を表示する。
+  5. 点击「确定」按钮，将客户数据保存到数据库，并显示完成页面。
 
     .. image:: ../images/client_create/complete_display.png
 
-顧客登録機能の仕様
+客户登录功能规格
 ------------------------------------------
-顧客登録機能の各処理と、URL及び業務アクションメソッドのマッピングを以下に示す。
+下表列出了客户登录功能的各项处理，以及对应的 URL 和业务Action方法的映射关系。
 
 .. image:: ../images/client_create/client_create.png
 
 === ================== ====================== ====================== ============
-NO. 処理名             URL                    Action                 HTTPメソッド
+NO.  处理名称           URL                    动作类#方法             HTTP请求方式
 === ================== ====================== ====================== ============
-1   初期表示           /action/client/        ClientAction#input     GET
-2   登録内容の確認     /action/client/confirm ClientAction#confirm   POST
-3   登録画面に戻る     /action/client/back    ClientAction#back      POST
-4   登録処理の実行     /action/client/create  ClientAction#create    POST
+1   初始显示           /action/client/        ClientAction#input     GET
+2   确认登录内容       /action/client/confirm ClientAction#confirm   POST
+3   返回登录页面       /action/client/back    ClientAction#back      POST
+4   执行登录处理       /action/client/create  ClientAction#create    POST
 === ================== ====================== ====================== ============
 
-使用するテーブルの定義を以下に示す。
+所使用的数据库表结构定义如下。
 
   .. image:: ../images/client_create/client_table.png
 
 ----
 
-登録機能の解説は以下4章で構成される。
+本功能的详细说明分为以下四章：
 
 .. toctree::
   :maxdepth: 1

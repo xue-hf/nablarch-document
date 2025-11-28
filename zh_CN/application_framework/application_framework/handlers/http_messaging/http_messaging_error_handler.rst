@@ -1,32 +1,32 @@
 .. _http_messaging_error_handler:
 
-HTTPメッセージングエラー制御ハンドラ
+HTTP消息传递错误控制handler
 ==================================================
 .. contents:: 目录
   :depth: 3
   :local:
 
-本ハンドラでは後続のハンドラで発生した例外及びエラーを補足し、例外(エラー)に応じたログ出力とレスポンスの生成を行う。
-また、後続のハンドラでレスポンスボディが設定されていない場合には、HTTPステータスコードに対応したデフォルトのボディをレスポンスに設定する。
+此handler捕获后续handler中发生的异常和错误，并根据异常(错误)进行日志输出和响应生成。
+此外，如果后续handler中没有设置响应体，则设置与HTTP状态码对应的默认响应体。
 
-本ハンドラでは、以下の処理を行う。
+此handler执行以下处理。
 
-* 例外(エラー)に応じたログ出力とレスポンスの生成を行う。
-  詳細は、 :ref:`http_messaging_error_handler-error_response_and_log` を参照。
+* 根据异常(错误)进行日志输出和响应生成。
+  详细信息请参考 :ref:`http_messaging_error_handler-error_response_and_log`。
 
-* デフォルトのレスポンスボディを設定する。
-  詳細は、 :ref:`http_messaging_error_handler-default_page` を参照。
+* 设置默认响应体。
+  详细信息请参考 :ref:`http_messaging_error_handler-default_page`。
 
-処理の流れは以下のとおり。
+处理流程如下。
 
 .. image:: ../images/HttpMessagingErrorHandler/flow.png
   :scale: 75
   
-ハンドラクラス名
+handler类名
 --------------------------------------------------
 * :java:extdoc:`nablarch.fw.messaging.handler.HttpMessagingErrorHandler`
 
-モジュール一覧
+模块列表
 --------------------------------------------------
 .. code-block:: xml
 
@@ -35,53 +35,53 @@ HTTPメッセージングエラー制御ハンドラ
     <artifactId>nablarch-fw-messaging-http</artifactId>
   </dependency>
 
-制約
+约束
 ------------------------------
-:ref:`http_response_handler` より後ろに配置すること
-  本ハンドラで生成した :java:extdoc:`HttpResponse <nablarch.fw.web.HttpResponse>` を :ref:`http_response_handler` が処理する。
-  このため、本ハンドラを :ref:`http_response_handler` より後ろに設定する必要がある。
+请配置在 :ref:`http_response_handler` 之后
+  :ref:`http_response_handler` 会处理由此handler生成的 :java:extdoc:`HttpResponse <nablarch.fw.web.HttpResponse>`。
+  因此，需要将此handler设置在 :ref:`http_response_handler` 之后。
 
 .. _http_messaging_error_handler-error_response_and_log:
 
-例外の種類に応じたログ出力とレスポンス生成
+根据异常类型进行日志输出和响应生成
 --------------------------------------------------------------
 :java:extdoc:`nablarch.fw.NoMoreHandlerException`
-  :ログレベル: INFO
-  :レスポンス: 404
-  :説明: リクエストを処理すべきハンドラが存在しなかったことを意味するため、証跡ログとして記録する。
-         また、処理すべき *action class* が存在しなかったことを意味するため、HTTPステータスコードが *404*  のレスポンスを生成する。
+  :日志级别: INFO
+  :响应: 404
+  :说明: 表示不存在应处理请求的handler，因此作为审计日志记录。
+         同时，表示不存在应处理的 *action class*，因此生成HTTP状态码为 *404* 的响应。
 
 :java:extdoc:`nablarch.fw.web.HttpErrorResponse`
-  :ログレベル: ログ出力なし
-  :レスポンス: :java:extdoc:`HttpErrorResponse#getResponse() <nablarch.fw.web.HttpErrorResponse.getResponse()>`
-  :説明: 後続のハンドラで業務例外(バリデーションなどを行った結果の例外)が発生したことを意味するので、ログ出力は行わない。
+  :日志级别: 不输出日志
+  :响应: :java:extdoc:`HttpErrorResponse#getResponse() <nablarch.fw.web.HttpErrorResponse.getResponse()>`
+  :说明: 表示在后续handler中发生了业务异常(如验证等结果异常)，因此不进行日志输出。
 
 :java:extdoc:`nablarch.fw.Result.Error`
-  :ログレベル: 設定による
-  :レスポンス: :java:extdoc:`Error#getStatusCode() <nablarch.fw.Result.Error.getStatusCode()>`
-  :説明: :ref:`http_messaging_error_handler-write_failure_log_pattern` を参照
+  :日志级别: 根据设置
+  :响应: :java:extdoc:`Error#getStatusCode() <nablarch.fw.Result.Error.getStatusCode()>`
+  :说明: 参考 :ref:`http_messaging_error_handler-write_failure_log_pattern`
 
-:java:extdoc:`nablarch.core.message.ApplicationException` と :java:extdoc:`nablarch.fw.messaging.MessagingException`
-  :ログレベル: \-
-  :レスポンス: 400
-  :説明: クライアントからのリクエストが不正であることを示す例外のため、HTTPステータスコードが *400* のレスポンスを生成する。
+:java:extdoc:`nablarch.core.message.ApplicationException` 和 :java:extdoc:`nablarch.fw.messaging.MessagingException`
+  :日志级别: \-
+  :响应: 400
+  :说明: 表示客户端请求不正确的异常，因此生成HTTP状态码为 *400* 的响应。
 
-上記以外の例外及びエラー
-  :ログレベル: FATAL
-  :レスポンス: 500
-  :説明: 上記に該当しない例外及びエラーの場合には、障害扱いとしてログ出力を行う。
-         また、予期しない例外やエラーであるため、レスポンスは **500** としている。
+上述以外的异常和错误
+  :日志级别: FATAL
+  :响应: 500
+  :说明: 对于不属于上述情况的异常和错误，作为故障进行日志输出。
+         同时，由于是意外异常和错误，响应设置为 **500**。
 
 .. _http_messaging_error_handler-write_failure_log_pattern:
 
-nablarch.fw.Result.Errorのログ出力について
+关于nablarch.fw.Result.Error的日志输出
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-後続のハンドラで発生した例外が、 :java:extdoc:`Error <nablarch.fw.Result.Error>` の場合はログ出力を行うかどうかは、
-:java:extdoc:`writeFailureLogPattern <nablarch.fw.web.handler.HttpErrorHandler.setWriteFailureLogPattern(java.lang.String)>` に設定した値によって変わる。
-このプロパティには正規表現が設定でき、その正規表現が :java:extdoc:`Error#getStatusCode() <nablarch.fw.Result.Error.getStatusCode()>` とマッチした場合に `FATAL` レベルのログを出力する。
+当后续handler中发生的异常是 :java:extdoc:`Error <nablarch.fw.Result.Error>` 时，是否输出日志取决于
+:java:extdoc:`writeFailureLogPattern <nablarch.fw.web.handler.HttpErrorHandler.setWriteFailureLogPattern(java.lang.String)>` 中设置的值。
+此属性可以设置正则表达式，当该正则表达式与 :java:extdoc:`Error#getStatusCode() <nablarch.fw.Result.Error.getStatusCode()>` 匹配时，输出 `FATAL` 级别的日志。
 
 .. _http_messaging_error_handler-default_page:
 
-レスポンスボディが空の場合のデフォルトレスポンスの設定
+响应体为空时的默认响应设置
 --------------------------------------------------------
-詳細は、 :ref:`HTTPエラー制御ハンドラのデフォルトページの設定 <HttpErrorHandler_DefaultPage>` を参照。
+详细信息请参考 :ref:`HTTP错误控制handler的默认页面设置 <HttpErrorHandler_DefaultPage>`。

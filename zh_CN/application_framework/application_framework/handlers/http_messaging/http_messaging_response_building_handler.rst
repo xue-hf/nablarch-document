@@ -1,29 +1,29 @@
 .. _http_messaging_response_building_handler:
 
-HTTPメッセージングレスポンス変換ハンドラ
+HTTP消息传递响应转换handler
 ==================================================
 .. contents:: 目录
   :depth: 3
   :local:
 
-本ハンドラでは、後続のハンドラが作成した応答電文オブジェクトをHTTPレスポンスオブジェクトに変換する。
-また、応答電文オブジェクト内のプロトコルヘッダの値を、対応するHTTPヘッダに設定及びXMLやJSONなどの形式への直列化を行う。
+此handler将后续handler创建的响应电文对象转换为HTTP响应对象。
+此外，将响应电文对象内的协议头值设置到对应的HTTP头中，并进行XML或JSON等格式的序列化。
 
 
-本ハンドラでは、以下の処理を行う。
+此handler执行以下处理。
 
-* 応答電文オブジェクトの内容をHTTPレスポンスオブジェクトに変換する。
+* 将响应电文对象的内容转换为HTTP响应对象。
 
-処理の流れは以下のとおり。
+处理流程如下。
 
 .. image:: ../images/HttpMessagingResponseBuildingHandler/flow.png
   :scale: 75
   
-ハンドラクラス名
+handler类名
 --------------------------------------------------
 * :java:extdoc:`nablarch.fw.messaging.handler.HttpMessagingResponseBuildingHandler`
 
-モジュール一覧
+模块列表
 --------------------------------------------------
 .. code-block:: xml
 
@@ -32,52 +32,51 @@ HTTPメッセージングレスポンス変換ハンドラ
     <artifactId>nablarch-fw-messaging-http</artifactId>
   </dependency>
 
-制約
+约束
 ------------------------------
 
-:ref:`http_response_handler` よりも後ろに設定すること
-  このハンドラで生成した :java:extdoc:`HTTPレスポンスオブジェクト <nablarch.fw.web.HttpResponse>` を
-  :ref:`http_response_handler` がクライアントに返却するため。
+请设置在 :ref:`http_response_handler` 之后
+  因为 :ref:`http_response_handler` 会将此handler生成的 :java:extdoc:`HTTP响应对象 <nablarch.fw.web.HttpResponse>` 返回给客户端。
 
 .. _http_messaging_response_building_handler-header:
 
-レスポンスヘッダに設定される値
+设置到响应头的值
 --------------------------------------------------
-後続のハンドラで作成された応答電文オブジェクトを元に以下のレスポンスヘッダを設定する。
+基于后续handler创建的响应电文对象，设置以下响应头。
 
 :Status-Code:
-  応答電文オブジェクトのステータスコードを設定する。
+  设置响应电文对象的状态码。
 
 :Content-Type:
-  応答電文オブジェクトの持つフォーマッタ(:java:extdoc:`InterSystemMessage.getFormatter() <nablarch.fw.messaging.InterSystemMessage.getFormatter()>`)から以下の値を取得し設定する。
+  从响应电文对象持有的格式化器(:java:extdoc:`InterSystemMessage.getFormatter() <nablarch.fw.messaging.InterSystemMessage.getFormatter()>`)获取以下值并设置。
 
   * MIME(:java:extdoc:`DataRecordFormatterSupport#getMimeType() <nablarch.core.dataformat.DataRecordFormatterSupport.getMimeType()>`
   * cherset(:java:extdoc:`DataRecordFormatterSupport#getDefaultEncoding() <nablarch.core.dataformat.DataRecordFormatterSupport.getDefaultEncoding()>`
 
-  MIMEが ``application/json`` でcharsetが ``utf-8`` の場合、Content-Typeは以下の値となる。
+  当MIME为 ``application/json`` 且charset为 ``utf-8`` 时，Content-Type为以下值。
 
   **application/json;charset=utf-8**
 
-:関連メッセージID: レスポンスヘッダの ``X-Correlation-Id`` に、応答電文オブジェクトのヘッダに設定された ``CorrelationId`` の値を設定する。
+:相关消息ID: 在响应头的 ``X-Correlation-Id`` 中，设置响应电文头中设置的 ``CorrelationId`` 值。
 
 .. important::
-  このハンドラでは、上記に記載のないレスポンスヘッダを設定できない。
+  此handler无法设置上述未记载的响应头。
 
-  上記外のレスポンスヘッダを使用したい場合は、プロジェクトでハンドラを作成し対応すること。
+  如需使用上述之外的响应头，请在项目中创建handler进行对应。
 
-フレームワーク制御ヘッダのレイアウトを変更する
+更改框架控制头的结构
 --------------------------------------------------
-応答電文内のフレームワーク制御ヘッダの定義を変更する場合には、プロジェクトで拡張したフレームワーク制御ヘッダの定義を設定する必要がある。
-設定しない場合は、デフォルトの :java:extdoc:`StructuredFwHeaderDefinition <nablarch.fw.messaging.reader.StructuredFwHeaderDefinition>` が使用される。
+如需更改响应电文内的框架控制头定义，需要设置项目中扩展的框架控制头定义。
+未设置时，将使用默认的 :java:extdoc:`StructuredFwHeaderDefinition <nablarch.fw.messaging.reader.StructuredFwHeaderDefinition>`。
 
-フレームワーク制御ヘッダの詳細は、 :ref:`フレームワーク制御ヘッダ <http_system_messaging-fw_header>` を参照。
+关于框架控制头的详细信息，请参考 :ref:`框架控制头 <http_system_messaging-fw_header>`。
 
-以下に設定例を示す。
+以下为配置示例。
 
 .. code-block:: xml
 
   <component class="nablarch.fw.messaging.handler.HttpMessagingResponseBuildingHandler">
-    <!-- フレームワーク制御ヘッダの設定 -->
+    <!-- 框架控制头的设置 -->
     <property name="fwHeaderDefinition">
       <component class="sample.SampleFwHeaderDefinition" />
     </property>

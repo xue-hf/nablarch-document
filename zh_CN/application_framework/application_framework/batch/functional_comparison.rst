@@ -21,7 +21,7 @@ Jakarta Batch 与 Nablarch Batch 应用程序的功能对比
     - ○ |br| :ref:`前往文档 <main-option_parameter>`
 
   * - 防止同一Batch应用重复启动
-    - ○ |br| :java:extdoc:`Javadocへ <nablarch.fw.batch.ee.listener.job.DuplicateJobRunningCheckListener>`
+    - ○ |br| :java:extdoc:`Javadoc <nablarch.fw.batch.ee.listener.job.DuplicateJobRunningCheckListener>`
     - ○ |br| :ref:`前往文档 <duplicate_process_check_handler>`
 
   * - 从外部安全地停止正在运行的批处理应用程序。
@@ -80,7 +80,7 @@ Jakarta Batch 与 Nablarch Batch 应用程序的功能对比
   通过 :ref:`retry_handler` 可对可重试异常执行重试，但无法像 Jakarta Batch 那样对发生异常的单条数据进行简单重试。
   此外，:ref:`retry_handler` 无法灵活指定需重试的异常类型。
 
-  若 :ref:`retry_handler` 无法满足需求（例如需要对发生异常的数据进行简单重试，或需灵活指定异常类型），则应通过自定义处理器进行应对。
+  若 :ref:`retry_handler` 无法满足需求（例如需要对发生异常的数据进行简单重试，或需灵活指定异常类型），则应通过自定义handler进行应对。
 
 .. [#branch_batch]
   通过作业调度器等进行应对。例如，需根据退出代码切换下一个执行的作业等。

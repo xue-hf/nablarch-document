@@ -3,29 +3,30 @@
 Getting Started
 ==========================================
 
-本章を通読することで、Nablarchを用いたウェブ应用開発のイメージを掴むことができる。
+通过通读本章，可以掌握 Nablarch Batch 应用方式的 Batch 开发思路。
 
-本章节詳細な機能説明を行わないため、実装する際には、適宜 :doc:`../feature_details`
-や :doc:`../../libraries/index` 、及び `APIドキュメント` を参照する必要がある。
+
+本章节不提供详细的功能说明，因此在实现时，
+需参考 :doc:`../feature_details`、:doc:`../../libraries/index` 以及 `API文档`。
 
 .. tip::
- ExampleはNablarchの機能の使用方法を示した実装例であり、Exampleを改修して本格的な应用を作成することは想定していない。
- 
- 本格的な应用を作成する場合は :ref:`blank_project` から作成すること。
+ Example 是展示 Nablarch 功能使用方法的实现示例，不建议通过修改 Example 来开发正式应用。
+
+ 如需开发正式应用，请从 :ref:`blank_project` 开始。
 
 
 前提条件
-  本章は  :ref:`example_application`  をベースに解説する。
-  Example应用の動作環境を事前に構築しておくこと。
+  本章以 :ref:`example_application` 为基础进行说明。
+  请事先构建好 Example 应用的运行环境。
 
   .. tip::
-    Example应用に関する以下の事項は、本章节解説しない。
-    以下の事項については、 :ref:`example_application` を参照すること。
+    与Example应用相关的以下事项不会在本章节说明。
+    请参考 :ref:`example_application` 。
     
-    - Example应用の環境構築および実行
-    - Example应用の設定
-    - 使用しているOSSプラグインについて
-    - 使用しているUIフレームワークについて
+    - Example应用的运行环境构建与执行
+    - Example应用的设置
+    - 使用的开源插件相关
+    - 使用的UI框架相关
 
 .. toctree::
   :maxdepth: 1

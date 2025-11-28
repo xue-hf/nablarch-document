@@ -1,4 +1,4 @@
-機能詳細
+功能详细
 ========================================
 
 .. contents:: 目录
@@ -7,7 +7,7 @@
 
 .. _web_feature_details-nablarch_initialization:
 
-Nablarchの初期化
+Nablarch的初始化
 ----------------------------------------
 .. toctree::
   :maxdepth: 1
@@ -16,10 +16,10 @@ Nablarchの初期化
   feature_details/nablarch_servlet_context_listener
   feature_details/web_front_controller
 
-Nablarchの初期化を行うためには、 :ref:`System Repositoryのロードの為の設定 <nablarch_servlet_context_listener>`
-及び :ref:`handler队列の設定(構築) <web_front_controller>` が必要となる。
+为了进行Nablarch的初始化，需要进行 :ref:`用于加载System Repository的设置 <nablarch_servlet_context_listener>`
+以及 :ref:`handler队列的设置（构建）<web_front_controller>`。
 
-入力値のチェック
+输入值校验
 ----------------------------------------
 .. toctree::
     :maxdepth: 1
@@ -27,18 +27,18 @@ Nablarchの初期化を行うためには、 :ref:`System Repositoryのロード
 
     feature_details/error_message
 
-* :ref:`入力値のチェック <validation>`
-* :doc:`エラーメッセージの画面表示 <feature_details/error_message>`
+* :ref:`输入值校验 <validation>`
+* :doc:`在页面上显示错误消息 <feature_details/error_message>`
 
-データベースアクセス
+数据库访问
 ----------------------------------------
-* :ref:`データベースアクセス <database_management>`
+* :ref:`数据库访问 <database_management>`
 
-排他制御
+数据库锁控制
 ----------------------------------------
-排他制御は、以下の2種類の方法を提供しているが、
-:ref:`UniversalDaoを推奨する理由 <exclusive_control-deprecated>` に記載がある通り、
-:ref:`universal_dao` の使用を推奨する。
+关于数据库锁控制，虽然Nablarch提供了以下两种方式，
+但是根据 :ref:`为什么推荐使用UniversalDao <exclusive_control-deprecated>` ，
+推荐使用 :ref:`universal_dao`。
 
 * :ref:`exclusive_control`
 * :ref:`universal_dao`
@@ -46,47 +46,48 @@ Nablarchの初期化を行うためには、 :ref:`System Repositoryのロード
   * :ref:`universal_dao_jpa_optimistic_lock`
   * :ref:`universal_dao_jpa_pessimistic_lock`
 
-ファイルアップロード
+文件上传
 ----------------------------------------
 * :ref:`multipart_handler-read_upload_file`
 
-ファイルダウンロード
+文件下载
 ----------------------------------------
-ファイルダウンロードは、以下の2種類の方法を提供しているが、
-:ref:`データバインドを推奨する理由 <data_converter-data_bind_recommend>` に記載がある通り、
-:ref:`data_bind` の使用を推奨する。
+虽然提供了两种不同的提供下载功能的方法，
+但是根据:ref:`为什么推荐数据绑定 <data_converter-data_bind_recommend>` ，
+推荐使用:ref:`data_bind`。
 
-* :ref:`データバインド機能を使用したファイルダウンロード <data_bind-file_download>`
-* :ref:`汎用データフォーマット機能を使用したファイルダウンロード <data_format-file_download>`
+* :ref:`使用数据绑定的文件上传 <data_bind-file_download>`
+* :ref:`使用通用数据模板的文件上传 <data_format-file_download>`
 
-大量データのダウンロード時には、 :ref:`universal_dao-lazy_load` を参照し、
-データベースの検索結果をヒープ上に展開しないように注意すること。
+下载大量数据时，参考:ref:`universal_dao-lazy_load`，
+注意数据库的检索结果不要导致堆溢出。
 
-URIとAction类のマッピング
+URI与Action类的映射（路由）
 ----------------------------------------
-以下の2種類の方法を提供しているが、
-:ref:`ルーティングアダプタが推奨である理由<http_request_java_package_mapping-router_adaptor>` に記載がある通り、 :ref:`router_adaptor` の使用を推奨する。
+虽然提供了以下两种方法，
+但是根据 :ref:`为什么推荐使用route适配器<http_request_java_package_mapping-router_adaptor>` ，
+推荐使用 :ref:`router_adaptor` 。
 
 * :ref:`router_adaptor`
 * :ref:`http_request_java_package_mapping`
 
-2重サブミット防止
+防抖
 ----------------------------------------
-* :ref:`2重サブミット防止 <tag-double_submission>`
+* :ref:`防抖 <tag-double_submission>`
 
-また、JSP以外のテンプレートエンジンを使用している場合は :ref:`use_token_interceptor` も参照すること。
+此外，使用JSP以外的模板引擎时，还可以参考 :ref:`use_token_interceptor`。
 
-入力データの保持
+保存输入数据
 ----------------------------------------
 * :ref:`session_store`
 
-ページネーション
+分页
 ----------------------------------------
-データベースから範囲を指定して検索する方法は、 :ref:`database_management` を参照。
+从数据库获取指定范围的数据的方法，请参考 :ref:`database_management` 。
 
-クライアントサイドについては、プロジェクト要件により仕様が異なるため、フレークワークとしては提供していない。
+关于客户端，由于项目需求不同而导致规格各异，因此框架本身并未提供。
 
-画面の作成
+创建页面
 ----------------------------------------
 .. toctree::
   :maxdepth: 1
@@ -95,53 +96,48 @@ URIとAction类のマッピング
   feature_details/jsp_session
   feature_details/view/other
 
-* JSPを使用する場合
+* 使用JSP的情况
 
-  * :ref:`JSPのtaglibを使用した画面開発 <tag>`
+  * :ref:`使用JSP的taglib进行页面开发 <tag>`
   * :ref:`jsp_session`
 
-* JSP以外のテンプレートエンジンを使用する場合
+* 使用JSP以外的其他模板引擎的情况
 
-  * :ref:`Thymeleafを使用した画面開発 <web_thymeleaf_adaptor>`
+  * :ref:`使用Thymeleaf进行页面开发 <web_thymeleaf_adaptor>`
   * :ref:`view_other`
 
-国際化対応
+国际化
 ----------------------------------------
-静的リソースの多言語化対応については以下を参照。
+关于静态资源的多语言支持，请参照如下内容。
 
-* :ref:`メッセージの多言語化 <message-multi_lang>`
-* :ref:`コード名称の多言語化 <code-use_multilingualization>`
+* :ref:`消息的多语言化 <message-multi_lang>`
+* :ref:`code名称的多语言化 <code-use_multilingualization>`
 
-画面表示する文言の言語を切り替えるには、以下の2通りの方法を提供しているが、
-:ref:`メッセージタグでの国際化対応 <tag-write_message>` を使用した場合、
-画面レイアウトが崩れる可能性がある。
-そのため、レイアウト崩れを許容できる場合のみ、 :ref:`メッセージタグでの国際化対応 <tag-write_message>` を使用すること。
+虽然提供了以下两种切换页面文本的语言的方式，
+但是使用 :ref:`使用消息tag实现多语言 <tag-write_message>` 的时候
+可能导致页面布局不稳定的情况。
+因此只有在能接受页面布局不稳定的情况下才可以使用 :ref:`使用消息tag实现多语言 <tag-write_message>`。
 
-* :ref:`メッセージタグでの国際化対応 <tag-write_message>`
-* :ref:`言語ごとにリソースのパスを切り替える <tag_change_resource_path_of_lang>`
+* :ref:`使用消息tag实现多语言 <tag-write_message>`
+* :ref:`根据语言切换资源路径 <tag_change_resource_path_of_lang>`
 
-認証
+认证
 ----------------------------------------
-認証については、プロジェクト要件により仕様が異なるため、フレークワークとしては提供していない。
-プロジェクト要件に合わせてPJで実装する。
+因为在不同的项目中，认证方式存在各种差异，因此框架不提供认证相关的功能。
+请根据项目要求自行实现。
 
-認証情報の保持については、以下を参照。
+关于认证信息的保存，请参照如下内容。
 
 * :ref:`session_store-authentication_data`
 
-認可チェック
+权限校验
 ----------------------------------------
 * :ref:`permission_check`
 
 
 .. _web_feature_details-status_code:
 
-ステータスコード
---------------------------------------------------
-* `ステータスコードの使い分け(外部サイト) <https://qiita.com/kawasima/items/e48180041ace99842779>`_
-
-
-エラー時の画面遷移とステータスコード
+错误画面跳转与状态码
 --------------------------------------------------
 .. toctree::
   :maxdepth: 1
@@ -149,32 +145,32 @@ URIとAction类のマッピング
 
   feature_details/forward_error_page
 
-* :ref:`ステータスコードに対応したデフォルトの遷移先ページを設定する <HttpErrorHandler_DefaultPage>`
-* :ref:`ハンドラで例外クラスに対応したエラーページに遷移させる <forward_error_page-handler>`
-* アクションでエラー時の遷移先を指定する
+* :ref:`根据状态码设置默认的跳转指定错误页面。 <HttpErrorHandler_DefaultPage>`
+* :ref:`通过handler中根据异常类跳转指定错误页面。 <forward_error_page-handler>`
+* 在Action中编写发生错误时跳转指定错误页面的逻辑
 
-  * 例外クラスに対応した遷移先を定義する (:ref:`on_error_interceptor` 、 :ref:`on_errors_interceptor`)
-  * :ref:`1つの例外に対して複数の遷移先を定義する <forward_error_page-try_catch>`
-* `ステータスコードの使い分け(外部サイト) <https://qiita.com/kawasima/items/e48180041ace99842779>`_
+  * 定义与异常类对应的跳转目标。 (:ref:`on_error_interceptor` 、 :ref:`on_errors_interceptor`)
+  * :ref:`为一个异常定义多个跳转目标。 <forward_error_page-try_catch>`
+* `我该使用什么状态码(外链) <https://qiita.com/kawasima/items/e48180041ace99842779>`_
 
-MOMメッセージ送信
+发送面向消息的中间件消息
 ----------------------------------------
-* :ref:`同期応答メッセージ送信<mom_system_messaging-sync_message_send>`
+* :ref:`发送同步消息<mom_system_messaging-sync_message_send>`
 
 
-Web应用のスケールアウト設計
+Web应用的横向扩展设计
 ---------------------------------------
 
 * :ref:`stateless_web_app`
 
-CSRF対策
+CSRF
 ----------------------------------------
-* :ref:`CSRF対策 <csrf_token_verification_handler>`
+* :ref:`CSRF <csrf_token_verification_handler>`
 
-ウェブ应用とRESTfulウェブサービスの併用
+Web应用与RESTful Web服务的结合使用
 -----------------------------------------------------
-* :ref:`委譲するWebフロントコントローラの名前を変更する <change_web_front_controller_name>`
+* :ref:`更改委托的Web前端控制器名称 <change_web_front_controller_name>`
 
-Content Security Policy(CSP)対応
+内容安全策略(CSP)
 ----------------------------------------
-* :ref:`Content Security Policy(CSP)対応<content_security_policy>`
+* :ref:`Content Security Policy(CSP)<content_security_policy>`

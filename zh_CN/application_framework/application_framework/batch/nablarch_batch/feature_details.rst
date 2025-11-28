@@ -67,7 +67,7 @@ Batch处理的执行控制
 * :ref:`单次Batch处理的数据量限制 <data_read_handler-max_count>`
   |br| (例如，需将处理大量数据的批处理任务分摊到数天内完成的情况。)
 
-发送MOM消息
+发送面向消息的中间件消息
 ----------------------------------------
 * :ref:`发送同步消息<mom_system_messaging-sync_message_send>`
 * :ref:`发送异步消息<mom_system_messaging-async_message_send>`

@@ -1,27 +1,27 @@
 .. _dbless_loop_handler:
 
-ループ制御ハンドラ
+循环控制handler
 ==================================================
 .. contents:: 目录
   :depth: 3
   :local:
 
-本ハンドラは、データリーダ上に処理対象のデータが存在する間、後続ハンドラの処理を繰り返し実行する。
+本handler在数据读取器上存在处理对象数据期间，重复执行后续handler的处理。
 
 .. important::
 
-  DBに接続するバッチ应用ではトランザクション管理が必要になるため、本ハンドラではなく :ref:`loop_handler` を使用すること。
+  在连接数据库的Batch应用中，由于需要事务管理，因此不使用本handler，而应该使用 :ref:`loop_handler` 。
 
-処理の流れは以下のとおり。
+处理流程如下。
 
 .. image:: ../images/DbLessLoopHandler/flow.png
   :scale: 80
 
-ハンドラクラス名
+handler类名
 --------------------------------------------------
 * :java:extdoc:`nablarch.fw.handler.DbLessLoopHandler`
 
-モジュール一覧
+模块列表
 --------------------------------------------------
 
 .. code-block:: xml
@@ -31,6 +31,6 @@
     <artifactId>nablarch-fw-standalone</artifactId>
   </dependency>
 
-制約
+约束
 ------------------------------
-なし。
+无。
