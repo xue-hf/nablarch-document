@@ -61,7 +61,7 @@ MOMメッセージングはJakarta Messagingに対応しており、
 さらに、MOMとして使用実績が多い IBM MQ にも対応している。
 詳細は、 :ref:`webspheremq_adaptor` を参照。
 
-モジュール一覧
+模块列表
 --------------------------------------------------
 .. code-block:: xml
 

@@ -23,7 +23,7 @@ JSR310(Date and Time API)で追加された日時関連を使用可能にする�
   * :java:extdoc:`LocalDate <java.time.LocalDate>`
   * :java:extdoc:`LocalDateTime <java.time.LocalDateTime>`
 
-モジュール一覧
+模块列表
 --------------------------------------------------
 .. code-block:: xml
 

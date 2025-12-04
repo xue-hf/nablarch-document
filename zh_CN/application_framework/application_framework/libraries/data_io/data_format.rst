@@ -86,7 +86,7 @@
 
 パディングやトリミングの詳細は、 :ref:`data_format-field_convertor_list` を参照。
 
-モジュール一覧
+模块列表
 ---------------------------------------------------------------------
 * :ref:`アップロードヘルパー <data_format-upload_helper>` を使用する場合は、 ``nablarch-fw-web-extension`` を追加する。
 * :ref:`ファイルダウンロード <data_format-file_download>` を使用する場合は、 ``nablarch-fw-web-extension`` を追加する。

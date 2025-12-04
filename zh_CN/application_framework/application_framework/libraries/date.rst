@@ -20,7 +20,7 @@
 * :ref:`date-system_time_change`
 * :ref:`date-business_date_change`
 
-モジュール一覧
+模块列表
 ---------------------------------------------------------------------
 .. code-block:: xml
 

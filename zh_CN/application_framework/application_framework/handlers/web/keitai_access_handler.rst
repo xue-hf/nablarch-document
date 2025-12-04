@@ -19,11 +19,11 @@
 
 .. image:: ../images/KeitaiAccessHandler/flow.png
 
-ハンドラクラス名
+handler类名
 --------------------------------------------------
 * :java:extdoc:`nablarch.fw.web.handler.KeitaiAccessHandler`
 
-モジュール一覧
+模块列表
 --------------------------------------------------
 .. code-block:: xml
 

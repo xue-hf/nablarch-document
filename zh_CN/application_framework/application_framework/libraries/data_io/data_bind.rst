@@ -52,7 +52,7 @@ Mapオブジェクトへの変換時、値は全てString型で格納される�
   * :ref:`data_bind-csv_format`
   * :ref:`data_bind-fixed_length_format`
 
-モジュール一覧
+模块列表
 ---------------------------------------------------------------------
 
 .. code-block:: xml

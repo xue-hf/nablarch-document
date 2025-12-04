@@ -27,11 +27,11 @@
   このため、使用するストアの特性をよく理解し、要件にあったストアを選択する必要がある。
   ストアの詳細は、 :ref:`session_store-future_of_store` を参照。
 
-ハンドラクラス名
+handler类名
 --------------------------------------------------
 * :java:extdoc:`nablarch.common.web.session.SessionStoreHandler`
 
-モジュール一覧
+模块列表
 --------------------------------------------------
 .. code-block:: xml
 

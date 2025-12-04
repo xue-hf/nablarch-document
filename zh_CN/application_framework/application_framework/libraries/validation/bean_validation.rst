@@ -38,7 +38,7 @@ Nablarchで提供しているバリデータは以下のパッケージ内のア
 * :java:extdoc:`nablarch.core.validation.ee`
 * :java:extdoc:`nablarch.common.code.validator.ee`
 
-モジュール一覧
+模块列表
 --------------------------------------------------
 .. code-block:: xml
 

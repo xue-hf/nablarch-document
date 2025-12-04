@@ -15,7 +15,7 @@ Micrometerアダプタ
 * 収集したメトリクスを `Datadog(外部サイト) <https://www.datadoghq.com/ja/>`_ や `CloudWatch(外部サイト) <https://aws.amazon.com/jp/cloudwatch/>`_ などの監視サービスに連携できる
 
 
-モジュール一覧
+模块列表
 --------------------------------------------------
 .. code-block:: xml
 

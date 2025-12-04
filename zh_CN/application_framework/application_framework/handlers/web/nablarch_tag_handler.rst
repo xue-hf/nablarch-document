@@ -30,11 +30,11 @@ Nablarchの :ref:`tag` に必要なリクエスト処理を行うハンドラ。
 
 .. image:: ../images/NablarchTagHandler/NablarchTagHandler_flow.png
 
-ハンドラクラス名
+handler类名
 --------------------------------------------------
 * :java:extdoc:`nablarch.common.web.handler.NablarchTagHandler`
 
-モジュール一覧
+模块列表
 ---------------------------------------------------------------------
 .. code-block:: xml
 

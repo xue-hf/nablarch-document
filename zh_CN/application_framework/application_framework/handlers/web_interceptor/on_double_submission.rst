@@ -19,7 +19,7 @@ OnDoubleSubmissionインターセプタ
 --------------------------------------------------
 * :java:extdoc:`nablarch.common.web.token.OnDoubleSubmission`
 
-モジュール一覧
+模块列表
 --------------------------------------------------
 .. code-block:: xml
 

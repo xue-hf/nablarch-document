@@ -34,11 +34,11 @@
 
 .. image:: ../images/ResourceMapping/flow.png
 
-ハンドラクラス名
+handler类名
 --------------------------------------------------
 * :java:extdoc:`nablarch.fw.web.handler.ResourceMapping`
 
-モジュール一覧
+模块列表
 --------------------------------------------------
 .. code-block:: xml
 

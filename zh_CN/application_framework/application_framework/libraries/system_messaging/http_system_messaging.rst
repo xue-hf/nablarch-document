@@ -51,7 +51,7 @@ HTTPメッセージングでは、メッセージの送受信の実装を :ref:`
 * :java:extdoc:`MessagingAction<nablarch.fw.messaging.action.MessagingAction>`
 * :java:extdoc:`MessageSender<nablarch.fw.messaging.MessageSender>`
 
-モジュール一覧
+模块列表
 --------------------------------------------------
 .. code-block:: xml
 

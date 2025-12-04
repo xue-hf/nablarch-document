@@ -20,7 +20,7 @@
 
 詳細は、 :ref:`file_path_management-definition` を参照
 
-モジュール一覧
+模块列表
 --------------------------------------------------
 .. code-block:: xml
 

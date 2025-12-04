@@ -9,7 +9,7 @@ E-mail FreeMarkerアダプタ
 
 `FreeMarker(外部サイト) <https://freemarker.apache.org/>`_ を使用した定型メール送信処理を行うためのアダプタを提供する。
 
-モジュール一覧
+模块列表
 --------------------------------------------------
 .. code-block:: xml
 

@@ -37,11 +37,11 @@ CSRFトークンが画面に自動で出力される。
 .. image:: ../images/CsrfTokenVerificationHandler/flow.png
   :scale: 80
 
-ハンドラクラス名
+handler类名
 --------------------------------------------------
 * :java:extdoc:`nablarch.fw.web.handler.CsrfTokenVerificationHandler`
 
-モジュール一覧
+模块列表
 --------------------------------------------------
 .. code-block:: xml
 

@@ -37,7 +37,7 @@
 * :ref:`service_availability-check`
 * :ref:`service_availability-view_control`
 
-モジュール一覧
+模块列表
 --------------------------------------------------
 .. code-block:: xml
 

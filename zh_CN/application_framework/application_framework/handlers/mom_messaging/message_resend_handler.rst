@@ -30,11 +30,11 @@
 .. image:: ../images/MessageResendHandler/flow.png
   :scale: 75
   
-ハンドラクラス名
+handler类名
 --------------------------------------------------
 * :java:extdoc:`nablarch.fw.messaging.handler.MessageResendHandler`
 
-モジュール一覧
+模块列表
 --------------------------------------------------
 .. code-block:: xml
 

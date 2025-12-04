@@ -20,11 +20,11 @@ HTTPリクエストがマルチパート形式の場合に、ボディ部を解�
 
 .. image:: ../images/MultipartHandler/flow.png
 
-ハンドラクラス名
+handler类名
 --------------------------------------------------
 * :java:extdoc:`nablarch.fw.web.upload.MultipartHandler`
 
-モジュール一覧
+模块列表
 --------------------------------------------------
 .. code-block:: xml
 

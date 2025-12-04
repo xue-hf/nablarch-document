@@ -15,7 +15,7 @@ InjectForm インターセプタ
 --------------------------------------------------
 * :java:extdoc:`nablarch.common.web.interceptor.InjectForm`
 
-モジュール一覧
+模块列表
 --------------------------------------------------
 .. code-block:: xml
 

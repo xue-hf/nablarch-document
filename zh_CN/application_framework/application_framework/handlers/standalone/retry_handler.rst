@@ -24,11 +24,11 @@
 .. image:: ../images/RetryHandler/flow.png
   :scale: 80
   
-ハンドラクラス名
+handler类名
 --------------------------------------------------
 * :java:extdoc:`nablarch.fw.handler.RetryHandler`
 
-モジュール一覧
+模块列表
 --------------------------------------------------
 .. code-block:: xml
 

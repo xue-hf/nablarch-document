@@ -17,11 +17,11 @@
 .. image:: ../images/NormalizationHandler/flow.png
   :scale: 75
   
-ハンドラクラス名
+handler类名
 --------------------------------------------------
 * :java:extdoc:`nablarch.fw.web.handler.NormalizationHandler`
 
-モジュール一覧
+模块列表
 --------------------------------------------------
 .. code-block:: xml
 

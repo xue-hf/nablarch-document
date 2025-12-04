@@ -21,7 +21,7 @@ Jakarta RESTful Web Servicesアダプタ
 * `Jersey(外部サイト、英語) <https://eclipse-ee4j.github.io/jersey/>`_  で :ref:`RESTfulウェブサービス <restful_web_service>` を使用するためのアダプタ
 * `RESTEasy(外部サイト、英語) <https://resteasy.dev/>`_ で :ref:`RESTfulウェブサービス <restful_web_service>` を使用するためのアダプタ
 
-モジュール一覧
+模块列表
 --------------------------------------------------
 .. code-block:: xml
 

@@ -42,11 +42,11 @@ className     クラス名 (必須)
 
 .. image:: ../images/RequestPathJavaPackageMapping/flow.png
 
-ハンドラクラス名
+handler类名
 --------------------------------------------------
 * :java:extdoc:`nablarch.fw.handler.RequestPathJavaPackageMapping`
 
-モジュール一覧
+模块列表
 --------------------------------------------------
 .. code-block:: xml
 

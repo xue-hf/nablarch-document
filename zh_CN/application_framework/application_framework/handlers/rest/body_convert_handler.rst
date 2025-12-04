@@ -24,11 +24,11 @@
 .. image:: ../images/BodyConvertHandler/flow.png
   :scale: 75
   
-ハンドラクラス名
+handler类名
 --------------------------------------------------
 * :java:extdoc:`nablarch.fw.jaxrs.BodyConvertHandler`
 
-モジュール一覧
+模块列表
 --------------------------------------------------
 .. code-block:: xml
 
