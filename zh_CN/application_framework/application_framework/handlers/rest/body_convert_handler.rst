@@ -11,7 +11,7 @@
 変換時に使用するフォーマットは、リクエストを処理するリソース(アクション)クラスのメソッドに設定された
 :java:extdoc:`Consumes <jakarta.ws.rs.Consumes>` 及び :java:extdoc:`Produces <jakarta.ws.rs.Produces>` アノテーションで指定する。
 
-本ハンドラでは、以下の処理を行う。
+本handler执行以下处理。
 
 * リクエストボディをリソース(アクション)クラスで受け付けるFormに変換する。
   詳細は、:ref:`body_convert_handler-convert_request` を参照。
@@ -19,7 +19,7 @@
 * リソース(アクション)クラスの処理結果をレスポンスボディに変換する。
   詳細は、:ref:`body_convert_handler-convert_response` を参照。
 
-処理の流れは以下のとおり。
+处理流程如下。
 
 .. image:: ../images/BodyConvertHandler/flow.png
   :scale: 75

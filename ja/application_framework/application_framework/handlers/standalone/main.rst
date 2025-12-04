@@ -11,7 +11,7 @@
 
 javaコマンドから直接起動することで、システムリポジトリの初期化を行い、そこに定義されたハンドラキューを実行させることができる。
 
-本ハンドラでは、以下の処理を行う。
+本handler执行以下处理。
 処理の詳細は、カッコ内のJavadocを参照。
 
 * コマンドライン引数のパース( :java:extdoc:`CommandLine<nablarch.fw.launcher.CommandLine>` )
@@ -23,7 +23,7 @@ javaコマンドから直接起動することで、システムリポジトリ�
 * 例外及びエラーに応じたログの出力
 * 終了ログの出力( :java:extdoc:`LauncherLogFormatter#getEndLogFormat<nablarch.fw.launcher.logging.LauncherLogFormatter.getEndLogFormat()>` )
 
-処理の流れは以下のとおり。
+处理流程如下。
 
 .. image:: ../images/Main/Main_flow.png
 

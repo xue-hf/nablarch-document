@@ -13,11 +13,11 @@
 そのため、本ハンドラを使用するには、
 :java:extdoc:`ServiceAvailability <nablarch.common.availability.ServiceAvailability>` を実装したクラスを本ハンドラに設定する必要がある。
 
-本ハンドラでは、以下の処理を行う。
+本handler执行以下处理。
 
 * サービス提供可否チェック
 
-処理の流れは以下のとおり。
+处理流程如下。
 
 .. image:: ../images/ServiceAvailabilityCheckHandler/ServiceAvailabilityCheckHandler_flow.png
 

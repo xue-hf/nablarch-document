@@ -15,7 +15,7 @@
 * 在后续handler中发生异常时，判断是否继续此handler等。
   详细内容请参考 :ref:`process_resident_handler-exception`。
 
-处理流程如下。
+本handler执行以下处理。
 
 .. image:: ../images/ProcessResidentHandler/flow.png
   :scale: 80

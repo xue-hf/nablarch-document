@@ -13,7 +13,7 @@
 * 事务的结束(commit或回滚)
 * 事务结束时的回调
 
-处理流程如下。
+本handler执行以下处理。
 
 .. image:: ../images/LoopHandler/flow.png
   :scale: 80

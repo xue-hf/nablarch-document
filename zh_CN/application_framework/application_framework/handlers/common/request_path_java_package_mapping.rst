@@ -33,12 +33,12 @@ className     クラス名 (必須)
   :ref:`main` に記載の通り、コマンドラインで起動する際に ``-requestPath`` オプションで指定する。
 
 
-本ハンドラでは、以下の処理を行う。
+本handler执行以下处理。
 
 * リクエストパスを解析し、対応するアクションの handle メソッドを呼び出す。
 
 
-処理の流れは以下のとおり。
+处理流程如下。
 
 .. image:: ../images/RequestPathJavaPackageMapping/flow.png
 

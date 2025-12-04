@@ -19,11 +19,11 @@ Jakarta RESTful Web Servcies Bean Validationハンドラ
 バリデーションでバリデーションエラーが発生した場合には、後続のハンドラに処理は委譲せずに、
 :java:extdoc:`ApplicationException <nablarch.core.message.ApplicationException>` を送出して処理を終了する。
 
-本ハンドラでは、以下の処理を行う。
+本handler执行以下处理。
 
 * リソース(アクション)クラスのメソッドが受け取るFormに対する :ref:`bean_validation` を行う。
 
-処理の流れは以下のとおり。
+处理流程如下。
 
 .. image:: ../images/JaxRsBeanValidationHandler/flow.png
   :scale: 75

@@ -12,7 +12,7 @@
 
   在连接数据库的Batch应用中，由于需要事务管理，因此不使用本handler，而应该使用 :ref:`loop_handler` 。
 
-处理流程如下。
+本handler执行以下处理。
 
 .. image:: ../images/DbLessLoopHandler/flow.png
   :scale: 80

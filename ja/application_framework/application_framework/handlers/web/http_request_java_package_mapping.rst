@@ -52,11 +52,11 @@ URL形式
 
   このため、このハンドラを使うよりも、URLとアクションクラスとのマッピングを柔軟に設定できる :ref:`router_adaptor` を使用することを推奨する。
 
-本ハンドラでは、以下の処理を行う。
+本handler执行以下处理。
 
 * URIを解析し、対応するアクションのメソッドを呼び出す。
 
-処理の流れは以下のとおり。
+处理流程如下。
 
 .. image:: ../images/HttpRequestJavaPackageMapping/flow.png
 

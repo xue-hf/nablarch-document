@@ -9,7 +9,7 @@ HTTPメッセージングエラー制御ハンドラ
 本ハンドラでは後続のハンドラで発生した例外及びエラーを補足し、例外(エラー)に応じたログ出力とレスポンスの生成を行う。
 また、後続のハンドラでレスポンスボディが設定されていない場合には、HTTPステータスコードに対応したデフォルトのボディをレスポンスに設定する。
 
-本ハンドラでは、以下の処理を行う。
+本handler执行以下处理。
 
 * 例外(エラー)に応じたログ出力とレスポンスの生成を行う。
   詳細は、 :ref:`http_messaging_error_handler-error_response_and_log` を参照。
@@ -17,7 +17,7 @@ HTTPメッセージングエラー制御ハンドラ
 * デフォルトのレスポンスボディを設定する。
   詳細は、 :ref:`http_messaging_error_handler-default_page` を参照。
 
-処理の流れは以下のとおり。
+处理流程如下。
 
 .. image:: ../images/HttpMessagingErrorHandler/flow.png
   :scale: 75

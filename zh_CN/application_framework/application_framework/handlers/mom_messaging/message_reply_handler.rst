@@ -9,7 +9,7 @@
 此handler基于后续handler的处理结果，即 :java:extdoc:`ResponseMessage <nablarch.fw.messaging.ResponseMessage>` 对象的内容，
 创建应答电文并返回(发送)给连接的目标系统。
 
-此handler执行以下处理。
+本handler执行以下处理。
 
 * 执行应答电文的发送处理
 

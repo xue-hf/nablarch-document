@@ -9,7 +9,7 @@ Nablarchカスタムタグ制御ハンドラ
 
 Nablarchの :ref:`tag` に必要なリクエスト処理を行うハンドラ。
 
-本ハンドラでは、以下の処理を行う。
+本handler执行以下处理。
 
 * カスタムタグのデフォルト値をJSPで参照できるように、
   :java:extdoc:`CustomTagConfig<nablarch.common.web.tag.CustomTagConfig>` をリクエストスコープに設定する。
@@ -26,7 +26,7 @@ Nablarchの :ref:`tag` に必要なリクエスト処理を行うハンドラ。
  カスタムタグに合わせて、本ハンドラでも、GETリクエストの場合はhiddenパラメータに関連する処理を行わず、
  複合キーの復元処理のみを行う。
 
-処理の流れは以下のとおり。
+处理流程如下。
 
 .. image:: ../images/NablarchTagHandler/NablarchTagHandler_flow.png
 

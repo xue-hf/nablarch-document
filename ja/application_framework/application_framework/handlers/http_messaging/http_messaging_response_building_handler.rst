@@ -10,11 +10,11 @@ HTTPメッセージングレスポンス変換ハンドラ
 また、応答電文オブジェクト内のプロトコルヘッダの値を、対応するHTTPヘッダに設定及びXMLやJSONなどの形式への直列化を行う。
 
 
-本ハンドラでは、以下の処理を行う。
+本handler执行以下处理。
 
 * 応答電文オブジェクトの内容をHTTPレスポンスオブジェクトに変換する。
 
-処理の流れは以下のとおり。
+处理流程如下。
 
 .. image:: ../images/HttpMessagingResponseBuildingHandler/flow.png
   :scale: 75

@@ -8,7 +8,7 @@
 
 用于捕获后续handler中发生的未捕获异常和错误，并输出日志和返回结果的handler。
 
-处理流程如下。
+本handler执行以下处理。
 
 
 .. image:: ../images/GlobalErrorHandler/flow.png

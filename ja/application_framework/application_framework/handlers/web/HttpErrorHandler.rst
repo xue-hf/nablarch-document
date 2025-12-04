@@ -9,14 +9,14 @@ HTTPエラー制御ハンドラ
 
 後続のハンドラで発生した例外に対するログ出力やレスポンスへの変換を行うハンドラ。
 
-本ハンドラでは、以下の処理を行う。
+本handler执行以下处理。
 
 * :ref:`例外の種類に応じたログ出力 <HttpErrorHandler_ErrorHandling>`
 * :ref:`例外の種類に応じたエラー用HttpResponseの生成と返却 <HttpErrorHandler_ErrorHandling>`
 * :ref:`デフォルトページの設定 <HttpErrorHandler_DefaultPage>`
 
 
-処理の流れは以下のとおり。
+处理流程如下。
 
 .. image:: ../images/HttpErrorHandler/flow.png
 

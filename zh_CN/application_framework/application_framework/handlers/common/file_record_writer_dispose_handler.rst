@@ -14,7 +14,7 @@
   此handler的释放对象是使用 :java:extdoc:`FileRecordWriterHolder <nablarch.common.io.FileRecordWriterHolder>` 打开的输出文件。
   对于使用其他API(例如，`java.io`包)打开的资源，需要单独进行关闭处理。
 
-处理流程如下。
+本handler执行以下处理。
 
 .. image:: ../images/FileRecordWriterDisposeHandler/flow.png
 

@@ -11,13 +11,13 @@
 
 トランザクション機能の詳細は、 :ref:`transaction` を参照。
 
-本ハンドラでは、以下の処理を行う。
+本handler执行以下处理。
 
 * トランザクションの開始
 * トランザクションの終了(コミットやロールバック)
 * トランザクションの終了時のコールバック
 
-処理の流れは以下のとおり。
+处理流程如下。
 
 .. image:: ../images/TransactionManagementHandler/flow.png
 

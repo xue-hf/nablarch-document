@@ -12,11 +12,11 @@ CORSを実現するには、実際のリクエストの前に送信されるプ�
 プリフライトリクエストは本ハンドラで処理し、実際のリクエストに対する処理は :ref:`jaxrs_response_handler-response_finisher` で説明している
 ResponseFinisherを実装した :java:extdoc:`CorsResponseFinisher <nablarch.fw.jaxrs.cors.CorsResponseFinisher>` で処理する。
 
-本ハンドラでは、以下の処理を行う。
+本handler执行以下处理。
 
 * リクエストがプリフライトリクエストの場合はプリフライトリクエストに対するレスポンスを返す。
 
-処理の流れは以下のとおり。
+处理流程如下。
 
 .. image:: ../images/CorsPreflightRequestHandler/flow.png
   :scale: 75

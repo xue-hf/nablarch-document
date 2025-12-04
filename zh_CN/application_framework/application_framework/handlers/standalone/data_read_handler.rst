@@ -1,23 +1,22 @@
 .. _data_read_handler:
 
-データリードハンドラ
+数据读取handler
 ========================================
 .. contents:: 目录
   :depth: 3
   :local:
 
-:ref:`データリーダ <nablarch_batch-data_reader>` を使用して、入力データの順次読み込みを行なうハンドラ。
+使用:ref:`データリーダ <nablarch_batch-data_reader>` 来顺序读取业务处理所需的输入数据，并将其作为参数传递给后续handler进行处理。
 
-このハンドラは、运行上下文上の :ref:`データリーダ <nablarch_batch-data_reader>` を使用し、業務処理に対する入力データを1件ずつ読み込み、
-それを引数として後続ハンドラに処理を委譲する。
-:ref:`データリーダ <nablarch_batch-data_reader>` の終端に達した場合は、後続のハンドラを実行せずに、データの終端に達したことを示す :java:extdoc:`NoMoreRecord <nablarch.fw.DataReader.NoMoreRecord>` を返却する。
+本handler会使用运行上下文上的 :ref:`データリーダ <nablarch_batch-data_reader>` 来顺序读取业务处理所需的输入数据，并将其作为参数传递给后续handler进行处理。
+:ref:`データリーダ <nablarch_batch-data_reader>` 读取到数据的末尾时，会返回 :java:extdoc:`NoMoreRecord <nablarch.fw.DataReader.NoMoreRecord>` 异常。
 
-本ハンドラでは、以下の処理を行う。
+本handler执行以下处理。
 
 * データリーダを使用して入力データの読み込み
 * :ref:`実行時ID <log-execution_id>` の採番
 
-処理の流れは以下のとおり。
+处理流程如下。
 
 .. image:: ../images/DataReadHandler/flow.png
 

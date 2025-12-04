@@ -9,7 +9,7 @@
 
 後続ハンドラによる処理結果のステータスコードをプロセスの終了コードに変換するハンドラ。
 
-処理の流れは以下のとおり。
+处理流程如下。
 
 .. image:: ../images/StatusCodeConvertHandler/StatusCodeConvertHandler_flow.png
 

@@ -9,7 +9,7 @@ HTTP消息传递错误控制handler
 此handler捕获后续handler中发生的异常和错误，并根据异常(错误)进行日志输出和响应生成。
 此外，如果后续handler中没有设置响应体，则设置与HTTP状态码对应的默认响应体。
 
-此handler执行以下处理。
+本handler执行以下处理。
 
 * 根据异常(错误)进行日志输出和响应生成。
   详细信息请参考 :ref:`http_messaging_error_handler-error_response_and_log`。

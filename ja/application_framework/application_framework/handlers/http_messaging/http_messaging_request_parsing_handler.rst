@@ -12,12 +12,12 @@ HTTPリクエスト(
 :java:extdoc:`RequestMessage<nablarch.fw.messaging.RequestMessage>`
 )に変換するハンドラ。
 
-本ハンドラでは、以下の処理を行う。
+本handler执行以下处理。
 
 * HTTPリクエストを要求電文に変換する。
   詳細は、 :ref:`http_messaging_request_parsing_handler-convert` を参照。
 
-処理の流れは以下のとおり。
+处理流程如下。
 
 .. image:: ../images/HttpMessagingRequestParsingHandler/flow.png
   :scale: 75

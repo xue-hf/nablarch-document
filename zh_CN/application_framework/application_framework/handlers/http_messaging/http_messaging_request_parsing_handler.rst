@@ -12,7 +12,7 @@ HTTP消息传递请求转换handler
 :java:extdoc:`RequestMessage<nablarch.fw.messaging.RequestMessage>`
 )的handler。
 
-此handler执行以下处理。
+本handler执行以下处理。
 
 * 将HTTP请求转换为请求电文。
   详细信息请参考 :ref:`http_messaging_request_parsing_handler-convert`。

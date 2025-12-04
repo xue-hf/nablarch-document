@@ -9,7 +9,7 @@
 本ハンドラは、サブスレッドを作成し、ハンドラキュー上の後続ハンドラの処理を各サブスレッド上で並行実行する。
 このハンドラでの処理結果は、各サブスレッドでの実行結果を集約したオブジェクト(:java:extdoc:`MultiStatus <nablarch.fw.Result.MultiStatus>`)となる。
 
-本ハンドラでは、以下の処理を行う。
+本handler执行以下处理。
 
 * :ref:`サブスレッド起動前のコールバック処理 <multi_thread_execution_handler-callback>`
 * :ref:`サブスレッドの起動 <multi_thread_execution_handler-thread_count>`
@@ -17,7 +17,7 @@
 * :ref:`サブスレッドで例外及びエラー発生時のコールバック処理 <multi_thread_execution_handler-callback>`
 * :ref:`サブスレッドでの処理終了後のコールバック処理 <multi_thread_execution_handler-callback>`
 
-処理の流れは以下のとおり。
+处理流程如下。
 
 .. image:: ../images/MultiThreadExecutionHandler/flow.png
   :scale: 75

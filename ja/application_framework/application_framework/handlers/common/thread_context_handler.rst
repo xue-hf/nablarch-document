@@ -21,11 +21,11 @@
  スレッドコンテキストの属性値の多くは、本ハンドラによって設定されるが、
  本ハンドラ以外のハンドラや業務アクションから任意の変数を設定可能である。
 
-本ハンドラでは、以下の処理を行う。
+本handler执行以下处理。
 
 * :ref:`thread_context_handler-initialization`
 
-処理の流れは以下のとおり。
+处理流程如下。
 
 .. image:: ../images/ThreadContextHandler/ThreadContextHandler_flow.png
 
