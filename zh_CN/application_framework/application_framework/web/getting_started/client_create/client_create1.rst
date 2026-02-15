@@ -1,33 +1,33 @@
 .. _`client_create_1`:
 
-登録画面初期表示の作成
+创建注册画面初始显示
 ==========================================
-本章节、登録画面の初期表示について解説する。
+本章将介绍注册画面的初始显示。
 
-登録画面のJSPを作成する
-  ひな形となるJSPを `/src/main/webapp/WEB-INF/view/client` 配下に配置する。
+创建注册画面的JSP
+  将JSP模板文件放置到 `/src/main/webapp/WEB-INF/view/client` 目录下。
 
      :download:`create.jsp <../downloads/client_create/create.jsp>`
 
-画面に初期表示する部分を実装する
-  create.jspに登録画面の内容を追加する。
+实现画面初始显示部分
+  向create.jsp添加注册画面的内容。
 
   /src/main/webapp/WEB-INF/view/client/create.jsp
     .. code-block:: jsp
 
       <n:form>
           <div class="row m-3">
-              <label class="col-md-2 col-form-label fs-5">顧客名</label>
-              <!-- 顧客名のテキストボックス -->
-              <!-- フォーム作成前なので、name属性には仮の値を指定する -->
+              <label class="col-md-2 col-form-label fs-5">客户名称</label>
+              <!-- 客户名称的文本框 -->
+              <!-- 由于Form尚未创建，name属性暂时使用临时值 -->
               <div class="col-md-10 form-group">
                   <n:text name="tmp" cssClass="form-control form-control-lg"/>
               </div>
           </div>
           <div class="row m-3">
-              <label class="col-md-2 col-form-label fs-5">業種</label>
-              <!-- 業種のプルダウン -->
-              <!-- フォーム作成前なので、name属性には仮の値を指定する -->
+              <label class="col-md-2 col-form-label fs-5">行业</label>
+              <!-- 行业的下拉框 -->
+              <!-- 由于Form尚未创建，name属性暂时使用临时值 -->
               <div class="col-md-10 form-group">
                   <n:select
                           listName="industries"
@@ -39,26 +39,25 @@
               </div>
           </div>
           <div class="button-nav">
-              <!-- 登録ボタン -->
-              <!-- 登録内容確認画面は作成前なので、uri属性には仮の値を指定する -->
+              <!-- 注册按钮 -->
+              <!-- 由于注册内容确认画面尚未创建，uri属性暂时使用临时值 -->
               <n:button
                       uri="tmp"
-                      cssClass="btn btn-lg btn-success">登録</n:button>
+                      cssClass="btn btn-lg btn-success">注册</n:button>
           </div>
       </n:form>
 
-  この実装のポイント
-    * :ref:`tag` を使用し、テキスト入力フォーム、プルダウンを作成する。
-      :ref:`tag-input_form` を参照。
-    * :ref:`tag-select_tag` の `listName` 属性に、
-      後述の初期表示メソッドでリクエストスコープに登録する業種リストの名称を指定し、プルダウンに表示する。
-      :ref:`tag-selection` を参照。
+  实现要点
+    * 使用 :ref:`tag` 创建文本输入框和下拉框。
+      参考 :ref:`tag-input_form` 。
+    * 在 :ref:`tag-select_tag` 的 `listName` 属性中指定后续初始显示方法注册到request scope的行业列表名称，用于下拉框显示。
+      参考 :ref:`tag-selection` 。
 
-業務アクションに初期表示メソッドを作成する
-  `ClientAction` に、以下の処理を行う業務アクションメソッドを追加する
+在业务Action中创建初始显示方法
+  在 `ClientAction` 中添加执行以下处理的业务Action方法
 
-    * プルダウンに表示するデータを取得しリクエストスコープに登録する。
-    * 初期表示画面のJSPへフォーワードする。
+    * 获取下拉框显示的数据并注册到request scope。
+    * forward到初始显示画面的JSP。
 
     ClientAction.java
       .. code-block:: java
@@ -69,67 +68,67 @@
             return new HttpResponse("/WEB-INF/view/client/create.jsp");
         }
 
-    業務アクションメソッドのシグネチャは以下とすること。
-    業務アクションメソッドが以下のシグネチャを満たさない場合、404エラーが発生する。
+    业务Action方法的签名必须符合以下条件。
+    如果业务Action方法不满足以下签名，将发生404错误。
 
     .. java:method:: public HttpResponse methodName(HttpRequest request, ExecutionContext context)
 
-      :param request: フレームワークから受け渡されるリクエストオブジェクト
+      :param request: 框架传递的请求对象
 
-      :param context: フレームワークから受け渡される运行上下文
+      :param context: 框架传递的执行上下文
 
-      :param return: 遷移先を設定したレスポンスオブジェクト
+      :param return: 设置了跳转目标的响应对象
 
 
-    この実装のポイント
-      * 登録画面に業種のプルダウンを表示するために、:ref:`universal_dao` を使用してデータベースから業種情報を全件取得する。
-      * JSPへ値を受け渡すために、取得した業種リストをリクエストスコープに登録する。
+    实现要点
+      * 为了在注册画面显示行业下拉框，使用 :ref:`universal_dao` 从数据库获取所有行业信息。
+      * 为了向JSP传递值，将获取的行业列表注册到request scope。
 
-URLと業務アクションのマッピングを行う
-  マッピング処理はOSSライブラリである `http_request_router(外部サイト) <https://github.com/kawasima/http-request-router>`_ を使用して行う。
-  指定したURLと初期表示処理をマッピングするための設定を追加する。
+URL与业务Action的映射
+  映射处理使用OSS库 `http_request_router(外部站点) <https://github.com/kawasima/http-request-router>`_ 。
+  添加将指定URL与初始显示处理进行映射的设置。
 
     routes.xml
       .. code-block:: xml
 
         <routes>
-          <!-- 上から評価されるので、他のマッピングより前に設定する -->
+          <!-- 从上往下评估，所以要在其他映射之前设置 -->
           <get path="/action/client" to="Client#input"/>
-          <!-- その他の設定は省略 -->
+          <!-- 其他设置省略 -->
         </routes>
 
     .. tip::
-      routes.xmlの指定方法は、`ライブラリのREADMEドキュメント(外部サイト) <https://github.com/kawasima/http-request-router/blob/master/README.ja.md>`_ を参照。
+      routes.xml的指定方法请参考 `库的README文档(外部站点) <https://github.com/kawasima/http-request-router/blob/master/README.ja.md>`_ 。
 
-登録画面へのリンクを作成する
-  ヘッダメニューに顧客登録画面へのリンクを作成する。
+创建注册画面的链接
+  在头部菜单中创建客户注册画面的链接。
 
   /src/main/webapp/WEB-INF/view/common/menu.jsp
     .. code-block:: jsp
 
       <ul class="navbar-nav me-auto">
-        <!-- その他のリンクは省略 -->
+        <!-- 其他链接省略 -->
         <li class="nav-item px-2">
-          <n:a href="/action/client" cssClass="nav-link">顧客登録</n:a>
+          <n:a href="/action/client" cssClass="nav-link">客户注册</n:a>
         </li>
       </ul>
 
-  この実装のポイント
-    * :ref:`tag` の :ref:`tag-a_tag` を使用してリンクを作成する。
+  实现要点
+    * 使用 :ref:`tag` 的 :ref:`tag-a_tag` 创建链接。
 
-動作確認を行う
-  以下の手順で動作確認を行う。
+进行动作确认
+  按以下步骤进行动作确认。
 
-  1. 应用にログインし、ヘッダメニューに「顧客登録」リンクが作成されていることを確認する。
+  1. 登录应用程序，确认头部菜单中已创建「客户注册」链接。
 
     .. image:: ../images/client_create/header_menu.png
 
-  2. 「顧客登録」リンクを押下すると顧客登録画面に遷移し、「顧客名」フォーム、「業種」プルダウン、登録ボタンが表示されていることを確認する。
+  2. 点击「客户注册」链接后跳转到客户注册画面，确认显示了「客户名称」表单、「行业」下拉框和注册按钮。
 
     .. image:: ../images/client_create/initial_display.png
 
-  3. 「業種」プルダウンが選択できることを確認する。
+  3. 确认「行业」下拉框可以选择。
 
     .. image:: ../images/client_create/initial_display_select.png
 
-:ref:`次へ<client_create_2>`
+:ref:`下一页<client_create_2>`

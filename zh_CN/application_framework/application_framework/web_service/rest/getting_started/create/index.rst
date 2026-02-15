@@ -1,35 +1,35 @@
-登録機能の作成
+创建注册功能
 ================================================================
-Example应用を元に、登録機能を解説する。
+基于Example应用程序讲解注册功能。
 
-作成する機能の説明
-  本機能は、POSTリクエスト時にリクエストボディにJSON形式のプロジェクト情報を設定することで、
-  データベースにプロジェクト情報を登録する。
+功能说明
+  本功能在POST请求时通过请求主体设置JSON格式的项目信息，
+  将项目信息注册到数据库。
 
-動作確認手順
-  1. 事前にDBの状態を確認
+动作确认步骤
+  1. 事先确认DB状态
 
-     H2のコンソールから下記SQLを実行し、レコードが存在しないことを確認する。
+     从H2控制台执行以下SQL，确认记录不存在。
 
      .. code-block:: sql
 
-       SELECT * FROM PROJECT WHERE PROJECT_NAME = 'プロジェクト９９９';
+       SELECT * FROM PROJECT WHERE PROJECT_NAME = '项目９９９';
 
-  2. プロジェクト情報の登録
+  2. 注册项目信息
 
-    任意のRESTクライアントを使用して、以下のリクエストを送信する。
+    使用任意REST客户端发送以下请求。
 
     URL
       http://localhost:9080/projects
-    HTTPメソッド
+    HTTP方法
       POST
     Content-Type
       application/json
-    リクエストボディ
+    请求主体
       .. code-block:: json
 
         {
-            "projectName": "プロジェクト９９９",
+            "projectName": "项目９９９",
             "projectType": "development",
             "projectClass": "ss",
             "projectManager": "山田",
@@ -37,47 +37,47 @@ Example应用を元に、登録機能を解説する。
             "clientId": 10,
             "projectStartDate": "20160101",
             "projectEndDate": "20161231",
-            "note": "備考９９９",
+            "note": "备注９９９",
             "sales": 10000,
             "costOfGoodsSold": 20000,
             "sga": 30000,
             "allocationOfCorpExpenses": 40000
         }
 
-  3. 動作確認
+  3. 动作确认
 
-    H2のコンソールから下記SQLを実行し、レコードが1件取得できることを確認する。
+    从H2控制台执行以下SQL，确认可以获取1条记录。
 
     .. code-block:: sql
 
-      SELECT * FROM PROJECT WHERE PROJECT_NAME = 'プロジェクト９９９';
+      SELECT * FROM PROJECT WHERE PROJECT_NAME = '项目９９９';
 
-プロジェクト情報を登録する
+注册项目信息
 ---------------------------------
 
-フォームの作成
-  クライアントから送信された値を受け付けるフォームを作成する。
+创建Form
+  创建接收客户端发送值的Form。
 
   ProjectForm.java
     .. code-block:: java
 
       public class ProjectForm implements Serializable {
 
-          // 一部のみ抜粋
+          // 仅摘录部分
 
-          /** プロジェクト名 */
+          /** 项目名称 */
           @Required
           @Domain("projectName")
           private String projectName;
 
-          // ゲッタ及びセッタは省略
+          // getter及setter省略
       }
 
-    この実装のポイント
-     * プロパティは全てString型で宣言する。詳細は :ref:`バリデーションルールの設定方法 <bean_validation-form_property>` を参照。
+    实现要点
+     * 属性全部声明为String型。详细信息请参考 :ref:`验证规则的设置方法 <bean_validation-form_property>` 。
 
-業務アクションメソッドの実装
-  プロジェクト情報をデータベースに登録する処理を実装する。
+实现业务Action方法
+  实现将项目信息注册到数据库的处理。
 
   ProjectAction.java
     .. code-block:: java
@@ -89,18 +89,18 @@ Example应用を元に、登録機能を解説する。
           return new HttpResponse(HttpResponse.Status.CREATED.getStatusCode());
       }
 
-   この実装のポイント
-    * リクエストをJSON形式で受け付けるため、 :java:extdoc:`Consumes<jakarta.ws.rs.Consumes>` アノテーションに
-      ``MediaType.APPLICATION_JSON`` を指定する。
-    * :java:extdoc:`Valid <jakarta.validation.Valid>` アノテーションを使用して、リクエストのバリデーションを行う。
-      詳細は :ref:`jaxrs_bean_validation_handler` を参照。
-    * :java:extdoc:`BeanUtil <nablarch.core.beans.BeanUtil>` でフォームをエンティティに変換し、
-      :ref:`universal_dao` を使用してプロジェクト情報をデータベースに登録する。
-    * 戻り値として、リソースの作成完了(ステータスコード： ``201`` )を表す :java:extdoc:`HttpResponse<nablarch.fw.web.HttpResponse>` を返却する。
+   实现要点
+    * 为以JSON形式接收请求，在 :java:extdoc:`Consumes<jakarta.ws.rs.Consumes>` 注解中
+      指定 ``MediaType.APPLICATION_JSON`` 。
+    * 使用 :java:extdoc:`Valid <jakarta.validation.Valid>` 注解进行请求的验证。
+      详细信息请参考 :ref:`jaxrs_bean_validation_handler` 。
+    * 使用 :java:extdoc:`BeanUtil <nablarch.core.beans.BeanUtil>` 将Form转换为Entity，
+      使用 :ref:`universal_dao` 将项目信息注册到数据库。
+    * 返回表示资源创建完成(状态码： ``201`` )的 :java:extdoc:`HttpResponse<nablarch.fw.web.HttpResponse>` 作为返回值。
 
-URLとのマッピングを定義
-  :ref:`router_adaptor` を使用して、業務アクションとURLのマッピングを行う。
-  マッピングには :ref:`Jakarta RESTful Web ServicesのPathアノテーション <router_adaptor_path_annotation>` を使用する。
+定义URL映射
+  使用 :ref:`router_adaptor` 进行业务Action与URL的映射。
+  映射使用 :ref:`Jakarta RESTful Web Services的Path注解 <router_adaptor_path_annotation>` 。
 
   ProjectAction.java
     .. code-block:: java
@@ -115,6 +115,5 @@ URLとのマッピングを定義
           return new HttpResponse(HttpResponse.Status.CREATED.getStatusCode());
       }
 
-  この実装のポイント
-    * ``@Path`` アノテーションと ``@POST`` アノテーションを使用して、POSTリクエスト時にマッピングする業務アクションメソッドを定義する。
-
+  实现要点
+    * 使用 ``@Path`` 注解和 ``@POST`` 注解定义POST请求时映射的业务Action方法。

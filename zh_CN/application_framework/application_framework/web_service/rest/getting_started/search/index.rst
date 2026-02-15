@@ -1,87 +1,87 @@
-検索機能の作成
+创建搜索功能
 ================================================================
-Example应用を元に、検索機能を解説する。
+基于Example应用程序讲解搜索功能。
 
-作成する機能の説明
-  本機能は、GETリクエスト時にクエリパラメータに検索条件を付与することで、
-  条件に合致するプロジェクト情報をJSON形式で返却する。
+功能说明
+  本功能在GET请求时通过查询参数附加搜索条件，
+  以JSON格式返回符合条件的项目信息。
 
-  検索条件として、 ``顧客ID(完全一致)``  、 ``プロジェクト名(部分一致)`` を指定できる。
-  検索条件を指定しない場合は、全てのプロジェクト情報を返却する。
+  搜索条件可以指定 ``客户ID(完全匹配)`` 、 ``项目名称(部分匹配)`` 。
+  不指定搜索条件时返回所有项目信息。
 
-動作確認手順
-  1. プロジェクト情報の検索
+动作确认步骤
+  1. 搜索项目信息
 
-    ここでは、顧客IDが `1` のプロジェクト情報を検索する。
+    此处搜索客户ID为 `1` 的项目信息。
 
-    任意のRESTクライアントを使用して、以下のリクエストを送信する。
+    使用任意REST客户端发送以下请求。
 
     URL
       http://localhost:9080/projects?clientId=1
-    HTTPメソッド
+    HTTP方法
       GET
 
-  2. 検索結果の確認
+  2. 确认搜索结果
 
-    1.を実行した結果、以下のようなJSON形式のレスポンスが返却されることを確認する。
+    执行1的结果，确认返回以下JSON格式的响应。
 
     .. code-block:: javascript
 
       [{
           "projectId":1,
-          "projectName":"プロジェクト００１",
+          "projectName":"项目００１",
           "projectType":"development",
 
           // 省略
 
       }]
 
-プロジェクト情報を検索する
+搜索项目信息
 ---------------------------------
 
-フォームの作成
-  クライアントから送信された値を受け付けるフォームを作成する。
+创建Form
+  创建接收客户端发送值的Form。
 
   ProjectSearchForm.java
     .. code-block:: java
 
       public class ProjectSearchForm implements Serializable {
 
-          /** 顧客ID */
+          /** 客户ID */
           @Domain("id")
           private String clientId;
 
-          /** プロジェクト名 */
+          /** 项目名称 */
           @Domain("projectName")
           private String projectName;
 
-          // ゲッタ及びセッタは省略
+          // getter及setter省略
       }
 
-  この実装のポイント
-    * プロパティは全てString型で宣言する。詳細は :ref:`バリデーションルールの設定方法 <bean_validation-form_property>` を参照。
+  实现要点
+    * 属性全部声明为String型。详细信息请参考 :ref:`验证规则的设置方法 <bean_validation-form_property>` 。
 
-検索条件を保持するBeanの作成
-  検索条件を保持するBeanを作成する。
+创建保持搜索条件的Bean
+  创建保持搜索条件的Bean。
 
   ProjectSearchDto.java
     .. code-block:: java
 
       public class ProjectSearchDto implements Serializable {
 
-          /** 顧客ID */
+          /** 客户ID */
           private Integer clientId;
 
-          /** プロジェクト名 */
+          /** 项目名称 */
           private String projectName;
 
-          // ゲッタ及びセッタは省略
+          // getter及setter省略
 
-  この実装のポイント
-   * Beanのプロパティは、:ref:`対応する条件カラムの定義(型)と互換性のある型とする<universal_dao-search_with_condition>` こと。
+  实现要点
+   * Bean的属性必须是 :ref:`与对应条件列定义(类型)兼容的类型<universal_dao-search_with_condition>` 。
 
-検索に使用するSQLの作成
-  検索に使用するSQLを作成する。
+创建搜索使用的SQL
+  创建搜索使用的SQL。
 
     Project.sql
       .. code-block:: none
@@ -95,13 +95,13 @@ Example应用を元に、検索機能を解説する。
             $if(clientId) {CLIENT_ID = :clientId}
             AND $if(projectName) {PROJECT_NAME LIKE :%projectName%}
 
-    この実装のポイント
-      * SQLインジェクションを防ぐため、SQLは外部ファイルに記述する。詳細は :ref:`database-use_sql_file` を参照。
-      * Beanのプロパティ名を使って、SQLに値をバインドする。詳細は :ref:`database-input_bean` を参照。
-      * 検索条件として指定された項目のみを条件に含める場合には、 :ref:`$if 構文を使用してSQL文を構築<database-use_variable_condition>` する。
+    实现要点
+      * 为防止SQL注入，SQL写入外部文件。详细信息请参考 :ref:`database-use_sql_file` 。
+      * 使用Bean的属性名向SQL绑定值。详细信息请参考 :ref:`database-input_bean` 。
+      * 仅将搜索画面中指定的项目作为条件时，使用 :ref:`$if 语法构建SQL语句<database-use_variable_condition>` 。
 
-業務アクションメソッドの実装
-  検索条件をもとにデータベースから検索する処理を実装する。
+实现业务Action方法
+  实现基于搜索条件从数据库搜索的处理。
 
   ProjectAction.java
     .. code-block:: java
@@ -109,32 +109,32 @@ Example应用を元に、検索機能を解説する。
       @Produces(MediaType.APPLICATION_JSON)
       public List<Project> find(JaxRsHttpRequest req) {
 
-          // リクエストパラメータをBeanに変換
+          // 将请求参数转换为Bean
           ProjectSearchForm form =
                   BeanUtil.createAndCopy(ProjectSearchForm.class, req.getParamMap());
 
-          // BeanValidation実行
+          // 执行BeanValidation
           ValidatorUtil.validate(form);
 
           ProjectSearchDto searchCondition = BeanUtil.createAndCopy(ProjectSearchDto.class, form);
           return UniversalDao.findAllBySqlFile(Project.class, "FIND_PROJECT", searchCondition);
       }
 
-  この実装のポイント
-   * 検索結果をJSON形式でクライアントに返却するため、 :java:extdoc:`Produces<jakarta.ws.rs.Produces>` アノテーションに
-     ``MediaType.APPLICATION_JSON`` を指定する。
-   * クエリパラメータは :java:extdoc:`JaxRsHttpRequest<nablarch.fw.jaxrs.JaxRsHttpRequest>` から取得する。
-   * :java:extdoc:`BeanUtil <nablarch.core.beans.BeanUtil>` を使用してリクエストパラメータからフォームを作成する。
-   * :java:extdoc:`ValidatorUtil#validate <nablarch.core.validation.ee.ValidatorUtil.validate(java.lang.Object)>`
-     を使用してフォームのバリデーションを行う。
-   * フォームの値を :java:extdoc:`BeanUtil <nablarch.core.beans.BeanUtil>` を使用して検索条件Beanにコピーする。
-   * :ref:`universal_dao` を使用して取得したプロジェクト情報のリストを戻り値として返却する。
-   * 戻り値のオブジェクトは :ref:`body_convert_handler` によってJSON形式に変換されるため、
-     業務アクションメソッド内で変換処理を実装する必要はない。
+  实现要点
+   * 为以JSON格式向客户端返回搜索结果，在 :java:extdoc:`Produces<jakarta.ws.rs.Produces>` 注解中
+     指定 ``MediaType.APPLICATION_JSON`` 。
+   * 查询参数从 :java:extdoc:`JaxRsHttpRequest<nablarch.fw.jaxrs.JaxRsHttpRequest>` 获取。
+   * 使用 :java:extdoc:`BeanUtil <nablarch.core.beans.BeanUtil>` 从请求参数创建Form。
+   * 使用 :java:extdoc:`ValidatorUtil#validate <nablarch.core.validation.ee.ValidatorUtil.validate(java.lang.Object)>`
+     进行Form的验证。
+   * 使用 :java:extdoc:`BeanUtil <nablarch.core.beans.BeanUtil>` 将Form的值复制到搜索条件Bean。
+   * 返回使用 :ref:`universal_dao` 获取的项目信息列表作为返回值。
+   * 返回值的对象由 :ref:`body_convert_handler` 转换为JSON格式，
+     因此无需在业务Action方法内实现转换处理。
 
-URLとのマッピングを定義
-  :ref:`router_adaptor` を使用して、業務アクションとURLのマッピングを行う。
-  マッピングには :ref:`Jakarta RESTful Web ServicesのPathアノテーション <router_adaptor_path_annotation>` を使用する。
+定义URL映射
+  使用 :ref:`router_adaptor` 进行业务Action与URL的映射。
+  映射使用 :ref:`Jakarta RESTful Web Services的Path注解 <router_adaptor_path_annotation>` 。
 
   ProjectAction.java
     .. code-block:: java
@@ -145,17 +145,16 @@ URLとのマッピングを定義
         @Produces(MediaType.APPLICATION_JSON)
         public List<Project> find(JaxRsHttpRequest req) {
 
-            // リクエストパラメータをBeanに変換
+            // 将请求参数转换为Bean
             ProjectSearchForm form =
                     BeanUtil.createAndCopy(ProjectSearchForm.class, req.getParamMap());
 
-            // BeanValidation実行
+            // 执行BeanValidation
             ValidatorUtil.validate(form);
 
             ProjectSearchDto searchCondition = BeanUtil.createAndCopy(ProjectSearchDto.class, form);
             return UniversalDao.findAllBySqlFile(Project.class, "FIND_PROJECT", searchCondition);
         }
 
-  この実装のポイント
-    * ``@Path`` アノテーションと ``@GET`` アノテーションを使用して、GETリクエスト時にマッピングする業務アクションメソッドを定義する。
-
+  实现要点
+    * 使用 ``@Path`` 注解和 ``@GET`` 注解定义GET请求时映射的业务Action方法。

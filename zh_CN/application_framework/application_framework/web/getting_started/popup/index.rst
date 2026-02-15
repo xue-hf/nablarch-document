@@ -1,66 +1,66 @@
 .. _`client_popup`:
 
-ポップアップ画面の作成
+创建弹出窗口画面
 ==========================================
-Example应用を元にポップアップ画面の作成方法を解説する。
+基于Example应用程序讲解弹出窗口画面的创建方法。
 
-ポップアップ画面は、 :ref:`tag-submit_popup` に記載がある通り別ウィンドウ化ではなくダイアログ形式で作成する。
+弹出窗口画面按照 :ref:`tag-submit_popup` 的说明，不是以独立窗口而是以对话框形式创建。
 
-作成する機能の説明
-  1. プロジェクト詳細画面の変更ボタンを押下する。
+功能说明
+  1. 点击项目详情画面的变更按钮。
 
     .. image:: ../images/popup/popup-project_update_btn.png
       :scale: 80
 
-  2. 顧客欄の検索ボタンを押下する。
+  2. 点击客户栏的搜索按钮。
 
     .. image:: ../images/popup/popup-project_update.png
       :scale: 75
 
-  3. 顧客検索画面がダイアログで表示される。検索ボタンを押下する。
+  3. 客户搜索画面以对话框形式显示。点击搜索按钮。
 
     .. image:: ../images/popup/popup-popup_init.png
       :scale: 60
 
-  4. 検索結果の顧客IDのリンクを押下する。
+  4. 点击搜索结果的客户ID链接。
 
     .. image:: ../images/popup/popup-popup_search.png
       :scale: 80
 
-  5. 顧客検索画面が閉じられ、プロジェクト変更画面の顧客ID及び顧客名に選択した値が設定される。
+  5. 客户搜索画面关闭，所选值设置到项目变更画面的客户ID和客户名称。
 
     .. image:: ../images/popup/popup-complete.png
       :scale: 80
 
-ポップアップ(ダイアログ)画面を表示する
+显示弹出窗口(对话框)
 ------------------------------------------------
-ポップアップ(ダイアログ)の表示はOSS(Bootstrap)を使用して実現している。
-詳細は、 `Bootstrapのドキュメント(外部サイト) <https://getbootstrap.jp/docs/5.3/getting-started/introduction/>`_ を参照。
+弹出窗口(对话框)的显示使用OSS(Bootstrap)实现。
+详细信息请参考 `Bootstrap文档(外部站点) <https://getbootstrap.jp/docs/5.3/getting-started/introduction/>`_ 。
 
 .. _`popup-action`:
 
-業務アクションメソッドの作成
-  顧客を検索し、選択の結果を親画面に引き渡す。
+创建业务Action方法
+  搜索客户并将选择结果传递给父画面。
   
-  本機能は、ダイアログからのAjax呼び出しにより検索処理を実現している。
-  Action类の実装方法については、 :ref:`restful_web_service` を参照。
+  本功能通过从对话框进行Ajax调用来实现搜索处理。
+  Action类的实现方法请参考 :ref:`restful_web_service` 。
 
 .. _`popup-popup_jsp`:
 
-ポップアップ画面のJSPの作成
-  jQueryを使用して、Ajax呼び出しの結果を元にDOMを構築し結果を表示する。
-  jQueryを使用しているため、詳細な解説は省略する。
+创建弹出窗口画面的JSP
+  使用jQuery基于Ajax调用结果构建DOM并显示结果。
+  由于使用了jQuery，详细说明省略。
   
-  jQueryについては、 `ドキュメント(外部サイト、英語) <https://jquery.com/>`_ を参照。
+  关于jQuery请参考 `文档(外部站点，英文) <https://jquery.com/>`_ 。
 
 .. _`popup-parent_hand_over`:
 
-ポップアップ画面から親ウィンドウへ値を引き渡すJavaScript関数の作成
-  jQueryを使用してダイアログ内の情報を顧客名と顧客ID部に設定する。
-  jQueryを使用しているため、詳細な解説は省略する。
+创建从弹出窗口画面向父窗口传递值的JavaScript函数
+  使用jQuery将对话框内的信息设置到客户名称和客户ID区域。
+  由于使用了jQuery，详细说明省略。
   
-  jQueryについては、 `ドキュメント(外部サイト、英語) <https://jquery.com/>`_ を参照。
+  关于jQuery请参考 `文档(外部站点，英文) <https://jquery.com/>`_ 。
   
-ポップアップ画面の解説は以上。
+弹出窗口画面的讲解完毕。
 
-:ref:`Getting Started TOPページへ <getting_started>`
+:ref:`返回Getting Started TOP页 <getting_started>`

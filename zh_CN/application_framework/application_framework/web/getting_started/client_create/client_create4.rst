@@ -1,13 +1,13 @@
 .. _`client_create_4`:
 
-データベースへの登録
+向数据库注册
 ==========================================
-本章节、顧客情報をデータベースへ登録する処理について解説する。
+本章将介绍将客户信息注册到数据库的处理。
 
-:ref:`前へ<client_create_3>`
+:ref:`上一页<client_create_3>`
 
-登録処理の実装
-  `ClientAction` に顧客情報の登録処理を行うメソッドを追加する。
+实现注册处理
+  在 `ClientAction` 中添加执行客户信息注册的方法。
 
   ClientAction.java
     .. code-block:: java
@@ -23,14 +23,14 @@
           return new HttpResponse(303, "redirect://complete");
       }
 
-  この実装のポイント
-    * :ref:`セッションストア <session_store>` から顧客エンティティを取り出して、 :ref:`universal_dao` を使用してデータベースに登録する。
-    * :ref:`セッションストア <session_store>` から顧客情報を削除する。
-    * レスポンスオブジェクトの遷移先として、登録完了画面の表示処理へのリダイレクトを指定する(完了画面でのブラウザの更新ボタン押下による顧客情報の多重登録を防ぐため)。
-      リダイレクトに指定するステータスコードについては、 :ref:`web_feature_details-status_code` を参照。
+  实现要点
+    * 从 :ref:`session store <session_store>` 取出客户Entity，使用 :ref:`universal_dao` 注册到数据库。
+    * 从 :ref:`session store <session_store>` 删除客户信息。
+    * 在响应对象的跳转目标中指定重定向到注册完成画面显示处理(防止在完成画面点击浏览器刷新按钮导致客户信息重复注册)。
+      关于重定向指定的状态码请参考 :ref:`web_feature_details-status_code` 。
 
-二重サブミットを防止する
-  ボタンをダブルクリックした場合等でリクエストが二重に送信されないように、業務アクションとJSPの二か所に制御を追加する。
+防止重复提交
+  为了防止双击按钮等情况下请求被重复发送，在业务Action和JSP两处添加控制。
 
   ClientAction.java
     .. code-block:: java
@@ -38,42 +38,42 @@
       @OnDoubleSubmission
       public HttpResponse create(HttpRequest request, ExecutionContext context) {
 
-      // 実装は変更なし
+      // 实现内容不变
 
       }
 
-  この実装のポイント
-    * :java:extdoc:`OnDoubleSubmission <nablarch.common.web.token.OnDoubleSubmission>` を付与して、
-      業務アクションメソッドが二重に実行された場合にエラーページへ遷移させる。詳細は :ref:`tag-double_submission` を参照。
+  实现要点
+    * 添加 :java:extdoc:`OnDoubleSubmission <nablarch.common.web.token.OnDoubleSubmission>` 注解，
+      在业务Action方法被重复执行时跳转到错误页面。详细信息请参考 :ref:`tag-double_submission` 。
 
   .. tip::
 
-    Example应用では、二重サブミット時のデフォルトの遷移先画面を設定している。
-    デフォルトの遷移先の指定方法は、 :ref:`tag-double_submission` を参照。
+    Example应用程序中设置了重复提交时的默认跳转画面。
+    默认跳转目标的指定方法请参考 :ref:`tag-double_submission` 。
 
   /src/main/webapp/WEB-INF/view/client/create.jsp
     .. code-block:: jsp
 
-      <!-- 修正しない部分は省略 -->
-      <!-- 入力へ戻る、確定ボタンは確認画面でのみ表示 -->
+      <!-- 不修改的部分省略 -->
+      <!-- 返回输入、确定按钮仅在确认画面显示 -->
         <n:forConfirmationPage>
             <n:button uri="/action/client/back"
-                      cssClass="btn btn-lg btn-light">入力へ戻る</n:button>
-            <!-- allowDoubleSubmission属性にfalseを指定する -->
+                      cssClass="btn btn-lg btn-light">返回输入</n:button>
+            <!-- allowDoubleSubmission属性指定false -->
             <n:button uri="/action/client/create"
                       allowDoubleSubmission="false"
-                      cssClass="btn btn-lg btn-success">確定</n:button>
+                      cssClass="btn btn-lg btn-success">确定</n:button>
         </n:forConfirmationPage>
 
-  この実装のポイント
-    * :ref:`tag-button_tag` の `allowDoubleSubmission` 属性にfalseを指定することで、二重サブミットを制御するJavaScriptが追加される。
-    * ブラウザのJavaScriptが無効になっている場合等を考慮して、サーバサイドでも二重サブミットを制御する。
+  实现要点
+    * 在 :ref:`tag-button_tag` 的 `allowDoubleSubmission` 属性中指定false，将添加控制重复提交的JavaScript。
+    * 考虑浏览器JavaScript被禁用等情况，在服务器端也要控制重复提交。
 
-登録完了画面の表示処理を実装する
-  登録完了画面の表示処理を実装する。
+实现注册完成画面的显示处理
+  实现注册完成画面的显示处理。
 
-  業務アクションメソッドを実装する
-    登録完了画面の表示処理を実装する。
+  实现业务Action方法
+    实现注册完成画面的显示处理。
 
     ClientAction.java
       .. code-block:: java
@@ -82,8 +82,8 @@
             return new HttpResponse("/WEB-INF/view/client/complete.jsp");
         }
 
-  登録完了画面のJSPを作成する
-    登録完了画面のJSPを新規作成する。
+  创建注册完成画面的JSP
+    新建注册完成画面的JSP。
 
     /src/main/webapp/WEB-INF/view/client/complete.jsp
       .. code-block:: jsp
@@ -95,7 +95,7 @@
         <!DOCTYPE html>
         <html>
             <head>
-                <title>顧客登録完了画面</title>
+                <title>客户注册完成画面</title>
             </head>
             <body>
                 <n:include path="/WEB-INF/view/common/menu.jsp" />
@@ -103,10 +103,10 @@
                 <div class="container-fluid mainContents">
                     <section class="row">
                         <div class="title-nav">
-                            <span class="page-title">顧客登録完了画面</span>
+                            <span class="page-title">客户注册完成画面</span>
                         </div>
                         <div class="message-area message-info">
-                            顧客の登録が完了しました。
+                            客户注册已完成。
                         </div>
                     </section>
                 </div>
@@ -114,34 +114,34 @@
             </body>
         </html>
 
-動作確認を行う
-  以下の手順で、登録処理が正しく実装されていることを確認する。
+进行动作确认
+  按以下步骤确认注册处理已正确实现。
 
-  1. 顧客登録画面を表示する。
+  1. 显示客户注册画面。
 
     .. image:: ../images/client_create/input_display.png
 
-  2. 顧客名に全角文字列、業種に任意の値を選択して「登録」ボタンを押下する。
+  2. 在客户名称输入全角字符串，行业选择任意值后点击「注册」按钮。
 
     .. image:: ../images/client_create/input_valid_value.png
 
-  3. 登録確認画面が表示され、`2` で入力した顧客名、業種がラベルで表示されることを確認する。
+  3. 显示注册确认画面，确认 `2` 中输入的客户名称、行业以标签形式显示。
 
     .. image:: ../images/client_create/confirm_display.png
 
-  4. 「確定」ボタンを押下し、登録完了画面が表示されることを確認する。
+  4. 点击「确定」按钮，确认显示注册完成画面。
 
     .. image:: ../images/client_create/complete_display.png
 
-  5. サイドメニューの顧客欄の検索ボタンを押下し、顧客検索画面へ遷移する。
+  5. 点击侧边菜单客户栏的搜索按钮，跳转到客户搜索画面。
 
     .. image:: ../images/client_create/client_confirm_sidemenu.png
 
-  6. 登録した顧客情報を検索できることを確認する。
+  6. 确认可以搜索到注册的的客户信息。
 
     .. image:: ../images/client_create/client_search_result.png
 
 
-登録機能の解説は以上。
+注册功能讲解完毕。
 
-:ref:`Getting Started TOPページへ <getting_started>`
+:ref:`返回Getting Started TOP页 <getting_started>`

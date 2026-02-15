@@ -83,6 +83,9 @@
 | 常駐バッチ | 常驻Batch | Resident Batch | 持续运行的批处理 |
 | バッチステータス | Batch状态 | Batch Status | |
 | 終了ステータス | 结束状态/退出状态 | Exit Status | |
+| 一括更新 | 批量更新 | Bulk Update | |
+| 一括登録 | 批量注册 | Bulk Insert | |
+| 一括処理 | 批量处理 | Bulk Processing | |
 
 ## Web 相关
 
@@ -97,6 +100,36 @@
 | サーブレット | Servlet | Servlet | 保留英文 |
 | JSP | JSP | JSP | 保留英文 |
 | URIとアクションクラスのマッピング | URI与Action类的映射 | URI-Action Mapping | |
+| ポップアップ画面 | 弹出窗口画面 | Popup Window | |
+| ダイアログ | 对话框 | Dialog | |
+| フォワード | forward/跳转 | Forward | |
+| リダイレクト | redirect/重定向 | Redirect | |
+| セッションストア | 会话存储 | Session Store | |
+| リクエストスコープ | 请求作用域 | Request Scope | |
+| プルダウン | 下拉框 | Dropdown/Pulldown | |
+| テキストボックス | 文本框 | Text Box | |
+| ボタン | 按钮 | Button | |
+| リンク | 链接 | Link | |
+| メニュー | 菜单 | Menu | |
+| サイドメニュー | 侧边菜单 | Side Menu | |
+| ヘッダメニュー | 头部菜单 | Header Menu | |
+| 画面 | 画面/页面 | Screen/Page | |
+| 画面遷移 | 页面跳转 | Page Transition | |
+| 初期表示 | 初始显示 | Initial Display | |
+| 入力項目 | 输入项目 | Input Item | |
+| 入力欄 | 输入栏 | Input Field | |
+| 入力エラー | 输入错误 | Input Error | |
+| エラーメッセージ | 错误消息 | Error Message | |
+| 完了画面 | 完成画面 | Completion Screen | |
+| 確認画面 | 确认画面 | Confirmation Screen | |
+| 詳細画面 | 详情画面 | Detail Screen | |
+| 一覧画面 | 列表画面 | List Screen | |
+| 検索画面 | 搜索画面 | Search Screen | |
+| 検索条件 | 搜索条件 | Search Condition | |
+| 検索結果 | 搜索结果 | Search Result | |
+| ページング | 分页 | Paging | |
+| ソート | 排序 | Sort | |
+| 二重サブミット | 重复提交 | Double Submission | |
 
 ## 数据库
 
@@ -141,6 +174,24 @@
 | 要求電文 | 请求电文 | Request Message | |
 | 応答電文 | 响应电文 | Response Message | |
 
+## RESTful Web服务
+
+| 日文 | 中文 | 英文 | 备注 |
+|------|------|------|------|
+| ウェブサービス | Web服务 | Web Service | |
+| RESTfulウェブサービス | RESTful Web服务 | RESTful Web Service | |
+| パスパラメータ | 路径参数 | Path Parameter | |
+| クエリーパラメータ | 查询参数 | Query Parameter | |
+| メディアタイプ | 媒体类型 | Media Type | |
+| Produces | Produces | Produces | 保留英文 |
+| Consumes | Consumes | Consumes | 保留英文 |
+| リクエストボディ | 请求主体 | Request Body | |
+| レスポンスボディ | 响应主体 | Response Body | |
+| HTTPヘッダ | HTTP头部 | HTTP Header | |
+| HTTPメソッド | HTTP方法 | HTTP Method | |
+| JSON形式 | JSON格式 | JSON Format | |
+| XML形式 | XML格式 | XML Format | |
+
 ## 适配器
 
 | 日文 | 中文 | 英文 | 备注 |
@@ -149,6 +200,23 @@
 | Domaアダプタ | Doma适配器 | Doma Adaptor | |
 | Lettuceアダプタ | Lettuce适配器 | Lettuce Adaptor | |
 | ログアダプタ | 日志适配器 | Log Adaptor | |
+
+## 文件操作
+
+| 日文 | 中文 | 英文 | 备注 |
+|------|------|------|------|
+| ダウンロード | 下载 | Download | |
+| アップロード | 上传 | Upload | |
+| ファイル | 文件 | File | |
+| ファイル名 | 文件名 | File Name | |
+| ファイルパス | 文件路径 | File Path | |
+| ファイル形式 | 文件格式 | File Format | |
+| フォーマットファイル | 格式文件 | Format File | |
+| データフォーマット | 数据格式 | Data Format | |
+| データバインド | 数据绑定 | Data Binding | |
+| CSV形式 | CSV格式 | CSV Format | |
+| 一時ファイル | 临时文件 | Temp File | |
+| 一時領域 | 临时区域 | Temporary Area | |
 
 ## 文档结构词
 
@@ -231,6 +299,7 @@
 | 2026-02-14 | 初始版本，整理核心术语 | AI |
 | 2026-02-15 | 添加 Batch 相关术语（ItemReader/ItemProcessor/ItemWriter/Listener/进度日志/运维日志/悲观锁等） | AI |
 | 2026-02-15 | 整理术语表，统一格式，删除 JSON 版本 | AI |
+| 2026-02-15 | 添加 Web/RESTful Web服务/HTTP消息处理/文件操作相关术语（弹出窗口/对话框/路径参数/查询参数/批量更新/批量注册/下载/上传等） | AI |
 
 ---
 

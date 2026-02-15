@@ -1,49 +1,49 @@
 .. _`project_delete`:
 
-削除機能の作成
+创建删除功能
 ==========================================
-Example应用を元に削除機能を解説する。
+基于Example应用程序讲解删除功能。
 
-作成する機能の説明
-  1. プロジェクト一覧のプロジェクトIDを押下する。
+功能说明
+  1. 点击项目一览的项目ID。
 
     .. image:: ../images/project_delete/project_delete_list.png
       :scale: 80
 
-  2. 詳細画面の変更ボタンを押下する。
+  2. 点击详情画面的变更按钮。
 
     .. image:: ../images/project_delete/project_delete_detail.png
       :scale: 80
 
-  3. 更新画面上の削除ボタンを押下する。
+  3. 点击更新画面上的删除按钮。
 
     .. image:: ../images/project_delete/project_delete_update.png
       :scale: 80
 
-  4. 完了画面が表示される。
+  4. 显示完成画面。
 
     .. image:: ../images/project_delete/project_delete_complete.png
       :scale: 80
 
-削除を行う
+执行删除
 -----------
-削除機能の基本的な実装方法を、以下の順に説明する。
+按以下顺序说明删除功能的基本实现方法。
 
-  #. :ref:`更新画面上に削除ボタンを作成<project_delete-update>`
-  #. :ref:`削除を行う業務アクションメソッドの作成<project_delete-delete_action>`
-  #. :ref:`削除完了画面の作成<project_delete-complete>`
+  #. :ref:`在更新画面上创建删除按钮<project_delete-update>`
+  #. :ref:`创建执行删除的业务Action方法<project_delete-delete_action>`
+  #. :ref:`创建删除完成画面<project_delete-complete>`
 
 .. _`project_delete-update`:
 
-更新画面上に削除ボタンを作成
-  更新画面上に、削除ボタンを作成する。
-  更新画面の作成に関する説明は、 :ref:`更新画面を表示する業務アクションメソッドの作成<project_update-create_edit_action>` 及び
-  :ref:`更新画面のJSPの作成<project_update-create_update_jsp>` を参照。
+在更新画面上创建删除按钮
+  在更新画面上创建删除按钮。
+  关于更新画面的创建说明，请参考 :ref:`创建显示更新画面的业务Action方法<project_update-create_edit_action>` 及
+  :ref:`创建更新画面的JSP<project_update-create_update_jsp>` 。
 
 .. _`project_delete-delete_action`:
 
-削除を行う業務アクションメソッドの作成
-  データベースから対象プロジェクトを削除する業務アクションメソッドを作成する。
+创建执行删除的业务Action方法
+  创建从数据库删除目标项目的业务Action方法。
 
   ProjectAction.java
     .. code-block:: java
@@ -51,29 +51,29 @@ Example应用を元に削除機能を解説する。
       @OnDoubleSubmission
       public HttpResponse delete(HttpRequest request, ExecutionContext context) {
 
-          // 更新画面を表示する際にセッションにプロジェクト情報を格納している
+          // 显示更新画面时会话中存储了项目信息
           Project project = SessionUtil.delete(context, "project");
           UniversalDao.delete(project);
 
           return new HttpResponse(303, "redirect://completeOfDelete");
       }
 
-  この実装のポイント
-    * 主キーを条件とした削除は、主キーが設定されたエンティティを引数に :java:extdoc:`UniversalDao#delete <nablarch.common.dao.UniversalDao.delete(T)>`
-      を実行することで、SQLを作成しなくとも実行できる。
+  实现要点
+    * 以主键为条件的删除，可以通过将设置了主键的Entity作为参数执行 :java:extdoc:`UniversalDao#delete <nablarch.common.dao.UniversalDao.delete(T)>`
+      来实现，无需创建SQL。
 
   .. tip::
 
-    :ref:`universal_dao` は、主キーを条件とする削除機能のみを提供する。主キー以外を条件として削除する場合は、別途SQLを作成して実行する必要がある。
-    SQLの実行方法については、 :ref:`SQLIDを指定してSQLを実行する<database-execute_sqlid>` を参照。
+    :ref:`universal_dao` 仅提供以主键为条件的删除功能。以主键以外为条件进行删除时，需要另行创建SQL执行。
+    关于SQL的执行方法请参考 :ref:`指定SQLID执行SQL<database-execute_sqlid>` 。
 
 .. _`project_delete-complete`:
 
-削除完了画面の作成
-  削除完了画面を表示する。
-  完了画面の作成に関する説明は、 :ref:`完了画面を表示する業務アクションメソッドの作成<project_update-create_complete_action>` 及び
-  :ref:`更新完了画面の作成<project_update-create_success_jsp>` を参照。
+创建删除完成画面
+  显示删除完成画面。
+  关于完成画面的创建说明，请参考 :ref:`创建显示完成画面的业务Action方法<project_update-create_complete_action>` 及
+  :ref:`创建更新完成画面<project_update-create_success_jsp>` 。
 
-削除機能の解説は以上。
+删除功能讲解完毕。
 
-:ref:`Getting Started TOPページへ <getting_started>`
+:ref:`返回Getting Started TOP页 <getting_started>`

@@ -2,25 +2,25 @@
 
 Getting Started
 ==========================================
-本章を通読することで、Nablarch应用フレームワークを使用したRESTfulウェブサービスの開発のイメージを掴むことができる。
+通读本章可以掌握使用Nablarch应用框架的RESTful Web服务开发的概要。
 
 .. tip::
- ExampleはNablarchの機能の使用方法を示した実装例であり、Exampleを改修して本格的な应用を作成することは想定していない。
+ Example是展示Nablarch功能使用方法的实现示例，不设想通过改造Example创建正式应用程序。
  
- 本格的な应用を作成する場合は :ref:`blank_project` から作成すること。
+ 创建正式应用程序时请从 :ref:`blank_project` 开始。
 
 
 前提条件
-  本章は :ref:`example_application` をベースに解説する。
-  Example应用の動作環境を事前に構築しておくこと。
+  本章基于 :ref:`example_application` 进行讲解。
+  请事先构建Example应用程序的运行环境。
 
   .. tip::
-    Example应用に関する以下の事項は、本章节解説しない。
-    以下の事項については、 :ref:`example_application` を参照すること。
+    本章不讲解Example应用程序相关的以下事项。
+    以下事项请参考 :ref:`example_application` 。
 
-    - Example应用の環境構築および実行
-    - Example应用の設定
-    - 使用しているOSSプラグインについて
+    - Example应用程序的环境构建及执行
+    - Example应用程序的设置
+    - 使用的OSS插件相关信息
 
 .. toctree::
   :maxdepth: 1

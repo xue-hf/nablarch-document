@@ -1,155 +1,155 @@
-アーキテクチャ概要
+架构概述
 ==============================
-HTTPメッセージングでは、外部(ブラウザや外部システムなど)から送信されたhttpメッセージ
-を処理するウェブサービスを構築するための機能を提供している。
+HTTP消息处理提供处理从外部(浏览器或外部系统等)发送的HTTP消息
+的Web服务构建功能。
 
 .. important::
 
-  本機能ではなく、 :ref:`RESTfulウェブサービス <restful_web_service>` の使用を推奨する。
-  詳細は、 :ref:`RESTfulウェブサービスを推奨する理由 <web_service-recommended_jaxrs>` を参照。
+  推荐使用 :ref:`RESTful Web服务 <restful_web_service>` 而非本功能。
+  详细信息请参考 :ref:`推荐使用RESTful Web服务的理由 <web_service-recommended_jaxrs>` 。
 
-HTTPメッセージングの構成
+HTTP消息处理的构成
 --------------------------------------------------
-Nablarchウェブ应用と同じ構成となる。
-詳細は、 :ref:`web_application-structure` を参照。
+与Nablarch Web应用程序构成相同。
+详细信息请参考 :ref:`web_application-structure` 。
 
-HTTPメッセージングの処理の流れ
+HTTP消息处理的处理流程
 --------------------------------------------------
-HTTPメッセージング機能がリクエストを処理し、レスポンスを返却するまでの処理の流れを以下に示す。
+以下显示HTTP消息处理功能处理请求并返回响应的处理流程。
 
 .. image:: images/http_messaging_flow.png
   :scale: 75
 
-1. :ref:`WebFrontController <web_front_controller>` ( `jakarta.servlet.Filter` の実装クラス)がrequestを受信する。
-2. :ref:`WebFrontController <web_front_controller>` は、requestに対する処理をhandler队列(handler queue)に委譲する。
-3. handler队列に設定されたディスパッチハンドラ(`DispatchHandler`) が、URIを元に処理すべきAction类(action class)を特定しhandler队列の末尾に追加する。
-4. Action类(action class)は、フォームクラス(form class)やエンティティクラス(entity class)を使用して業務ロジック(business logic) を実行する。 |br|
-   各クラスの詳細は、 :ref:`http_messaging-design` を参照。
+1. :ref:`WebFrontController <web_front_controller>` ( `jakarta.servlet.Filter` 的实现类)接收request。
+2. :ref:`WebFrontController <web_front_controller>` 将request的处理委托给handler队列(handler queue)。
+3. handler队列中设置的调度handler(`DispatchHandler`) 基于URI确定要处理的Action类(action class)并添加到handler队列末尾。
+4. Action类(action class)使用Form类(form class)和Entity类(entity class)执行业务逻辑(business logic)。 |br|
+   各类的详细信息请参考 :ref:`http_messaging-design` 。
 
-5. Action类(action class)は、処理結果を示す `ResponseMessage` を作成し返却する。
-6. handler队列内の :ref:`http_messaging_response_building_handler` が、 `ResponseMessage` をクライアントに返却するレスポンス(jsonやxmlなど)に変換し、クライアントへ応答を返す。 |br|
+5. Action类(action class)创建表示处理结果的 `ResponseMessage` 并返回。
+6. handler队列内的 :ref:`http_messaging_response_building_handler` 将 `ResponseMessage` 转换为返回给客户端的响应(json或xml等)，向客户端返回响应。 |br|
 
 
-HTTPメッセージングで使用するハンドラ
+HTTP消息处理使用的handler
 --------------------------------------------------
-Nablarchでは、HTTPメッセージングを使用したウェブサービスを構築するために必要なハンドラを標準で幾つか提供している。
-プロジェクトの要件に従い、handler队列を構築すること。(要件によっては、プロジェクトカスタムなハンドラを作成することになる)
+Nablarch提供了构建使用HTTP消息处理的Web服务所需的多个标准handler。
+请根据项目需求构建handler队列。(根据需求可能需要创建项目自定义handler)
 
-各ハンドラの詳細は、リンク先を参照すること。
+各handler的详细信息请参考链接。
 
-リクエストやレスポンスの変換を行うハンドラ
+进行请求和响应转换的handler
   * :ref:`http_response_handler`
   * :ref:`http_messaging_request_parsing_handler`
   * :ref:`http_messaging_response_building_handler`
   * :ref:`message_resend_handler`
 
-リクエストのフィルタリングを行うハンドラ
+进行请求过滤的handler
   * :ref:`service_availability`
   * :ref:`permission_check_handler`
 
-データベースに関連するハンドラ
+与数据库相关的handler
   * :ref:`database_connection_management_handler`
   * :ref:`transaction_management_handler`
 
-エラー処理に関するハンドラ
+与错误处理相关的handler
   * :ref:`global_error_handler`
   * :ref:`http_messaging_error_handler`
 
-その他のハンドラ
+其他handler
   * :ref:`http_request_java_package_mapping`
   * :ref:`thread_context_handler`
   * :ref:`thread_context_clear_handler`
   * :ref:`http_access_log_handler`
 
-HTTPメッセージングの最小ハンドラ構成
+HTTP消息处理的最小handler构成
 --------------------------------------------------
-HTTPメッセージングを使用したウェブサービスを構築する際の必要最小限のhandler队列を以下に示す。
-これをベースに、プロジェクト要件に従ってNablarchの標準ハンドラやプロジェクトで作成したカスタムハンドラを追加する。
+以下显示构建使用HTTP消息处理的Web服务时的最小handler队列。
+以此为基础，根据项目需求添加Nablarch的标准handler或项目创建的自定义handler。
 
-.. list-table:: 最小ハンドラ構成
+.. list-table:: 最小handler构成
   :header-rows: 1
   :class: white-space-normal
   :widths: 4,24,24,24,24
 
   * - No.
-    - ハンドラ
-    - 往路処理
-    - 復路処理
-    - 例外処理
+    - handler
+    - 去路处理
+    - 回路处理
+    - 异常处理
  
   * - 1
     - :ref:`thread_context_clear_handler`
     -
-    - :ref:`thread_context_handler` でスレッドローカル上に設定した値を全て削除する。
+    - 删除 :ref:`thread_context_handler` 在线程本地设置的所有值。
     -
     
   * - 2
     - :ref:`global_error_handler`
     -
     -
-    - 実行時例外、またはエラーの場合、ログ出力を行う。
+    - 运行时异常或错误时进行日志输出。
 
   * - 3
     - :ref:`http_response_handler`
     -
-    - サーブレットフォーワード、リダイレクト、レスポンス書き込みのいずれかを行う。
-    - 実行時例外、またはエラーの場合、既定のエラーページを表示する。
+    - 进行servlet forward、redirect、响应写入之一。
+    - 运行时异常或错误时显示默认错误页面。
 
   * - 4
     - :ref:`thread_context_handler`
-    - リクエストの情報からリクエストIDなどのスレッドコンテキスト変数を初期化する。
+    - 从请求信息初始化请求ID等线程上下文变量。
     - 
     -
 
   * - 5
     - :ref:`http_messaging_error_handler`
     - 
-    - 後続ハンドラで生成したレスポンスのボディが空の場合、ステータスコードに応じたデフォルトのボディを設定する。
-    - ログ出力及び、例外に応じたレスポンスを生成する。
+    - 后续handler生成的响应主体为空时，设置与状态码对应的默认主体。
+    - 进行日志输出及根据异常生成响应。
 
   * - 6
     - :ref:`request_path_java_package_mapping`
-    - リクエストパスから処理対象の業務アクションを特定し、handler队列の末尾に追加する。
+    - 从请求路径确定处理对象的业务Action，添加到handler队列末尾。
     - 
     - 
 
   * - 7
     - :ref:`http_messaging_request_parsing_handler`
-    - httpリクエストのボディを解析し :java:extdoc:`RequestMessage <nablarch.fw.messaging.RequestMessage>` を生成し、
-      後続のハンドラにリクエストオブジェクトとして引き渡す。
+    - 解析http请求主体生成 :java:extdoc:`RequestMessage <nablarch.fw.messaging.RequestMessage>` ，
+      作为请求对象传递给后续handler。
     - 
     - 
 
   * - 8
     - :ref:`database_connection_management_handler`
-    - DB接続を取得する。
-    - DB接続を解放する。
+    - 获取DB连接。
+    - 释放DB连接。
     -
 
   * - 9
     - :ref:`http_messaging_response_building_handler`
     - 
     - 
-    - 業務アクションが生成したエラー用のメッセージを元に、エラー用のhttpスポンスを生成する。
+    - 基于业务Action生成的错误用消息，生成错误用http响应。
 
   * - 10
     - :ref:`transaction_management_handler`
-    - トランザクションを開始する。
-    - トランザクションをコミットする。
-    - トランザクションをロールバックする。
+    - 开始事务。
+    - 提交事务。
+    - 回滚事务。
 
   * - 11
     - :ref:`http_messaging_response_building_handler`
     - 
-    - 業務アクションが生成したメッセージを元に、http用のレスポンスを生成する。
-    - 後続ハンドラで発生した例外を元にエラー用のhttpレスポンスを生成する。
+    - 基于业务Action生成的消息，生成http用响应。
+    - 基于后续handler发生的异常生成错误用http响应。
 
-HTTPメッセージングで使用するアクション
+HTTP消息处理使用的Action
 ---------------------------------------------------------------------------------
-Nablarchでは、HTTPメッセージングを構築するために必要なAction类を標準で提供している。
-詳細は、リンク先を参照すること。
+Nablarch提供了构建HTTP消息处理所需的标准Action类。
+详细信息请参考链接。
 
-* :java:extdoc:`MessagingAction (同期応答メッセージング用アクションのテンプレートクラス)<nablarch.fw.messaging.action.MessagingAction>`
+* :java:extdoc:`MessagingAction (同步响应消息处理用Action的模板类)<nablarch.fw.messaging.action.MessagingAction>`
 
 .. |br| raw:: html
 

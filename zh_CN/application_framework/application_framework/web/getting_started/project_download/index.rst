@@ -1,49 +1,49 @@
 .. _`project_download`:
 
-ファイルダウンロード機能の作成
+创建文件下载功能
 ==========================================
-Example应用を元に、CSVファイルをダウンロードする機能を解説する。
+基于Example应用程序讲解下载CSV文件的功能。
 
-作成する機能の説明
-  1. プロジェクト一覧画面の、検索結果右横のダウンロードボタンを押下する。
+功能说明
+  1. 点击项目一览画面搜索结果右侧的下载按钮。
 
     .. image:: ../images/project_download/project_download-list.png
       :scale: 80
 
-  2. 現在の検索結果を出力したCSVファイルがダウンロードされる。
+  2. 下载输出当前搜索结果的CSV文件。
 
     .. image:: ../images/project_download/project_download-download.png
       :scale: 80
 
-CSVファイルのダウンロードを行う
+下载CSV文件
 ---------------------------------
-CSVファイルをダウンロードする機能の実装方法を解説する。
+讲解下载CSV文件功能的实现方法。
 
-プロジェクト検索機能の作成方法については、 :ref:`検索機能の作成<project_search>` を参照すること。
+关于项目搜索功能的创建方法，请参考 :ref:`创建搜索功能<project_search>` 。
 
-  #. :ref:`ダウンロードボタンの作成<project_download-download_button>`
-  #. :ref:`ファイルをバインドするBeanの作成<project_download-create_bean>`
-  #. :ref:`業務アクションメソッドの作成<project_upload-file_download_action>`
+  #. :ref:`创建下载按钮<project_download-download_button>`
+  #. :ref:`创建绑定文件的Bean<project_download-create_bean>`
+  #. :ref:`创建业务Action方法<project_upload-file_download_action>`
 
 .. _`project_download-download_button`:
 
-ダウンロードボタンの作成
-  ファイルダウンロードメソッドへのGETリクエストを送信するリンクを配置する。
+创建下载按钮
+  放置发送GET请求到文件下载方法的链接。
 
   /src/main/webapp/WEB-INF/view/project/index.jsp
     .. code-block:: jsp
 
-      <!-- ダウンロードボタン周辺のみ記載 -->
+      <!-- 仅记载下载按钮周边 -->
       <div style="float:left;">
           <span class="font-group">
-          検索結果
+          搜索结果
           </span>
           <span class="search-result-count">
               <c:if test="${not empty searchResult}">
                   <n:write name="searchResult.pagination.resultCount" />
               </c:if>
           </span>
-          <!-- 現在の検索条件をパラメータとして設定 -->
+          <!-- 将当前搜索条件设置为参数 -->
           <c:url value="/action/project/download" var="download_uri">
               <c:param name="searchForm.clientId" value="${searchForm.clientId}"/>
               <c:param name="searchForm.clientName" value="${searchForm.clientName}"/>
@@ -62,45 +62,45 @@ CSVファイルをダウンロードする機能の実装方法を解説する�
           </c:url>
           <n:a href="${download_uri}">
               <n:write name="label" />
-              <n:img src="/images/download.png" alt="ダウンロード" />
+              <n:img src="/images/download.png" alt="下载" />
           </n:a>
       </div>
 
 .. _`project_download-create_bean`:
 
-ファイルをバインドするBeanの作成
-  ファイルの内容をバインドするBeanを作成する。
+创建绑定文件的Bean
+  创建绑定文件内容的Bean。
 
   ProjectDownloadDto.java
     .. code-block:: java
 
-      @Csv(headers = { /** ヘッダを記述 **/},
-              properties = { /** バインド対象のプロパティ **/},
+      @Csv(headers = { /** 记述头部 **/},
+              properties = { /** 绑定对象的属性 **/},
               type = Csv.CsvType.CUSTOM)
       @CsvFormat(charset = "Shift_JIS", fieldSeparator = ',',ignoreEmptyLine = true,
               lineSeparator = "\r\n", quote = '"',
               quoteMode = CsvDataBindConfig.QuoteMode.NORMAL, requiredHeader = true, emptyToNull = true)
       public class ProjectDownloadDto implements Serializable {
 
-          // 一部項目のみ抜粋。ゲッタ及びセッタは省略
+          // 仅摘录部分项目。getter及setter省略
 
-          /** プロジェクト名 */
+          /** 项目名称 */
           private String projectName;
 
-          /** プロジェクト種別 */
+          /** 项目类型 */
           private String projectType;
       }
 
-  この実装のポイント
-    * ダウンロードするCSVファイルの内容と、Beanのプロパティとの紐付けの設定は、 :java:extdoc:`@Csv<nablarch.common.databind.csv.Csv>` を使用する。
-      受け付けるCSVのフォーマットの指定は、 :java:extdoc:`@CsvFormat<nablarch.common.databind.csv.CsvFormat>` を使用する。
-      （ :ref:`デフォルトのフォーマットの指定<data_bind-csv_format_set>` を使用する場合は、 :java:extdoc:`@CsvFormat<nablarch.common.databind.csv.CsvFormat>` は不要）
-      アノテーションの設定方法の詳細は、 :ref:`CSVファイルをJava Beansクラスにバインドする場合のフォーマット指定方法 <data_bind-csv_format-beans>` を参照。
+  实现要点
+    * 下载的CSV文件内容与Bean属性的绑定设置使用 :java:extdoc:`@Csv<nablarch.common.databind.csv.Csv>` 。
+      接收的CSV格式指定使用 :java:extdoc:`@CsvFormat<nablarch.common.databind.csv.CsvFormat>` 。
+      (使用 :ref:`默认格式指定<data_bind-csv_format_set>` 时，不需要 :java:extdoc:`@CsvFormat<nablarch.common.databind.csv.CsvFormat>` )
+      注解设置方法的详细信息请参考 :ref:`CSV文件绑定到Java Beans类时的格式指定方法 <data_bind-csv_format-beans>` 。
 
 .. _`project_upload-file_download_action`:
 
-業務アクションメソッドの作成
-  検索結果をCSVファイルに書きこむ業務アクションメソッドを作成する。
+创建业务Action方法
+  创建将搜索结果写入CSV文件的业务Action方法。
 
   ProjectAction.java
     .. code-block:: java
@@ -128,26 +128,26 @@ CSVファイルをダウンロードする機能の実装方法を解説する�
           
           FileResponse response = new FileResponse(path.toFile(), true);
           response.setContentType("text/csv; charset=Shift_JIS");
-          response.setContentDisposition("プロジェクト一覧.csv");
+          response.setContentDisposition("项目一览.csv");
 
           return response;
       }
 
-  この実装のポイント
-    * 検索処理の実装方法については  :ref:`検索機能の作成：業務アクションの実装<project_search-create_action>` を参照。
-    * Beanをファイルにバインドして出力するには、 :ref:`データバインド<data_bind>` が提供する、
-      :java:extdoc:`ObjectMapper <nablarch.common.databind.ObjectMapper>` を使用する。
-    * ファイルに出力されたデータをダウンロードさせるには、 :java:extdoc:`FileResponse <nablarch.common.web.download.FileResponse>` を使用する。
-      詳細は、 :ref:`データバインドをダウンロードで使用する<data_bind-file_download>` を参照。
-    * 大量のデータを読み込む場合は、メモリの逼迫を防ぐために :java:extdoc:`UniversalDao#defer <nablarch.common.dao.UniversalDao.defer()>` を使用して、
-      検索結果を :ref:`遅延ロード<universal_dao-lazy_load>` する。
-    * レスポンスのコンテンツタイプは
-      :java:extdoc:`HttpResponse#setContentType<nablarch.fw.web.HttpResponse.setContentType(java.lang.String)>` を使用して設定する。
-      詳細は :ref:`汎用データフォーマットをダウンロードで使用する <data_format-file_download>` を参照。
-    * ダウンロードファイルのファイル名は
-      :java:extdoc:`HttpResponse#setContentDisposition<nablarch.fw.web.HttpResponse.setContentDisposition(java.lang.String)>` を使用して設定する。
-      詳細は :ref:`汎用データフォーマットをダウンロードで使用する <data_format-file_download>` を参照。
+  实现要点
+    * 关于搜索处理的实现方法请参考 :ref:`创建搜索功能：实现业务Action<project_search-create_action>` 。
+    * 要将Bean绑定到文件并输出，使用 :ref:`数据绑定<data_bind>` 提供的
+      :java:extdoc:`ObjectMapper <nablarch.common.databind.ObjectMapper>` 。
+    * 要下载输出到文件的数据，使用 :java:extdoc:`FileResponse <nablarch.common.web.download.FileResponse>` 。
+      详细信息请参考 :ref:`在下载中使用数据绑定<data_bind-file_download>` 。
+    * 读取大量数据时，为防止内存压力，使用 :java:extdoc:`UniversalDao#defer <nablarch.common.dao.UniversalDao.defer()>` 
+      :ref:`延迟加载<universal_dao-lazy_load>` 搜索结果。
+    * 响应的内容类型使用
+      :java:extdoc:`HttpResponse#setContentType<nablarch.fw.web.HttpResponse.setContentType(java.lang.String)>` 设置。
+      详细信息请参考 :ref:`在下载中使用通用数据格式 <data_format-file_download>` 。
+    * 下载文件的文件名使用
+      :java:extdoc:`HttpResponse#setContentDisposition<nablarch.fw.web.HttpResponse.setContentDisposition(java.lang.String)>` 设置。
+      详细信息请参考 :ref:`在下载中使用通用数据格式 <data_format-file_download>` 。
 
-ファイルダウンロード機能の解説は以上。
+文件下载功能讲解完毕。
 
-:ref:`Getting Started TOPページへ <getting_started>`
+:ref:`返回Getting Started TOP页 <getting_started>`

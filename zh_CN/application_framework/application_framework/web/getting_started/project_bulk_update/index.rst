@@ -1,133 +1,133 @@
 .. _`project_bulk_update`:
 
-一括更新機能の作成
+创建批量更新功能
 ==========================================
-Example应用を元に一括更新機能を解説する。
+基于Example应用程序讲解批量更新功能。
 
-作成する機能の説明
-  1. メニューの一括更新リンクを押下し、一括更新画面へ遷移する。
+功能说明
+  1. 点击菜单的批量更新链接，跳转到批量更新画面。
 
     .. image:: ../images/project_bulk_update/project_bulk_update-menu.png
       :scale: 80
 
-  2. プロジェクト全件検索の結果が表示される。
+  2. 显示项目全件搜索结果。
 
     .. image:: ../images/project_bulk_update/project_bulk_update-list.png
       :scale: 80
 
-  3. 当該ページで更新する項目を書き換えて、更新ボタンを押下する(ページをまたいだ更新はできない)。
+  3. 在该页面改写要更新的项目，点击更新按钮(不能跨页更新)。
 
     .. image:: ../images/project_bulk_update/project_bulk_update-list_changed.png
       :scale: 80
 
-  4. 更新確認画面が表示されるので、確定ボタンを押下する。
+  4. 显示更新确认画面，点击确定按钮。
 
     .. image:: ../images/project_bulk_update/project_bulk_update-confirm.png
       :scale: 80
 
-  5. データベースが更新され、更新完了画面が表示される。
+  5. 数据库被更新，显示更新完成画面。
 
     .. image:: ../images/project_bulk_update/project_bulk_update-complete.png
       :scale: 80
 
-一括更新機能の作成
+创建批量更新功能
 ---------------------
-一括更新機能の作成方法を解説する。
+讲解批量更新功能的创建方法。
 
-  #. :ref:`フォームの作成<project_bulk_update-create_form>`
-  #. :ref:`画面に更新対象を受け渡すBeanの作成<project_bulk_update-create_bean>`
-  #. :ref:`一括更新画面を表示する業務アクションメソッドの作成<project_bulk_update-action_list>`
-  #. :ref:`一括更新画面JSPの作成<project_bulk_update-update_jsp>`
-  #. :ref:`更新内容を確認する業務アクションメソッドの作成<project_bulk_update-confirm_action>`
-  #. :ref:`確認画面JSPの作成<project_bulk_update-confirm_jsp>`
-  #. :ref:`データベースを一括更新する業務アクションメソッドの作成<project_bulk_update-bulk_update>`
-  #. :ref:`完了画面の作成<project_bulk_update-complete_jsp>`
+  #. :ref:`创建Form<project_bulk_update-create_form>`
+  #. :ref:`创建向画面传递更新目标的Bean<project_bulk_update-create_bean>`
+  #. :ref:`创建显示批量更新画面的业务Action方法<project_bulk_update-action_list>`
+  #. :ref:`创建批量更新画面JSP<project_bulk_update-update_jsp>`
+  #. :ref:`创建确认更新内容的业务Action方法<project_bulk_update-confirm_action>`
+  #. :ref:`创建确认画面JSP<project_bulk_update-confirm_jsp>`
+  #. :ref:`创建批量更新数据库的业务Action方法<project_bulk_update-bulk_update>`
+  #. :ref:`创建完成画面<project_bulk_update-complete_jsp>`
 
 .. _`project_bulk_update-create_form`:
 
-フォームの作成
-  検索条件を受け付けるフォームと、更新内容を受け付けるフォームをそれぞれ作成する。
+创建Form
+  分别创建接收搜索条件的Form和接收更新内容的Form。
 
-  検索フォームの作成
-    検索フォームの実装は、 :ref:`検索機能の作成：フォームの作成<project_search-create_form>` と同様であるためそちらを参照。
+  创建搜索Form
+    搜索Form的实现与 :ref:`创建搜索功能：创建Form<project_search-create_form>` 相同，请参考。
 
-  更新フォームの作成
-    複数のプロジェクトの更新情報を一括で送信するため、フォームを2種類作成する。
+  创建更新Form
+    为了批量发送多个项目的更新信息，创建两种Form。
 
-      #. :ref:`プロジェクト１つ分の更新情報を受け付けるフォーム<project_bulk_update-create_single_pj_form>`
-      #. :ref:`プロジェクト１つ分のフォームのリストをプロパティとして持つ親フォーム<project_bulk_update-create_multi_pj_form>`
+      #. :ref:`接收单个项目更新信息的Form<project_bulk_update-create_single_pj_form>`
+      #. :ref:`以单个项目Form列表作为属性的父Form<project_bulk_update-create_multi_pj_form>`
 
         .. image:: ../images/project_bulk_update/project_bulk_update-form.png
 
     .. _`project_bulk_update-create_single_pj_form`:
 
-    プロジェクト１つ分の更新情報を受け付けるフォーム
-      プロジェクト１つ分の更新値を受け付けるフォームを作成する。
+    接收单个项目更新信息的Form
+      创建接收单个项目更新值的Form。
 
         InnerProjectForm.java
           .. code-block:: java
 
             public class InnerProjectForm implements Serializable {
 
-                // 一部項目のみ抜粋
+                // 仅摘录部分项目
 
-                /** プロジェクト名 */
+                /** 项目名称 */
                 @Required
                 @Domain("projectName")
                 private String projectName;
 
-                // ゲッタ及びセッタは省略
+                // getter及setter省略
             }
 
-      この実装のポイント
-        * 入れ子となったフォームに対しても  :ref:`Bean Validation<bean_validation>` を実行するため、
-          :java:extdoc:`@Required<nablarch.core.validation.ee.Required>` や :java:extdoc:`@Domain<nablarch.core.validation.ee.Domain>`
-          などのバリデーション用のアノテーションを付与する。
+      实现要点
+        * 为了对嵌套Form也执行 :ref:`Bean Validation<bean_validation>` ，
+          需要添加 :java:extdoc:`@Required<nablarch.core.validation.ee.Required>` 或 :java:extdoc:`@Domain<nablarch.core.validation.ee.Domain>`
+          等验证用注解。
 
     .. _`project_bulk_update-create_multi_pj_form`:
 
-    プロジェクト１つ分のフォームのリストをプロパティとして持つ親フォーム
-      複数プロジェクトの更新情報を一括で受け付けるために、プロジェクト１つ分の更新情報を受け付けるフォームのリストを定義した親フォームを作成する。
+    以单个项目Form列表作为属性的父Form
+      为了批量接收多个项目的更新信息，创建定义了接收单个项目更新信息Form列表的父Form。
 
       ProjectBulkForm.java
         .. code-block:: java
 
           public class ProjectBulkForm implements Serializable {
 
-              /** プロジェクト情報のリスト */
+              /** 项目信息列表 */
               @Valid
               private List<InnerProjectForm> projectList = new ArrayList<>();
 
-              // ゲッタ及びセッタは省略
+              // getter及setter省略
           }
 
-      この実装のポイント
-        * :java:extdoc:`@Valid<jakarta.validation.Valid>` を付与することで、入れ子としたフォームも :ref:`Bean Validation<bean_validation>` の対象に含めることができる。
+      实现要点
+        * 通过添加 :java:extdoc:`@Valid<jakarta.validation.Valid>` 注解，可以将嵌套的Form也纳入 :ref:`Bean Validation<bean_validation>` 的对象。
 
 .. _`project_bulk_update-create_bean`:
 
-業務アクションで取得した更新対象リストを画面へ受け渡すBeanの作成
-  業務アクションで取得した更新対象リストを画面へ受け渡すBeanを作成する。このBeanは一括更新画面と確認画面で持ちまわすため、 :ref:`セッションストア <session_store>` に登録する。
+创建向画面传递业务Action获取的更新目标列表的Bean
+  创建向画面传递业务Action获取的更新目标列表的Bean。此Bean会在批量更新画面和确认画面间传递，因此注册到 :ref:`session store <session_store>` 。
 
     ProjectListDto.java
       .. code-block:: java
 
         public class ProjectListDto implements Serializable {
 
-            /** プロジェクトリスト */
+            /** 项目列表 */
             private List<Project> projectList = new ArrayList<>();
 
-            // ゲッタ及びセッタは省略
+            // getter及setter省略
         }
 
-    この実装のポイント
-      * 配列やコレクション型を :ref:`セッションストア <session_store>` に登録する場合は、シリアライズ可能なBeanのプロパティとして定義し、
-        そのBeanを :ref:`セッションストア <session_store>` に登録すること。詳細は :ref:`セッションストア使用上の制約<session_store-constraint>` を参照。
+    实现要点
+      * 将数组或集合类型注册到 :ref:`session store <session_store>` 时，需要定义为可序列化Bean的属性，
+        然后将该Bean注册到 :ref:`session store <session_store>` 。详细信息请参考 :ref:`session store使用上的限制<session_store-constraint>` 。
 
 .. _`project_bulk_update-action_list`:
 
-一括更新画面を表示する業務アクションメソッドの作成
-  データベースから対象プロジェクトを取得し、一括更新画面に表示する業務アクションメソッドを作成する。
+创建显示批量更新画面的业务Action方法
+  创建从数据库获取目标项目并显示在批量更新画面的业务Action方法。
 
   ProjectBulkAction.java
     .. code-block:: java
@@ -138,7 +138,7 @@ Example应用を元に一括更新機能を解説する。
 
           ProjectSearchForm searchForm = context.getRequestScopedVar("searchForm");
 
-          // 検索実行
+          // 执行搜索
           ProjectSearchDto projectSearchDto
               = BeanUtil.createAndCopy(ProjectSearchDto.class, searchForm);
           EntityList<Project> projectList = searchProject(projectSearchDto, context);
@@ -146,56 +146,56 @@ Example应用を元に一括更新機能を解説する。
           projectListDto.setProjectList(projectList);
           SessionUtil.put(context, "projectListDto", projectListDto);
 
-          // 更新対象を画面に引き渡す
+          // 将更新目标传递到画面
           context.setRequestScopedVar("bulkForm", projectListDto);
 
-          // 検索条件を保存
+          // 保存搜索条件
           SessionUtil.put(context, "projectSearchDto", projectSearchDto);
 
           return new HttpResponse("/WEB-INF/view/projectBulk/update.jsp");
       }
 
-  この実装のポイント
-    * 検索メソッドの実装方法に関しては :ref:`検索機能の作成：業務アクションの実装<project_search-create_action>` と同様であるためそちらを参照。
-    * 確認画面から一括更新画面へ戻った際に、同条件でページングや再検索ができるように
-      検索条件を :ref:`セッションストア <session_store>` に登録して持ちまわす。
+  实现要点
+    * 关于搜索方法的实现请参考 :ref:`创建搜索功能：实现业务Action<project_search-create_action>` 。
+    * 为了从确认画面返回批量更新画面时能以相同条件进行分页或再搜索，
+      将搜索条件注册到 :ref:`session store <session_store>` 进行传递。
 
 .. _`project_bulk_update-update_jsp`:
 
-一括更新画面JSPの作成
-  検索結果の表示と複数のプロジェクトの情報を編集する、一括更新画面のJSPを作成する。
+创建批量更新画面JSP
+  创建显示搜索结果和编辑多个项目信息的批量更新画面JSP。
 
   /src/main/webapp/WEB-INF/projectBulk/update.jsp
     .. code-block:: jsp
 
-      <!-- 顧客検索結果の表示部分 -->
+      <!-- 客户搜索结果显示部分 -->
       <n:form>
-          <!-- 現在の検索結果の表示に使用した検索条件をパラメータとして持つURIを、
-               変数としてpageスコープに登録する。
-               この変数は、<app:listSearchResult>タグのページング用のURIとして使用される。-->
+          <!-- 将当前搜索结果显示使用的搜索条件作为参数持有的URI，
+               作为变量注册到page scope。
+               此变量用作<app:listSearchResult>标签的分页用URI。-->
           <c:url value="list" var="uri">
-              <!-- セッションストア上のprojectSearchDtoから検索条件を取得する -->
+              <!-- 从session store上的projectSearchDto获取搜索条件 -->
               <c:param name="searchForm.clientId" value="${projectSearchDto.clientId}"/>
               <c:param name="searchForm.clientName" value="${projectSearchDto.clientName}"/>
               <c:param name="searchForm.projectName" value="${projectSearchDto.projectName}"/>
-              <!-- 以降も同様に検索条件パラメータであるため省略 -->
+              <!-- 以下同样是搜索条件参数因此省略 -->
 
           </c:url>
           <app:listSearchResult>
-          <!-- listSearchResultの属性値は省略 -->
+          <!-- listSearchResult的属性值省略 -->
               <jsp:attribute name="headerRowFragment">
                   <tr>
-                      <th>プロジェクトID</th>
-                      <th>プロジェクト名</th>
-                      <th>プロジェクト種別</th>
-                      <th>開始日</th>
-                      <th>終了日</th>
+                      <th>项目ID</th>
+                      <th>项目名称</th>
+                      <th>项目类型</th>
+                      <th>开始日期</th>
+                      <th>结束日期</th>
                   </tr>
               </jsp:attribute>
               <jsp:attribute name="bodyRowFragment">
                   <tr class="info">
                       <td>
-                          <!-- プロジェクトIDをパラメータとするリンクを表示する -->
+                          <!-- 显示以项目ID为参数的链接 -->
                           <n:a href="show/${row.projectId}">
                               <n:write name="bulkForm.projectList[${status.index}].projectId"/>
                           </n:a>
@@ -210,7 +210,7 @@ Example应用を元に一括更新機能を解説する。
                                       name="bulkForm.projectList[${status.index}].projectName" />
                           </div>
                       </td>
-                      <!-- その他の編集項目は省略 -->
+                      <!-- 其他编辑项目省略 -->
 
                   </tr>
               </jsp:attribute>
@@ -226,17 +226,17 @@ Example应用を元に一括更新機能を解説する。
           </div>
       </n:form>
 
-  この実装のポイント
-    * 検索結果を表示するJSPの作成方法は :ref:`検索機能の作成：検索結果表示部分の作成<project_search-create_result_jsp>` と同様であるため、そちらを参照。
-    * 確認画面から一括更新画面に戻った際に、同条件での再検索やページングが行えるように、 :ref:`セッションストア <session_store>` から取得した検索条件を元に検索条件パラメータを構成する。
-      JSPでは、 :ref:`セッションストア <session_store>` に登録したオブジェクトは、リクエストスコープに登録したオブジェクトと同様に扱うことができる。
-    * 配列型、もしくは :java:extdoc:`List<java.util.List>` 型プロパティの要素は、 `プロパティ名[index]` 形式でアクセスできる。
-      詳細は :ref:`tag-access_rule` 参照。
+  实现要点
+    * 搜索结果显示JSP的创建方法与 :ref:`创建搜索功能：创建搜索结果显示部分<project_search-create_result_jsp>` 相同，请参考。
+    * 为了从确认画面返回批量更新画面时能进行相同条件的再搜索或分页，基于从 :ref:`session store <session_store>` 获取的搜索条件构建搜索条件参数。
+      在JSP中，注册到 :ref:`session store <session_store>` 的对象可以与注册到request scope的对象同样处理。
+    * 数组型或 :java:extdoc:`List<java.util.List>` 型属性的元素可以通过 `属性名[index]` 形式访问。
+      详细信息请参考 :ref:`tag-access_rule` 。
 
 .. _`project_bulk_update-confirm_action`:
 
-更新内容を確認する業務アクションメソッドの作成
-  更新内容を確認する業務アクションメソッドを作成する。
+创建确认更新内容的业务Action方法
+  创建确认更新内容的业务Action方法。
 
   ProjectBulkAction.java
     .. code-block:: java
@@ -248,7 +248,7 @@ Example应用を元に一括更新機能を解説する。
           ProjectBulkForm form = context.getRequestScopedVar("bulkForm");
           ProjectListDto dto = SessionUtil.get(context, "projectListDto");
 
-          // 更新内容をセッションに上書き
+          // 将更新内容覆盖到会话
           final List<InnerProjectForm> innerForms = form.getProjectList();
           dto.getProjectList()
              .forEach(project ->
@@ -262,42 +262,42 @@ Example应用を元に一括更新機能を解説する。
           return new HttpResponse("/WEB-INF/view/projectBulk/confirmOfUpdate.jsp");
       }
 
-  この実装のポイント
-    * 更新する情報は :ref:`セッションストア <session_store>` に保持する。
+  实现要点
+    * 更新信息保存在 :ref:`session store <session_store>` 中。
 
 .. _`project_bulk_update-confirm_jsp`:
 
-確認画面JSPの作成
-  変更後のプロジェクト情報を表示する画面のJSPを作成する。
+创建确认画面JSP
+  创建显示变更后项目信息的画面JSP。
 
   /src/main/webapp/WEB-INF/projectBulk/confirmOfUpdate.jsp
     .. code-block:: jsp
 
           <section>
               <div class="title-nav">
-                  <span>プロジェクト検索一覧更新画面</span>
+                  <span>项目搜索一览更新画面</span>
                   <div class="button-nav">
                       <n:form useToken="true">
-                        <!-- ボタン部分は省略 -->
+                        <!-- 按钮部分省略 -->
                       </n:form>
                   </div>
               </div>
-              <h2 class="font-group my-3">プロジェクト変更一覧</h2>
+              <h2 class="font-group my-3">项目变更一览</h2>
               <div>
                   <table class="table table-striped table-hover">
                       <tr>
-                          <th>プロジェクトID</th>
-                          <th>プロジェクト名</th>
-                          <th>プロジェクト種別</th>
-                          <th>開始日</th>
-                          <th>終了日</th>
+                          <th>项目ID</th>
+                          <th>项目名称</th>
+                          <th>项目类型</th>
+                          <th>开始日期</th>
+                          <th>结束日期</th>
                       </tr>
                       <c:forEach var="row" items="${projectListDto.projectList}">
                           <tr class="<n:write name='oddEvenCss' />">
                               <td>
                                   <n:write name="row.projectId" />
                               </td>
-                              <!-- 他項目は省略 -->
+                              <!-- 其他项目省略 -->
                           </tr>
                       </c:forEach>
                   </table>
@@ -306,8 +306,8 @@ Example应用を元に一括更新機能を解説する。
 
 .. _`project_bulk_update-bulk_update`:
 
-データベースを一括更新する業務アクションメソッドの作成
-  対象プロジェクトを一括で更新する。
+创建批量更新数据库的业务Action方法
+  批量更新目标项目。
 
   ProjectBulkAction.java
     .. code-block:: java
@@ -321,26 +321,26 @@ Example应用を元に一括更新機能を解説する。
         return new HttpResponse(303, "redirect://completeOfUpdate");
       }
 
-  この実装のポイント
-    * 基本的な実装方法は  :ref:`更新機能の作成：データベースを更新する業務アクションメソッドの作成<project_update-create_decide_action>` と同様である。
-    * :java:extdoc:`UniversalDao#update <nablarch.common.dao.UniversalDao.update(java.lang.Object)>` を更新件数分実行する。
-      排他制御エラーが発生した場合は全件の更新がロールバックされる。
+  实现要点
+    * 基本实现方法与 :ref:`创建更新功能：创建更新数据库的业务Action方法<project_update-create_decide_action>` 相同。
+    * 执行更新次数份的 :java:extdoc:`UniversalDao#update <nablarch.common.dao.UniversalDao.update(java.lang.Object)>` 。
+      发生并发控制错误时全部更新都会回滚。
 
       .. tip::
-        Example应用では独自のエラー制御ハンドラを追加しているため、排他制御エラーにより :java:extdoc:`OptimisticLockException<jakarta.persistence.OptimisticLockException>` が発生した場合、
-        排他制御エラー画面へ遷移する。ハンドラによるエラー制御の作成方法は、 :ref:`ハンドラで例外クラスに対応したエラーページに遷移させる <forward_error_page-handler>` を参照。
+        Example应用程序中添加了自定义错误控制handler，因此 :java:extdoc:`OptimisticLockException<jakarta.persistence.OptimisticLockException>` 发生时
+        会跳转到并发控制错误画面。handler进行错误控制的创建方法请参考 :ref:`在handler中根据异常类跳转到对应错误页面 <forward_error_page-handler>` 。
 
-    * :java:extdoc:`UniversalDao<nablarch.common.dao.UniversalDao>` には、エンティティのリストを引数に取る
-      :java:extdoc:`UniversalDao#batchUpdate <nablarch.common.dao.UniversalDao.batchUpdate(java.util.List)>` メソッドも用意されているが、
-      このメソッドは :ref:`バッチ実行<universal_dao-batch_execute>` での使用を想定したものであり、排他制御を行わない。
-      排他制御が必要である場合は、 :java:extdoc:`UniversalDao#update <nablarch.common.dao.UniversalDao.update(java.lang.Object)>`
-      を使用すること。
+    * :java:extdoc:`UniversalDao<nablarch.common.dao.UniversalDao>` 也提供了以Entity列表为参数的
+      :java:extdoc:`UniversalDao#batchUpdate <nablarch.common.dao.UniversalDao.batchUpdate(java.util.List)>` 方法，
+      但此方法是以 :ref:`批量执行<universal_dao-batch_execute>` 使用为前提的，不进行并发控制。
+      需要并发控制时，请使用 :java:extdoc:`UniversalDao#update <nablarch.common.dao.UniversalDao.update(java.lang.Object)>`
+      。
 
 .. _`project_bulk_update-complete_jsp`:
 
-完了画面の表示
-  完了画面の実装方法は :ref:`更新機能の作成：更新完了画面の作成<project_update-create_success_jsp>` と同様であるためそちらを参照。
+显示完成画面
+  完成画面的实现方法与 :ref:`创建更新功能：创建更新完成画面<project_update-create_success_jsp>` 相同，请参考。
 
-一括更新機能の解説は以上。
+批量更新功能讲解完毕。
 
-:ref:`Getting Started TOPページへ <getting_started>`
+:ref:`返回Getting Started TOP页 <getting_started>`

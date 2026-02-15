@@ -1,13 +1,13 @@
 .. _`client_create_3`:
 
-登録内容確認画面から登録画面へ戻る
+从注册内容确认画面返回注册画面
 ==============================================
-本章节、登録内容確認画面から登録画面へ戻る処理について解説する。
+本章将介绍从注册内容确认画面返回注册画面的处理。
 
-:ref:`前へ<client_create_2>`
+:ref:`上一页<client_create_2>`
 
-登録画面へ戻る処理の実装
-  `ClientAction` に登録画面へ戻る処理を行うメソッドを追加する。
+实现返回注册画面的处理
+  在 `ClientAction` 中添加执行返回注册画面处理的方法。
 
   ClientAction.java
     .. code-block:: java
@@ -33,28 +33,28 @@
           return new HttpResponse("/WEB-INF/view/client/create.jsp");
       }
 
-  この実装のポイント
-    *  :ref:`セッションストア <session_store>` から顧客情報を取得する。
-    * 取得した顧客情報を登録画面に表示するため、:java:extdoc:`BeanUtil <nablarch.core.beans.BeanUtil>` を使用して顧客エンティティをフォームに変換し、リクエストスコープに登録する。
-    * レスポンスオブジェクトの遷移先を、初期表示処理への内部フォーワードとする
-      (登録画面を表示する際、再度プルダウンに表示する業種情報を取得するため)。
-    * 初期表示処理で :ref:`セッションストア <session_store>` へ登録したオブジェクトを削除する(戻るボタンを押下せずにヘッダメニューから直接登録画面に遷移された場合等を考慮)。
+  实现要点
+    * 从 :ref:`session store <session_store>` 获取客户信息。
+    * 为了在注册画面显示获取的客户信息，使用 :java:extdoc:`BeanUtil <nablarch.core.beans.BeanUtil>` 将客户Entity转换为Form，并注册到request scope。
+    * 将响应对象的跳转目标设置为内部forward到初始显示处理
+      (因为显示注册画面时需要重新获取下拉框显示的行业信息)。
+    * 在初始显示处理中删除注册到 :ref:`session store <session_store>` 的对象(考虑不点击返回按钮而从头部菜单直接跳转到注册画面等情况)。
 
-動作確認を行う
-  1. 登録画面を表示する。
+进行动作确认
+  1. 显示注册画面。
 
     .. image:: ../images/client_create/input_display.png
 
-  2. 顧客名に全角文字列、業種に任意の値を選択して「登録」ボタンを押下する。
+  2. 在客户名称输入全角字符串，行业选择任意值后点击「注册」按钮。
 
     .. image:: ../images/client_create/input_valid_value.png
 
-  3. 確認画面にて「入力へ戻る」ボタンを押下する。
+  3. 在确认画面点击「返回输入」按钮。
 
     .. image:: ../images/client_create/confirm_display.png
 
-  4. 登録画面が表示され、`2` で入力した値が画面に表示されていることを確認する。
+  4. 显示注册画面，确认 `2` 中输入的值显示在画面上。
 
     .. image:: ../images/client_create/input_back.png
 
-:ref:`次へ<client_create_4>`
+:ref:`下一页<client_create_4>`

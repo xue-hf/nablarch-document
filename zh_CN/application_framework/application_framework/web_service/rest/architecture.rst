@@ -1,176 +1,176 @@
 .. _`restful_web_service_architecture`:
 
-アーキテクチャ概要
+架构概述
 ==============================
 
 .. contents:: 目录
   :depth: 3
   :local:
 
-Nablarchでは、Jakarta RESTful Web Servicesのリソースクラスを作るのと同じように、ウェブ应用の業務アクションを使用して
-RESTfulウェブサービスを作成する機能（Jakarta RESTful Web Servicesサポート）を提供する。
+Nablarch提供了使用Web应用程序的业务Action，以与创建Jakarta RESTful Web Services资源类相同的方式
+创建RESTful Web服务的功能（Jakarta RESTful Web Services支持）。
 
 .. tip::
-  本機能は、Nablarch5までは「JAX-RSサポート」という名称だった。
-  しかし、Java EEがEclipse Foundationに移管され仕様名が変わったことに伴い「Jakarta RESTful Web Servicesサポート」という名称に変更された。
+  本功能在Nablarch5之前称为「JAX-RS支持」。
+  但是，随着Java EE移管到Eclipse Foundation且规格名改变，名称变更为「Jakarta RESTful Web Services支持」。
 
-  変更されたのは名称のみで、機能的な差は無い。
+  变更的只有名称，功能上没有差异。
 
-  その他、Nablarch6で名称が変更された機能については :ref:`renamed_features_in_nablarch_6` を参照のこと。
+  关于Nablarch6中名称变更的其他功能请参考 :ref:`renamed_features_in_nablarch_6` 。
 
-Jakarta RESTful Web Servicesサポートは、Nablarchのウェブ应用をベースとする。
-そのため、Jakarta RESTful Web Servicesで使用できる@Contextアノテーションを使用したServletリソースのインジェクションやJakarta Contexts and Dependency Injectionなどは使用できない。
-以下に、Jakarta RESTful Web Servicesサポートで使用できるアノテーションを示す。
+Jakarta RESTful Web Services支持基于Nablarch的Web应用程序。
+因此，无法使用Jakarta RESTful Web Services中可用的@Context注解进行Servlet资源注入或Jakarta Contexts and Dependency Injection等。
+以下显示Jakarta RESTful Web Services支持中可使用的注解。
 
- - Produces(レスポンスのメディアタイプの指定)
- - Consumes(リクエストのメディアタイプの指定)
- - Valid(リクエストに対するBeanValidationの実行)
+ - Produces(指定响应的媒体类型)
+ - Consumes(指定请求的媒体类型)
+ - Valid(对请求执行BeanValidation)
 
-Jakarta RESTful Web ServicesとJakarta RESTful Web Servicesサポートとの機能比較は、 :ref:`restful_web_service_functional_comparison` を参照。
+Jakarta RESTful Web Services与Jakarta RESTful Web Services支持的功能比较请参考 :ref:`restful_web_service_functional_comparison` 。
 
 .. important::
 
- Jakarta RESTful Web Servicesサポートでは、クライアントサイドの機能は提供しない。
- Jakarta RESTful Web Servicesのクライアントを使用する必要がある場合は、Jakarta RESTful Web Servicesの実装(JerseyやRESTEasyなど)を使用すること。
+  Jakarta RESTful Web Services支持不提供客户端功能。
+  需要使用Jakarta RESTful Web Services客户端时，请使用Jakarta RESTful Web Services的实现(Jersey或RESTEasy等)。
 
-RESTfulウェブサービスの構成
+RESTful Web服务的构成
 ----------------------------------------
-Nablarchウェブ应用と同じ構成となる。
-詳細は、 :ref:`web_application-structure` を参照。
+与Nablarch Web应用程序构成相同。
+详细信息请参考 :ref:`web_application-structure` 。
 
-RESTfulウェブサービスの処理の流れ
+RESTful Web服务的处理流程
 ----------------------------------------
-RESTfulウェブサービスがリクエストを処理し、レスポンスを返却するまでの処理の流れを以下に示す。
+以下显示RESTful Web服务处理请求并返回响应的处理流程。
 
 .. image:: images/rest-design.png 
   :scale: 75
 
-1. :ref:`web_front_controller` ( `jakarta.servlet.Filter` の実装クラス)がrequestを受信する。
-2. :ref:`web_front_controller` は、requestに対する処理をhandler队列(handler queue)に委譲する。
-3. handler队列に設定されたディスパッチハンドラ(`DispatchHandler`) が、URIを元に処理すべきAction类(action class)を特定しhandler队列の末尾に追加する。
-4. Action类(action class)は、フォームクラス(form class)やエンティティクラス(entity class)を使用して業務ロジック(business logic) を実行する。 |br|
-   各クラスの詳細は、 :ref:`rest-application_design` を参照。
+1. :ref:`web_front_controller` ( `jakarta.servlet.Filter` 的实现类)接收request。
+2. :ref:`web_front_controller` 将request的处理委托给handler队列(handler queue)。
+3. handler队列中设置的调度handler(`DispatchHandler`) 基于URI确定要处理的Action类(action class)并添加到handler队列末尾。
+4. Action类(action class)使用Form类(form class)和Entity类(entity class)执行业务逻辑(business logic)。 |br|
+   各类的详细信息请参考 :ref:`rest-application_design` 。
 
-5. action classは、処理結果を示すDTOや `HttpResponse` を作成し返却する。
-6. handler队列内のHTTPレスポンスハンドラ(`JaxRsResponseHandler`)が、 `HttpResponse` をクライアントに返却するレスポンスに変換し、クライアントへ応答を返す。 |br|
-   なお、Action类(action class)の処理結果がフォームクラス(form class)の場合には、 `BodyConvertHandler` により `HttpResponse` に変換される。 |br|
-   変換される `HttpResponse` のボディの形式は、 Action类(action class)に設定されたメディアタイプとなる。
+5. action类创建表示处理结果的DTO或 `HttpResponse` 并返回。
+6. handler队列内的HTTP响应handler(`JaxRsResponseHandler`)将 `HttpResponse` 转换为返回给客户端的响应，向客户端返回响应。 |br|
+   注意，Action类(action class)的处理结果为Form类(form class)时，通过 `BodyConvertHandler` 转换为 `HttpResponse`。 |br|
+   转换后的 `HttpResponse` 的主体格式为Action类(action class)中设置的媒体类型。
 
 
-RESTfulウェブサービスで使用するハンドラ
+RESTful Web服务使用的handler
 --------------------------------------------------
-Nablarchでは、RESTfulウェブサービスを構築するために必要なハンドラを標準で幾つか提供している。
-プロジェクトの要件に従い、handler队列を構築すること。(要件によっては、プロジェクトカスタムなハンドラを作成することになる)
+Nablarch提供了构建RESTful Web服务所需的多个标准handler。
+请根据项目需求构建handler队列。(根据需求可能需要创建项目自定义handler)
 
-各ハンドラの詳細は、リンク先を参照すること。
+各handler的详细信息请参考链接。
 
-リクエストやレスポンスの変換を行うハンドラ
+进行请求和响应转换的handler
   * :ref:`jaxrs_response_handler`
   * :ref:`body_convert_handler`
 
-データベースに関連するハンドラ
+与数据库相关的handler
   * :ref:`database_connection_management_handler`
   * :ref:`transaction_management_handler`
 
-リクエストの検証を行うハンドラ
+进行请求验证的handler
   * :ref:`jaxrs_bean_validation_handler`
   * :ref:`csrf_token_verification_handler`
 
-エラー処理に関するハンドラ
+与错误处理相关的handler
   * :ref:`global_error_handler`
 
-その他のハンドラ
-  * :ref:`リクエストURIとアクションを紐付けるハンドラ <router_adaptor>`
+其他handler
+  * :ref:`请求URI与Action绑定的handler <router_adaptor>`
   * :ref:`health_check_endpoint_handler`
 
-最小ハンドラ構成
+最小handler构成
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-NablarchでRESTfulウェブサービスを構築する際の、必要最小限のhandler队列を以下に示す。
-これをベースに、プロジェクト要件に従ってNablarchの標準ハンドラやプロジェクトで作成したカスタムハンドラを追加する。
+以下显示在Nablarch中构建RESTful Web服务时的最小handler队列。
+以此为基础，根据项目需求添加Nablarch的标准handler或项目创建的自定义handler。
 
-.. list-table:: 最小ハンドラ構成
+.. list-table:: 最小handler构成
   :header-rows: 1
   :class: white-space-normal
   :widths: 4 24 24 24 24
 
   * - No.
-    - ハンドラ
-    - 往路処理
-    - 復路処理
-    - 例外処理
+    - handler
+    - 去路处理
+    - 回路处理
+    - 异常处理
 
   * - 1
     - :ref:`global_error_handler`
     -
     -
-    - 実行時例外、またはエラーの場合、ログ出力を行う。
+    - 运行时异常或错误时进行日志输出。
 
   * - 2
     - :ref:`jaxrs_response_handler`
     - 
-    - レスポンスの書き込み処理を行う。
-    - 例外(エラー)に対応したレスポンスの生成と書き込み処理とログ出力処理を行う。
+    - 执行响应的写入处理。
+    - 执行异常(错误)对应的响应生成和写入处理以及日志输出处理。
 
   * - 3
     - :ref:`database_connection_management_handler`
-    - DB接続を取得する。
-    - DB接続を解放する。
+    - 获取DB连接。
+    - 释放DB连接。
     -
 
   * - 4
     - :ref:`transaction_management_handler`
-    - トランザクションを開始する。
-    - トランザクションをコミットする。
-    - トランザクションをロールバックする。
+    - 开始事务。
+    - 提交事务。
+    - 回滚事务。
 
   * - 5
-    - :ref:`リクエストURIとアクションを紐付けるハンドラ <router_adaptor>`
-    - リクエストパスをもとに呼び出すアクション(メソッド)を決定する。
+    - :ref:`请求URI与Action绑定的handler <router_adaptor>`
+    - 基于请求路径确定要调用的Action(方法)。
     -
     -
 
   * - 6
     - :ref:`body_convert_handler`
-    - request bodyをアクションで受け付けるフォームクラスに変換する。
-    - アクションの処理結果のフォームの内容をresponse bodyに変換する。
+    - 将request body转换为Action接收的Form类。
+    - 将Action处理结果的Form内容转换为response body。
     -
 
   * - 7
     - :ref:`jaxrs_bean_validation_handler`
-    - No6で変換したフォームクラスに対してバリデーションを実行する。
+    - 对No6转换的Form类执行验证。
     - 
     -
 
 .. tip::
 
-   :ref:`リクエストURIとアクションを紐付けるハンドラ <router_adaptor>` より後ろに設定するハンドラは、
-   handler队列に直接設定するのではなく :ref:`リクエストURIとアクションを紐付けるハンドラ <router_adaptor>` に対して設定する。
+   :ref:`请求URI与Action绑定的handler <router_adaptor>` 之后设置的handler，
+   不是直接设置在handler队列中，而是设置在 :ref:`请求URI与Action绑定的handler <router_adaptor>` 上。
 
-   :ref:`jaxrs_adaptor` を使用した場合、自動的に :ref:`body_convert_handler` と :ref:`jaxrs_bean_validation_handler` がhandler队列に追加される。
+   使用 :ref:`jaxrs_adaptor` 时， :ref:`body_convert_handler` 和 :ref:`jaxrs_bean_validation_handler` 会自动添加到handler队列。
 
-   :ref:`body_convert_handler` と :ref:`jaxrs_bean_validation_handler` 以外のハンドラを設定したい場合や、サポートするメディアタイプを増やしたい場合は、
-   以下の設定例や :ref:`jaxrs_adaptor` の実装を参考にhandler队列を構築すること。
+   想要设置 :ref:`body_convert_handler` 和 :ref:`jaxrs_bean_validation_handler` 以外的handler，或增加支持的媒体类型时，
+   请参考以下设置示例和 :ref:`jaxrs_adaptor` 的实现构建handler队列。
 
    .. code-block:: xml
 
     <component name="webFrontController" class="nablarch.fw.web.servlet.WebFrontController">
       <property name="handlerQueue">
         <list>
-          <!-- 前段のハンドラは省略 -->
+          <!-- 前段handler省略 -->
 
-          <!-- リクエストURIとアクションを紐付けるハンドラの設定 -->
+          <!-- 请求URI与Action绑定的handler设置 -->
           <component name="packageMapping" class="nablarch.integration.router.RoutesMapping">
-            <!-- ハンドラ以外の設定値は省略 -->
+            <!-- handler以外的设置值省略 -->
             <property name="methodBinderFactory">
               <component class="nablarch.fw.jaxrs.JaxRsMethodBinderFactory">
                 <property name="handlerList">
                   <list>
                     <!--
-                    リクエストURIとアクションを紐付けるハンドラ以降のhandler队列の設定
-                    ※各クラスの設定値は省略
+                    请求URI与Action绑定的handler之后的handler队列设置
+                    ※各类的设置值省略
                     -->
                     <component class="nablarch.fw.jaxrs.BodyConvertHandler">
-                      <!-- サポートするメディアタイプのコンバータを設定する -->
+                      <!-- 设置支持的媒体类型的converter -->
                     </component>
                     <component class="nablarch.fw.jaxrs.JaxRsBeanValidationHandler" />
                   </list>

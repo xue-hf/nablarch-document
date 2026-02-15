@@ -1,78 +1,78 @@
 .. _`project_search`:
 
-検索機能の作成
+创建搜索功能
 ==========================================
-Example应用を元に検索機能を解説する。
+基于Example应用程序讲解搜索功能。
 
-作成する機能の説明
-  1. サイドメニュー「プロジェクト名」欄に検索条件を入力し、検索ボタンを押下する。
+功能说明
+  1. 在侧边菜单「项目名称」栏输入搜索条件，点击搜索按钮。
 
     .. image:: ../images/project_search/project_search_sidemenu.png
       :scale: 60
 
-  2. プロジェクト名で検索した結果が表示される。
+  2. 显示按项目名称搜索的结果。
 
     .. image:: ../images/project_search/project_search_search_with_condition.png
       :scale: 80
 
-  3. プロジェクト名をクリアし、「期間からさがす」欄の「今年開始」リンクを押下する。
+  3. 清除项目名称，点击「按期间搜索」栏的「今年开始」链接。
 
     .. image:: ../images/project_search/project_search_start_date.png
           :scale: 60
 
-  4. プロジェクト開始日が今年となっているプロジェクトが表示される。
+  4. 显示项目开始日期为今年的项目。
 
     .. image:: ../images/project_search/project_search_start_date_result.png
       :scale: 80
 
-検索する
+搜索
 -----------
 
-検索機能の基本的な実装方法を、以下の順に説明する。
+按以下顺序说明搜索功能的基本实现方法。
 
-  #. :ref:`フォームの作成<project_search-create_form>`
-  #. :ref:`検索条件入力部分のJSPの作成<project_search-create_jsp>`
-  #. :ref:`検索条件Beanの作成<project_search-create_bean>`
-  #. :ref:`検索に使用するSQLの作成<project_search-create_sql>`
-  #. :ref:`業務アクションの実装<project_search-create_action>`
-  #. :ref:`検索結果表示部分の作成<project_search-create_result_jsp>`
+  #. :ref:`创建Form<project_search-create_form>`
+  #. :ref:`创建搜索条件输入部分的JSP<project_search-create_jsp>`
+  #. :ref:`创建搜索条件Bean<project_search-create_bean>`
+  #. :ref:`创建搜索使用的SQL<project_search-create_sql>`
+  #. :ref:`实现业务Action<project_search-create_action>`
+  #. :ref:`创建搜索结果显示部分<project_search-create_result_jsp>`
 
 .. _`project_search-create_form`:
 
-フォームの作成
-  検索条件を受け付けるフォームを作成する。
+创建Form
+  创建接收搜索条件的Form。
 
   ProjectSearchForm.java
     .. code-block:: java
 
       public class ProjectSearchForm extends SearchFormBase implements Serializable {
 
-          // 一部のみ抜粋
+          // 仅摘录部分
 
-          /** プロジェクト名 */
+          /** 项目名称 */
           @Domain("projectName")
           private String projectName;
 
-          /** プロジェクト開始日（FROM） */
+          /** 项目开始日期（FROM） */
           @Domain("date")
           private String projectStartDateBegin;
 
-          // ゲッタ及びセッタは省略
+          // getter及setter省略
 
-  この実装のポイント
-    * 入力値を受け付けるプロパティは、全てString型で宣言する。詳細は :ref:`バリデーションルールの設定方法 <bean_validation-form_property>` を参照。
+  实现要点
+    * 接收输入值的属性全部声明为String型。详细信息请参考 :ref:`验证规则的设置方法 <bean_validation-form_property>` 。
 
 .. _`project_search-create_jsp`:
 
-検索条件入力部分のJSPの作成
-  検索条件入力部分のJSPを作成する。
+创建搜索条件输入部分的JSP
+  创建搜索条件输入部分的JSP。
 
   /src/main/webapp/WEB-INF/view/common/sidemenu.jsp
     .. code-block:: jsp
 
       <n:form method="GET" action="list">
           <!-- 省略 -->
-          <label for="projectName" class="control-label mb-3">プロジェクト名</label>
+          <label for="projectName" class="control-label mb-3">项目名称</label>
           <div>
               <n:text
                       id="projectName"
@@ -81,52 +81,52 @@ Example应用を元に検索機能を解説する。
                       maxlength="64"
                       cssClass="form-control form-control-lg"
                       errorCss="input-error"
-                      placeholder="プロジェクト名"/>
+                      placeholder="项目名称"/>
               <n:error errorCss="message-error" name="searchForm.projectName" />
           </div>
           <!-- 省略 -->
           <div align="center">
-              <input type="submit" id="search" class="btn btn-lg btn-primary" value="検索" />
+              <input type="submit" id="search" class="btn btn-lg btn-primary" value="搜索" />
           </div>
       </n:form>
 
-    この実装のポイント
-      * リクエストをGETで送信する場合は、 :ref:`tag-form_tag` の `method` 属性にGETを指定する。
-        さらに、GETの場合、ボタンやリンクにカスタムタグを使用できないので、HTMLでボタンやリンクを作成する。詳細は :ref:`tag-using_get` を参照。
+    实现要点
+      * 使用GET发送请求时，在 :ref:`tag-form_tag` 的 `method` 属性中指定GET。
+        此外，使用GET时不能使用自定义标签创建按钮或链接，需要用HTML创建按钮或链接。详细信息请参考 :ref:`tag-using_get` 。
 
 .. _`project_search-create_bean`:
 
-検索条件Beanの作成
-  検索条件を設定し :ref:`universal_dao` へ引き渡すBeanを作成する。
-  Beanのプロパティは、:ref:`対応する条件カラムの定義(型)と互換性のある型とする<universal_dao-search_with_condition>` こと。
+创建搜索条件Bean
+  创建设置搜索条件并传递给 :ref:`universal_dao` 的Bean。
+  Bean的属性必须是 :ref:`与对应条件列定义(类型)兼容的类型<universal_dao-search_with_condition>` 。
 
   ProjectSearchDto.java
     .. code-block:: java
 
       public class ProjectSearchDto implements Serializable {
 
-          // 一部のみ抜粋
+          // 仅摘录部分
 
-          /** プロジェクト名 */
+          /** 项目名称 */
           private String projectName;
 
-          /** プロジェクト開始日付(FROM） */
+          /** 项目开始日期(FROM） */
           private java.sql.Date projectStartDateBegin;
 
-          // ゲッタ及びセッタは省略
+          // getter及setter省略
 
-    この実装のポイント
-      * フォームから検索条件Beanへの値の移送は、 :java:extdoc:`BeanUtil <nablarch.core.beans.BeanUtil>` を使用する。
-        :java:extdoc:`BeanUtil <nablarch.core.beans.BeanUtil>` は、プロパティ名が同一の項目を移送するため、
-        検索条件に使用する項目のプロパティ名は、フォームと検索条件Beanで合わせる必要がある。
-      * :java:extdoc:`BeanUtil <nablarch.core.beans.BeanUtil>` を用いて値を移送する場合は、互換性のある型であれば、
-        プロパティを型変換した上で移送できる。詳細は :ref:`BeanUtilの型変換ルール<utility-conversion>` を参照。
-      * Beanのプロパティは、対応するカラムの型に合わせたJavaの型で定義する。
+    实现要点
+      * 使用 :java:extdoc:`BeanUtil <nablarch.core.beans.BeanUtil>` 从Form向搜索条件Bean移送值。
+        :java:extdoc:`BeanUtil <nablarch.core.beans.BeanUtil>` 会移送属性名相同的项目，
+        因此搜索条件使用的项目的属性名需要在Form和搜索条件Bean中保持一致。
+      * 使用 :java:extdoc:`BeanUtil <nablarch.core.beans.BeanUtil>` 移送值时，如果是兼容的类型，
+        可以在类型转换后移送。详细信息请参考 :ref:`BeanUtil的类型转换规则<utility-conversion>` 。
+      * Bean的属性使用与对应列类型匹配的Java类型定义。
 
 .. _`project_search-create_sql`:
 
-検索に使用するSQLの作成
-  検索に使用するSQLを作成する。
+创建搜索使用的SQL
+  创建搜索使用的SQL。
 
     Project.sql
       .. code-block:: none
@@ -163,19 +163,19 @@ Example应用を元に検索機能を解説する。
             (endDateDesc PROJECT_END_DATE DESC, PROJECT_ID DESC)
         }
 
-    この実装のポイント
-      * SQLインジェクションを防ぐため、SQLは外部ファイルに記述する。詳細は :ref:`database-use_sql_file` を参照。
-      * Beanのプロパティ名を使って、SQLに値をバインドする。詳細は :ref:`database-input_bean` を参照。
-      * 検索画面で入力された項目のみを条件に含める場合には、 :ref:`$if 構文を使用してSQL文を構築<database-use_variable_condition>` する。
-      * ソートキーを画面から選択可能とする場合には、 :ref:`$sort 構文を使用してSQL文を構築<database-make_order_by>` する。
+    实现要点
+      * 为防止SQL注入，SQL写入外部文件。详细信息请参考 :ref:`database-use_sql_file` 。
+      * 使用Bean的属性名向SQL绑定值。详细信息请参考 :ref:`database-input_bean` 。
+      * 仅在搜索画面输入的项目作为条件时，使用 :ref:`$if 语法构建SQL语句<database-use_variable_condition>` 。
+      * 排序键可从画面选择时，使用 :ref:`$sort 语法构建SQL语句<database-make_order_by>` 。
 
 .. _`project_search-create_action`:
 
-業務アクションの実装
-  業務アクションに、検索処理を実装する。
+实现业务Action
+  在业务Action中实现搜索处理。
 
-  業務アクションメソッドの作成
-    画面から与えられた検索条件を元に検索するメソッドを作成する。
+  创建业务Action方法
+    创建基于画面给出的搜索条件进行搜索的方法。
 
     ProjectAction.java
       .. code-block:: java
@@ -194,15 +194,15 @@ Example应用を元に検索機能を解説する。
               return new HttpResponse("/WEB-INF/view/project/index.jsp");
           }
 
-    この実装のポイント
-      * 検索条件は、外部からの入力値で安全である保証がないため、
-        :java:extdoc:`InjectForm <nablarch.common.web.interceptor.InjectForm>` を付与してバリデーションを行う。
-      * :java:extdoc:`InjectForm <nablarch.common.web.interceptor.InjectForm>` によるバリデーションが済んだフォームは、
-        リクエストスコープから取り出すことができる。
-      * フォームの値を :java:extdoc:`BeanUtil <nablarch.core.beans.BeanUtil>` を使用して検索条件Beanにコピーする。
+    实现要点
+      * 搜索条件来自外部的输入值，无法保证安全性，
+        因此添加 :java:extdoc:`InjectForm <nablarch.common.web.interceptor.InjectForm>` 注解进行验证。
+      * 通过 :java:extdoc:`InjectForm <nablarch.common.web.interceptor.InjectForm>` 完成验证的Form，
+        可以从request scope中取出。
+      * 使用 :java:extdoc:`BeanUtil <nablarch.core.beans.BeanUtil>` 将Form的值复制到搜索条件Bean。
 
-  データベースを検索するプライベートメソッドの作成
-    このメソッドでは、前述のSQLを指定してデータベースを検索する。
+  创建搜索数据库的私有方法
+    在此方法中，指定前述SQL搜索数据库。
 
       ProjectAction.java
         .. code-block:: java
@@ -219,39 +219,39 @@ Example应用を元に検索機能を解説する。
                       .findAllBySqlFile(Project.class, "SEARCH_PROJECT", searchCondition);
           }
 
-      この実装のポイント
-        * 前述のSQL文を実行するには、:java:extdoc:`UniversalDao#findAllBySqlFile <nablarch.common.dao.UniversalDao.findAllBySqlFile(java.lang.Class,java.lang.String,java.lang.Object)>` の第二引数として、
-          :ref:`SQLID <database-execute_sqlid>` (前述のSQLの場合は"SEARCH_PROJECT")を指定する。
-        * ページング用の検索は、 :java:extdoc:`UniversalDao#per <nablarch.common.dao.UniversalDao.per(long)>` メソッド、
-          及び :java:extdoc:`UniversalDao#page <nablarch.common.dao.UniversalDao.page(long)>` を用いて行うことができる。
-          詳細は :ref:`ページングのために検索範囲を絞る<universal_dao-paging>` を参照。
+      实现要点
+        * 要执行前述SQL语句，需要在 :java:extdoc:`UniversalDao#findAllBySqlFile <nablarch.common.dao.UniversalDao.findAllBySqlFile(java.lang.Class,java.lang.String,java.lang.Object)>` 的第二参数中指定
+          :ref:`SQLID <database-execute_sqlid>` (前述SQL的情况下是"SEARCH_PROJECT")。
+        * 用于分页的搜索可以使用 :java:extdoc:`UniversalDao#per <nablarch.common.dao.UniversalDao.per(long)>` 方法、
+          以及 :java:extdoc:`UniversalDao#page <nablarch.common.dao.UniversalDao.page(long)>` 。
+          详细信息请参考 :ref:`为分页而缩小搜索范围<universal_dao-paging>` 。
 
 .. _`project_search-create_result_jsp`:
 
-検索結果表示部分の作成
-  リクエストスコープに登録された検索結果を画面に表示する処理を、JSPに実装する。
+创建搜索结果显示部分
+  在JSP中实现将注册到request scope的搜索结果显示在画面上的处理。
 
   /src/main/webapp/WEB-INF/view/project/index.jsp
     .. code-block:: jsp
 
-      <!-- 検索結果 -->
+      <!-- 搜索结果 -->
       <app:listSearchResult>
-      <!-- app:listSearchResultの属性値指定は省略 -->
+      <!-- app:listSearchResult的属性值指定省略 -->
       <!-- 省略 -->
           <jsp:attribute name="headerRowFragment">
               <tr>
-                  <th>プロジェクトID</th>
-                  <th>プロジェクト名</th>
-                  <th>プロジェクト種別</th>
-                  <th>開始日</th>
-                  <th>終了日</th>
+                  <th>项目ID</th>
+                  <th>项目名称</th>
+                  <th>项目类型</th>
+                  <th>开始日期</th>
+                  <th>结束日期</th>
               </tr>
           </jsp:attribute>
           <jsp:attribute name="bodyRowFragment">
               <tr class="info">
                   <td>
-                      <!-- プロジェクトIDを追加したURLを作成する -->
-                      <!-- プロジェクト詳細画面へ遷移する -->
+                      <!-- 创建添加了项目ID的URL -->
+                      <!-- 跳转到项目详情画面 -->
                       <n:a href="show/${row.projectId}">
                           <n:write name="row.projectId"/>
                       </n:a>
@@ -269,10 +269,10 @@ Example应用を元に検索機能を解説する。
           </jsp:attribute>
       </app:listSearchResult>
 
-  この実装のポイント
-    * 詳細画面へ遷移するリンクなど、GETリクエストのURLにパラメータを含めたい場合は、JSTLの `<c:url>` タグやEL式を使って作成する。
-    * Example应用では、ルーティングを以下のように設定しているため、末尾にプロジェクトIDを付与したURLが「 `ProjectAction#show` 」に紐づけられる。
-      詳細は `ライブラリのREADMEドキュメント(外部サイト) <https://github.com/kawasima/http-request-router/blob/master/README.ja.md>`_ を参照。
+  实现要点
+    * 跳转到详情画面的链接等，想要在GET请求URL中包含参数时，使用JSTL的 `<c:url>` 标签或EL表达式创建。
+    * Example应用程序中设置了如下路由，因此末尾附加项目ID的URL会映射到「 `ProjectAction#show` 」。
+      详细信息请参考 `库的README文档(外部站点) <https://github.com/kawasima/http-request-router/blob/master/README.ja.md>`_ 。
 
       routes.xml
         .. code-block:: xml
@@ -283,14 +283,14 @@ Example应用を元に検索機能を解説する。
                         <requirement name="projectId" value="\d+$" />
                     </requirements>
                 </match>
-            <!-- その他の設定は省略 -->
+            <!-- 其他设置省略 -->
           </routes>
 
-    * 値を出力するために、 :ref:`tag-write_tag` を用いる。
-      値を「日付」や「金額」等の形式でフォーマットして出力したい場合は、 `valueFormat` 属性で形式を指定する。詳細は :ref:`tag-format_value` を参照。
-    * `<app:listSearchResult>` の使用方法については :ref:`list_search_result` を参照。
+    * 使用 :ref:`tag-write_tag` 输出值。
+      想要以「日期」或「金额」等格式输出值时，在 `valueFormat` 属性中指定格式。详细信息请参考 :ref:`tag-format_value` 。
+    * 关于 `<app:listSearchResult>` 的使用方法请参考 :ref:`list_search_result` 。
 
 
-検索機能の解説は以上。
+搜索功能讲解完毕。
 
-:ref:`Getting Started TOPページへ <getting_started>`
+:ref:`返回Getting Started TOP页 <getting_started>`

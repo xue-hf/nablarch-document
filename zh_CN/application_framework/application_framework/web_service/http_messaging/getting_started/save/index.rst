@@ -1,37 +1,37 @@
 .. _`getting_started_http_massaging-save`:
 
-登録機能の作成
+创建注册功能
 ==========================================================
-リクエストされた情報(JSON形式)をDBに登録する機能を解説する。
+讲解将请求的信息(JSON格式)注册到DB的功能。
 
-作成する機能の概要
+功能概要说明
   .. image:: ../images/overview.png
 
-動作確認手順
-  1. 事前にDBの状態を確認
+动作确认步骤
+  1. 事先确认DB状态
 
-     H2のコンソールから下記SQLを実行し、レコードが存在しないことを確認する。
+     从H2控制台执行以下SQL，确认记录不存在。
 
      .. code-block:: sql
 
-       SELECT * FROM PROJECT WHERE PROJECT_NAME = 'プロジェクト９９９';
+       SELECT * FROM PROJECT WHERE PROJECT_NAME = '项目９９９';
 
-  2. プロジェクト情報の登録
+  2. 注册项目信息
 
-    任意のRESTクライアントを使用して、以下のリクエストを送信する。
+    使用任意REST客户端发送以下请求。
 
     URL
       http://localhost:9080/ProjectSaveAction
-    HTTPメソッド
+    HTTP方法
       POST
-    HTTPヘッダ
+    HTTP头部
       Content-Type: application/json |br|
       X-Message-Id: 1
-    リクエストボディ
+    请求主体
       .. code-block:: json
 
         {
-            "projectName": "プロジェクト９９９",
+            "projectName": "项目９９９",
             "projectType": "development",
             "projectClass": "ss",
             "projectManager": "山田",
@@ -39,32 +39,32 @@
             "clientId": 10,
             "projectStartDate": "20160101",
             "projectEndDate": "20161231",
-            "note": "備考９９９",
+            "note": "备注９９９",
             "sales": 10000,
             "costOfGoodsSold": 20000,
             "sga": 30000,
             "allocationOfCorpExpenses": 40000
         }
 
-  3. 動作確認
+  3. 动作确认
 
-    H2のコンソールから下記SQLを実行し、レコードが1件取得できることを確認する。
+    从H2控制台执行以下SQL，确认可以获取1条记录。
 
     .. code-block:: sql
 
-      SELECT * FROM PROJECT WHERE PROJECT_NAME = 'プロジェクト９９９';
+      SELECT * FROM PROJECT WHERE PROJECT_NAME = '项目９９９';
 
-登録を行う
+执行注册
 ----------------------
 
-#. :ref:`フォーマットファイルの作成<getting_started_http_messaging-format>`
-#. :ref:`フォームの作成<getting_started_http_messaging-form>`
-#. :ref:`業務アクションの作成<getting_started_http_messaging-action>`
+#. :ref:`创建格式文件<getting_started_http_messaging-format>`
+#. :ref:`创建Form<getting_started_http_messaging-form>`
+#. :ref:`创建业务Action<getting_started_http_messaging-action>`
 
 .. _`getting_started_http_messaging-format`:
 
-フォーマットファイルの作成
-  HTTPメッセージングでは、リクエストされたHTTPメッセージを :ref:`data_format` を使用して解析する。
+创建格式文件
+  HTTP消息处理使用 :ref:`data_format` 解析请求的HTTP消息。
 
   ProjectSaveAction_RECEIVE.fmt
     .. code-block:: bash
@@ -88,40 +88,40 @@
       13 allocationOfCorpExpenses[0..1]    X9
       14 userId[0..1]                      X9
 
-  この実装のポイント
-    * フォーマットファイルの名称は、「リクエストID + "_RECEIVE"」という形式にする。
-    * フォーマットファイルの記述方法は :ref:`data_format-definition` を参照。
+  实现要点
+    * 格式文件名称采用「请求ID + "_RECEIVE"」的形式。
+    * 格式文件的记述方法请参考 :ref:`data_format-definition` 。
 
 .. _`getting_started_http_messaging-form`:
 
-フォームの作成
-  リクエストボディの内容をバインドするフォームを作成する。
+创建Form
+  创建绑定请求主体内容的Form。
 
   ProjectForm.java
     .. code-block:: java
 
       public class ProjectForm {
 
-          // 一部項目のみ抜粋
+          // 仅摘录部分项目
 
-          /** プロジェクト名 */
+          /** 项目名称 */
           @Required
           @Domain("projectName")
           private String projectName;
 
           /**
-           * プロジェクト名を取得する。
+           * 获取项目名称。
            *
-           * @return プロジェクト名
+           * @return 项目名称
            */
           public String getProjectName() {
               return projectName;
           }
 
           /**
-           * プロジェクト名を設定する。
+           * 设置项目名称。
            *
-           * @param projectName 設定するプロジェクト名
+           * @param projectName 要设置的项目名称
            *
            */
           public void setProjectName(String projectName) {
@@ -129,13 +129,13 @@
           }
       }
 
-  この実装のポイント
-    * :ref:`bean_validation` を用いてバリデーションを行うため、バリデーション用のアノテーションを設定する。
+  实现要点
+    * 为了使用 :ref:`bean_validation` 进行验证，设置验证用注解。
 
 .. _`getting_started_http_messaging-action`:
 
-業務アクションの作成
-  プロジェクトをDBに登録する業務アクションを作成する。
+创建业务Action
+  创建将项目注册到DB的业务Action。
 
   ProjectSaveAction.java
     .. code-block:: java
@@ -143,41 +143,41 @@
       public class ProjectSaveAction extends MessagingAction {
 
           /**
-           * 電文を受信した際に実行される業務処理。
+           * 接收电文时执行的业务处理。
            * <p>
-           * プロジェクト情報をバリデーションし、DBに登録する。
-           * このメソッドは、一つのプロジェクトを登録するための処理である。
-           * (汎用フォーマットによる形式チェックにより単独プロジェクトであることが保証される)
+           * 验证项目信息并注册到DB。
+           * 此方法是注册单个项目的处理。
+           * (通过通用格式的格式检查保证是单个项目)
            * </p>
-           * 登録が完了した場合は、レスポンスコードを記載した応答電文を設定する。
-           * 例外が発生した場合は、{@link ProjectSaveAction#onError(Throwable, RequestMessage, ExecutionContext)}
-           * にて応答電文を設定する。
+           * 注册完成时设置记载响应代码的响应电文。
+           * 发生异常时，在{@link ProjectSaveAction#onError(Throwable, RequestMessage, ExecutionContext)}
+           * 中设置响应电文。
            * 
-           * @param requestMessage   受信したメッセージ
-           * @param executionContext 运行上下文
-           * @return 応答電文
+           * @param requestMessage   接收的消息
+           * @param executionContext 执行上下文
+           * @return 响应电文
            */
           @Override
           protected ResponseMessage onReceive(RequestMessage requestMessage,
                                               ExecutionContext executionContext) {
 
-              // 入力値をフォームにバインドする
+              // 将输入值绑定到Form
               ProjectForm form = BeanUtil.createAndCopy(ProjectForm.class,
                       requestMessage.getParamMap());
 
-              // バリデーションエラーがある場合は業務例外を送出
+              // 存在验证错误时抛出业务异常
               ValidatorUtil.validate(form);
 
               UniversalDao.insert(BeanUtil.createAndCopy(Project.class, form));
 
-              // 応答電文のフォーマッタを作成する
+              // 创建响应电文的formatter
               requestMessage.setFormatterOfReply(createFormatter());
 
-              // 応答電文に記載するステータスコードを設定する
+              // 设置响应电文中记载的响应状态码
               Map<String, String> map = new HashMap<>();
               map.put("statusCode", String.valueOf(HttpResponse.Status.CREATED.getStatusCode()));
 
-              // 応答データ返却
+              // 返回响应数据
               return requestMessage.reply()
                      .setStatusCodeHeader(String.valueOf(HttpResponse.Status.CREATED.getStatusCode()))
                      .addRecord("data", map);
@@ -185,18 +185,18 @@
       }
 
 
-  この実装のポイント
-    * :java:extdoc:`MessagingAction <nablarch.fw.messaging.action.MessagingAction>` を継承し、業務メソッドを作成する。
-    * :java:extdoc:`MessagingAction#onReceive <nablarch.fw.messaging.action.MessagingAction.onReceive(nablarch.fw.messaging.RequestMessage,nablarch.fw.ExecutionContext)>`
-      に、リクエスト受信時に実行する処理を実装する。
-    * リクエストボディの値は、 :ref:`data_format` を使用して解析された状態で引数の :java:extdoc:`RequestMessage <nablarch.fw.messaging.RequestMessage>` オブジェクト
-      が保持している。 `getParamMap` メソッドを使用してリクエストボディの値を取得する。
-    * :ref:`bean_validation` を使用してリクエスト値のバリデーションを行う。
-    * :java:extdoc:`UniversalDao <nablarch.common.dao.UniversalDao>` を用いてプロジェクトをDBに登録する。
-    * 処理結果を表すレスポンスコードを :java:extdoc:`ResponseMessage <nablarch.fw.messaging.ResponseMessage>` に設定して返却する。
+  实现要点
+    * 继承 :java:extdoc:`MessagingAction <nablarch.fw.messaging.action.MessagingAction>` ，创建业务方法。
+    * 在 :java:extdoc:`MessagingAction#onReceive <nablarch.fw.messaging.action.MessagingAction.onReceive(nablarch.fw.messaging.RequestMessage,nablarch.fw.ExecutionContext)>`
+      中实现接收请求时执行的处理。
+    * 请求主体的值在通过 :ref:`data_format` 解析后，由参数 :java:extdoc:`RequestMessage <nablarch.fw.messaging.RequestMessage>` 对象
+      保持。使用 `getParamMap` 方法获取请求主体的值。
+    * 使用 :ref:`bean_validation` 进行请求值的验证。
+    * 使用 :java:extdoc:`UniversalDao <nablarch.common.dao.UniversalDao>` 将项目注册到DB。
+    * 返回设置表示处理结果的响应代码的 :java:extdoc:`ResponseMessage <nablarch.fw.messaging.ResponseMessage>` 。
 
   .. tip::
-    業務例外が送出された場合は、 :ref:`http_messaging_error_handler` の処理によってレスポンスコード「400」が設定される。
+    业务异常被抛出时，通过 :ref:`http_messaging_error_handler` 的处理设置响应代码「400」。
 
 .. |br| raw:: html
 

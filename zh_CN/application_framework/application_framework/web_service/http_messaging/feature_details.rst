@@ -1,24 +1,24 @@
-機能詳細
+功能详情
 ========================================
 .. contents:: 目录
   :depth: 3
   :local:
 
-Nablarchの初期化
+Nablarch初始化
 ----------------------------------------
-:ref:`ウェブ应用のNablarchの初期化 <web_feature_details-nablarch_initialization>` を参照。
+请参考 :ref:`Web应用程序的Nablarch初始化 <web_feature_details-nablarch_initialization>` 。
 
 .. _http_messaging-request_validation:
 
-入力値のチェック
+输入值检查
 ----------------------------------------
-* :ref:`入力値のチェック <validation>`
+* :ref:`输入值检查 <validation>`
 
-データベースアクセス
+数据库访问
 ----------------------------------------
-* :ref:`データベースアクセス <database_management>`
+* :ref:`数据库访问 <database_management>`
 
-排他制御
+并发控制
 ----------------------------------------
 * :ref:`universal_dao`
 
@@ -28,36 +28,36 @@ Nablarchの初期化
 
 .. important::
 
-  :ref:`exclusive_control` 機能は、クライアント(taglib)との連動が前提であるため、
-  HTTPメッセージングでは使用できない。
+  :ref:`exclusive_control` 功能以与客户端(taglib)联动为前提，
+  因此无法在HTTP消息处理中使用。
 
 .. _http_messaging-action_mapping:
 
-URIとAction类のマッピング
+URI与Action类的映射
 ----------------------------------------
 * :ref:`http_request_java_package_mapping`
 
 .. tip::
- HTTPメッセージングでは :ref:`router_adaptor` を使用できない。
- HTTPメッセージングは、:ref:`mom_system_messaging` が提供する
+ HTTP消息处理无法使用 :ref:`router_adaptor` 。
+ HTTP消息处理使用 :ref:`mom_system_messaging` 提供的
  :java:extdoc:`MessagingAction<nablarch.fw.messaging.action.MessagingAction>`
- でAction类を作成するため、URIに応じてAction类のメソッドを呼び分ける想定がないため。
+ 创建Action类，因此没有根据URI调用不同Action类方法的设想。
 
-国際化対応
+国际化支持
 ----------------------------------------
-静的リソースの多言語化対応については以下を参照。
+关于静态资源的多语言化支持请参考以下文档。
 
-* :ref:`メッセージの多言語化 <message-multi_lang>`
-* :ref:`コード名称の多言語化 <code-use_multilingualization>`
+* :ref:`消息的多语言化 <message-multi_lang>`
+* :ref:`代码名称的多语言化 <code-use_multilingualization>`
 
-認証
+认证
 ----------------------------------------
-認証については、プロジェクト要件により仕様が異なるため、フレークワークとしては提供していない。
+认证因项目需求而异，因此框架不提供。
 
-認可チェック
+授权检查
 ----------------------------------------
 * :ref:`permission_check`
 
-エラー時に返却するレスポンス
+错误时返回的响应
 --------------------------------------------------
 * :ref:`http_messaging_error_handler`
