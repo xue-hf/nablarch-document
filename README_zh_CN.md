@@ -1,6 +1,6 @@
 # Nablarch 文档（中文版）
 
-[![翻译进度](https://img.shields.io/badge/翻译进度-15.6%25-orange)](TRANSLATION_STATUS.md)
+[![翻译进度](https://img.shields.io/badge/翻译进度-52.7%25-green)](TRANSLATION_STATUS.md)
 [![使用 Skill](https://img.shields.io/badge/使用-Skill-blue)](.kimi/skills/nablarch-translation/SKILL.md)
 
 本项目是 [Nablarch](https://nablarch.github.io/) 框架文档的中文翻译项目。
@@ -27,7 +27,7 @@ Nablarch 是一个为企业信息系统开发的 Java 应用框架，由日本 T
 
 ## 翻译进度
 
-目前翻译进度：**15.6%**（52/334 文件）
+目前翻译进度：**52.7%**（176/334 文件）
 
 ## 文档索引
 
@@ -39,7 +39,7 @@ Nablarch 是一个为企业信息系统开发的 Java 应用框架，由日本 T
 
 ## 翻译进度
 
-目前翻译进度：**15.6%**（52/334 文件）
+目前翻译进度：**52.7%**（176/334 文件）
 
 详细进度请参考：[TRANSLATION_STATUS.md](TRANSLATION_STATUS.md)
 
@@ -47,17 +47,19 @@ Nablarch 是一个为企业信息系统开发的 Java 应用框架，由日本 T
 
 | 模块 | 进度 | 说明 |
 |------|------|------|
+| ✅ 处理器 (handlers) | 65/65 (100%) | 全部完成 |
+| ✅ Web 应用 (web) | 23/23 (100%) | 全部完成 |
+| ✅ Web 服务 (web_service) | 17/17 (100%) | 全部完成 |
+| ✅ Nablarch 核心 | 5/5 (100%) | 全部完成 |
+| 批处理 (batch) | 24/29 (82.8%) | Nablarch Batch 和 JSR352 基本完成 |
+| 类库 (libraries) | 33/49 (67.3%) | 核心类库已完成 |
 | 关于 Nablarch | 4/5 (80%) | concept, index, license, mvn_module 已完成 |
-| 适配器 (adaptors) | 1/16 (6%) | 仅 index 完成 |
-| 批处理 (batch) | 14/25 (56%) | Nablarch Batch 基本完成，JSR352 未完成 |
-| 云原生 (cloud_native) | 0/4 (0%) | 未开始 |
-| 处理器 (handlers) | 17/54 (31%) | 部分 batch/common/http/mom/rest 处理器完成 |
-| 类库 (libraries) | 0/53 (0%) | 未开始 |
+| 空白项目 (blank_project) | 1/20 (5%) | 仅 index 完成 |
+| 适配器 (adaptors) | 1/16 (6.3%) | 仅 index 完成 |
 | 消息处理 (messaging) | 0/12 (0%) | 未开始 |
-| Web 应用 (web) | 12/22 (55%) | application_design, architecture, feature_details 完成 |
-| Web 服务 (web_service) | 0/18 (0%) | 未开始 |
-| 开发工具 (development_tools) | 0/55 (0%) | 未开始 |
-| 业务示例 (biz_samples) | 0/14 (0%) | 未开始 |
+| 云原生 (cloud_native) | 0/4 (0%) | 未开始 |
+| 开发工具 (development_tools) | 0/52 (0%) | 未开始 |
+| 业务示例 (biz_samples) | 0/15 (0%) | 未开始 |
 
 ## 环境准备
 
