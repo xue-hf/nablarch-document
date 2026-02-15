@@ -1,10 +1,10 @@
-機能詳細
+功能详情
 ========================================
 .. contents:: 目录
   :depth: 3
   :local:
 
-バッチ应用の起動方法
+Batch应用的启动方法
 --------------------------------------------------
 .. toctree::
   :maxdepth: 1
@@ -12,21 +12,21 @@
 
   feature_details/run_batch_application
 
-* :ref:`Jakarta Batch应用の起動方法 <jsr352_run_batch_application>`
+* :ref:`Jakarta Batch应用的启动方法 <jsr352_run_batch_application>`
 
-System Repositoryの初期化
+系统仓库的初始化
 --------------------------------------------------
-* :ref:`Jakarta Batch应用でSystem Repositoryの初期化 <jsr352_run_batch_init_repository>`
+* :ref:`Jakarta Batch应用中系统仓库的初始化 <jsr352_run_batch_init_repository>`
 
-バッチジョブに適用するリスナーの定義方法
+应用到Batch Job的监听器定义方法
 --------------------------------------------------
-* :ref:`リスナーの定義方法 <jsr352-listener_definition>`
+* :ref:`监听器的定义方法 <jsr352-listener_definition>`
 
-入力値のチェック
+输入值的检查
 --------------------------------------------------
-* :ref:`入力値のチェック <validation>`
+* :ref:`输入值的检查 <validation>`
 
-データベースアクセス
+数据库访问
 --------------------------------------------------
 .. toctree::
   :maxdepth: 1
@@ -34,16 +34,16 @@ System Repositoryの初期化
 
   feature_details/database_reader
 
-* :ref:`データベースアクセス <database_management>`
+* :ref:`数据库访问 <database_management>`
 * :doc:`feature_details/database_reader`
 
 
 
-ファイル入出力
+文件输入输出
 --------------------------------------------------
-* :ref:`ファイル入出力<data_converter>`
+* :ref:`文件输入输出<data_converter>`
 
-排他制御
+排他控制
 --------------------------------------------------
 .. toctree::
   :maxdepth: 1
@@ -51,24 +51,24 @@ System Repositoryの初期化
 
   feature_details/pessimistic_lock
 
-排他制御は、以下の2種類の方法を提供しているが、
-:ref:`UniversalDaoを推奨する理由 <exclusive_control-deprecated>` に記載がある通り、
-:ref:`universal_dao` の使用を推奨する。
+排他控制虽然提供以下2种方法，
+但如 :ref:`推荐使用UniversalDao的理由 <exclusive_control-deprecated>` 中所述，
+推荐使用 :ref:`universal_dao` 。
 
 * :ref:`exclusive_control`
 * :ref:`universal_dao`
 
-  * :doc:`悲観的ロック<feature_details/pessimistic_lock>`
+  * :doc:`悲观锁<feature_details/pessimistic_lock>`
 
-ジョブ定義のxmlの作成方法
+Job定义的xml创建方法
 --------------------------------------------------
-* `Jakarta Batch Specificationを参照(外部サイト、英語) <https://jakarta.ee/specifications/batch/>`_
+* `请参考Jakarta Batch Specification(外部网站，英文) <https://jakarta.ee/specifications/batch/>`_
 
-MOMメッセージ送信
+MOM消息发送
 ----------------------------------------
-* :ref:`同期応答メッセージ送信<mom_system_messaging-sync_message_send>`
+* :ref:`同步响应消息发送<mom_system_messaging-sync_message_send>`
 
-運用設計
+运维设计
 ----------------------------------------
 .. toctree::
   :maxdepth: 1
@@ -81,4 +81,3 @@ MOMメッセージ送信
 * :doc:`feature_details/operation_policy`
 * :doc:`feature_details/progress_log`
 * :doc:`feature_details/operator_notice_log`
-

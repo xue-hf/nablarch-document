@@ -1,25 +1,25 @@
-運用担当者向けのログ出力
+运维人员日志输出
 ==================================================
 .. contents:: 目录
   :depth: 3
   :local:
 
-運用担当者向けログの出力内容
+运维人员日志的输出内容
 --------------------------------------------
-運用担当者向けログには、運用担当者がログをもとに対処を行えるよう、最低限以下の内容を出力する必要がある。
+运维人员日志中，为了让运维人员能够根据日志进行处理，至少需要输出以下内容。
 
-* 何が発生したか
-* どのように対処すべきか
+* 发生了什么
+* 应该如何处理
 
-これらの内容が出力されていないと、運用担当者が発生した事象に対しどう対処すればよいか判断できない恐れがある。
+如果未输出这些内容，运维人员可能无法判断对发生的事象应如何处理。
 
-運用担当者向けのログを専用のログファイルに出力するための設定を追加する
+添加运维人员日志输出到专用日志文件的设置
 ----------------------------------------------------------------------
-運用担当者向けのログは、ログカテゴリ名を ``operator`` として出力する。
-このカテゴリ名を使用して、運用担当者向けのログ用のファイルにログを出力することが出来る。
+运维人员日志以日志类别名 ``operator`` 输出。
+使用此类别名，可以将日志输出到运维人员专用的日志文件中。
 
-:ref:`log` を使用した場合の ``log.properties`` の設定例を以下に示す。
-:ref:`log_adaptor` を使用している場合には、アダプタに対応したログライブラリのマニュアルなどを参照して設定すること。
+以下展示使用 :ref:`log` 时的 ``log.properties`` 设置示例。
+如果使用 :ref:`log_adaptor` ，请参考对应适配器的日志库手册等进行设置。
 
 .. code-block:: properties
 
@@ -38,17 +38,17 @@
   loggers.OPERATOR.level=INFO
   loggers.OPERATOR.writerNames=operationLog
 
-運用担当者向けのログを出力する
+输出运维人员日志
 --------------------------------------------------
 
-運用担当者向けのログを出力するための実装例を以下に示す。
+以下展示输出运维人员日志的实现示例。
 
-ポイント
-  * :java:extdoc:`OperationLogger#write <nablarch.core.log.operation.OperationLogger.write(nablarch.core.log.basic.LogLevel,java.lang.String,java.lang.Throwable)>`
-    を使用してログを出力する。
-  * 運用担当者向けのログ出力とともにバッチ処理を異常終了させたい場合には、例外を送出すること。
+要点
+  * 使用 :java:extdoc:`OperationLogger#write <nablarch.core.log.operation.OperationLogger.write(nablarch.core.log.basic.LogLevel,java.lang.String,java.lang.Throwable)>`
+    输出日志。
+  * 如果希望输出运维人员日志的同时使 Batch 处理异常结束，请抛出异常。
 
-実装例
+实现示例
   .. code-block:: java
 
     @Named
@@ -61,10 +61,10 @@
             try {
                 // 省略
             } catch (FileNotFoundException e) {
-                // 入力ファイルが存在しないことを運用担当者に通知して例外を送出する
+                // 向运维人员通知输入文件不存在并抛出异常
                 OperationLogger.write(
                         LogLevel.ERROR,
-                        "ファイルが存在しません。正しく受信できているか確認してください。",
+                        "文件不存在。请确认是否正确接收。",
                         e);
                 throw e;
             }
@@ -73,8 +73,7 @@
         }
     }
 
-出力例
+输出示例
   .. code-block:: bash
 
-    ERROR operator ファイルが存在しません。正しく受信できているか確認してください。
-
+    ERROR operator 文件不存在。请确认是否正确接收。

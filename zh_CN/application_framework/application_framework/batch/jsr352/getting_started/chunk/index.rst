@@ -1,92 +1,92 @@
 .. _`getting_started_chunk`:
 
-データを導出するバッチの作成(Chunkステップ)
+创建导出数据的Batch（Chunk步骤）
 ===============================================================
-Example应用を元に、既存データから計算を行い新たにデータを導出する :ref:`Chunkステップ<jsr352-batch_type_chunk>` 方式のバッチを解説する。
+以Example应用为基础，解说从现有数据进行计算并新导出数据的 :ref:`Chunk步骤<jsr352-batch_type_chunk>` 方式的Batch。
 
-作成する機能の概要
+创建的功能概述
   .. image:: ../images/chunk/overview.png
 
-動作確認手順
-  1. 登録対象テーブル(賞与テーブル)のデータを削除
+操作确认步骤
+  1. 删除注册目标表（奖金表）的数据
 
-     H2のコンソールから下記SQLを実行し、賞与テーブルのデータを削除する。
+     从H2控制台执行以下SQL，删除奖金表的数据。
 
      .. code-block:: sql
 
        TRUNCATE TABLE BONUS;
 
-  2. 賞与計算バッチを実行
+  2. 执行奖金计算Batch
 
-     コマンドプロンプトから賞与計算バッチを実行する。
+     从命令提示符执行奖金计算Batch。
 
     .. code-block:: bash
 
-      $cd {nablarch-example-batch-eeSystem Repository}
+      $cd {nablarch-example-batch-ee系统仓库}
       $mvn exec:java -Dexec.mainClass=nablarch.fw.batch.ee.Main ^
           -Dexec.args=bonus-calculate
 
-  5. バッチ実行後の状態の確認
+  5. 确认Batch执行后的状态
 
-    H2のコンソールから下記SQLを実行し、賞与情報が登録されたことを確認する。
+    从H2控制台执行以下SQL，确认奖金信息已注册。
 
     .. code-block:: sql
 
         SELECT * FROM BONUS;
 
-データを導出する
+导出数据
 -------------------
-既存データから新たにデータを導出するバッチの実装方法を以下の順に説明する。
+按以下顺序说明从现有数据新导出数据的Batch实现方法。
 
 #. :ref:`getting_started_chunk-read`
 #. :ref:`getting_started_chunk-business_logic`
 #. :ref:`getting_started_chunk-persistence`
 #. :ref:`getting_started_chunk-job`
 
-処理フローについては、 :ref:`Chunkステップのバッチの処理フロー<jsr352-batch_flow_chunk>` を参照。
-責務配置については :ref:`Chunkステップの責務配置<jsr352-chunk_design>` を参照。
+关于处理流程，请参考 :ref:`Chunk步骤的Batch处理流程<jsr352-batch_flow_chunk>` 。
+关于职责配置，请参考 :ref:`Chunk步骤的职责配置<jsr352-chunk_design>` 。
 
-バッチ処理は、 |jsr352| で規定されたインターフェースの実装に加えて、トランザクション制御などの共通的な処理を提供するリスナーによって構成する。
-リスナーの詳細は :ref:`バッチ应用で使用するリスナー<jsr352-listener>` 及び :ref:`リスナーの指定方法<jsr352-listener>` を参照。
+Batch处理通过实现 |jsr352| 规定的接口，以及提供事务控制等通用处理的监听器来构成。
+监听器的详细信息请参考 :ref:`Batch应用中使用的监听器<jsr352-listener>` 以及 :ref:`监听器的指定方法<jsr352-listener>` 。
 
 .. _`getting_started_chunk-read`:
 
-入力データソースからデータを読み込む
+从输入数据源读取数据
 +++++++++++++++++++++++++++++++++++++
-計算に必要なデータを取得する処理を実装する。
+实现获取计算所需数据的处理。
 
-#. :ref:`フォームの作成<getting_started_chunk-form>`
-#. :ref:`ItemReaderの作成<getting_started_chunk-reader>`
+#. :ref:`创建Form<getting_started_chunk-form>`
+#. :ref:`创建ItemReader<getting_started_chunk-reader>`
 
 .. _`getting_started_chunk-form`:
 
-フォームの作成
-  Chunkステップでは、 :java:extdoc:`ItemReader<jakarta.batch.api.chunk.ItemReader>` と
-  :java:extdoc:`ItemProcessor<jakarta.batch.api.chunk.ItemProcessor>` とのデータ連携にフォームを使用する。
+创建Form
+  在Chunk步骤中，使用Form在 :java:extdoc:`ItemReader<jakarta.batch.api.chunk.ItemReader>` 和
+  :java:extdoc:`ItemProcessor<jakarta.batch.api.chunk.ItemProcessor>` 之间进行数据传递。
 
   EmployeeForm.java
     .. code-block:: java
 
       public class EmployeeForm {
 
-          //一部のみ抜粋
+          //仅摘录部分
 
-          /** 社員ID */
+          /** 员工ID */
           private Long employeeId;
 
           /**
-           * 社員IDを返します。
+           * 返回员工ID。
            *
-           * @return 社員ID
+           * @return 员工ID
            */
           public Long getEmployeeId() {
               return employeeId;
           }
 
           /**
-           * 社員IDを設定します。
+           * 设置员工ID。
            *
-           * @param employeeId 社員ID
+           * @param employeeId 员工ID
            */
           public void setEmployeeId(Long employeeId) {
               this.employeeId = employeeId;
@@ -95,15 +95,15 @@ Example应用を元に、既存データから計算を行い新たにデータ�
 
 .. _`getting_started_chunk-reader`:
 
-ItemReaderの作成
-  :java:extdoc:`AbstractItemReader<jakarta.batch.api.chunk.AbstractItemReader>` を継承し、データの読み込みを行う。
+创建ItemReader
+  继承 :java:extdoc:`AbstractItemReader<jakarta.batch.api.chunk.AbstractItemReader>` ，进行数据读取。
 
     ==================================================================   =============================================================================================
-    インタフェース名                                                       責務
+    接口名                                                               职责
     ==================================================================   =============================================================================================
-    :java:extdoc:`ItemReader<jakarta.batch.api.chunk.ItemReader>`          データの読み込みを行う。
+    :java:extdoc:`ItemReader<jakarta.batch.api.chunk.ItemReader>`          进行数据读取。
 
-                                                                         空実装を提供する :java:extdoc:`AbstractItemReader<jakarta.batch.api.chunk.AbstractItemReader>` を継承する。
+                                                                         继承提供空实现的 :java:extdoc:`AbstractItemReader<jakarta.batch.api.chunk.AbstractItemReader>` 。
 
                                                                            * `ItemReader#open`
                                                                            * `ItemReader#readItem`
@@ -117,10 +117,10 @@ ItemReaderの作成
       @Named
       public class EmployeeSearchReader extends AbstractItemReader {
 
-          /** 社員情報のリスト */
+          /** 员工信息列表 */
           private DeferredEntityList<EmployeeForm> list;
 
-          /** 社員情報を保持するイテレータ */
+          /** 保存员工信息的迭代器 */
           private Iterator<EmployeeForm> iterator;
 
           @Override
@@ -159,33 +159,33 @@ ItemReaderの作成
           EMPLOYEE
       INNER JOIN GRADE ON EMPLOYEE.GRADE_CODE = GRADE.GRADE_CODE
 
-  この実装のポイント
-    * :java:extdoc:`Named<jakarta.inject.Named>` と :java:extdoc:`Dependent<jakarta.enterprise.context.Dependent>` をクラスに付与する。
-      詳細は、 :ref:`BatchletのNamedとDependentの説明 <getting_started_batchlet-cdi>` を参照。
-    * `open` メソッドで処理対象のデータを読み込む。
-    * SQLファイルの配置場所や作成方法などは、 :ref:`universal_dao-sql_file` を参照。
-    * 大量のデータを読み込む場合は、メモリの逼迫を防ぐために :java:extdoc:`UniversalDao#defer <nablarch.common.dao.UniversalDao.defer()>` を使用して
-      検索結果を :ref:`遅延ロード<universal_dao-lazy_load>` する。
-    * `readItem` メソッドで読み込んだデータから一行分のデータを返却する。
-      このメソッドで返却したオブジェクトが、後続する :java:extdoc:`ItemProcessor<jakarta.batch.api.chunk.ItemProcessor>` の `processItem` メソッドの引数として与えられる。
+  这个实现的要点
+    * 在类上添加 :java:extdoc:`Named<jakarta.inject.Named>` 和 :java:extdoc:`Dependent<jakarta.enterprise.context.Dependent>` 。
+      详细信息请参考 :ref:`Batchlet的Named和Dependent说明 <getting_started_batchlet-cdi>` 。
+    * 在 `open` 方法中读取处理对象的数据。
+    * SQL文件的放置位置和创建方法等，请参考 :ref:`universal_dao-sql_file` 。
+    * 读取大量数据时，为防止内存压力，使用 :java:extdoc:`UniversalDao#defer <nablarch.common.dao.UniversalDao.defer()>`
+      进行 :ref:`延迟加载<universal_dao-lazy_load>` 。
+    * 在 `readItem` 方法中从读取的数据返回一行数据。
+      在这个方法中返回的对象，将作为后续 :java:extdoc:`ItemProcessor<jakarta.batch.api.chunk.ItemProcessor>` 的 `processItem` 方法的参数传入。
 
 .. _`getting_started_chunk-business_logic`:
 
-業務ロジックを実行する
+执行业务逻辑
 ++++++++++++++++++++++
-賞与の計算等の業務ロジックを実装する。
+实现奖金计算等业务逻辑。
 
-ItemProcessorの作成
-  :java:extdoc:`ItemProcessor<jakarta.batch.api.chunk.ItemProcessor>` を実装し、
-  業務ロジックを行う(永続化処理は :java:extdoc:`ItemWriter<jakarta.batch.api.chunk.ItemWriter>` の責務であるため実施しない)。
+创建ItemProcessor
+  实现 :java:extdoc:`ItemProcessor<jakarta.batch.api.chunk.ItemProcessor>` ，
+  执行业务逻辑（持久化处理是 :java:extdoc:`ItemWriter<jakarta.batch.api.chunk.ItemWriter>` 的职责，因此不执行）。
 
-    ====================================================================   =============================================================================================
-    インタフェース名                                                         責務
-    ====================================================================   =============================================================================================
-    :java:extdoc:`ItemProcessor<jakarta.batch.api.chunk.ItemProcessor>`      一行分のデータに対する業務処理を行う。
+    =====================================================================   =============================================================================================
+    接口名                                                                  职责
+    =====================================================================   =============================================================================================
+    :java:extdoc:`ItemProcessor<jakarta.batch.api.chunk.ItemProcessor>`      对一行数据进行业务处理。
 
-                                                                             * `ItemProcessor#processItem`
-    ====================================================================   =============================================================================================
+                                                                               * `ItemProcessor#processItem`
+    =====================================================================   =============================================================================================
 
   BonusCalculateProcessor.java
     .. code-block:: java
@@ -206,10 +206,10 @@ ItemProcessorの作成
           }
 
           /**
-           * 社員情報をもとに賞与計算を行う。
+           * 根据员工信息进行奖金计算。
            *
-           * @param form 社員情報Form
-           * @return 賞与
+           * @param form 员工信息Form
+           * @return 奖金
            */
           private static Long calculateBonus(EmployeeForm form) {
               if (form.getFixedBonus() == null) {
@@ -220,23 +220,23 @@ ItemProcessorの作成
           }
       }
 
-  この実装のポイント
-    * `processItem` メソッドで一定数( :ref:`getting_started_chunk-job` にて設定方法を解説)のエンティティを返却した時点で、
-      後続する :java:extdoc:`ItemWriter<jakarta.batch.api.chunk.ItemWriter>` の `writeItems` メソッドが実行される。
+  这个实现的要点
+    * 当 `processItem` 方法返回一定数量的实体时（ :ref:`getting_started_chunk-job` 中解说设置方法），
+      将执行后续 :java:extdoc:`ItemWriter<jakarta.batch.api.chunk.ItemWriter>` 的 `writeItems` 方法。
 
 .. _`getting_started_chunk-persistence`:
 
-永続化処理を行う
+执行持久化处理
 ++++++++++++++++++++
-DB更新等の、永続化処理を実装する。
+实现DB更新等持久化处理。
 
-ItemWriterの作成
-  :java:extdoc:`ItemWriter<jakarta.batch.api.chunk.ItemWriter>` を実装し、データの永続化を行う。
+创建ItemWriter
+  实现 :java:extdoc:`ItemWriter<jakarta.batch.api.chunk.ItemWriter>` ，进行数据持久化。
 
     ==================================================================   =============================================================================================
-    インタフェース名                                                        責務
+    接口名                                                                职责
     ==================================================================   =============================================================================================
-    :java:extdoc:`ItemWriter<jakarta.batch.api.chunk.ItemWriter>`          データを永続化する。
+    :java:extdoc:`ItemWriter<jakarta.batch.api.chunk.ItemWriter>`          进行数据持久化。
 
                                                                            * `ItemWriter#writeItems`
     ==================================================================   =============================================================================================
@@ -254,16 +254,16 @@ ItemWriterの作成
           }
       }
 
-  この実装のポイント
-    * :java:extdoc:`UniversalDao#batchInsert <nablarch.common.dao.UniversalDao.batchInsert(java.util.List)>` を使用してエンティティのリストを一括登録する。
-    * `writeItems` メソッド実行後にトランザクションがコミットされ、新たなトランザクションが開始される。
-    * `writeItems` メソッド実行後、バッチ処理が `readItem` メソッド実行から繰り返される。
+  这个实现的要点
+    * 使用 :java:extdoc:`UniversalDao#batchInsert <nablarch.common.dao.UniversalDao.batchInsert(java.util.List)>` 批量注册实体列表。
+    * `writeItems` 方法执行后事务将提交，并开始新的事务。
+    * `writeItems` 方法执行后，Batch处理将从 `readItem` 方法执行开始重复进行。
 
 .. _`getting_started_chunk-job`:
 
-JOB設定ファイルを作成する
+创建JOB设置文件
 +++++++++++++++++++++++++
-JOBの実行設定を記載したファイルを作成する。
+创建记载JOB执行设置的文件。
 
   bonus-calculate.xml
     .. code-block:: xml
@@ -287,12 +287,12 @@ JOBの実行設定を記載したファイルを作成する。
        </step>
      </job>
 
-  この実装のポイント
-    * ジョブ定義ファイルは `/src/main/resources/META-INF/batch-jobs/` 配下に配置する。
-    * `job` 要素 の `id` 属性で、ジョブ名称を指定する。
-    * `chunk` 要素の `item-count` 属性で `writeItems` 一回当たりで処理する件数を設定する。
-    * 設定ファイルの詳細な記述方法は |jsr352| を参照。
+  这个实现的要点
+    * 作业定义文件放置在 `/src/main/resources/META-INF/batch-jobs/` 下。
+    * `job` 元素的 `id` 属性指定作业名称。
+    * `chunk` 元素的 `item-count` 属性设置 `writeItems` 每次处理的件数。
+    * 配置文件的详细记述方法请参考 |jsr352| 。
 
 .. |jsr352| raw:: html
 
-  <a href="https://jakarta.ee/specifications/batch/" target="_blank">Jakarta Batch(外部サイト、英語)</a>
+  <a href="https://jakarta.ee/specifications/batch/" target="_blank">Jakarta Batch(外部网站，英语)</a>

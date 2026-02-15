@@ -1,66 +1,66 @@
-应用の責務配置
+应用的职责配置
 ================================
-Jakarta Batchに準拠したバッチ应用を作成する際に実装すべきクラスとその責務を説明する。
+说明创建遵循Jakarta Batch的Batch应用时应实现的类及其职责。
 
 .. _jsr352-batchlet_design:
 
-Batchletステップの場合
+Batchlet步骤的情况
 --------------------------------------------------
-Batchletステップの場合の実装すべきクラスとその責務について説明する。
+说明Batchlet步骤情况下应实现的类及其职责。
 
 .. image:: images/batchlet-design.png
   :scale: 80
   
 
-バッチレット(Batchlet class)
-  バッチレットで業務ロジックを実行し、ステップの処理結果を表す文字列 [#batchlet_status]_ を返却する。
+Batchlet (Batchlet class)
+  在Batchlet中执行业务逻辑，返回表示步骤处理结果的字符串 [#batchlet_status]_ 。
 
-  例えば、インターネット上のファイルをダウンロードしたり、SQL1つだけで完結するような処理 [#insert_select]_ を行う。
+  例如，下载互联网上的文件，或执行仅通过单个SQL即可完成的处理 [#insert_select]_ 等。
 
 .. _jsr352-chunk_design:
 
-Chunkステップの場合
+Chunk步骤的情况
 --------------------------------------------------
-Chunkステップの場合の実装すべきクラスとその責務について説明する。
+说明Chunk步骤情况下应实现的类及其职责。
 
 .. image:: images/chunk-design.png
   :scale: 80
 
-アイテムリーダ(ItemReader class)
-  データソース(ファイルやデータベース等)から処理対象のデータを読み込む処理を実装する。
-  読み込んだデータは、フォームに変換し返却する。
+ItemReader (ItemReader class)
+  实现从数据源(文件或数据库等)读取处理对象数据的处理。
+  将读取的数据转换为Form后返回。
 
-  アイテムリーダは、Jakarta Batchで規定されているインタフェースである。
-  このため実装方法などの詳細は、 `Jakarta Batch Specification(外部サイト、英語) <https://jakarta.ee/specifications/batch/>`_ を参照。
+  ItemReader是Jakarta Batch规定的接口。
+  因此，实现方法等详情请参考 `Jakarta Batch Specification(外部网站，英文) <https://jakarta.ee/specifications/batch/>`_ 。
 
-アイテムプロセッサ(ItemProcessor class)
-  アイテムリーダが読み込んだデータを元に業務ロジックを実行し出力対象のデータを生成する。
+ItemProcessor (ItemProcessor class)
+  根据ItemReader读取的数据执行业务逻辑，生成输出对象数据。
 
-  出力対象がデータベースの場合には、業務ロジック実行後のデータをエンティティに変換する。
-  データベース以外の場合には、業務ロジック実行後のデータを出力用のフォームに変換する。
+  输出对象为数据库时，将业务逻辑执行后的数据转换为Entity。
+  输出对象为数据库以外时，将业务逻辑执行后的数据转换为输出用Form。
 
-  アイテムプロセッサは、Jakarta Batchで規定されているインタフェースである。
-  このため実装方法などの詳細は、 `Jakarta Batch Specification(外部サイト、英語) <https://jakarta.ee/specifications/batch/>`_ を参照。
+  ItemProcessor是Jakarta Batch规定的接口。
+  因此，实现方法等详情请参考 `Jakarta Batch Specification(外部网站，英文) <https://jakarta.ee/specifications/batch/>`_ 。
 
   .. tip::
-    アイテムリーダで読み込んだデータが外部から取得したデータの場合は、業務ロジックの実行前に入力値のチェックを行うこと。
-    入力値のチェックについては、 :ref:`入力値のチェック <validation>` を参照。
+    如果ItemReader读取的数据是从外部获取的数据，请在执行业务逻辑前进行输入值检查。
+    关于输入值检查，请参考 :ref:`输入值的检查 <validation>` 。
 
-アイテムライタ(ItemWriter class)
-  アイテムプロセッサで変換したエンティティ(フォーム)をデータベースやファイルなどに出力する処理を実装する。
+ItemWriter (ItemWriter class)
+  实现将ItemProcessor转换的Entity(Form)输出到数据库或文件等的处理。
 
-  アイテムライタは、Jakarta Batchで規定されているインタフェースである。
-  このため実装方法などの詳細は、 `Jakarta Batch Specification(外部サイト、英語) <https://jakarta.ee/specifications/batch/>`_ を参照。
+  ItemWriter是Jakarta Batch规定的接口。
+  因此，实现方法等详情请参考 `Jakarta Batch Specification(外部网站，英文) <https://jakarta.ee/specifications/batch/>`_ 。
 
-フォーム(form class)
-  アイテムリーダが読み込んだデータを保持するクラス。また出力対象がデータベース以外の場合に、出力するデータを保持するクラス。
+Form (form class)
+  保持ItemReader读取的数据的类。另外，在输出对象为数据库以外时，保持输出数据的类。
 
-  外部から受け付けたファイルなどの信用出来ない値を保持するフォームの場合には、プロパティの型は全てStringとすること。
-  理由は、 :ref:`Bean Validation <bean_validation-form_property>` 参照。
-  ただし、バイナリ項目の場合はバイト配列で定義する。
+  保持从外部接收的文件等不可信值的Form，其属性类型应全部为String。
+  理由请参考 :ref:`Bean Validation <bean_validation-form_property>` 。
+  但是，二进制项目请定义为字节数组。
 
-エンティティ(entity class)
-  テーブルと1対1で対応するクラス。カラムに対応するプロパティを持つ。
+Entity (entity class)
+  与表格1对1对应的类。具有与列对应的属性。
 
-.. [#batchlet_status] バッチレットが返却する文字列(バッチレットの終了ステータス)の詳細は、 `Jakarta Batch Specification(外部サイト、英語) <https://jakarta.ee/specifications/batch/>`_ を参照。
-.. [#insert_select] 例えば、 ``insert～select`` のみで処理が完結するSQLの実行などを指す。
+.. [#batchlet_status] Batchlet返回的字符串(Batchlet的结束状态)的详情请参考 `Jakarta Batch Specification(外部网站，英文) <https://jakarta.ee/specifications/batch/>`_ 。
+.. [#insert_select] 例如，指仅通过 ``insert～select`` 即可完成处理的SQL执行等。

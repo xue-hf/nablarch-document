@@ -1,4 +1,4 @@
-進捗状況のログ出力
+进度日志输出
 ==================================================
 .. contents:: 目录
   :depth: 3
@@ -6,21 +6,21 @@
   
 .. _jsr352-progress_log:
 
-進捗ログで出力される内容
+进度日志输出的内容
 --------------------------------------------------
-以下の内容をログに出力する。
+以下内容将输出到日志中。
 
-* ジョブの開始と終了ログ
-* ステップの開始と終了ログ
-* 処理対象の件数ログ(処理対象の件数は、应用側で求める必要がある)
-* ステップの進捗状況ログ
+* 作业的开始和结束日志
+* 步骤的开始和结束日志
+* 处理对象件数日志（处理对象件数需要在应用侧获取）
+* 步骤的进度日志
 
-  * 開始後からのTPS(処理対象の件数及び処理済み件数から算出したTPS)
-  * 最新のTPS(前回TPS算出時の時間の経過時間と処理した件数から算出したTPS)
-  * 未処理件数
-  * 終了予測時間(未処理件数とTPSから求めたステップの終了予測時間)
+  * 从开始后的TPS（从处理对象件数和处理完成件数计算得出的TPS）
+  * 最新的TPS（从前次TPS计算时经过的时间和处理件数计算得出的TPS）
+  * 未处理件数
+  * 结束预测时间（从未处理件数和TPS计算的步骤结束预测时间）
   
-以下に出力例を示す。
+以下显示输出示例。
 
 .. code-block:: bash
 
@@ -33,13 +33,13 @@
   INFO progress finish step. job name: [test-job] step name: [test-step] step status: [null]
   INFO progress finish job. job name: [test-job]
 
-進捗ログを専用のログファイルに出力するための設定を追加する
+添加将进度日志输出到专用日志文件的设置
 -----------------------------------------------------------------
-進捗を示すログは、ログカテゴリ名を ``progress`` として出力する。
-このカテゴリ名を使用して、進捗ログ用のファイルにログを出力することが出来る。
+表示进度的日志，使用 ``progress`` 作为日志类别名输出。
+使用这个类别名，可以将日志输出到进度日志专用的文件中。
 
-:ref:`log` を使用した場合の ``log.properties`` の設定例を以下に示す。
-:ref:`log_adaptor` を使用している場合には、アダプタに対応したログライブラリのマニュアルなどを参照して設定すること。
+以下显示使用 :ref:`log` 时的 ``log.properties`` 设置示例。
+如果使用 :ref:`log_adaptor` ，请参考适配器对应的日志库手册等进行设置。
 
 .. code-block:: properties
 
@@ -58,39 +58,39 @@
   loggers.PROGRESS.level=INFO
   loggers.PROGRESS.writerNames=progressLog
 
-Batchletステップで進捗ログを出力する
+在Batchlet步骤中输出进度日志
 --------------------------------------------------
-Batchletステップで進捗状況をログに出力するための実装例を以下に示す。
+以下显示在Batchlet步骤中将进度输出到日志的实现示例。
 
-なお、Batchletは基本的にはタスク指向の処理を実行するため進捗ログを必要とするケースは少ない。
-Batchletで、ループを伴う処理を行う必要がある場合には、下の実装例を元に進捗ログを出力すると良い。
+另外，Batchlet基本上是执行任务导向的处理，因此需要进度日志的情况较少。
+如果在Batchlet中需要进行伴随循环的处理时，可以参考以下实现示例输出进度日志。
 
-ポイント
-  * processメソッドの先頭で、処理対象件数(データベースへのcount結果やファイルのレコード数等)を取得し、 :java:extdoc:`inputCount <nablarch.fw.batch.ee.progress.ProgressManager.setInputCount(long)>` に設定する。
+要点
+  * 在process方法的头部，获取处理对象件数（数据库count结果或文件记录数等），设置到 :java:extdoc:`inputCount <nablarch.fw.batch.ee.progress.ProgressManager.setInputCount(long)>` 中。
   
     .. important::
     
-      TPSの算出の起点となる時間は、 :java:extdoc:`inputCount <nablarch.fw.batch.ee.progress.ProgressManager.setInputCount(long)>` が呼び出されたタイミングとなる。
-      :java:extdoc:`inputCount <nablarch.fw.batch.ee.progress.ProgressManager.setInputCount(long)>` を呼び出し後にデータベースから対象データを抽出するなどの重い処理を行った場合、
-      TPSが実際と異なる(実際より小さい値)結果となるので注意すること。
+      TPS计算的起点时间，是在调用 :java:extdoc:`inputCount <nablarch.fw.batch.ee.progress.ProgressManager.setInputCount(long)>` 的时间点。
+      如果在调用 :java:extdoc:`inputCount <nablarch.fw.batch.ee.progress.ProgressManager.setInputCount(long)>` 后执行从数据库提取对象数据等重处理，
+      TPS会与实际不同（比实际小的值），请注意。
       
-  * 処理を行うループ処理内で、一定間隔ごとに進捗ログを出力する :java:extdoc:`outputProgressInfo <nablarch.fw.batch.ee.progress.ProgressManager.outputProgressInfo(long)>` を呼び出す。
+  * 在执行处理的循环内，以一定间隔调用输出进度日志的 :java:extdoc:`outputProgressInfo <nablarch.fw.batch.ee.progress.ProgressManager.outputProgressInfo(long)>` 。
 
-実装例
+实现示例
   .. code-block:: java
 
     @Named
     @Dependent
     public class ProgressBatchlet extends AbstractBatchlet {
 
-        /** 進捗ログを出力するための機能 */
+        /** 输出进度日志的功能 */
         private final ProgressManager progressManager;
         
-        /** 進捗ログを出力する間隔 */
+        /** 输出进度日志的间隔 */
         private static final int PROGRESS_LOG_INTERVAL = 1000;
 
         /**
-         * 進捗ログを出力するための機能をコンストラクタインジェクションを使用してインジェクションする。
+         * 使用构造器注入注入输出进度日志的功能。
          */
         @Inject
         public ProgressBatchlet(ProgressManager progressManager) {
@@ -100,20 +100,20 @@ Batchletで、ループを伴う処理を行う必要がある場合には、下
         @Override
         public String process() throws Exception {
          
-          // 処理対象の件数を設定する。
-          // 実際には、データベースやファイルのレコード数などが処理件数となる。
+          // 设置处理对象件数。
+          // 实际中，数据库或文件的记录数等即为处理件数。
           progressManager.setInputCount(10000);
           
-          // 処理済みの件数
+          // 处理完成件数
           long processedCount = 0;
           
-          while (処理対象が存在している間) {
+          while (处理对象存在期间) {
               processedCount++;
               
-              // 実際の処理は省略
+              // 实际处理省略
               
               if (processedCount % PROGRESS_LOG_INTERVAL == 0) {
-                // 処理済みの件数を進捗ログ出力機能に渡すことで、進捗ログが出力される
+                // 将处理完成件数传递给进度日志输出功能，即可输出进度日志
                 progressManager.outputProgressInfo(processedCount);
               }
           }
@@ -121,35 +121,35 @@ Batchletで、ループを伴う処理を行う必要がある場合には、下
         }
     }
   
-Chunkステップで進捗ログを出力する
+在Chunk步骤中输出进度日志
 --------------------------------------------------
-Chunkステップで進捗状況をログに出力するための実装例を以下に示す。
+以下显示在Chunk步骤中将进度输出到日志的实现示例。
 
 .. _jsr352-progress_reader:
 
 ItemReader
-  ポイント
-    * コンストラクタインジェクションを使用して、進捗ログを出力するインタフェース( :java:extdoc:`ProgressManager <nablarch.fw.batch.ee.progress.ProgressManager>` )をインジェクションする。
-    * openメソッドにて、処理対象件数(データベースへのcount結果やファイルのレコード数等)を取得し、 :java:extdoc:`inputCount <nablarch.fw.batch.ee.progress.ProgressManager.setInputCount(long)>` に設定する。
+  要点
+    * 使用构造器注入注入输出进度日志的接口( :java:extdoc:`ProgressManager <nablarch.fw.batch.ee.progress.ProgressManager>` )。
+    * 在open方法中，获取处理对象件数（数据库count结果或文件记录数等），设置到 :java:extdoc:`inputCount <nablarch.fw.batch.ee.progress.ProgressManager.setInputCount(long)>` 中。
     
       .. important::
       
-        TPSの算出の起点となる時間は、 :java:extdoc:`inputCount <nablarch.fw.batch.ee.progress.ProgressManager.setInputCount(long)>` が呼び出されたタイミングとなる。
-        :java:extdoc:`inputCount <nablarch.fw.batch.ee.progress.ProgressManager.setInputCount(long)>` を呼び出し後にデータベースから対象データを抽出するなどの重い処理を行った場合、
-        TPSが実際と異なる(実際より小さい値)結果となるので注意すること。
+        TPS计算的起点时间，是在调用 :java:extdoc:`inputCount <nablarch.fw.batch.ee.progress.ProgressManager.setInputCount(long)>` 的时间点。
+        如果在调用 :java:extdoc:`inputCount <nablarch.fw.batch.ee.progress.ProgressManager.setInputCount(long)>` 后执行从数据库提取对象数据等重处理，
+        TPS会与实际不同（比实际小的值），请注意。
     
-  実装例
+  实现示例
     .. code-block:: java
 
       @Named
       @Dependent
       public class ProgressReader extends AbstractItemReader {
 
-        /** 進捗ログを出力する機能 */
+        /** 输出进度日志的功能 */
         private final ProgressManager progressManager;
 
         /**
-         * 進捗ログを出力するための機能をコンストラクタインジェクションを使用してインジェクションする。
+         * 使用构造器注入注入输出进度日志的功能。
          */
         @Inject
         public ProgressReader(ProgressManager progressManager) {
@@ -158,8 +158,8 @@ ItemReader
 
         @Override
         public void open(Serializable checkpoint) throws Exception {
-          // openメソッド内で、処理対象の件数を進捗ログを出力する機能に設定する。
-          // 実際には、データベースに対するcount文の結果やファイルのレコード数を設定する。
+          // 在open方法内，将处理对象件数设置到输出进度日志的功能中。
+          // 实际中，设置为对数据库的count语句结果或文件记录数。
           progressManager.setInputCount(10000);
         }
 
@@ -171,11 +171,11 @@ ItemReader
 
 .. _jsr352-progress_listener:
 
-ジョブ定義ファイル
-  ポイント
-    * step配下のリスナーのリストに進捗ログを出力するリスナー(名前は、 ``progressLogListener`` 固定)を設定する。
+作业定义文件
+  要点
+    * 在step下的监听器列表中设置输出进度日志的监听器（名称固定为 ``progressLogListener`` ）。
     
-  実装例
+  实现示例
     .. code-block:: xml
     
       <job id="batchlet-progress-test" xmlns="https://jakarta.ee/xml/ns/jakartaee" version="2.0">
@@ -187,7 +187,7 @@ ItemReader
           <listeners>
             <listener ref="nablarchStepListenerExecutor" />
             <listener ref="nablarchItemWriteListenerExecutor" />
-            <!-- step配下に進捗ログを出力するリスナーを設定する。 -->
+            <!-- 在step下设置输出进度日志的监听器。 -->
             <listener ref="progressLogListener" />
           </listeners>
           <chunk item-count="1000">
@@ -198,16 +198,16 @@ ItemReader
       </job>
 
 .. important::
-  :ref:`ItemReader <jsr352-progress_reader>` で処理対象件数を設定せずに、
-  :ref:`進捗ログ出力リスナー <jsr352-progress_listener>` を設定した場合には、設定不備として例外を送出し処理を異常終了させる。
-  このため、進捗ログを必要としない場合には、 :ref:`進捗ログ出力リスナー <jsr352-progress_listener>` の設定を必ず削除すること。
+  如果在 :ref:`ItemReader <jsr352-progress_reader>` 中没有设置处理对象件数，
+  却设置了 :ref:`进度日志输出监听器 <jsr352-progress_listener>` ，将作为设置不完整的错误抛出异常并异常结束处理。
+  因此，如果不需要进度日志，请务必删除 :ref:`进度日志输出监听器 <jsr352-progress_listener>` 的设置。
   
 .. important::
-  chunkステップでRetrying Exceptionsを設定した場合は、リスナーによる進捗ログの出力が正しく機能しなくなる。
-  これは、リスナーが処理済み件数として使用している :java:extdoc:`metrics <jakarta.batch.runtime.context.StepContext.getMetrics()>`
-  の読み込み済み件数が実態とずれることに起因する。
+  在chunk步骤中设置了Retrying Exceptions时，监听器输出的进度日志将无法正常运作。
+  这是因为监听器用作处理完成件数的 :java:extdoc:`metrics <jakarta.batch.runtime.context.StepContext.getMetrics()>`
+  的读取完成件数与实际不符。
   
-  このため、Retrying Exceptionsを使用して例外発生時のリトライ処理を行いたい場合には、 :java:extdoc:`ItemWriter <jakarta.batch.api.chunk.ItemWriter>` の実装クラスにて処理済み件数を計算し、
-  :java:extdoc:`outputProgressInfo <nablarch.fw.batch.ee.progress.ProgressManager.outputProgressInfo(long)>` を使用して進捗ログを出力すること。
+  因此，如果想使用Retrying Exceptions进行异常发生时的重试处理，需要在 :java:extdoc:`ItemWriter <jakarta.batch.api.chunk.ItemWriter>` 的实现类中计算处理完成件数，
+  使用 :java:extdoc:`outputProgressInfo <nablarch.fw.batch.ee.progress.ProgressManager.outputProgressInfo(long)>` 输出进度日志。
   
 

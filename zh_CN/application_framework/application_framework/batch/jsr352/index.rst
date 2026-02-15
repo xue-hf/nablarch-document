@@ -1,9 +1,8 @@
 .. _jsr352_batch:
 
-Jakarta Batchに準拠したバッチ应用
+遵循Jakarta Batch的Batch应用
 ====================================================================================================
-本章节Jakarta Batchに準拠したバッチ应用フレームワークを使用して
-バッチ应用を開発するために必要となる情報を提供する。
+本章提供使用遵循Jakarta Batch的Batch应用框架开发Batch应用所需的信息。
 
 .. toctree::
   :maxdepth: 2
@@ -14,9 +13,9 @@ Jakarta Batchに準拠したバッチ应用
   feature_details
 
 .. tip::
-  本機能は、Nablarch5までは「JSR352に準拠したバッチ应用」という名称だった。
-  しかし、Java EEがEclipse Foundationに移管され仕様名が変わったことに伴い「Jakarta Batchに準拠したバッチ应用」という名称に変更された。
+  本功能在Nablarch5之前的名称为「遵循JSR352的Batch应用」。
+  但是，随着Java EE移管至Eclipse Foundation且规范名称变更，名称也随之变更为「遵循Jakarta Batch的Batch应用」。
 
-  変更されたのは名称のみで、機能的な差は無い。
+  变更的仅是名称，功能上没有差异。
 
-  その他、Nablarch6で名称が変更された機能については :ref:`renamed_features_in_nablarch_6` を参照のこと。
+  关于Nablarch6中其他名称变更的功能，请参考 :ref:`renamed_features_in_nablarch_6` 。

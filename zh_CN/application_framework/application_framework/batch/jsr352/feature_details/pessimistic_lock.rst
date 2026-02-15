@@ -1,12 +1,12 @@
-Jakarta Batchに準拠したバッチ应用の悲観的ロック
+符合 Jakarta Batch 的 Batch 应用的悲观锁
 ============================================================
-本項では、Jakarta Batchに準拠したバッチ应用で悲観的ロックを行うための実装例を示す。
-以下に示す例を参考に実装することで、ロック時間が短縮され他プロセスへの影響を抑えることができる。
+本节展示在符合 Jakarta Batch 的 Batch 应用中实现悲观锁的示例。
+参考以下示例进行实现，可以缩短锁时间，减少对其他进程的影响。
 
-ポイント
- * `ItemReader` では処理対象レコードの主キーのみ取得する。
- * `ItemProcessor` で主キーをもとに処理対象レコードを取得して悲観的ロックを行う。
-   :ref:`universal_dao` を使用した悲観的ロックについては :ref:`universal_dao_jpa_pessimistic_lock` を参照。
+要点
+ * 在 `ItemReader` 中仅获取处理对象记录的主键。
+ * 在 `ItemProcessor` 中根据主键获取处理对象记录并进行悲观锁。
+   关于使用 :ref:`universal_dao` 的悲观锁，请参考 :ref:`universal_dao_jpa_pessimistic_lock` 。
 
 .. code-block:: java
 
@@ -21,7 +21,7 @@ Jakarta Batchに準拠したバッチ应用の悲観的ロック
       @Override
       public void open(Serializable checkpoint) throws Exception {
 
-          // 検索条件の取得処理は省略
+          // 搜索条件的获取处理省略
 
           list = (DeferredEntityList<ProjectId>) UniversalDao.defer()
                   .findAllBySqlFile(ProjectId.class, "GET_ID", condition);
@@ -51,7 +51,7 @@ Jakarta Batchに準拠したバッチ应用の悲観的ロック
           final Project project =
                   UniversalDao.findBySqlFile(Project.class, "FIND_BY_ID_WITH_LOCK", item);
 
-          // 業務処理のため省略
+          // 业务处理省略
 
           return project;
       }
@@ -66,4 +66,3 @@ Jakarta Batchに準拠したバッチ应用の悲観的ロック
           UniversalDao.batchUpdate(items);
       }
   }
-

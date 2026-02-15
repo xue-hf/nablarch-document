@@ -1,4 +1,4 @@
-Jakarta Batch应用の起動
+Jakarta Batch应用的启动
 ==================================================
 .. contents:: 目录
   :depth: 3
@@ -6,71 +6,71 @@ Jakarta Batch应用の起動
 
 .. _jsr352_run_batch_application:
 
-バッチ应用を起動する
+启动Batch应用
 --------------------------------------------------
-Jakarta Batchに準拠したバッチ应用の場合、バッチの起動はJakarta Batchで規定されたAPIを使用して行う。
+对于符合Jakarta Batch的Batch应用，Batch的启动使用Jakarta Batch规定的API进行。
 
-Nablarchでは、標準の実装クラスとして、:java:extdoc:`nablarch.fw.batch.ee.Main` を提供している。
-このクラスは実行引数として対象JOBのXMLファイル名(.xmlを除いたファイル名)を指定する。
+Nablarch提供了 :java:extdoc:`nablarch.fw.batch.ee.Main` 作为标准实现类。
+该类将目标JOB的XML文件名（不含.xml扩展名）作为执行参数指定。
 
-ジョブ実行時にパラメータを指定したい場合は、 :java:extdoc:`nablarch.fw.batch.ee.Main` に対して起動オプションを指定する。
-起動オプションで指定した値は、 :java:extdoc:`JobOperator#start <jakarta.batch.operations.JobOperator.start(java.lang.String,java.util.Properties)>` のjobParametersに設定される。
+如果想在作业执行时指定参数，需要向 :java:extdoc:`nablarch.fw.batch.ee.Main` 指定启动选项。
+启动选项中指定的值将被设置到 :java:extdoc:`JobOperator#start <jakarta.batch.operations.JobOperator.start(java.lang.String,java.util.Properties)>` 的jobParameters中。
 
-起動オプションは、名前に ``--`` を付加し、名前の次の引数に値を設定する。
+启动选项需要在名称前添加 ``--`` ，在名称后的参数中设置值。
 
-起動オプションの使用例
+启动选项使用示例
   .. code-block:: bash
 
-    # この例では、「option1=value1」と「option2=value2」の2つのjobParametersが設定される。
+    # 在这个例子中，将设置「option1=value1」和「option2=value2」两个jobParameters。
     $ java nablarch.fw.batch.ee.Main jobName --option1 value1 --option2 value2
   
 .. tip::
 
-  プロジェクト独自で起動クラスを作成する際にも、このMainクラスを参考に実装できる。
+  创建项目特有的启动类时，也可以参考这个Main类进行实现。
 
 
 .. _jsr352_exitcode_batch_application:
 
-バッチ应用の終了コード
+Batch应用的退出码
 --------------------------------------------------
-上記のMainクラスのプログラムの終了コードは以下のようになる。
+上述Main类程序的退出码如下。
 
-* 正常終了：0 - 終了ステータスが “WARNING” 以外の場合で、バッチステータスが  :java:extdoc:`BatchStatus.COMPLETED <jakarta.batch.runtime.BatchStatus>` の場合
-* 異常終了：1 - 終了ステータスが “WARNING” 以外の場合で、バッチステータスが  :java:extdoc:`BatchStatus.COMPLETED <jakarta.batch.runtime.BatchStatus>` 以外の場合
-* 警告終了：2 - 終了ステータスが “WARNING” の場合
+* 正常结束：0 - 结束状态为 "WARNING" 以外，且Batch状态为 :java:extdoc:`BatchStatus.COMPLETED <jakarta.batch.runtime.BatchStatus>` 的情况
+* 异常结束：1 - 结束状态为 "WARNING" 以外，且Batch状态为 :java:extdoc:`BatchStatus.COMPLETED <jakarta.batch.runtime.BatchStatus>` 以外的情况
+* 警告结束：2 - 结束状态为 "WARNING" 的情况
 
-なお、JOBの終了待ちの間に中断された場合は、異常終了のコードを返す。
+另外，如果在等待JOB结束期间被中断，则返回异常结束的代码。
 
-バリデーションエラーなど警告すべき事項が発生している場合に、警告終了させることができる。
-警告終了の方法はchunkまたはbatchlet内で、 :java:extdoc:`JobContext#setExitStatus(String) <jakarta.batch.runtime.context.JobContext.setExitStatus(java.lang.String)>`
-を呼び出し "WARNING" を終了ステータスとして設定する。警告終了時は、バッチステータスは任意の値を許可するため、
-例外を送出しバッチステータスが :java:extdoc:`BatchStatus.COMPLETED <jakarta.batch.runtime.BatchStatus>` 以外となる場合であっても、
-終了ステータスに "WARNING" を設定していれば、上記クラスは警告終了する。
+在发生验证错误等需要警告的事项时，可以进行警告结束。
+警告结束的方法是在chunk或batchlet内调用 :java:extdoc:`JobContext#setExitStatus(String) <jakarta.batch.runtime.context.JobContext.setExitStatus(java.lang.String)>`
+将 "WARNING" 设置为结束状态。警告结束时，允许Batch状态为任意值，
+因此即使抛出异常导致Batch状态变为 :java:extdoc:`BatchStatus.COMPLETED <jakarta.batch.runtime.BatchStatus>` 以外，
+只要将 "WARNING" 设置为结束状态，上述类就会进行警告结束。
 
 .. _jsr352_run_batch_init_repository:
 
-System Repositoryを初期化する
+初始化系统仓库
 --------------------------------------------------
-:ref:`repository` は、ジョブリスナーに ``nablarchJobListenerExecutor`` を設定することで初期化できる。
+:ref:`repository` 可以通过在作业监听器中设置 ``nablarchJobListenerExecutor`` 来初始化。
 
-System Repositoryのルートxmlファイルのファイル名は、 ``batch-boot.xml`` としクラスパス直下に配置する。
-ファイル名や、配置場所を変更したい場合には、 ``nablarchJobListenerExecutor`` のパラメータで変更する。
+系统仓库的根xml文件文件名为 ``batch-boot.xml`` ，放置在类路径根目录下。
+如果要更改文件名或放置位置，可以通过 ``nablarchJobListenerExecutor`` 的参数进行更改。
 
-以下に例を示す。
+以下显示示例。
 
-デフォルトの ``batch-boot.xml`` を使用する場合の例
+使用默认的 ``batch-boot.xml`` 时的示例
   .. code-block:: xml
 
     <job id="sample-job" xmlns="https://jakarta.ee/xml/ns/jakartaee" version="2.0">
       <listeners>
-        <!-- ジョブリスナーにnablarchJobListenerExecutorを設定する -->
+        <!-- 在作业监听器中设置nablarchJobListenerExecutor -->
         <listener ref="nablarchJobListenerExecutor" />
       </listeners>
 
-      <!-- ステップ定義は省略 -->
+      <!-- 步骤定义省略 -->
     </job>
 
-デフォルト以外の設定ファイルを使用する例
+使用默认以外的配置文件时的示例
   .. code-block:: xml
 
     <job id="sample-job" xmlns="https://jakarta.ee/xml/ns/jakartaee" version="2.0">
@@ -78,14 +78,14 @@ System Repositoryのルートxmlファイルのファイル名は、 ``batch-boo
         <listener ref="nablarchJobListenerExecutor">
           <properties>
             <!--
-            diConfigFilePathプロパティに読み込むxmlを設定する
-            この例の場合、クラスパス配下の「sample_project/batch-boot.xml」が
-            System Repositoryにロードされる
+            在diConfigFilePath属性中设置要加载的xml
+            这个例子中，类路径下的「sample_project/batch-boot.xml」
+            将被加载到系统仓库
             -->
             <property name="diConfigFilePath" value="sample_project/batch-boot.xml" />
           </properties>
         </listener>
       </listeners>
 
-      <!-- ステップ定義は省略 -->
+      <!-- 步骤定义省略 -->
     </job>

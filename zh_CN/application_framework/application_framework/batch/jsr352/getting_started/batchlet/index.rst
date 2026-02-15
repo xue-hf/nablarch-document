@@ -1,80 +1,80 @@
 .. _`getting_started_batchlet`:
 
-対象テーブルのデータを削除するバッチの作成(Batchletステップ)
+创建删除目标表数据的Batch（Batchlet步骤）
 ================================================================
-Example应用を元に、 :ref:`batchletステップ<jsr352-batch_type_Batchlet>` で対象テーブルのデータを削除するバッチを解説する。
+以Example应用为基础，解说使用 :ref:`batchlet步骤<jsr352-batch_type_Batchlet>` 删除目标表数据的Batch。
 
-作成する機能の説明
-  1. 現在のDBの状態の確認
+创建的功能说明
+  1. 确认当前DB的状态
 
-     H2のコンソールから下記SQLを実行する。
+     从H2控制台执行以下SQL。
 
      .. code-block:: sql
 
        SELECT * FROM ZIP_CODE_DATA;
        SELECT * FROM ZIP_CODE_DATA_WORK;
 
-     データが登録されていない場合は 2の手順を実施する。
+     如果数据未注册，则执行步骤2的操作。
 
-  2. (データが登録されていない場合)データベースを初期状態にリセット
+  2. （数据未注册时）将数据库重置为初始状态
 
-    コマンドプロンプトから下記コマンドを実行する。
+    从命令提示符执行以下命令。
 
     .. code-block:: bash
 
-      $cd {nablarch-example-batch-eeSystem Repository}
+      $cd {nablarch-example-batch-ee系统仓库}
       $mvn generate-resources
 
-    H2のコンソールから下記SQLを実行してデータが登録されたことを確認する。
+    从H2控制台执行以下SQL确认数据已注册。
 
     .. code-block:: sql
 
       SELECT * FROM ZIP_CODE_DATA;
       SELECT * FROM ZIP_CODE_DATA_WORK;
 
-  3. 住所テーブル削除バッチを実行
+  3. 执行地址表删除Batch
 
-    コマンドプロンプトから下記コマンドを実行する。
+    从命令提示符执行以下命令。
 
     .. code-block:: bash
 
-      $cd {nablarch-example-batch-eeSystem Repository}
+      $cd {nablarch-example-batch-ee系统仓库}
       $mvn exec:java -Dexec.mainClass=nablarch.fw.batch.ee.Main ^
           -Dexec.args=zip-code-truncate-table
 
-  4. 対象テーブルのデータが削除されていることを確認
+  4. 确认目标表的数据已被删除
 
-     H2のコンソールから下記SQLを実行し、データが削除されていることを確認する。
+     从H2控制台执行以下SQL，确认数据已被删除。
 
      .. code-block:: sql
 
        SELECT * FROM ZIP_CODE_DATA;
        SELECT * FROM ZIP_CODE_DATA_WORK;
 
-対象テーブルのデータを削除する
+删除目标表的数据
 ---------------------------------
-住所情報を削除するバッチの実装方法を説明する。
+说明删除地址信息Batch的实现方法。
 
-処理フローについては、 :ref:`Batchletステップのバッチの処理フロー<jsr352-batch_flow_batchlet>` を参照。
-責務配置については :ref:`Batchletステップの責務配置<jsr352-batchlet_design>` を参照。
+关于处理流程，请参考 :ref:`Batchlet步骤的Batch处理流程<jsr352-batch_flow_batchlet>` 。
+关于职责配置，请参考 :ref:`Batchlet步骤的职责配置<jsr352-batchlet_design>` 。
 
-  #. :ref:`Batchletの作成<getting_started_batchlet_create>`
-  #. :ref:`JOB設定ファイルの作成<getting_started_batchlet_job>`
+  #. :ref:`创建Batchlet<getting_started_batchlet_create>`
+  #. :ref:`创建JOB设置文件<getting_started_batchlet_job>`
 
 .. _`getting_started_batchlet_create`:
 
-Batchletの作成
-  住所情報を削除するバッチのBatchletクラスを作成する。
+创建Batchlet
+  创建删除地址信息Batch的Batchlet类。
 
-  実装すべきインタフェースとその責務
-    Batchletクラスに以下のインタフェースを実装してバッチ処理を作成する。オーバーライドしたメソッドは、Batch Runtimeによって適切なタイミングで呼び出される。
+  应实现的接口及其职责
+    Batchlet类通过实现以下接口来创建Batch处理。重写的方法将由Batch Runtime在适当的时机调用。
 
    ==================================================================   =============================================================================================
-   インタフェース                                                       実装
+   接口                                                                 实现
    ==================================================================   =============================================================================================
-   :java:extdoc:`Batchlet<jakarta.batch.api.Batchlet>`                    バッチ処理を実装する。
+   :java:extdoc:`Batchlet<jakarta.batch.api.Batchlet>`                    实现Batch处理。
 
-                                                                        デフォルト実装を提供する :java:extdoc:`AbstractBatchlet<jakarta.batch.api.AbstractBatchlet>` を継承する。
+                                                                        继承提供默认实现的 :java:extdoc:`AbstractBatchlet<jakarta.batch.api.AbstractBatchlet>` 。
 
                                                                           * `Batchlet#process`
                                                                           * `Batchlet#stop`
@@ -82,8 +82,8 @@ Batchletの作成
 
   .. tip::
 
-    バッチ処理は、上記のインタフェースの実装に加えて、トランザクション制御などの共通的な処理を提供するリスナーによって構成する。
-    リスナーの詳細は :ref:`バッチ应用で使用するリスナー<jsr352-listener>` 及び :ref:`リスナーの指定方法<jsr352-listener_definition>` を参照。
+    Batch处理除了实现上述接口外，还通过提供事务控制等通用处理的监听器来构成。
+    监听器的详细信息请参考 :ref:`Batch应用中使用的监听器<jsr352-listener>` 以及 :ref:`监听器的指定方法<jsr352-listener_definition>` 。
 
   TruncateTableBatchlet.java
     .. code-block:: java
@@ -108,22 +108,22 @@ Batchletの作成
           }
       }
 
-    この実装のポイント
-      * :java:extdoc:`AbstractBatchlet<jakarta.batch.api.AbstractBatchlet>` を継承し、 `process` メソッドで業務処理を行う。
+    这个实现的要点
+      * 继承 :java:extdoc:`AbstractBatchlet<jakarta.batch.api.AbstractBatchlet>` ，在 `process` 方法中执行业务处理。
 
       .. _getting_started_batchlet-cdi:
 
-      * :java:extdoc:`Named<jakarta.inject.Named>` と :java:extdoc:`Dependent<jakarta.enterprise.context.Dependent>` をクラスに付与する。 |br|
-        Named及びDependentアノテーションを設定することで、Batchlet実装クラスをCDIの管理Beanにできる。
-        これにより、ジョブ定義に指定するBatchletクラス名をCDIの管理名で記述出来るようになる。 |br|
-        (CDI管理Beanとしなかった場合は、完全修飾名(FQCN)で記述する)
+      * 在类上添加 :java:extdoc:`Named<jakarta.inject.Named>` 和 :java:extdoc:`Dependent<jakarta.enterprise.context.Dependent>` 。 |br|
+        设置Named及Dependent注解后，可以将Batchlet实现类作为CDI的管理Bean。
+        这样，就可以在作业定义中使用CDI的管理名来记述Batchlet类名。 |br|
+        （如果不作为CDI管理Bean，则需要使用完全限定名(FQCN)来记述）
 
-      * :ref:`データベースアクセス<database>` を使用してTRUNCATE文を実行する。
+      * 使用 :ref:`数据库访问<database>` 执行TRUNCATE语句。
 
 .. _`getting_started_batchlet_job`:
 
-ジョブ定義ファイルの作成
-  ジョブの実行設定を定義したファイルを作成する。
+创建作业定义文件
+  创建定义作业执行设置的文件。
 
   zip-code-truncate-table.xml
     .. code-block:: xml
@@ -155,17 +155,17 @@ Batchletの作成
        </step>
      </job>
 
-  この実装のポイント
-    * ジョブ定義ファイルは、`/src/main/resources/META-INF/batch-jobs/` 配下に配置する。
-    * `job` 要素 の `id` 属性で、ジョブ名称を指定する。
-    * 複数ステップで構成されるバッチジョブの場合は、 `step` 要素を複数定義し、処理を順次実行する。
-    * `batchlet` 要素の `ref` 属性には、Batchletクラス名の頭文字を小文字にした名称を指定する。
-    * `property` 要素で、Batchletクラスのプロパティにインジェクトする値を指定する。
-    * 設定ファイルの詳細な記述方法は |jsr352| を参照
+  这个实现的要点
+    * 作业定义文件放置在 `/src/main/resources/META-INF/batch-jobs/` 下。
+    * `job` 元素的 `id` 属性指定作业名称。
+    * 由多个步骤构成的Batch作业，需要定义多个 `step` 元素，依次执行处理。
+    * `batchlet` 元素的 `ref` 属性指定将Batchlet类名首字母小写后的名称。
+    * `property` 元素指定注入到Batchlet类属性的值。
+    * 配置文件的详细记述方法请参考 |jsr352|
 
 .. |jsr352| raw:: html
 
-  <a href="https://jakarta.ee/specifications/batch/" target="_blank">Jakarta Batch(外部サイト、英語)</a>
+  <a href="https://jakarta.ee/specifications/batch/" target="_blank">Jakarta Batch(外部网站，英语)</a>
 
 .. |br| raw:: html
 

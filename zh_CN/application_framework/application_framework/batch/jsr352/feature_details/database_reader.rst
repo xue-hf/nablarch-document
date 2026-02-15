@@ -1,18 +1,18 @@
-データベースを入力とするChunkステップ
+以数据库为输入的 Chunk 步骤
 ======================================================
 .. contents:: 目录
   :depth: 3
   :local:
   
-データベースから処理対象データを抽出する場合は、Jakarta Batchで提供されているリーダではなく
-本機能で提供する :java:extdoc:`BaseDatabaseItemReader <nablarch.fw.batch.ee.chunk.BaseDatabaseItemReader>` を実装すること。
+从数据库中提取处理对象数据时，不要使用 Jakarta Batch 提供的 reader，
+而应实现本功能提供的 :java:extdoc:`BaseDatabaseItemReader <nablarch.fw.batch.ee.chunk.BaseDatabaseItemReader>` 。
 
-:java:extdoc:`BaseDatabaseItemReader <nablarch.fw.batch.ee.chunk.BaseDatabaseItemReader>` を実装することで、
-リーダ専用のデータベース接続を使用してデータを抽出できる。
-これにより、トランザクション制御時にカーソルを自動的にクローズするデータベースの場合でも、
-データベースを入力とするChunkステップを実現できる。
+通过实现 :java:extdoc:`BaseDatabaseItemReader <nablarch.fw.batch.ee.chunk.BaseDatabaseItemReader>` ，
+可以使用 reader 专用的数据库连接来提取数据。
+这样，即使在事务控制时会自动关闭游标的数据库中，
+也能够实现以数据库为输入的 Chunk 步骤。
 
-以下に実装例を示す。
+以下展示实现示例。
 
 .. code-block:: java
 
@@ -20,18 +20,18 @@
   @Named
   public class EmployeeSearchReader extends BaseDatabaseItemReader {
   
-    /** データベースからの取得結果(リソース解放用) */
+    /** 从数据库获取的结果(用于资源释放) */
     private DeferredEntityList<EmployeeForm> list;
 
-    /** データベースからの取得結果を保持するイテレータ */
+    /** 保存从数据库获取结果的迭代器 */
     private Iterator<EmployeeForm> iterator;
 
-    /** 進捗管理Bean */
+    /** 进度管理 Bean */
     private final ProgressManager progressManager;
 
     /**
-     * コンストラクタ。
-     * @param progressManager 進捗管理Bean
+     * 构造函数。
+     * @param progressManager 进度管理 Bean
      */
     @Inject
     public EmployeeSearchReader(ProgressManager progressManager) {
@@ -39,8 +39,8 @@
     }
   
     /**
-     * BaseDatabaseItemReaderが提供するdoOpenを実装して、データベースから処理対象データを抽出する。
-     * 大量データを取得する場合には、ヒープを圧迫しないよう遅延ロードを行うこと
+     * 实现 BaseDatabaseItemReader 提供的 doOpen，从数据库中提取处理对象数据。
+     * 获取大量数据时，为避免堆内存压力，请进行延迟加载
      */
     @Override
     public void doOpen(Serializable checkpoint) throws Exception {
@@ -53,8 +53,8 @@
     }
 
     /**
-     * readItemでは、次の1レコードを返す。
-     * なお、データが存在しない場合や最後まで処理した場合はnullを返す。
+     * 在 readItem 中，返回下一条记录。
+     * 注意，当数据不存在或已处理到最后时返回 null。
      */
     @Override
     public Object readItem() {
@@ -65,7 +65,7 @@
     }
 
     /**
-     * リソースの解放が必要な場合は、doCloseを実装する。
+     * 需要释放资源时，实现 doClose。
      */
     @Override
     public void doClose() throws Exception {

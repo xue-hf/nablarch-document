@@ -2,25 +2,25 @@
 
 Getting Started
 ==========================================
-本章を通読することで、Nablarchを用いた |jsr352| に準拠したバッチ应用の開発のイメージを掴むことができる。
+通读本章，可以了解使用 Nablarch 开发符合 |jsr352| 的 Batch 应用的开发思路。
 
 .. tip::
- ExampleはNablarchの機能の使用方法を示した実装例であり、Exampleを改修して本格的な应用を作成することは想定していない。
+ Example 是展示 Nablarch 功能使用方法的实现示例，不设想通过修改 Example 来创建正式的应用。
  
- 本格的な应用を作成する場合は :ref:`blank_project` から作成すること。
+ 创建正式的应用时，请从 :ref:`blank_project` 开始创建。
 
 
 前提条件
-  本章は :ref:`example_application` をベースに解説する。
-  Example应用の動作環境を事前に構築しておくこと。
+  本章基于 :ref:`example_application` 进行讲解。
+  请事先构建 Example 应用的运行环境。
 
   .. tip::
-    Example应用に関する以下の事項は、本章节解説しない。
-    以下の事項については、 :ref:`example_application` を参照すること。
+    关于 Example 应用的以下事项，本章不进行讲解。
+    关于以下事项，请参考 :ref:`example_application` 。
 
-    - Example应用の環境構築および実行
-    - Example应用の設定
-    - 使用しているOSSプラグインについて
+    - Example 应用的环境构建及执行
+    - Example 应用的设置
+    - 使用的 OSS 插件
 
 .. toctree::
   :maxdepth: 1
@@ -30,4 +30,4 @@ Getting Started
 
 .. |jsr352| raw:: html
 
-  <a href="https://jakarta.ee/specifications/batch/" target="_blank">Jakarta Batch(外部サイト、英語)</a>
+  <a href="https://jakarta.ee/specifications/batch/" target="_blank">Jakarta Batch(外部站点，英语)</a>
