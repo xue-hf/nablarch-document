@@ -1,106 +1,107 @@
 .. _data_format:
 
-汎用データフォーマット
+通用数据格式
 ==================================================
 
 .. contents:: 目录
   :depth: 3
   :local:
 
-システムで扱う多様なデータ形式に対応した汎用の入出力ライブラリ機能を提供する。
+提供对应系统处理的多种数据形式的通用输入输出库功能。
 
-本機能の大まかな構成は以下のとおり。
+本功能的大致构成如下。
 
 .. image:: ../images/data_format/structure.png
 
 
-機能概要
+功能概述
 --------------------------------------------------
 
 .. _data_format-support_type:
 
-標準でサポートするフォーマットが豊富
+标准支持丰富的格式
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-標準では、以下の形式のフォーマットに対応している。
+标准支持以下形式的格式。
 
-固定長と可変長のデータ形式では、レコード毎にレイアウトの異なるマルチレイアウトデータにも対応している。
-(XMLとJSONには、レコードという概念が存在しない。)
+固定长度和可变长度的数据形式中，也支持每条记录布局不同的多布局数据。
+(XML和JSON中不存在记录的概念。)
 
-* 固定長
-* 可変長(csvやtsvなど)
+* 固定长度
+* 可变长度(csv、tsv等)
 * JSON
 * XML
 
 .. important::
 
-  本機能には、以下のデメリットがある。
+  本功能有以下缺点。
 
-  * 複雑な :ref:`フォーマット定義ファイル <data_format-format_definition_file>` を作成する必要がある。
-  * 入出力が :java:extdoc:`Map <java.util.Map>` に限定されており、実装誤りを起こしやすい。
+  * 需要创建复杂的 :ref:`格式定义文件 <data_format-format_definition_file>` 。
+  * 输入输出限定为 :java:extdoc:`Map <java.util.Map>` ，容易发生实现错误。
 
-    * フィールド名を文字列で指定する必要があり、IDEの補完も使えないなど、実装時にミスを起こしやすい。
-    * 应用側で、Mapから取り出した値をダウンキャストする必要がある。(誤ると、実行時に例外が送出される。)
+    * 字段名需要以字符串指定，无法使用IDE的补全等功能，实现时容易出错。
+    * 应用侧需要将Map中取出的值向下转型。(如果出错会在运行时抛出异常。)
 
-  * データとJavaオブジェクトのマッピングに :java:extdoc:`BeanUtil <nablarch.core.beans.BeanUtil>` を使用していないため、他の機能とはマッピング方法が異なる。
-  * 出力対象の :java:extdoc:`Map <java.util.Map>` の扱い方がフォーマットによって異なる。このため、同じデータを複数のフォーマットに対応させる機能を使用した場合に、フォーマットによっては例外が発生するなど正常に動作しない場合がある。
+  * 数据与Java对象的映射没有使用 :java:extdoc:`BeanUtil <nablarch.core.beans.BeanUtil>` ，因此与其他功能的映射方法不同。
+  * 输出目标 :java:extdoc:`Map <java.util.Map>` 的处理方式因格式而异。因此，在使用同一数据对应多种格式的功能时，可能会因格式不同而发生异常等无法正常动作的情况。
     
-    例えば、下のケースで問題がある。
+    例如，在以下情况下会有问题。
     
-    XMLとJSONで必須項目にnullを指定した場合：
-      * XML：値を空文字として出力
-      * JSON：必須の例外を送出
+    在XML和JSON的必填项中指定null时：
+      * XML：将值作为空字符串输出
+      * JSON：抛出必填异常
   
-  * 出力対象のデータによってはJSONの仕様を満たせない場合がある。
+  * 根据输出目标数据，可能无法满足JSON的规范。
   
-    例えば、 :java:extdoc:`数値型 <nablarch.core.dataformat.convertor.datatype.JsonNumber>` や :java:extdoc:`真偽値型 <nablarch.core.dataformat.convertor.datatype.JsonBoolean>` を使用し、出力対象のデータ型がこれらの型に対応していない場合に不正なJSONが出力される。
+    例如，使用 :java:extdoc:`数值型 <nablarch.core.dataformat.convertor.datatype.JsonNumber>` 或 :java:extdoc:`布尔型 <nablarch.core.dataformat.convertor.datatype.JsonBoolean>` ，
+    而输出目标的数据类型与这些类型不对应时，会输出非法的JSON。
     
-    例：数値型を指定し、出力対象が「data」などの文字列の場合、{"number":data}のような不正なJSONが出力される。
+    例：指定为数值型，输出目标为"data"等字符串时，会输出{"number":data}这样的非法JSON。
   
-  * データ形式によって使用できる :java:extdoc:`データタイプ <nablarch.core.dataformat.convertor.datatype.DataType>` の実装クラスが異なるため拡張しづらい。また、この設定の誤りは実行時まで検知できない。
+  * 根据数据形式，可用的 :java:extdoc:`数据类型 <nablarch.core.dataformat.convertor.datatype.DataType>` 实现类不同，因此难以扩展。而且此设置错误在运行前无法检测。
   
-  このため原則本機能はやむを得ない場合を除き非推奨とする。
-  なお、 :ref:`messaging` は、内部で本機能を使用しているため、代替機能を使用できない。
+  因此，原则上本功能除不得已的情况外不推荐使用。
+  另外， :ref:`messaging` 由于内部使用本功能，无法使用替代功能。
 
-  本機能の代替機能
-    :固定長: :ref:`data_bind` を使用すること。
-    :可変長: :ref:`data_bind` を使用すること。
-    :XML: `Jakarta XML Binding <https://jakarta.ee/specifications/xml-binding/>`_ を推奨する。
-    :JSON: OSSの使用を推奨する。例えば、 `Jackson(外部サイト、英語) <https://github.com/FasterXML/jackson>`_ が広く使われている。
+  本功能的替代功能
+    :固定长度: 使用 :ref:`data_bind` 。
+    :可变长度: 使用 :ref:`data_bind` 。
+    :XML: 推荐使用 `Jakarta XML Binding <https://jakarta.ee/specifications/xml-binding/>`_ 。
+    :JSON: 推荐使用OSS。例如， `Jackson(外部站点、英语) <https://github.com/FasterXML/jackson>`_ 被广泛使用。
 
 
-様々な文字セットや文字種、データ形式に対応
+对应多种字符集、字符种类、数据形式
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-文字列や10進数数値だけでなく、ホストでよく扱われるパック数値やゾーン10進数形式などに対応している。
-また、UTF-8やShift_JISだけではなくEBCDICなどの文字セットにも対応している。
+不仅支持字符串和十进制数值，还支持主机中常用的压缩数值和区域十进制数形式等。
+此外，不仅支持UTF-8和Shift_JIS，还支持EBCDIC等字符集。
 
 .. tip::
   
-  文字セットについては、実行環境のJVMでサポートされているものが使用できる。
+  关于字符集，可以使用执行环境的JVM支持的字符编码。
 
 .. _data_format-value_convertor:
 
-パディングやトリミングなどの変換処理に対応
+支持填充和修剪等转换处理
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-固定長ファイルで多く使用されるスペースやゼロ(0)パディング及びトリミングに対応している。
-このため、应用側でパディング処理やトリミング処理を行わなくて良い。
+支持固定长度文件中常用的空格和零(0)填充及修剪。
+因此，应用侧无需进行填充处理或修剪处理。
 
-パディングやトリミングの詳細は、 :ref:`data_format-field_convertor_list` を参照。
+填充和修剪的详细内容请参考 :ref:`data_format-field_convertor_list` 。
 
 模块列表
 ---------------------------------------------------------------------
-* :ref:`アップロードヘルパー <data_format-upload_helper>` を使用する場合は、 ``nablarch-fw-web-extension`` を追加する。
-* :ref:`ファイルダウンロード <data_format-file_download>` を使用する場合は、 ``nablarch-fw-web-extension`` を追加する。
+* 使用 :ref:`上传助手 <data_format-upload_helper>` 时，需要添加 ``nablarch-fw-web-extension`` 。
+* 使用 :ref:`文件下载 <data_format-file_download>` 时，需要添加 ``nablarch-fw-web-extension`` 。
 
 .. code-block:: xml
 
-  <!-- 汎用データフォーマット -->
+  <!-- 通用数据格式 -->
   <dependency>
     <groupId>com.nablarch.framework</groupId>
     <artifactId>nablarch-core-dataformat</artifactId>
   </dependency>
 
   <!--
-  アップロードヘルパーを使用する場合、ダウンロードを使用する場合は以下を追加する
+  使用上传助手时、使用下载时需要添加以下内容
    -->
   <dependency>
     <groupId>com.nablarch.framework</groupId>
@@ -114,24 +115,24 @@
 
 .. _data_format-format_definition_file:
 
-入出力データのフォーマットを定義する
+定义输入输出数据的格式
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-入出力対象データのフォーマット定義は、フォーマット定義ファイルに行う。
+输入输出目标数据的格式定义在格式定义文件中进行。
 
-フォーマット定義ファイルは、以下のようなテキストファイル形式で作成する。
-詳細な仕様は、 :doc:`data_format/format_definition` を参照。
+格式定义文件以如下文本文件形式创建。
+详细规格请参考 :doc:`data_format/format_definition` 。
 
 .. code-block:: bash
 
-  file-type:        "Variable" # 可変長
-  text-encoding:    "MS932"    # 文字列型フィールドの文字エンコーディング
-  record-separator: "\r\n"     # 改行コード(crlf)
+  file-type:        "Variable" # 可变长度
+  text-encoding:    "MS932"    # 字符串型字段的字符编码
+  record-separator: "\r\n"     # 换行代码(crlf)
   field-separator:  ","        # csv
 
-  # レコード識別フィールドの定義
+  # 记录识别字段的定义
   [Classifier]
-  1 dataKbn X     # 1つめのフィールド
-  3 type    X     # 3つめのフィールド
+  1 dataKbn X     # 第1个字段
+  3 type    X     # 第3个字段
 
   [parentData]
   dataKbn = "1"
@@ -156,172 +157,171 @@
   data_format/format_definition
 
 
-ファイルにデータを出力する
+将数据输出到文件
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-データレコードの内容をファイルに出力する方法について説明する。
+说明将数据记录的内容输出到文件的方法。
 
-ファイルへのデータ出力は、 :java:extdoc:`FileRecordWriterHolder <nablarch.common.io.FileRecordWriterHolder>` を使用することで実現できる。
+向文件输出数据可以使用 :java:extdoc:`FileRecordWriterHolder <nablarch.common.io.FileRecordWriterHolder>` 实现。
 
-以下に実装例を示す。
+以下显示实现示例。
 
-ポイント
-  * ファイルに書き込むデータは :java:extdoc:`Map <java.util.Map>` として準備する。
-  * :java:extdoc:`Map <java.util.Map>` のキー値は、 :ref:`data_format-format_definition_file` で定義したフィールド名を設定する。(大文字、小文字は区別しない)
-  * :java:extdoc:`FileRecordWriterHolder <nablarch.common.io.FileRecordWriterHolder>` の `open` メソッドを呼び出して、ファイルリソースを書き込み可能状態にする。
-  * :java:extdoc:`FileRecordWriterHolder <nablarch.common.io.FileRecordWriterHolder>` の `write` メソッドを呼び出して、データをファイルに書き込む。
+要点
+  * 要写入文件的数据以 :java:extdoc:`Map <java.util.Map>` 形式准备。
+  * :java:extdoc:`Map <java.util.Map>` 的键值设置为 :ref:`data_format-format_definition_file` 中定义的字段名。(不区分大小写)
+  * 调用 :java:extdoc:`FileRecordWriterHolder <nablarch.common.io.FileRecordWriterHolder>` 的 `open` 方法，将文件资源置为可写入状态。
+  * 调用 :java:extdoc:`FileRecordWriterHolder <nablarch.common.io.FileRecordWriterHolder>` 的 `write` 方法，将数据写入文件。
 
 .. code-block:: java
 
-  // 書き込み対象のデータ
+  // 写入目标数据
   Map<String, Object> user = new HashMap<>();
-  user.put("name", "名前");
+  user.put("name", "名字");
   user.put("age", 20);
 
-  // 書き込み対象のファイルを開く
+  // 打开写入目标文件
   FileRecordWriterHolder.open("users.csv", "user_csv_format");
 
-  // データを書き込む
+  // 写入数据
   FileRecordWriterHolder.write(user, "user.csv");
 
 .. tip::
 
-  :java:extdoc:`FileRecordWriterHolder <nablarch.common.io.FileRecordWriterHolder>` を使用するためには、
-  :ref:`フォーマット定義ファイル <data_format-format_definition_file>` の配置ディレクトリや出力先ディレクトリを
-  :ref:`file_path_management` に設定する必要がある。
+  要使用 :java:extdoc:`FileRecordWriterHolder <nablarch.common.io.FileRecordWriterHolder>` ，
+  需要在 :ref:`file_path_management` 中设置 :ref:`格式定义文件 <data_format-format_definition_file>` 的配置目录和输出目标目录。
 
-  必要となるディレクトリの設定値については、 :java:extdoc:`FileRecordWriterHolder <nablarch.common.io.FileRecordWriterHolder>` を参照。
-
-.. important::
-
-  :java:extdoc:`FileRecordWriterHolder <nablarch.common.io.FileRecordWriterHolder>` で開いたファイルリソースは、
-  :ref:`file_record_writer_dispose_handler` にて自動的に開放される。
-  このため、 :java:extdoc:`FileRecordWriterHolder <nablarch.common.io.FileRecordWriterHolder>` を使用する場合には、
-  必ず :ref:`file_record_writer_dispose_handler` をhandler队列上に設定すること。
-
-.. important::
-  出力するデータに不正な値が設定されていた場合に正しく処理できない可能性があるため、事前に应用側で不正な値でないかをチェックすること。
+  所需目录的设置值请参考 :java:extdoc:`FileRecordWriterHolder <nablarch.common.io.FileRecordWriterHolder>` 。
 
 .. important::
 
-  デフォルトの動作では1レコード毎にファイルへの書き込みを行う。
-  大量データを出力する場合はレコード毎にファイルに書き込むと性能要件を満たせない可能性がある。
-  そのような場合は、1レコード毎でなく指定したバッファサイズで書き込みを行うようにデフォルトの動作を変更して対応すること。
+  :java:extdoc:`FileRecordWriterHolder <nablarch.common.io.FileRecordWriterHolder>` 打开的文件资源，
+  由 :ref:`file_record_writer_dispose_handler` 自动释放。
+  因此，使用 :java:extdoc:`FileRecordWriterHolder <nablarch.common.io.FileRecordWriterHolder>` 时，
+  必须在handler队列上设置 :ref:`file_record_writer_dispose_handler` 。
 
-  下記のコンポーネント定義を追加することで、1レコード毎でなく指定したバッファサイズで書き込みを行うようにできる。
+.. important::
+  如果输出的数据中设置了异常值，可能无法正确处理，因此需要事先在应用侧检查是否为异常值。
+
+.. important::
+
+  默认动作是每条记录都写入文件。
+  输出大量数据时如果每条记录都写入文件可能无法满足性能要求。
+  这种情况下，应将默认动作更改为不是每条记录而是按指定缓冲区大小写入。
+
+  添加以下组件定义，可以按指定缓冲区大小而不是每条记录写入。
 
   .. code-block:: xml
 
-    <!-- コンポーネント名はdataFormatConfigとする -->
+    <!-- 组件名设为dataFormatConfig -->
     <component name="dataFormatConfig" class="nablarch.core.dataformat.DataFormatConfig">
       <property name="flushEachRecordInWriting" value="false" />
     </component>
 
-  出力に使用するバッファサイズは :java:extdoc:`FileRecordWriterHolder <nablarch.common.io.FileRecordWriterHolder>`
-  の `open` メソッドで指定できる。
+  输出使用的缓冲区大小可以在 :java:extdoc:`FileRecordWriterHolder <nablarch.common.io.FileRecordWriterHolder>`
+  的 `open` 方法中指定。
 
 .. _data_format-file_download:
   
-ファイルダウンロードで使用する
+在文件下载中使用
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-データレコードの内容をファイルダウンロード形式でクライアントに応答する方法について解説する。
+说明以文件下载形式将数据记录的内容响应给客户端的方法。
 
-ファイルダウンロード形式のレスポンスは、 :java:extdoc:`DataRecordResponse <nablarch.common.web.download.DataRecordResponse>` を使用することで実現できる。
+文件下载形式的响应可以使用 :java:extdoc:`DataRecordResponse <nablarch.common.web.download.DataRecordResponse>` 实现。
 
-以下に実装例を示す。
+以下显示实现示例。
 
-ポイント
-  * :java:extdoc:`DataRecordResponse <nablarch.common.web.download.DataRecordResponse>` 生成時に、
-    フォーマット定義ファイルが格納された論理パス名と、フォーマット定義ファイル名を指定する。
-  * :java:extdoc:`DataRecordResponse#write <nablarch.common.web.download.DataRecordResponse.write(java.util.Map)>` を使って、
-    データを出力する。(複数のレコードをダウンロードする場合には、繰り返し出力する)
-  * `Content-Type` 及び `Content-Disposition` を設定する。
-  * 業務アクションから :java:extdoc:`DataRecordResponse <nablarch.common.web.download.DataRecordResponse>` を返却する。
+要点
+  * 生成 :java:extdoc:`DataRecordResponse <nablarch.common.web.download.DataRecordResponse>` 时，
+    指定格式定义文件存储的逻辑路径名和格式定义文件名。
+  * 使用 :java:extdoc:`DataRecordResponse#write <nablarch.common.web.download.DataRecordResponse.write(java.util.Map)>` 输出数据。
+    (下载多条记录时需要重复输出)
+  * 设置 `Content-Type` 及 `Content-Disposition` 。
+  * 从业务Action返回 :java:extdoc:`DataRecordResponse <nablarch.common.web.download.DataRecordResponse>` 。
 
 .. code-block:: java
 
   public HttpResponse download(HttpRequest request, ExecutionContext context) {
 
-    // 業務処理
+    // 业务处理
 
-    // ダウンロードデータを格納したMapの作成する。
+    // 创建存储下载数据的Map。
     Map<String, Object> user = new hashMap<>()
-    user.put("name", "なまえ");
+    user.put("name", "名字");
     user.put("age", 30);
 
-    // フォーマット定義ファイルが格納された論理パス名と
-    // フォーマット定義ファイル名を指定してDataRecordResponseを生成する。
+    // 指定格式定义文件存储的逻辑路径名和
+    // 格式定义文件名生成DataRecordResponse。
     DataRecordResponse response = new DataRecordResponse("format", "users_csv");
 
-    // ダウンロードデータを出力する。
+    // 输出下载数据。
     response.write(user);
 
-    // Content-Typeヘッダ、Content-Dispositionヘッダを設定する
+    // 设置Content-Type头部、Content-Disposition头部
     response.setContentType("text/csv; charset=Shift_JIS");
-    response.setContentDisposition("メッセージ一覧.csv");
+    response.setContentDisposition("消息列表.csv");
 
     return response;
   }
   
 
 .. tip::
-  フォーマット定義ファイルの格納パスは、 :ref:`file_path_management` に設定する必要がある。
+  格式定义文件的存储路径需要在 :ref:`file_path_management` 中设置。
 
 .. _data_format-load_upload_file:
 
-アップロードしたファイルを読み込む
+读取上传的文件
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-アップロードしたファイルを読み込む方法について解説する。
+说明读取上传文件的方法。
 
-この機能では、以下の2種類の方法でアップロードしたファイルを読み込むことが出来る。
-:ref:`アップロードヘルパーを使った読み込み <data_format-upload_helper>` に記載のある通り、
-:ref:`汎用データフォーマット(本機能)のみを使った読み込み <data_format-native_upload_file_load>` の使用を推奨する。
+本功能中，可以使用以下两种方法读取上传的文件。
+如 :ref:`使用上传助手读取 <data_format-upload_helper>` 中所述，
+推荐使用 :ref:`仅使用通用数据格式(本功能)读取 <data_format-native_upload_file_load>` 。
 
-* :ref:`汎用データフォーマット(本機能)のみを使った読み込み <data_format-native_upload_file_load>`
-* :ref:`アップロードヘルパーを使った読み込み <data_format-upload_helper>`
+* :ref:`仅使用通用数据格式(本功能)读取上传文件 <data_format-native_upload_file_load>`
+* :ref:`使用上传助手读取 <data_format-upload_helper>`
 
 .. _data_format-native_upload_file_load:
 
-汎用データフォーマット(本機能)のみを使ったアップロードファイルの読み込み
-  後述のアップロードヘルパーを使わずに本機能のAPIを使用したアップロードファイルのロード処理について解説する。
+仅使用通用数据格式(本功能)读取上传文件
+  说明不使用后述的上传助手而使用本功能API读取上传文件的加载处理。
 
-  以下に実装例を示す。
+  以下显示实现示例。
 
-  ポイント
-    * :java:extdoc:`HttpRequest#getPart <nablarch.fw.web.HttpRequest.getPart(java.lang.String)>` を呼び出してアップロードされたファイルを取得する。
-    * :java:extdoc:`HttpRequest#getPart <nablarch.fw.web.HttpRequest.getPart(java.lang.String)>` の引数には、パラメータ名を指定する。
-    * :java:extdoc:`FilePathSetting <nablarch.core.util.FilePathSetting>` からフォーマット定義ファイルの :java:extdoc:`File <java.io.File>` オブジェクトを取得する。
-    * フォーマット定義ファイルを指定し、 :java:extdoc:`FormatterFactory <nablarch.core.dataformat.FormatterFactory>`
-      から :java:extdoc:`DataRecordFormatter <nablarch.core.dataformat.DataRecordFormatter>` を生成する。
-    * :java:extdoc:`DataRecordFormatter <nablarch.core.dataformat.DataRecordFormatter>` にアップロードファイルを読み込むための :java:extdoc:`InputStream <java.io.InputStream>` を設定する。
-      設定する :java:extdoc:`InputStream <java.io.InputStream>` の実装クラスは、 :java:extdoc:`mark <java.io.InputStream.mark(int)>`/:java:extdoc:`reset <java.io.InputStream.reset()>` がサポートされている必要がある。
-    * :java:extdoc:`DataRecordFormatter <nablarch.core.dataformat.DataRecordFormatter>` のAPIを呼び出し、アップロードファイルのレコードを読み込む。
+  要点
+    * 调用 :java:extdoc:`HttpRequest#getPart <nablarch.fw.web.HttpRequest.getPart(java.lang.String)>` 获取上传的文件。
+    * :java:extdoc:`HttpRequest#getPart <nablarch.fw.web.HttpRequest.getPart(java.lang.String)>` 的参数中指定参数名。
+    * 从 :java:extdoc:`FilePathSetting <nablarch.core.util.FilePathSetting>` 获取格式定义文件的 :java:extdoc:`File <java.io.File>` 对象。
+    * 指定格式定义文件，从 :java:extdoc:`FormatterFactory <nablarch.core.dataformat.FormatterFactory>`
+      生成 :java:extdoc:`DataRecordFormatter <nablarch.core.dataformat.DataRecordFormatter>` 。
+    * 向 :java:extdoc:`DataRecordFormatter <nablarch.core.dataformat.DataRecordFormatter>` 设置读取上传文件的 :java:extdoc:`InputStream <java.io.InputStream>` 。
+      设置的 :java:extdoc:`InputStream <java.io.InputStream>` 实现类需要支持 :java:extdoc:`mark <java.io.InputStream.mark(int)>`/:java:extdoc:`reset <java.io.InputStream.reset()>` 。
+    * 调用 :java:extdoc:`DataRecordFormatter <nablarch.core.dataformat.DataRecordFormatter>` 的API读取上传文件的记录。
 
   .. code-block:: java
 
     public HttpResponse upload(HttpRequest req, ExecutionContext ctx) {
 
-      // アップロードしたファイルの情報を取得
+      // 获取上传文件的信息
       final List<PartInfo> partInfoList = request.getPart("users");
 
-      // フォーマット定義ファイルのFileオブジェクトを取得する
+      // 获取格式定义文件的File对象
       final File format = FilePathSetting.getInstance()
                                          .getFile("format", "users-layout");
 
-      // フォーマット定義ファイルを取得し、アップロードファイルを読み込むためのフォーマッタを生成する。
+      // 获取格式定义文件，生成读取上传文件的格式化器。
       try (final DataRecordFormatter formatter = FormatterFactory.getInstance()
                                                                  .createFormatter(format)) {
 
-        // アップロードファイルを読み込むためのInputStreamをフォーマッタに設定し初期化する。
-        // mark/resetがサポートされている必要が有るため、BufferedInputStreamでラップする。
+        // 向格式化器设置读取上传文件的InputStream并初始化。
+        // 需要支持mark/reset，因此用BufferedInputStream包装。
         formatter.setInputStream(new BufferedInputStream(partInfoList.get(0).getInputStream()))
                  .initialize();
 
-        // レコードが終わるまで繰り返し処理を行う。
+        // 重复处理直到记录结束。
         while (formatter.hasNext()) {
-          // レコードを読み込む。
+          // 读取记录。
           final DataRecord record = formatter.readRecord();
 
-          // レコードに対する処理を行う
+          // 执行对记录的处理
           final Users users = BeanUtil.createAndCopy(Users.class, record);
 
           // 以下省略
@@ -333,27 +333,26 @@
 
 .. _data_format-upload_helper:
 
-アップロードヘルパーを使用したアップロードファイルの読み込み
-  アップロードヘルパー( :java:extdoc:`UploadHelper <nablarch.fw.web.upload.util.UploadHelper>` )を使用すると、
-  ファイルの読み込み、バリデーション、データベースへの保存を簡易的に実行出来る。
+使用上传助手读取上传文件
+  使用上传助手( :java:extdoc:`UploadHelper <nablarch.fw.web.upload.util.UploadHelper>` )，
+  可以简易地执行文件读取、验证、保存到数据库。
 
-  しかし、この機能では以下の制限(デメリット)があるため、 :ref:`汎用データフォーマット(本機能)のみを使ったアップロードファイルの読み込み <data_format-native_upload_file_load>`
-  を使用することを推奨する。
+  但是，此功能有以下限制(缺点)，因此推荐使用 :ref:`仅使用通用数据格式(本功能)读取上传文件 <data_format-native_upload_file_load>` 。
 
-  * 入力値のチェックは :ref:`nablarch_validation` に限定される。(推奨される :ref:`bean_validation` が使用できない。)
-  * 拡張可能ではあるが、難易度が高く容易に要件を満たす実装ができない。
+  * 输入值校验限定为 :ref:`nablarch_validation` 。(无法使用推荐的 :ref:`bean_validation` 。)
+  * 虽然可以扩展，但难度较高，不容易实现满足需求的代码。
 
-  以下にシングルレイアウトのアップロードファイルに対して、入力チェックを行いデータベースに登録する例を示す。
+  以下显示对单布局上传文件进行输入校验并保存到数据库的示例。
 
-  ポイント
-    * :java:extdoc:`HttpRequest#getPart <nablarch.fw.web.HttpRequest.getPart(java.lang.String)>` を呼び出してアップロードされたファイルを取得する。
-    * :java:extdoc:`HttpRequest#getPart <nablarch.fw.web.HttpRequest.getPart(java.lang.String)>` の引数には、パラメータ名を指定する。
-    * 取得したアップロードファイルを元に :java:extdoc:`UploadHelper <nablarch.fw.web.upload.util.UploadHelper>` を生成する。
-    * :java:extdoc:`UploadHelper#applyFormat <nablarch.fw.web.upload.util.UploadHelper.applyFormat(java.lang.String)>` を使って、フォーマット定義ファイルを設定する。
+  要点
+    * 调用 :java:extdoc:`HttpRequest#getPart <nablarch.fw.web.HttpRequest.getPart(java.lang.String)>` 获取上传的文件。
+    * :java:extdoc:`HttpRequest#getPart <nablarch.fw.web.HttpRequest.getPart(java.lang.String)>` 的参数中指定参数名。
+    * 基于获取的上传文件生成 :java:extdoc:`UploadHelper <nablarch.fw.web.upload.util.UploadHelper>` 。
+    * 使用 :java:extdoc:`UploadHelper#applyFormat <nablarch.fw.web.upload.util.UploadHelper.applyFormat(java.lang.String)>` 设置格式定义文件。
 
-    * :java:extdoc:`setUpMessageIdOnError <nablarch.fw.web.upload.util.BulkValidator.setUpMessageIdOnError(java.lang.String,java.lang.String,java.lang.String)>` を使って、バリデーションエラー用のメッセージIDを設定する。
-    * :java:extdoc:`validateWith <nablarch.fw.web.upload.util.BulkValidator.ErrorHandlingBulkValidator.validateWith(java.lang.Class,java.lang.String)>` を使って、バリデーションを実行するJava Beansクラスとバリデーションメソッドを設定する。
-    * :java:extdoc:`importWith <nablarch.fw.web.upload.util.BulkValidationResult.importWith(nablarch.core.db.support.DbAccessSupport,java.lang.String)>` を使って、バリデーション実行後のJava Beansオブジェクトの内容をデータベースに登録する。
+    * 使用 :java:extdoc:`setUpMessageIdOnError <nablarch.fw.web.upload.util.BulkValidator.setUpMessageIdOnError(java.lang.String,java.lang.String,java.lang.String)>` 设置验证错误用的消息ID。
+    * 使用 :java:extdoc:`validateWith <nablarch.fw.web.upload.util.BulkValidator.ErrorHandlingBulkValidator.validateWith(java.lang.Class,java.lang.String)>` 设置执行验证的Java Beans类和验证方法。
+    * 使用 :java:extdoc:`importWith <nablarch.fw.web.upload.util.BulkValidationResult.importWith(nablarch.core.db.support.DbAccessSupport,java.lang.String)>` 将验证执行后的Java Beans对象内容保存到数据库。
 
   .. code-block:: java
 
@@ -361,80 +360,80 @@
 
       PartInfo partInfo = req.getPart("fileToSave").get(0);
 
-      // 全件一括登録
+      // 全件批量注册
       UploadHelper helper = new UploadHelper(partInfo);
       int cnt = helper
-          .applyFormat("N11AC002")                     // フォーマットを適用する
-          .setUpMessageIdOnError("format.error",       // 形式エラー時のメッセージIDを指定する
-                                 "validation.error",   // バリデーションエラー時のメッセージIDを指定する
-                                 "file.empty.error")   // ファイルが空の場合のメッセージIDを指定する
-          .validateWith(UserInfoTempEntity.class,      // バリデーションメソッドを指定する
+          .applyFormat("N11AC002")                     // 应用格式
+          .setUpMessageIdOnError("format.error",       // 指定格式错误时的消息ID
+                                 "validation.error",   // 指定验证错误时的消息ID
+                                 "file.empty.error")   // 指定文件为空时的消息ID
+          .validateWith(UserInfoTempEntity.class,      // 指定验证方法
                         "validateRegister")
-          .importWith(this, "INSERT_SQL");             // INSERT文のSQLIDを指定する
+          .importWith(this, "INSERT_SQL");             // 指定INSERT语句的SQLID
 
     }
 
   .. tip::
 
-    :java:extdoc:`nablarch.fw.web.upload.util` パッケージ内のクラスのドキュメントを合わせて参照すること。
+    请同时参考 :java:extdoc:`nablarch.fw.web.upload.util` 包内类的文档。
 
 .. _data_format-structured_data:
 
-JSONやXMLの階層構造のデータを読み書きする
+读写JSON和XML的层次结构数据
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-JSONやXMLの階層構造データを読み書きする際のMapの構造について解説する。
+说明读写JSON和XML的层次结构数据时Map的结构。
 
-JSONやXMLのような階層構造のデータを読み込んだ場合、Mapのキー値は各階層の要素名をドット( ``.`` )で囲んだ値となる。
+读取JSON和XML这样的层次结构数据时，Map的键值为各层次的元素名用点号( ``.`` )连接的值。
 
-以下に例を示す。
+以下显示示例。
 
-フォーマット定義ファイル
-  JSONの場合には、 `file-type` を ``JSON`` に読み替えること。
-  階層構造を表すフォーマット定義ファイルの定義方法は、 :ref:`階層構造の定義 <data_format-nest_object>` を参照。
+格式定义文件
+  JSON的情况下，将 `file-type` 替换为 ``JSON`` 。
+  表示层次结构的格式定义文件的定义方法请参考 :ref:`层次结构的定义 <data_format-nest_object>` 。
 
   .. code-block:: bash
 
     file-type:        "XML"
     text-encoding:    "UTF-8"
 
-    [users]              # ルート要素
+    [users]              # 根元素
     1 user    [0..*] OB
 
-    [user]               # ネストした要素
-    1 name    [0..1] N   # 最下層の要素
+    [user]               # 嵌套元素
+    1 name    [0..1] N   # 最下层元素
     2 age     [0..1] X9
     3 address [0..1] N
 
   .. important::
 
-    親要素が任意であり、親要素が存在する場合のみ子要素を必須、といった設定には対応していない。
-    そのため、階層構造のデータをフォーマット定義ファイルに定義する際は、全て任意項目として定義することを推奨する。
+    不支持父元素为可选且仅在父元素存在时子元素为必填这样的设置。
+    因此，在格式定义文件中定义层次结构数据时，建议全部作为可选项定义。
 
-Mapの構造
-  上記フォーマット定義ファイルを使って、XML及びJSONにデータを出力するMapの構造は以下のようになる。
+Map的结构
+  使用上述格式定义文件向XML及JSON输出数据时，Map的结构如下。
 
-  ポイント
-    * 階層構造の場合、「親要素名 + "." + 子要素名」形式でMapに値を設定する。
-    * 階層構造が深い場合は、更に ``.`` で要素名が連結される。
-    * 最上位の要素名は、キーに含める必要はない
-    * 配列要素の場合添字(0から開始)を設定する。
+  要点
+    * 层次结构时，以"父元素名 + "." + 子元素名"形式向Map设置值。
+    * 层次结构更深时，元素名用更多的 ``.`` 连接。
+    * 最上层元素名不需要包含在键中
+    * 数组元素时设置下标(从0开始)。
 
   .. code-block:: java
 
     Map<String, Object> data = new HashMap<String, Object>();
 
-    // user配列要素の1要素目
-    data.put("user[0].name", "なまえ1");
-    data.put("user[0].address", "住所1");
+    // user数组元素的第1个元素
+    data.put("user[0].name", "名字1");
+    data.put("user[0].address", "地址1");
     data.put("user[0].age", 30);
 
-    // user配列要素の2要素目
-    data.put("user[1].name", "なまえ2");
-    data.put("user[1].address", "住所2");
+    // user数组元素的第2个元素
+    data.put("user[1].name", "名字2");
+    data.put("user[1].address", "地址2");
     data.put("user[1].age", 31);
 
-XMLおよびJSONの構造
-  上記フォーマット定義ファイルに対応したXML及びJSONの構造は以下のとおり。
+XML及JSON的结构
+  上述格式定义文件对应的XML及JSON结构如下。
 
   XML
     .. code-block:: xml
@@ -442,13 +441,13 @@ XMLおよびJSONの構造
       <?xml version="1.0" encoding="UTF-8"?>
       <users>
         <user>
-          <name>なまえ1</name>
-          <address>住所1</address>
+          <name>名字1</name>
+          <address>地址1</address>
           <age>30</age>
         </user>
         <user>
-          <name>なまえ2</name>
-          <address>住所2</address>
+          <name>名字2</name>
+          <address>地址2</address>
           <age>31</age>
         </user>
       </users>    
@@ -459,30 +458,30 @@ XMLおよびJSONの構造
       {
         "user": [
           {
-            "name": "なまえ1",
-            "address": "住所1",
+            "name": "名字1",
+            "address": "地址1",
             "age": 30
           },
           {
-            "name": "ななえ2",
-            "address": "住所2",
+            "name": "名字2",
+            "address": "地址2",
             "age": 31
           }
         ]
       }
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-XMLでDTDを使う
+在XML中使用DTD
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 .. important::
 
-  本機能でXMLを入力する場合、DTDをデフォルトで使用できない。DTDを使用したXMLを読み込もうとした場合、例外が発生する。
-  これは `XML外部実体参照(XXE) <https://owasp.org/www-community/vulnerabilities/XML_External_Entity_(XXE)_Processing>`_ を防止するための措置である。
+  本功能输入XML时，默认不能使用DTD。尝试读取使用DTD的XML时会发生异常。
+  这是为了防止 `XML外部实体引用(XXE) <https://owasp.org/www-community/vulnerabilities/XML_External_Entity_(XXE)_Processing>`_ 的措施。
 
-読み込み対象となるXMLが信頼できる場合は、 :java:extdoc:`XmlDataParser<nablarch.core.dataformat.XmlDataParser>` の ``allowDTD`` プロパティを使用してDTDの使用を許可できる。
-使用方法は下記の通り。
+如果读取目标XML可信，可以使用 :java:extdoc:`XmlDataParser<nablarch.core.dataformat.XmlDataParser>` 的 ``allowDTD`` 属性允许使用DTD。
+使用方法如下。
 
-``XmlDataParser`` という名前で明示的にコンポーネント設定ファイルに設定を記載し、DTDの使用を許可する。
+在组件配置文件中显式设置名为 ``XmlDataParser`` 的组件，允许使用DTD。
 
 .. code-block:: xml
 
@@ -494,41 +493,41 @@ XMLでDTDを使う
 
       <component name="XmlDataParser" class="nablarch.core.dataformat.XmlDataParser">
         <!--
-            DTDの使用を許可する。
-            XXE攻撃の危険性があるため、信頼できるXML以外には使用してはならない。
+            允许使用DTD。
+            由于存在XXE攻击风险，不可用于可信XML以外的数据。
          -->
         <property name="allowDTD" value="true" />
       </component>
     </component-configuration>
 
-XMLで名前空間を使う
+在XML中使用命名空间
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-接続先システムとの接続要件で、名前空間を使用しなければならない場合がある。
-この場合は、フォーマット定義ファイルにて名前空間を定義することで対応できる。
+在与连接目标系统的连接需求中，有时必须使用命名空间。
+这种情况下，可以在格式定义文件中定义命名空间来对应。
 
 
-以下に例を示す。
+以下显示示例。
 
-ポイント
-  * 名前空間は、名前空間を使用する要素に「"?\@xmlns:" + 名前空間」として定義する。
-    タイプは、 ``X`` とし、フィールドコンバータ部にURIを指定する。
-  * 名前空間は、「名前空間 + ":" + 要素名」形式で表す。
-  * 入出力対象データのMapのキー値は、「名前空間＋要素名(先頭大文字)」となる。
+要点
+  * 命名空间在使用命名空间的元素上以""?\@xmlns:" + 命名空间"形式定义。
+    类型设为 ``X`` ，在字段转换器部分指定URI。
+  * 命名空间以"命名空间 + ":" + 元素名"形式表示。
+  * 输入输出目标数据的Map键值为"命名空间＋元素名(首字母大写)"。
 
 
-フォーマット定義ファイル
+格式定义文件
   .. code-block:: bash
 
     file-type:        "XML"
     text-encoding:    "UTF-8"
 
     [testns:data]
-    # 名前空間の定義
+    # 命名空间的定义
     1 ?@xmlns:testns X "http://testns.hoge.jp/apply"
     2 testns:key1 X
 
-XMLデータ
-  上記フォーマット定義ファイルに対応したXMLは以下のとおり。
+XML数据
+  上述格式定义文件对应的XML如下。
 
   .. code-block:: xml
 
@@ -537,26 +536,26 @@ XMLデータ
       <testns:key1>value1</testns:key1>
     </testns:data>
 
-Mapデータ
-  入出力対象のMapの構造は以下のとおり。
+Map数据
+  输入输出目标Map的结构如下。
 
   .. code-block:: java
 
     Map<String, Object> data = new HashMap<String, Object>();
     data.put("testnsKey1", "value1");
 
-XMLで属性を持つ要素にコンテンツを定義する
+在XML中为带属性的元素定义内容
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-XMLで属性を持つ要素にコンテンツを定義したい場合は、
-フォーマット定義ファイルにコンテンツを表すフィールドを定義する。
+想在XML中为带属性的元素定义内容时，
+在格式定义文件中定义表示内容的字段。
 
-設定例を以下に示す。
+设置示例如下。
 
-ポイント
-  * コンテンツを表すフィールド名には ``body`` を指定する。
-    コンテンツを表すフィールド名をデフォルトから変更したい場合は、 :ref:`data_format-xml_content_name_change` を参照。
+要点
+  * 表示内容的字段名指定为 ``body`` 。
+    想从默认值更改表示内容的字段名时，请参考 :ref:`data_format-xml_content_name_change` 。
 
-フォーマット定義ファイル
+格式定义文件
   .. code-block:: bash
 
     file-type:        "XML"
@@ -569,8 +568,8 @@ XMLで属性を持つ要素にコンテンツを定義したい場合は、
     1 @attr   X
     2 body    X
 
-XMLデータ
-  上記フォーマット定義ファイルに対応したXMLは以下のとおり。
+XML数据
+  上述格式定义文件对应的XML如下。
 
   .. code-block:: xml
 
@@ -579,8 +578,8 @@ XMLデータ
       <child attr="value1">value2</child>
     </parent>
 
-Mapデータ
-  入出力対象のMapの構造は以下のとおり。
+Map数据
+  输入输出目标Map的结构如下。
 
   .. code-block:: java
 
@@ -590,34 +589,34 @@ Mapデータ
 
 .. _data_format-replacement:
 
-文字の置き換え(寄せ字)を行う
+进行字符替换(替代字)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-寄せ字機能を使うことで、外部からデータを読み込む際に、システムで使用可能な文字に置き換えることが出来る。
+使用替代字功能，可以在从外部读取数据时将其替换为系统可用的字符。
 
-以下に使用方法を示す。
+以下显示使用方法。
 
-置き換えルールを定義したプロパティを作成する
-  propertiesファイルには、「置き換え前の文字=置き換え後の文字」形式で、置き換えルールを定義する。
+创建定义替换规则的属性
+  properties文件中以"替换前字符=替换后字符"形式定义替换规则。
 
-  置き換え前、置き換え後の文字に定義できる値は、ともに1文字のみである。
-  また、サロゲートペアには対応していない。
+  替换前、替换后字符可定义的值都仅限1个字符。
+  此外，不支持代理对。
 
-  コメントなどの記述ルールは、 :java:extdoc:`java.util.Properties` を参照。
+  注释等的记述规则请参考 :java:extdoc:`java.util.Properties` 。
 
   .. code-block:: properties
 
     髙=高
-    﨑=崎
+    崎=崎
     唖=■
 
   .. tip::
-    接続先ごとに置き換えルールを定義する場合には、複数のpropertiesファイルを作成する。
+    按连接目标定义替换规则时，创建多个properties文件。
 
-置き換えルールの設定をコンポーネント設定ファイルに追加する
-  ポイント
-    * :java:extdoc:`CharacterReplacementManager <nablarch.core.dataformat.CharacterReplacementManager>` をコンポーネント名 ``characterReplacementManager`` で設定する。
-    * :java:extdoc:`configList <nablarch.core.dataformat.CharacterReplacementManager.setConfigList(java.util.List)>` プロパティにリスト形式で :java:extdoc:`CharacterReplacementConfig <nablarch.core.dataformat.CharacterReplacementConfig>` を設定する。
-    * 複数のpropertiesファイルを定義する場合は、 :java:extdoc:`typeName <nablarch.core.dataformat.CharacterReplacementConfig.setTypeName(java.lang.String)>` プロパティに異なる名前を設定する。
+在组件配置文件中添加替换规则的设置
+  要点
+    * 以组件名 ``characterReplacementManager`` 设置 :java:extdoc:`CharacterReplacementManager <nablarch.core.dataformat.CharacterReplacementManager>` 。
+    * 以列表形式向 :java:extdoc:`configList <nablarch.core.dataformat.CharacterReplacementManager.setConfigList(java.util.List)>` 属性设置 :java:extdoc:`CharacterReplacementConfig <nablarch.core.dataformat.CharacterReplacementConfig>` 。
+    * 定义多个properties文件时，在 :java:extdoc:`typeName <nablarch.core.dataformat.CharacterReplacementConfig.setTypeName(java.lang.String)>` 属性中设置不同的名称。
 
   .. code-block:: xml
 
@@ -625,13 +624,13 @@ Mapデータ
         class="nablarch.core.dataformat.CharacterReplacementManager">
       <property name="configList">
         <list>
-          <!-- Aシステムとの寄せ字ルール -->
+          <!-- 与A系统的替代字规则 -->
           <component class="nablarch.core.dataformat.CharacterReplacementConfig">
             <property name="typeName" value="a_system"/>
             <property name="filePath" value="classpath:a-system.properties"/>
             <property name="encoding" value="UTF-8"/>
           </component>
-          <!-- Bシステムとの寄せ字ルール -->
+          <!-- 与B系统的替代字规则 -->
           <component class="nablarch.core.dataformat.CharacterReplacementConfig">
             <property name="typeName" value="b_system"/>
             <property name="filePath" value="classpath:b-system.properties"/>
@@ -641,8 +640,8 @@ Mapデータ
       </property>
     </component>
 
-初期化コンポーネントの設定
-  上記で設定した :java:extdoc:`CharacterReplacementManager <nablarch.core.dataformat.CharacterReplacementManager>` を初期化対象のリストに設定する。
+初始化组件的设置
+  将上述设置的 :java:extdoc:`CharacterReplacementManager <nablarch.core.dataformat.CharacterReplacementManager>` 设置到初始化目标列表中。
 
     .. code-block:: xml
 
@@ -657,78 +656,78 @@ Mapデータ
         </property>
       </component>
 
-フォーマット定義ファイルにどの置き換えルールを使用するかを定義する
-  入出力時に文字の置き換えを行う場合は、 :ref:`replacement <data_format-replacement_convertor>` を使用する。
+在格式定义文件中定义使用哪种替换规则
+  输入输出时进行字符替换时，使用 :ref:`replacement <data_format-replacement_convertor>` 。
 
-  `replacement` の引数には、上記で設定した置き換えルールの `typeName` を設定する。
+  `replacement` 的参数中设置上述设置的替换规则的 `typeName` 。
 
   .. code-block:: bash
     
-    # Aシステムとの置き換えルールを適用
+    # 应用与A系统的替换规则
     1 name N(100) replacement("a_system")
 
-    # Bシステムとの置き換えルールを適用
+    # 应用与B系统的替换规则
     1 name N(100) replacement("b_system")
 
 .. _data_format-formatter:
 
-出力するデータの表示形式をフォーマットする
+格式化输出数据的显示形式
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-データを出力する際に、 :ref:`format` を使用することで日付や数値などのデータの表示形式をフォーマットできる。
+输出数据时，可以使用 :ref:`format` 来格式化日期和数值等数据的显示形式。
 
-詳細は :ref:`format` を参照すること。
+详情请参考 :ref:`format` 。
 
-拡張例
+扩展示例
 --------------------------------------------------
 
 .. _data_format-field_type_add:
 
-フィールドタイプを追加する
+添加字段类型
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-:ref:`Nablarchが提供する標準データタイプ <data_format-field_type_list>` では要件を満たせない場合がある。
-例えば、文字列タイプのパディング文字がバイナリの場合などが該当する。
+:ref:`Nablarch提供的标准数据类型 <data_format-field_type_list>` 可能无法满足需求。
+例如，字符串类型的填充字符为二进制时就是这种情况。
 
-このような場合は、プロジェクト固有のフィールドタイプを定義することで対応する。
+这种情况下，通过定义项目固有的字段类型来对应。
 
-以下に手順を示す。
+以下显示步骤。
 
-#. フィールドタイプを処理するための :java:extdoc:`DataType<nablarch.core.dataformat.convertor.datatype.DataType>` 実装クラスを作成する。
-#. 追加したフィールドタイプを有効にするため、フォーマットに応じたファクトリの継承クラスを作成する。
-#. 作成したファクトリクラスを、フォーマットに応じた設定クラスのプロパティに設定する。
+#. 创建处理字段类型的 :java:extdoc:`DataType<nablarch.core.dataformat.convertor.datatype.DataType>` 实现类。
+#. 为启用添加的字段类型，创建对应格式的工厂继承类。
+#. 将创建的工厂类设置到对应格式的设置类的属性中。
 
-詳細な手順は以下のとおり。
+详细步骤如下。
 
-フィールドタイプに対応したデータタイプ実装の追加
-  :java:extdoc:`DataType<nablarch.core.dataformat.convertor.datatype.DataType>` を実装したクラスを作成する。
+添加对应字段类型的数据类型实现
+  创建实现 :java:extdoc:`DataType<nablarch.core.dataformat.convertor.datatype.DataType>` 的类。
 
   .. tip::
     
-    標準のフィールドタイプ実装は、 :java:extdoc:`nablarch.core.dataformat.convertor.datatype` パッケージ配下に配置されている。
-    実装を追加する際には、これらのクラスを参考にすると良い。
+    标准字段类型实现位于 :java:extdoc:`nablarch.core.dataformat.convertor.datatype` 包下。
+    添加实现时可以参考这些类。
 
-フォーマットに応じたファクトリの継承クラスの作成
-  追加したフィールドタイプを有効にするためには、
-  フォーマットに応じたファクトリの継承クラスを作成する。
+创建对应格式的工厂继承类
+  为启用添加的字段类型，
+  需要创建对应格式的工厂继承类。
 
-  以下にフォーマット毎のファクトリクラスを示す。
+  以下显示各格式的工厂类。
 
   .. list-table::
     :class: white-space-normal
     :header-rows: 1
 
-    * - フォーマット
-      - ファクトリクラス名
+    * - 格式
+      - 工厂类名
 
-    * - Fixed(固定長)
+    * - Fixed(固定长度)
       - :java:extdoc:`FixedLengthConvertorFactory <nablarch.core.dataformat.convertor.FixedLengthConvertorFactory>`
-    * - Variable(可変長)
+    * - Variable(可变长度)
       - :java:extdoc:`VariableLengthConvertorFactory <nablarch.core.dataformat.convertor.VariableLengthConvertorFactory>`
     * - JSON
       - :java:extdoc:`JsonDataConvertorFactory <nablarch.core.dataformat.convertor.JsonDataConvertorFactory>`
     * - XML
       - :java:extdoc:`XmlDataConvertorFactory <nablarch.core.dataformat.convertor.XmlDataConvertorFactory>`
 
-  Fixed(固定長)の場合の実装例を以下に示す。
+  以下显示Fixed(固定长度)时的实现示例。
 
   .. code-block:: java
 
@@ -742,24 +741,24 @@ Mapデータ
         }
     }
 
-フォーマットに応じた設定クラスのプロパティに設定
-  フォーマットに応じた設定クラスのプロパティに、先ほど作成したファクトリクラスを設定する。
+设置到对应格式的设置类的属性中
+  将刚才创建的工厂类设置到对应格式的设置类的属性中。
 
-  以下にフォーマット毎の設定クラスとプロパティを示す。
+  以下显示各格式的设置类和属性。
 
   .. list-table::
     :class: white-space-normal
     :header-rows: 1
 
-    * - フォーマット
-      - 設定クラス名(コンポーネント名)
-      - プロパティ名
+    * - 格式
+      - 设置类名(组件名)
+      - 属性名
 
-    * - Fixed(固定長)
+    * - Fixed(固定长度)
       - :java:extdoc:`FixedLengthConvertorSetting <nablarch.core.dataformat.convertor.FixedLengthConvertorSetting>`
         (fixedLengthConvertorSetting)
       - :java:extdoc:`fixedLengthConvertorFactory <nablarch.core.dataformat.convertor.FixedLengthConvertorSetting.setFixedLengthConvertorFactory(nablarch.core.dataformat.convertor.FixedLengthConvertorFactory)>`
-    * - Variable(可変長)
+    * - Variable(可变长度)
       - :java:extdoc:`VariableLengthConvertorSetting <nablarch.core.dataformat.convertor.VariableLengthConvertorSetting>`
         (variableLengthConvertorSetting)
       - :java:extdoc:`variableLengthConvertorFactory <nablarch.core.dataformat.convertor.VariableLengthConvertorSetting.setVariableLengthConvertorFactory(nablarch.core.dataformat.convertor.VariableLengthConvertorFactory)>`
@@ -772,7 +771,7 @@ Mapデータ
         (xmlDataConvertorSetting)
       - :java:extdoc:`xmlDataConvertorFactory <nablarch.core.dataformat.convertor.XmlDataConvertorSetting.setXmlDataConvertorFactory(nablarch.core.dataformat.convertor.XmlDataConvertorFactory)>`
 
-  Fixed(固定長)の場合の設定例を以下に示す。
+  以下显示Fixed(固定长度)时的设置示例。
 
   .. code-block:: xml
 
@@ -785,30 +784,30 @@ Mapデータ
 
 .. important::
 
-  フォーマットに応じた設定クラスの `convertorTable` プロパティを使用してフィールドタイプを追加できるが、
-  以下の理由により使用は推奨しない。
+  虽然可以使用对应格式的设置类的 `convertorTable` 属性添加字段类型，
+  但由于以下原因不推荐使用。
 
-  * 追加したいフィールドタイプだけでなく、元々デフォルトで定義されていたフィールドタイプも全て設定する必要がある。
-    そのため、もしバージョンアップによりデフォルトのフィールドタイプが変更となった場合、
-    自動的に変更が適用されず手動で設定を修正しなければならないため手間が掛かる。
-  * デフォルト定義はファクトリクラスに実装されており、ソースコードをもとにコンポーネント設定ファイルに定義を追加していく必要があるため、
-    設定ミスを起こしやすい。
+  * 不仅需要设置要添加的字段类型，还需要设置原本默认定义的所有字段类型。
+    因此，如果版本升级导致默认字段类型变更，
+    变更不会自动应用而需要手动修改设置，比较麻烦。
+  * 默认定义在工厂类中实现，需要基于源代码向组件配置文件添加定义，
+    容易出错。
 
 .. _data_format-xml_content_name_change:
 
-XMLで属性を持つ要素のコンテンツ名を変更する
+更改XML中带属性元素的内容名
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-属性を持つ要素のコンテンツ名を変更するには、
-以下のクラスをコンポーネント設定ファイルに設定し、``contentName`` プロパティに変更後のコンテンツ名をそれぞれ設定する。
+要更改带属性元素的内容名，
+在组件配置文件中设置以下类，``contentName`` 属性中分别设置更改后的内容名。
 
 * :java:extdoc:`XmlDataParser<nablarch.core.dataformat.XmlDataParser>`
 * :java:extdoc:`XmlDataBuilder<nablarch.core.dataformat.XmlDataBuilder>`
 
-コンポーネント設定ファイルの設定例を以下に示す。
+以下显示组件配置文件的设置示例。
 
-ポイント
- * :java:extdoc:`XmlDataParser<nablarch.core.dataformat.XmlDataParser>` のコンポーネント名は ``XmlDataParser`` とすること
- * :java:extdoc:`XmlDataBuilder<nablarch.core.dataformat.XmlDataBuilder>` のコンポーネント名は ``XmlDataBuilder`` とすること
+要点
+ * :java:extdoc:`XmlDataParser<nablarch.core.dataformat.XmlDataParser>` 的组件名设为 ``XmlDataParser`` 
+ * :java:extdoc:`XmlDataBuilder<nablarch.core.dataformat.XmlDataBuilder>` 的组件名设为 ``XmlDataBuilder`` 
 
 .. code-block:: xml
 

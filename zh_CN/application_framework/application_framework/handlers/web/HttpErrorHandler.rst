@@ -1,20 +1,19 @@
 .. _http_error_handler:
 
-HTTPエラー制御ハンドラ
+HTTP错误控制handler
 ============================
 
 .. contents:: 目录
   :depth: 3
   :local:
 
-後続のハンドラで発生した例外に対するログ出力やレスポンスへの変換を行うハンドラ。
+对后续handler发生的异常进行日志输出和转换为响应的handler。
 
 本handler执行以下处理。
 
-* :ref:`例外の種類に応じたログ出力 <HttpErrorHandler_ErrorHandling>`
-* :ref:`例外の種類に応じたエラー用HttpResponseの生成と返却 <HttpErrorHandler_ErrorHandling>`
-* :ref:`デフォルトページの設定 <HttpErrorHandler_DefaultPage>`
-
+* :ref:`根据异常类型输出日志 <HttpErrorHandler_ErrorHandling>`
+* :ref:`根据异常类型生成并返回错误用HttpResponse <HttpErrorHandler_ErrorHandling>`
+* :ref:`设置默认页面 <HttpErrorHandler_DefaultPage>`
 
 处理流程如下。
 
@@ -33,88 +32,88 @@ handler类名
     <artifactId>nablarch-fw-web</artifactId>
   </dependency>
 
-制約
+约束
 ------------------------------
 
-:ref:`http_response_handler` より後ろに配置すること
-  本ハンドラで生成した :java:extdoc:`HttpResponse <nablarch.fw.web.HttpResponse>` をHTTPレスポンスハンドラが処理するため、
-  本ハンドラは :ref:`http_response_handler` より後ろに配置する必要がある。
+应配置在 :ref:`http_response_handler` 之后
+  本handler生成的 :java:extdoc:`HttpResponse <nablarch.fw.web.HttpResponse>` 需要由HTTP响应handler处理，
+  因此本handler必须配置在 :ref:`http_response_handler` 之后。
 
-:ref:`http_access_log_handler` より後ろに配置すること
-  本ハンドラで生成したエラー用 :java:extdoc:`HttpResponse <nablarch.fw.web.HttpResponse>` を元にログ出力を行うため、
-  :ref:`http_access_log_handler` より後ろに配置する必要がある。
+应配置在 :ref:`http_access_log_handler` 之后
+  本handler生成的错误用 :java:extdoc:`HttpResponse <nablarch.fw.web.HttpResponse>` 将作为日志输出的依据，
+  因此需要配置在 :ref:`http_access_log_handler` 之后。
 
 .. _HttpErrorHandler_ErrorHandling:
 
-例外の種類に応じた処理とレスポンスの生成
+根据异常类型的处理和响应生成
 --------------------------------------------------------------
 
 :java:extdoc:`nablarch.fw.NoMoreHandlerException`
-  :ログレベル: INFO
-  :レスポンス: 404
-  :説明: リクエストを処理すべきハンドラが存在しなかったことを意味するため、証跡ログとして記録する。
-         また、処理すべき *action class* が存在しなかったことを意味するため、レスポンスは *404*  としている。
+  :日志级别: INFO
+  :响应: 404
+  :说明: 表示不存在处理请求的handler，作为审计日志记录。
+         同时表示不存在处理用的 *action class* ，因此响应设置为 *404* 。
 
 :java:extdoc:`nablarch.fw.web.HttpErrorResponse`
-  :ログレベル: ログ出力なし
-  :レスポンス: :java:extdoc:`HttpErrorResponse#getResponse() <nablarch.fw.web.HttpErrorResponse.getResponse()>`
-  :説明: 後続のハンドラで業務例外(バリデーションなどを行った結果のエラーレスポンス送出)を送出したことを意味するのでログ出力は行わない。
+  :日志级别: 不输出日志
+  :响应: :java:extdoc:`HttpErrorResponse#getResponse() <nablarch.fw.web.HttpErrorResponse.getResponse()>`
+  :说明: 表示后续handler抛出了业务异常（如验证结果的异常响应），因此不输出日志。
 
         .. _http_error_handler-error_messages:
 
-        ``HttpErrorResponse`` の原因例外が :java:extdoc:`ApplicationException <nablarch.core.message.ApplicationException>` の場合は、
-        Viewでエラーメッセージを扱えるよう以下の処理を行う。
+        当 ``HttpErrorResponse`` 的原因异常为 :java:extdoc:`ApplicationException <nablarch.core.message.ApplicationException>` 时，
+        为了使View能够处理错误消息，执行以下处理。
 
-        1. ``ApplicationException`` が保持するメッセージ情報を :java:extdoc:`ErrorMessages <nablarch.fw.web.message.ErrorMessages>` に変換する。
-        2. ``ErrorMessages`` をリクエストスコープに設定する。
-           リクエストスコープに設定する際のキー名は、デフォルトでは ``errors`` となる。キー名は、コンポーネント設定ファイルで変更できる。
+        1. 将 ``ApplicationException`` 持有的消息信息转换为 :java:extdoc:`ErrorMessages <nablarch.fw.web.message.ErrorMessages>` 。
+        2. 将 ``ErrorMessages`` 设置到请求作用域。
+           设置到请求作用域时的键名，默认为 ``errors`` 。键名可以在组件配置文件中更改。
 
-           設定例
+           配置示例
              .. code-block:: xml
 
               <component name="webConfig" class="nablarch.common.web.WebConfig">
-                <!-- キーをmessagesに変更 -->
+                <!-- 将键改为messages -->
                 <property name="errorMessageRequestAttributeName" value="messages" />
               </component>
 
 :java:extdoc:`nablarch.fw.Result.Error`
-  :ログレベル: 設定による
-  :レスポンス: :java:extdoc:`Error#getStatusCode() <nablarch.fw.Result.Error.getStatusCode()>`
-  :説明: `nablarch.fw.Result.Errorのログ出力について`_ を参照
+  :日志级别: 根据设置
+  :响应: :java:extdoc:`Error#getStatusCode() <nablarch.fw.Result.Error.getStatusCode()>`
+  :说明: 参考 `nablarch.fw.Result.Error的日志输出说明`_
 
 :java:extdoc:`java.lang.StackOverflowError`
-  :ログレベル: FATAL
-  :レスポンス: 500
-  :説明: データや実装バグに起因する可能性があるため、障害として通知する。
-         また予期しないエラーであるため、レスポンスは **500** としている。
+  :日志级别: FATAL
+  :响应: 500
+  :说明: 可能是由数据或实现缺陷引起的，作为故障进行通知。
+         由于是意外错误，因此响应设置为 **500** 。
 
-:java:extdoc:`java.lang.ThreadDeath` と :java:extdoc:`java.lang.VirtualMachineError` ( :java:extdoc:`java.lang.StackOverflowError` 以外)
-  :ログレベル: \-
-  :レスポンス: \-
-  :説明: 本ハンドラでは何もせず上位のハンドラに処理を任せる。(エラーを再送出する)
+:java:extdoc:`java.lang.ThreadDeath` 和 :java:extdoc:`java.lang.VirtualMachineError` ( :java:extdoc:`java.lang.StackOverflowError` 除外)
+  :日志级别: \-
+  :响应: \-
+  :说明: 本handler不做任何处理，将处理委托给上层handler。（重新抛出错误）
 
-上記以外の例外及びエラー
-  :ログレベル: FATAL
-  :レスポンス: 500
-  :説明: 上記に該当しない例外及びエラーの場合には、障害扱いとしてログ出力を行う。
-         また、予期しない例外やエラーであるため、レスポンスは **500** としている。
+上述以外的异常和错误
+  :日志级别: FATAL
+  :响应: 500
+  :说明: 对于不符合上述条件的异常和错误，作为故障处理并输出日志。
+         由于是意外异常或错误，因此响应设置为 **500** 。
 
-nablarch.fw.Result.Errorのログ出力について
+nablarch.fw.Result.Error的日志输出说明
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-後続のハンドラで発生した例外が、 :java:extdoc:`Error <nablarch.fw.Result.Error>` の場合はログ出力を行うかどうかは、
-:java:extdoc:`writeFailureLogPattern <nablarch.fw.web.handler.HttpErrorHandler.setWriteFailureLogPattern(java.lang.String)>` に設定した値によって変わる。
-このプロパティには正規表現が設定でき、その正規表現が :java:extdoc:`Error#getStatusCode() <nablarch.fw.Result.Error.getStatusCode()>` とマッチした場合に `FATAL` レベルのログを出力する。
+对于后续handler发生的异常，如果是 :java:extdoc:`Error <nablarch.fw.Result.Error>` ，是否输出日志取决于
+:java:extdoc:`writeFailureLogPattern <nablarch.fw.web.handler.HttpErrorHandler.setWriteFailureLogPattern(java.lang.String)>` 中设置的值。
+该属性可以设置正则表达式，当该正则表达式与 :java:extdoc:`Error#getStatusCode() <nablarch.fw.Result.Error.getStatusCode()>` 匹配时，输出 `FATAL` 级别的日志。
 
 .. _HttpErrorHandler_DefaultPage:
 
-デフォルトページの設定
+默认页面设置
 ---------------------------
-後続のハンドラや本ハンドラのエラー処理で作成した :java:extdoc:`HttpResponse <nablarch.fw.web.HttpResponse>` に対して、デフォルトページを適用する。
-この機能では、 :java:extdoc:`HttpResponse <nablarch.fw.web.HttpResponse>` が設定されていなかった場合、
-:java:extdoc:`defaultPage <nablarch.fw.web.handler.HttpErrorHandler.setDefaultPage(java.lang.String,java.lang.String)>` や
-:java:extdoc:`defaultPages <nablarch.fw.web.handler.HttpErrorHandler.setDefaultPages(java.util.Map)>` で設定されたデフォルトのページを適用する。
+对后续handler和本handler的错误处理创建的 :java:extdoc:`HttpResponse <nablarch.fw.web.HttpResponse>` 应用默认页面。
+此功能在 :java:extdoc:`HttpResponse <nablarch.fw.web.HttpResponse>` 未设置时，
+应用 :java:extdoc:`defaultPage <nablarch.fw.web.handler.HttpErrorHandler.setDefaultPage(java.lang.String,java.lang.String)>` 或
+:java:extdoc:`defaultPages <nablarch.fw.web.handler.HttpErrorHandler.setDefaultPages(java.util.Map)>` 中设置的默认页面。
 
-以下に設定例を示す。
+以下显示配置示例。
 
 .. code-block:: xml
 
@@ -131,9 +130,8 @@ nablarch.fw.Result.Errorのログ出力について
 
 .. important::
 
-  この機能を使用した場合、Servlet APIで規定されている `web.xml` へのエラーページ設定( `error-page` 要素)と重複してJSPの設定が必要となる。
-  `web.xml` へ設定しなかった場合、エラーの発生場所によっては、ウェブサーバのデフォルトのエラーページが表示される。
+  使用此功能时，需要同时在Servlet API规定的 `web.xml` 中设置错误页面（ `error-page` 元素），造成重复配置。
+  如果未在 `web.xml` 中设置，根据错误发生位置的不同，可能会显示Web服务器的默认错误页面。
 
-  このため、本機能を使用するのではなく、デフォルトのエラーページの設定は、 `web.xml` へ行うことを推奨する。
-
+  因此，建议不使用本功能，而是在 `web.xml` 中进行默认错误页面的设置。
 

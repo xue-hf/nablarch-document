@@ -1,6 +1,6 @@
 .. _keitai_access_handler:
 
-携帯端末アクセスハンドラ
+手机端访问handler
 ==================================================
 
 .. contents:: 目录
@@ -8,11 +8,10 @@
   :local:
 
 
-本ハンドラでは、いわゆる feature phone と呼ばれる携帯電話など、JavaScriptが動作しない環境で\
-ウェブ应用を動作させるために、下記を実現する。
+本handler用于在JavaScript无法运行的环境（如所谓feature phone的功能手机等）中运行Web应用，实现以下功能：
 
-* 画面で押されたボタンのボタン名から、想定されるURLにディスパッチする
-* JSP上にJavaScriptを出力しないよう変数を設定する
+* 根据画面点击的按钮名，分派到预期的URL
+* 设置变量以阻止在JSP上输出JavaScript
 
 
 处理流程如下。
@@ -32,53 +31,50 @@ handler类名
     <artifactId>nablarch-fw-web</artifactId>
   </dependency>
 
-制約
+约束
 ------------------------------
 
-:ref:`http_response_handler` より後ろに配置すること
-  本ハンドラは、通常クライントからのJSP上にJavaScriptを出力しないよう変数を設定するため、\
-  JSPへのフォワード処理を行う :ref:`http_response_handler` より後に配置する必要がある。
+配置在 :ref:`http_response_handler` 之后
+  本handler用于设置变量以阻止向JSP输出JavaScript，因此需要配置在负责JSP转发处理的 :ref:`http_response_handler` 之后。
 
-:ref:`thread_context_handler` より前に配置すること
-  通常JSPが出力するJavaScriptで決定されるURIを決定する処理が含まれるため、\
-  URIを使用する :ref:`thread_context_handler` より前に配置する必要がある。
+配置在 :ref:`thread_context_handler` 之前
+  由于包含通常由JSP输出的JavaScript决定URI的处理，因此需要配置在使用URI的 :ref:`thread_context_handler` 之前。
 
-JavaScript出力が抑制されるタグ
+JavaScript输出被抑制的标签
 --------------------------------------------------
 
-携帯端末アクセスハンドラを使用したURLにアクセスした際は、 下記Nablarch
-タグライブラリが通常出力するJavaScriptが一切出力されなくなる。
+使用手机端访问handler访问URL时，以下Nablarch标签库通常输出的JavaScript将完全不会输出。
 
- * :ref:`n:form タグ <tag-form_tag>`
- * :ref:`n:script タグ <tag-script_tag>`
- * :ref:`サブミット関連のタグ <tag_reference_submit>`
+ * :ref:`n:form 标签 <tag-form_tag>`
+ * :ref:`n:script 标签 <tag-script_tag>`
+ * :ref:`提交相关标签 <tag_reference_submit>`
 
  .. important::
-   下記のタグは、元々想定していた機能が実現できないため、使用できなくなる。
+   以下标签由于无法实现原本预期的功能，因此将无法使用。
 
-   * :ref:`n:submitLink タグ <tag-submit_link_tag>`
+   * :ref:`n:submitLink 标签 <tag-submit_link_tag>`
 
-   n:submitLink タグの代替として、 n:a タグを使用すること。
-   特にリクエストパラメータについては、GETメソッドのパラメータで送信する必要がある。
+   请使用n:a标签作为n:submitLink标签的替代。
+   特别是请求参数，需要通过GET方法的参数发送。
 
-URLの関連付け
+URL的关联
 --------------------
 
-携帯端末アクセスハンドラを適用した場合、下記の動作で、通常NablarchでJavaScriptで行っているformのURI属性の書き換えがサーバサイドで実施される。
+应用手机端访问handler时，以下操作会将通常Nablarch使用JavaScript进行的form的URI属性改写改为在服务器端执行。
 
-1. JSP表示時の動作
+1. JSP显示时的动作
 
-  1.1. n:submit、 n:button を記載した個所で出力するHTMLのinputタグについて、 name 属性に設定する値を ``nablarch_uri_override_<JSP上のname属性>|<サブミット先のURI>`` に出力
+  1.1. 对于记载n:submit、n:button的位置输出的HTML input标签，将name属性设置为 ``nablarch_uri_override_<JSP上的name属性>|<提交目标的URI>``
 
-  1.2. n:form タグでは、単純に HTML の <form> タグを出力する。\
-  つまり、ボタン押下時にはHTMLの<form>タグに記載したURLに押下したボタンのname属性が送られる。\
-  (通常、閉じタグの</form>には、押下したボタンに合わせたURLに <form> タグのuri属性を変更するJavaScriptが挿入される。)
+  1.2. n:form标签仅输出简单的HTML <form>标签。\
+  也就是说，点击按钮时会将按钮的name属性发送到HTML<form>标签中记载的URL。\
+  （通常，在结束标签</form>中会插入根据点击的按钮更改<form>标签uri属性的JavaScript。）
 
-2. form サブミット時の動作
+2. form提交时的动作
 
-  2.1. KeitaiAccessHandler にて、サブミット時に押下したボタンに設定された name 属性(1.1. で設定した  ``nablarch_uri_override_`` から始まる文字列)から、元のJSPタグに設定されていたURI属性を取得。
+  2.1. KeitaiAccessHandler在提交时，从点击的按钮设置的name属性（1.1.中设置的以 ``nablarch_uri_override_`` 开头的字符串）获取原始JSP标签中设置的URI属性。
 
-  2.2. KeitaiAccessHandler にて、リクエストパラメータに処理対象のURIとして扱われるパラメータキー ``nablarch_submit`` で取得したURI属性を設定。
-  (つまり、通常NablarchでJavaScriptで行っているformのURI属性の書き換えを、サーバサードで実施している)
+  2.2. KeitaiAccessHandler将作为处理对象的URI参数键 ``nablarch_submit`` 设置为获取到的URI属性。
+  （也就是说，将通常Nablarch使用JavaScript进行的form的URI属性改写改为在服务器端执行）
 
-  2.3. 後続処理に委譲する。(以降、クライアントからのリクエスト時にボタンに対応するURIが指定された場合と同じ動作をする)
+  2.3. 委托给后续处理。（此后，执行与客户端请求时指定了按钮对应URI时相同的动作）

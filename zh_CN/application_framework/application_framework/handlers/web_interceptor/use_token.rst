@@ -1,25 +1,25 @@
 .. _use_token_interceptor:
 
-UseTokenインターセプタ
+UseToken 拦截器
 =====================================
 
 .. contents:: 目录
   :depth: 3
   :local:
 
-:ref:`二重サブミット(同一リクエストの二重送信)防止 <tag-double_submission_server_side>` のためのトークンを発行するインターセプタ。
+为 :ref:`防止重复提交(同一请求的双重发送) <tag-double_submission_server_side>` 发行令牌的拦截器。
 
-このインターセプタが使用されることを想定しているのは、主にJSP以外のテンプレートエンジンを採用している場合である。
+此拦截器主要用于采用JSP以外模板引擎的情况。
 
-JSP以外のテンプレートエンジンでは、このインターセプタの使用に加えてテンプレートでトークンを明示的にhiddenへ埋め込む必要がある。
-トークンの埋め込み方は後述する。
-なお、JSPを使用している場合は :ref:`tag-form_tag` のuseToken属性でトークン生成とhiddenへの埋め込みが行われる。
+在JSP以外的模板引擎中，除了使用此拦截器外，还需要在模板中显式将令牌嵌入hidden。
+令牌的嵌入方法后述。
+另外，使用JSP时，通过 :ref:`tag-form_tag` 的useToken属性执行令牌生成和嵌入hidden的操作。
 
-トークンをチェックするため後続のアクションに対して
+为检查令牌，需要对后续Action设置
 :ref:`on_double_submission_interceptor`
-を設定する必要がある。
+。
 
-インターセプタクラス名
+拦截器类名
 --------------------------------------------------
 * :java:extdoc:`nablarch.common.web.token.UseToken`
 
@@ -32,10 +32,9 @@ JSP以外のテンプレートエンジンでは、このインターセプタ�
     <artifactId>nablarch-fw-web-tag</artifactId>
   </dependency>
 
-UseTokenを使用する
+使用 UseToken
 --------------------------------------------------
-:java:extdoc:`UseToken <nablarch.common.web.token.UseToken>` アノテーションを、
-アクションのメソッドに対して設定する。
+将 :java:extdoc:`UseToken <nablarch.common.web.token.UseToken>` 注解设置在Action方法上。
 
 .. code-block:: java
 
@@ -44,14 +43,14 @@ UseTokenを使用する
      // 省略
  }
 
-また、入力フォームへ明示的にトークンを埋め込む必要がある。
+另外，需要显式将令牌嵌入输入表单。
 
-Thymeleafでの実装例
+Thymeleaf 实现示例
  .. code-block:: xml
 
   <form th:action="@{/path/to/action}" method="post">
     <input type="hidden" name="nablarch_token" th:value="${nablarch_request_token}" />
 
-この例のようにname属性は"nablarch_token"と設定して、value属性はリクエストスコープから"nablarch_request_token"というキーで取得した値を設定する必要がある。
-このname属性とリクエストスコープから値を取得するキーは変更できる。
-詳しくは :ref:`サーバ側の二重サブミット防止 <tag-double_submission_server_side>` を参照すること。
+如本例所示，name属性需设置为"nablarch_token"，value属性需设置为从请求作用域以"nablarch_request_token"为键获取的值。
+此name属性和从请求作用域获取值的键可以更改。
+详情请参考 :ref:`服务器端防止重复提交 <tag-double_submission_server_side>` 。

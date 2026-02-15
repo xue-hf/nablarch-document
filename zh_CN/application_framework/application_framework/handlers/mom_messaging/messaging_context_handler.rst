@@ -1,15 +1,15 @@
 .. _messaging_context_handler:
 
-メッセージングコンテキスト管理ハンドラ
+消息处理上下文管理handler
 ==================================================
 
 .. contents:: 目录
   :depth: 3
   :local:
 
-後続のハンドラ及びライブラリで使用するためのMQ接続を、スレッド上で管理するハンドラ。
+在线程上管理后续handler和库使用的MQ连接的handler。
 
-MOMメッセージングの詳細は、 :ref:`system_messaging` を参照。
+MOM消息处理的详情请参考 :ref:`system_messaging` 。
 
 本handler执行以下处理。
 
@@ -33,28 +33,28 @@ handler类名
     <artifactId>nablarch-fw-messaging</artifactId>
   </dependency>
 
-制約
+约束
 ------------------------------
-なし。
+无。
 
-MQの接続先を設定する
+设置MQ连接目标
 --------------------------------------------------
-このハンドラは、 :java:extdoc:`messagingProvider <nablarch.fw.messaging.handler.MessagingContextHandler.setMessagingProvider(nablarch.fw.messaging.MessagingProvider)>`
-プロパティに設定されたプロバイダクラス( :java:extdoc:`MessagingProvider <nablarch.fw.messaging.MessagingProvider>` 実装クラス)を使用してMQ接続を取得する。
+本handler使用在 :java:extdoc:`messagingProvider <nablarch.fw.messaging.handler.MessagingContextHandler.setMessagingProvider(nablarch.fw.messaging.MessagingProvider)>`
+属性中设置的provider类( :java:extdoc:`MessagingProvider <nablarch.fw.messaging.MessagingProvider>` 实现类)来获取MQ连接。
 
-以下に設定例を示す。
-プロバイダクラスの設定内容については、使用する
-:java:extdoc:`MessagingProvider <nablarch.fw.messaging.MessagingProvider>` 実装クラスのJavadocを参照。
+以下显示设置示例。
+provider类的设置内容请参考使用的
+:java:extdoc:`MessagingProvider <nablarch.fw.messaging.MessagingProvider>` 实现类的Javadoc。
 
 .. code-block:: xml
 
- <!-- メッセージコンテキスト管理ハンドラ -->
+ <!-- 消息上下文管理handler -->
  <component class="nablarch.fw.messaging.handler.MessagingContextHandler">
    <property name="messagingProvider" ref="messagingProvider" />
  </component>
 
- <!-- プロバイダクラス -->
+ <!-- provider类 -->
  <component name="messagingProvider"
      class="nablarch.fw.messaging.provider.JmsMessagingProvider">
-   <!-- プロパティの設定は省略 -->
+   <!-- 属性设置省略 -->
  </component>

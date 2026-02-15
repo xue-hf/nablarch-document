@@ -1,17 +1,17 @@
 .. _inject_form_interceptor:
 
-InjectForm インターセプタ
+InjectForm 拦截器
 ============================
 
 .. contents:: 目录
   :depth: 3
   :local:
 
-入力値に対するバリデーションを行い、生成したフォームオブジェクトをリクエストスコープに設定するインターセプタ。
+对输入值进行验证，并将生成的表单对象设置到请求作用域的拦截器。
 
-このインターセプタは、業務アクションのメソッドに対して、 :java:extdoc:`InjectForm <nablarch.common.web.interceptor.InjectForm>` を設定することで有効となる。
+通过在业务Action方法上设置 :java:extdoc:`InjectForm <nablarch.common.web.interceptor.InjectForm>` 来启用此拦截器。
 
-インターセプタクラス名
+拦截器类名
 --------------------------------------------------
 * :java:extdoc:`nablarch.common.web.interceptor.InjectForm`
 
@@ -24,43 +24,43 @@ InjectForm インターセプタ
     <artifactId>nablarch-fw-web</artifactId>
   </dependency>
 
-  <!-- 入力値チェックにBeanValidationを使用する場合のみ -->
+  <!-- 仅在输入值校验中使用BeanValidation时 -->
   <dependency>
     <groupId>com.nablarch.framework</groupId>
     <artifactId>nablarch-core-validation-ee</artifactId>
   </dependency>
 
-  <!-- 入力値チェックにNablarchValidationを使用する場合のみ -->
+  <!-- 仅在输入值校验中使用NablarchValidation时 -->
   <dependency>
     <groupId>com.nablarch.framework</groupId>
     <artifactId>nablarch-core-validation</artifactId>
   </dependency>
 
-InjectFormを使用する
+使用 InjectForm
 --------------------------------------------------
-:java:extdoc:`InjectForm <nablarch.common.web.interceptor.InjectForm>` アノテーションを、業務アクションのリクエストを処理するメソッドに対して設定する。
+将 :java:extdoc:`InjectForm <nablarch.common.web.interceptor.InjectForm>` 注解设置在业务Action处理请求的方法上。
 
 
-以下に実装例を示す。
+以下展示实现示例。
 
-入力画面のhtml例
+输入画面html示例
   .. code-block:: html
 
-    <!-- バリデーション対象外-->
+    <!-- 验证对象外-->
     <input name="flag" type="hidden" />
 
-    <!-- バリデーション対象 -->
+    <!-- 验证对象 -->
     <input name="form.userId" type="text" />
     <input name="form.password" type="password" />
 
-業務アクションの例
-  この例では、画面から送信された ``form`` から始まるリクエストパラメータに対してバリデーションが実行される。
-  バリデーションでエラーが発生しなかった場合は、リクエストスコープに :java:extdoc:`InjectForm#form <nablarch.common.web.interceptor.InjectForm.form()>` で指定したクラスのオブジェクトが格納される。
+业务Action示例
+  此示例中，对从画面发送的以 ``form`` 开头的请求参数执行验证。
+  当验证未发生错误时， :java:extdoc:`InjectForm#form <nablarch.common.web.interceptor.InjectForm.form()>` 指定的类的对象将被存储到请求作用域。
 
-  リクエストスコープにバリデーション済みのフォームを格納する際に使用する変数名は、 :java:extdoc:`InjectForm#name <nablarch.common.web.interceptor.InjectForm.name()>` に指定する。
-  指定しなかった場合は、 ``form`` という変数名でフォームが格納される。
+  将验证后的表单存储到请求作用域时使用的变量名，在 :java:extdoc:`InjectForm#name <nablarch.common.web.interceptor.InjectForm.name()>` 中指定。
+  未指定时，表单将以 ``form`` 作为变量名存储。
 
-  業務アクションが実行された場合には、必ずリクエストスコープからオブジェクトが取得できる。
+  业务Action执行时，必定可以从请求作用域获取对象。
 
   .. code-block:: java
 
@@ -68,40 +68,39 @@ InjectFormを使用する
     @OnError(type = ApplicationException.class, path = "forward://registerForm.jsp")
     public HttpResponse handle(HttpRequest req, ExecutionContext ctx) {
 
-      // リクエストスコープからバリデーション済みのフォームを取得する。
+      // 从请求作用域获取验证后的表单。
       UserForm form = ctx.getRequestScopedVar("form");
 
-      // formを元に業務処理を行う。
+      // 基于form执行业务处理。
     }
 
 
 .. tip::
-  バリデーションに :ref:`bean_validation` を使用する場合、バリデーションエラー時にもリクエストスコープから\
-  オブジェクトを取得可能となるよう設定ができる。詳細は『\ :ref:`bean_validation_onerror`\ 』を参照。
+  使用 :ref:`bean_validation` 进行验证时，可以设置即使在验证错误时也能从请求作用域获取对象。详情请参考『\ :ref:`bean_validation_onerror`\ 』。
     
-バリデーションエラー時の遷移先を指定する
+指定验证错误时的跳转目标
 -------------------------------------------------
-バリデーションエラー発生時の遷移先画面は、 :java:extdoc:`OnError <nablarch.fw.web.interceptor.OnError>` アノテーションを使用して設定する。
+验证错误发生时的跳转目标画面，使用 :java:extdoc:`OnError <nablarch.fw.web.interceptor.OnError>` 注解进行设置。
 
-:java:extdoc:`OnError <nablarch.fw.web.interceptor.OnError>` アノテーションは、:java:extdoc:`InjectForm <nablarch.common.web.interceptor.InjectForm>` を設定した業務アクションのメソッドに対して設定する。
-:java:extdoc:`OnError <nablarch.fw.web.interceptor.OnError>` が設定されていない場合、バリデーションエラーがシステムエラー扱いとなるため注意すること。
+:java:extdoc:`OnError <nablarch.fw.web.interceptor.OnError>` 注解设置在配置了 :java:extdoc:`InjectForm <nablarch.common.web.interceptor.InjectForm>` 的业务Action方法上。
+请注意，如果未设置 :java:extdoc:`OnError <nablarch.fw.web.interceptor.OnError>` ，验证错误将被视为系统错误。
 
-バリデーションエラー発生時に、遷移先画面で表示するデータを取得したい場合は、:ref:`on_error-forward` を参照。
+如需在验证错误发生时获取跳转目标画面显示的数据，请参考 :ref:`on_error-forward` 。
 
-Bean Validationのグループを指定する
+指定 Bean Validation 的组
 -------------------------------------------------
-バリデーションに :ref:`bean_validation` を使用する場合は、 :java:extdoc:`InjectForm#validationGroup <nablarch.common.web.interceptor.InjectForm.validationGroup()>` にグループを指定することができる。
+使用 :ref:`bean_validation` 进行验证时，可以在 :java:extdoc:`InjectForm#validationGroup <nablarch.common.web.interceptor.InjectForm.validationGroup()>` 中指定组。
 
-以下に実装例を示す。
+以下展示实现示例。
 
   .. code-block:: java
 
-    // UserFormクラス内で設定されたバリデーションルールのうち、Createグループに所属するルールのみを使用して検証する。
+    // 使用UserForm类中设置的验证规则中，仅属于Create组的规则进行验证。
     @InjectForm(form = UserForm.class, prefix = "form", validationGroup = Create.class)
     public HttpResponse handle(HttpRequest req, ExecutionContext ctx) {
 
-      // リクエストスコープからバリデーション済みのフォームを取得する。
+      // 从请求作用域获取验证后的表单。
       UserForm form = ctx.getRequestScopedVar("form");
 
-      // formを元に業務処理を行う。
+      // 基于form执行业务处理。
     }

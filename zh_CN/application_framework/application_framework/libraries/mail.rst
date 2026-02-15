@@ -1,6 +1,6 @@
 .. _mail:
 
-メール送信
+邮件发送
 ==================================================
 
 .. contents:: 目录
@@ -9,56 +9,56 @@
 
 .. |JavaMail| raw:: html
 
-  <a href="https://jakarta.ee/specifications/platform/10/apidocs/jakarta/mail/package-summary.html" target="_blank">Jakarta Mail (外部サイト、英語)</a>
+  <a href="https://jakarta.ee/specifications/platform/10/apidocs/jakarta/mail/package-summary.html" target="_blank">Jakarta Mail (外部站点、英语)</a>
 
-メールを送信する機能を提供する。
+提供发送邮件的功能。
 
-この機能では、ディレードオンライン処理と呼ばれる方式を採用しており、
-メール送信を即時に行うのではなく、一旦、メール送信要求をデータベースに格納しておき、
-:ref:`驻留型Batch<nablarch_batch-resident_batch>` を使い非同期にメールを送信する。
+本功能采用称为延迟在线处理的方式，
+不是立即发送邮件，而是先将邮件发送请求存储到数据库中，
+使用 :ref:`常驻Batch<nablarch_batch-resident_batch>` 异步发送邮件。
 
 .. image:: images/mail/mail_system.png
   :scale: 60
 
-この方式を採用した理由は以下の通り。
+采用这种方式的理由如下。
 
-* メール送信要求を出す应用で、メール送信を業務トランザクションに含めることができる。
-* メールサーバやネットワークの障害により、メール送信が失敗しても、应用の処理に影響を与えない。
+* 发出邮件发送请求的应用程序可以将邮件发送包含在业务事务中。
+* 即使由于邮件服务器或网络故障导致邮件发送失败，也不会影响应用程序的处理。
 
-この機能では、上記方式を実現するため、2つの機能を提供する。
+本功能为了实现上述方式，提供了两个功能。
 
-* :ref:`メール送信要求をデータベースに登録する機能<mail-request>`
-* :ref:`メール送信要求に基づいてメールを送信するバッチ機能<mail-send>`
+* :ref:`将邮件发送请求注册到数据库的功能<mail-request>`
+* :ref:`根据邮件发送请求发送邮件的Batch功能<mail-send>`
 
-应用がメール送信要求を出す毎に1つのメール送信要求を作成し、
-メール送信要求1つにつきメールを1通送信する。
+应用程序每次发出邮件发送请求时创建1个邮件发送请求，
+每个邮件发送请求发送1封邮件。
 
 .. tip::
-  本機能は、即時にメールを送信するAPIは提供していない。
-  この場合は、 |JavaMail| を直接使用すること。
+  本功能不提供立即发送邮件的API。
+  这种情况下，请直接使用 |JavaMail| 。
 
-機能概要
+功能概述
 --------------------------------------------------
 
 .. _`mail-template`:
 
-テンプレートを使った定型メールを送信できる。
+可以使用模板发送定型邮件
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-システムのメール送信では、登録完了通知メールのように、同じ文言で、一部の項目のみ異なるメールを送信することが多い。
-そこで、本機能では、テンプレートを用意しておき、プレースホルダを変換して、件名と本文を作成する機能を提供している。
-機能の詳細は、 :ref:`mail-request` を参照。
+系统的邮件发送中，像注册完成通知邮件这样，使用相同内容、只有部分项目不同的邮件发送很常见。
+因此，本功能提供了预先准备模板，转换占位符来创建主题和正文的功能。
+功能详情请参考 :ref:`mail-request` 。
 
 .. important::
 
- Nablarch 5u13からテンプレートエンジンを使用した定型メールがサポートされた。
+ Nablarch 5u13开始支持使用模板引擎的定型邮件。
  
- 5u12までの定型メール機能もテンプレートエンジンの1つとして残されており、
- ``TinyTemplateEngineMailProcessor`` を設定することで使用可能だが、以下のように機能が限定的である。
+ 5u12之前的定型邮件功能也作为模板引擎之一保留，
+ 通过设置 ``TinyTemplateEngineMailProcessor`` 即可使用，但功能有以下限制。
 
- * プレースホルダを置換できる値は単純な文字列のみで、構造化されたオブジェクトをサポートしていない
- * 条件分岐や繰り返しといった制御構文をサポートしていない
+ * 可替换占位符的值只能是简单字符串，不支持结构化对象
+ * 不支持条件分支、循环等控制语法
 
- 既存の定型メール機能の代わりに、より高機能な下記のテンプレートエンジンを使用した定型メール機能を推奨する。
+ 建议替代现有的定型邮件功能，使用功能更强大的以下模板引擎的定型邮件功能。
 
  * :ref:`mail_sender_freemarker_adaptor`
  * :ref:`mail_sender_thymeleaf_adaptor`
@@ -66,14 +66,14 @@
 
 .. _`do-not-use-for-campaign-mail`:
 
-キャンペーン通知のような大量メールの一斉送信には対応していない
+不支持像活动通知那样的大量邮件群发
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-本機能では、キャンペーン通知のような一斉送信には対応していない。
-下記に当てはまる場合は、プロダクトの使用を推奨する。
+本功能不支持像活动通知那样的群发功能。
+符合以下情况时建议使用产品。
 
-* キャンペーン通知やメールマガジンなど、一括で大量のメールを送信する。
-* 配信したメールの開封率、クリックカウントの効果を測定する。
-* メールアドレスからクライアント(例えば、フィーチャーフォンか否か)を判別し、送信するメールを切り替える。
+* 活动通知、邮件杂志等批量发送大量邮件。
+* 测量已发送邮件的开封率、点击数效果。
+* 从邮件地址判断客户端（例如，是否为功能手机），切换发送的邮件。
 
 模块列表
 --------------------------------------------------
@@ -84,7 +84,7 @@
     <artifactId>nablarch-mail-sender</artifactId>
   </dependency>
 
-  <!-- メール送信要求IDの採番に使用する -->
+  <!-- 邮件发送请求ID的编号所使用 -->
   <dependency>
     <groupId>com.nablarch.framework</groupId>
     <artifactId>nablarch-common-idgenerator</artifactId>
@@ -99,172 +99,172 @@
 
 .. _`mail-settings`:
 
-メール送信を使うための設定
+使用邮件发送的设置
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-この機能では、データベースを使用してメール送信に使うデータを管理する。
-テーブルのレイアウトは以下となる。
+本功能使用数据库管理邮件发送所需的数据。
+表结构如下。
 
 .. |br| raw:: html
 
    <br />
 
-.. list-table:: メール送信要求
+.. list-table:: 邮件发送请求
   :header-rows: 0
   :class: white-space-normal
   :widths: 24,18,58
 
-  * - メール送信要求ID ``PK``
-    - 文字列型
-    - メール送信要求を一意に識別するID
-  * - メール送信パターンID（任意項目）
-    - 文字列型
-    - メールの送信方法のパターンを識別するためのID。 |br| パターンを使用した未送信データの抽出をする場合に定義する。（ :ref:`未送信のデータを抽出する際の条件<mail-mail_send_pattern>` を参照）
-  * - メール送信バッチのプロセスID（任意項目）
-    - 文字列型
-    - マルチプロセス実行時に各プロセスがレコードを悲観ロックするために使用するカラム。 |br| マルチプロセス実行する場合に定義する。（ :ref:`mail-mail_multi_process` を参照）
-  * - 件名
-    - 文字列型
+  * - 邮件发送请求ID ``PK``
+    - 字符串型
+    - 唯一标识邮件发送请求的ID
+  * - 邮件发送模式ID（可选项目）
+    - 字符串型
+    - 用于标识邮件发送方法模式的ID。 |br| 在使用模式提取未发送数据时定义。（参照 :ref:`提取未发送数据时的条件<mail-mail_send_pattern>` ）
+  * - 邮件发送Batch的进程ID（可选项目）
+    - 字符串型
+    - 多进程执行时各进程对记录进行悲观锁所使用的列。 |br| 多进程执行时定义。（参照 :ref:`mail-mail_multi_process` ）
+  * - 主题
+    - 字符串型
     -
-  * - 送信者メールアドレス
-    - 文字列型
-    - メールのFromヘッダに指定するメールアドレス
-  * - 返信先メールアドレス
-    - 文字列型
-    - メールのReply-Toヘッダに指定するメールアドレス
-  * - 差戻し先メールアドレス
-    - 文字列型
-    - メールのReturn-Pathヘッダに指定するメールアドレス
-  * - 文字セット
-    - 文字列型
-    - メールのContent-Typeヘッダに指定する文字セット
-  * - ステータス
-    - 文字列型
-    - メールの送信状態(未送信／送信済／送信失敗)を表すコード値
-  * - 要求日時
-    - タイムスタンプ型
+  * - 发件人邮件地址
+    - 字符串型
+    - 指定邮件From头部的邮件地址
+  * - 回复邮件地址
+    - 字符串型
+    - 指定邮件Reply-To头部的邮件地址
+  * - 退信邮件地址
+    - 字符串型
+    - 指定邮件Return-Path头部的邮件地址
+  * - 字符集
+    - 字符串型
+    - 指定邮件Content-Type头部的字符集
+  * - 状态
+    - 字符串型
+    - 表示邮件发送状态(未发送／已发送／发送失败)的代码值
+  * - 请求日期时间
+    - 时间戳型
     -
-  * - 送信日時
-    - タイムスタンプ型
+  * - 发送日期时间
+    - 时间戳型
     -
-  * - 本文
-    - 文字列型
+  * - 正文
+    - 字符串型
     -
 
-.. list-table:: メール送信先
+.. list-table:: 邮件接收方
   :header-rows: 0
   :class: white-space-normal
   :widths: 24,18,58
 
-  * - メール送信要求ID ``PK``
-    - 文字列型
+  * - 邮件发送请求ID ``PK``
+    - 字符串型
     -
-  * - 連番 ``PK``
-    - 数値型
-    - １つのメール送信要求内の連番
-  * - 送信先区分
-    - 文字列型
-    - メールの送信先区分(TO／CC／BCC)を表すコード値
-  * - メールアドレス
-    - 文字列型
+  * - 序号 ``PK``
+    - 数值型
+    - 1个邮件发送请求内的序号
+  * - 接收方区分
+    - 字符串型
+    - 表示邮件接收方区分(TO／CC／BCC)的代码值
+  * - 邮件地址
+    - 字符串型
     -
 
-.. list-table:: メール添付ファイル
+.. list-table:: 邮件附件
   :header-rows: 0
   :class: white-space-normal
   :widths: 24,18,58
 
-  * - メール送信要求ID ``PK``
-    - 文字列型
+  * - 邮件发送请求ID ``PK``
+    - 字符串型
     -
-  * - 連番 ``PK``
-    - 数値型
-    - １つのメール送信要求内の連番
-  * - 添付ファイル名
-    - 文字列型
+  * - 序号 ``PK``
+    - 数值型
+    - 1个邮件发送请求内的序号
+  * - 附件文件名
+    - 字符串型
     -
   * - Content-Type
-    - 文字列型
+    - 字符串型
     -
-  * - 添付ファイル
-    - バイト配列型
+  * - 附件
+    - 字节数组型
     -
 
-.. list-table:: メールテンプレート
+.. list-table:: 邮件模板
   :header-rows: 0
   :class: white-space-normal
   :widths: 24,18,58
 
-  * - メールテンプレートID ``PK``
-    - 文字列型
+  * - 邮件模板ID ``PK``
+    - 字符串型
     -
-  * - 言語 ``PK``
-    - 文字列型
+  * - 语言 ``PK``
+    - 字符串型
     -
-  * - 件名
-    - 文字列型
+  * - 主题
+    - 字符串型
     -
-  * - 本文
-    - 文字列型
+  * - 正文
+    - 字符串型
     -
-  * - 文字セット
-    - 文字列型
-    - メール送信時に指定する文字セット
+  * - 字符集
+    - 字符串型
+    - 邮件发送时指定的字符集
 
-メール送信を使うには、以下のとおり設定する。
+要使用邮件发送，请按以下方式设置。
 
-* :ref:`メール送信要求とメール送信バッチの共通設定<mail-common_settings>`
-* :ref:`メール送信要求の設定<mail-mail_requester_settings>`
-* :ref:`メール送信バッチの設定<mail-mail_sender_settings>`
+* :ref:`邮件发送请求与邮件发送Batch的共通设置<mail-common_settings>`
+* :ref:`邮件发送请求的设置<mail-mail_requester_settings>`
+* :ref:`邮件发送Batch的设置<mail-mail_sender_settings>`
 
 .. _mail-common_settings:
 
-メール送信要求とメール送信バッチの共通設定
- 共通設定では、以下のとおり設定する。
+邮件发送请求与邮件发送Batch的共通设置
+ 共通设置中，按以下方式设置。
 
- * :ref:`テーブルスキーマ<mail-common_settings_table_schema>`
- * :ref:`コード値とメッセージ<mail-common_settings_mail_config>`
+ * :ref:`表结构<mail-common_settings_table_schema>`
+ * :ref:`代码值与消息<mail-common_settings_mail_config>`
 
  .. _mail-common_settings_table_schema:
 
- テーブルスキーマ
-  次のクラスの設定をコンポーネント定義に追加する。
-  設定項目の詳細はリンク先のJavadocを参照。
+ 表结构
+  将以下类的设置添加到组件定义中。
+  设置项详情请参考链接处的Javadoc。
 
-  * :java:extdoc:`MailRequestTable<nablarch.common.mail.MailRequestTable>` (メール送信要求テーブル)
-  * :java:extdoc:`MailRecipientTable<nablarch.common.mail.MailRecipientTable>` (メール送信先テーブル)
-  * :java:extdoc:`MailAttachedFileTable<nablarch.common.mail.MailAttachedFileTable>` (添付ファイルテーブル)
-  * :java:extdoc:`MailTemplateTable<nablarch.common.mail.MailTemplateTable>` (メールテンプレートテーブル)
+  * :java:extdoc:`MailRequestTable<nablarch.common.mail.MailRequestTable>` (邮件发送请求表)
+  * :java:extdoc:`MailRecipientTable<nablarch.common.mail.MailRecipientTable>` (邮件接收方表)
+  * :java:extdoc:`MailAttachedFileTable<nablarch.common.mail.MailAttachedFileTable>` (附件表)
+  * :java:extdoc:`MailTemplateTable<nablarch.common.mail.MailTemplateTable>` (邮件模板表)
 
-  設定例を以下に示す。
+  设置示例如下。
 
   .. code-block:: xml
 
-   <!-- メール送信要求テーブルのスキーマ -->
+   <!-- 邮件发送请求表的Schema -->
    <component name="mailRequestTable" class="nablarch.common.mail.MailRequestTable">
-     <!-- テーブル名とカラム名を指定する。ここでは省略する。 -->
+     <!-- 指定表名和列名。此处省略。 -->
    </component>
 
-   <!-- メール送信先テーブルのスキーマ -->
+   <!-- 邮件接收方表的Schema -->
    <component name="mailRecipientTable" class="nablarch.common.mail.MailRecipientTable">
-     <!-- テーブル名とカラム名を指定する。ここでは省略する。 -->
+     <!-- 指定表名和列名。此处省略。 -->
    </component>
 
-   <!-- 添付ファイルテーブルのスキーマ -->
+   <!-- 附件表的Schema -->
    <component name="mailAttachedFileTable" class="nablarch.common.mail.MailAttachedFileTable">
-     <!-- テーブル名とカラム名を指定する。ここでは省略する。 -->
+     <!-- 指定表名和列名。此处省略。 -->
    </component>
 
-   <!-- メールテンプレートテーブルのスキーマ -->
+   <!-- 邮件模板表的Schema -->
    <component name="mailTemplateTable" class="nablarch.common.mail.MailTemplateTable">
-     <!-- テーブル名とカラム名を指定する。ここでは省略する。 -->
+     <!-- 指定表名和列名。此处省略。 -->
    </component>
 
-   <!-- 初期化設定 -->
+   <!-- 初始化设置 -->
    <component name="initializer"
               class="nablarch.core.repository.initialization.BasicApplicationInitializer">
      <property name="initializeList">
        <list>
-         <!-- 他のコンポーネントは省略 -->
+         <!-- 其他组件省略 -->
          <component-ref name="mailRequestTable" />
          <component-ref name="mailRecipientTable" />
          <component-ref name="mailAttachedFileTable" />
@@ -275,82 +275,82 @@
 
  .. tip::
 
-   MailRequestTableのmailSendPatternIdColumnNameプロパティ, sendProcessIdColumnNameプロパティは任意項目であり、機能を使用したい場合に設定する。
-   mailSendPatternIdColumnNameプロパティについては :ref:`未送信のデータを抽出する際の条件<mail-mail_send_pattern>` を、
-   sendProcessIdColumnNameプロパティについては :ref:`mail-mail_multi_process` を参照すること。
+   MailRequestTable的mailSendPatternIdColumnName属性、sendProcessIdColumnName属性是可选项目，想使用功能时才设置。
+   mailSendPatternIdColumnName属性请参考 :ref:`提取未发送数据时的条件<mail-mail_send_pattern>` ，
+   sendProcessIdColumnName属性请参考 :ref:`mail-mail_multi_process` 。
 
  .. _mail-common_settings_mail_config:
 
- コード値とメッセージ
-  メール送信に使用するコード値、メッセージID、障害コードを設定する。
-  :java:extdoc:`MailConfig<nablarch.common.mail.MailConfig>` の設定をコンポーネント定義に追加する。
-  設定項目の詳細は、 :java:extdoc:`MailConfigのJavadoc<nablarch.common.mail.MailConfig>` を参照。
+ 代码值与消息
+  设置邮件发送所使用的代码值、消息ID、故障代码。
+  将 :java:extdoc:`MailConfig<nablarch.common.mail.MailConfig>` 的设置添加到组件定义中。
+  设置项详情请参考 :java:extdoc:`MailConfig的Javadoc<nablarch.common.mail.MailConfig>` 。
 
-  設定例を以下に示す。
+  设置示例如下。
 
   .. code-block:: xml
 
    <component name="mailConfig" class="nablarch.common.mail.MailConfig">
 
-     <!-- メール送信要求IDの採番対象識別ID -->
+     <!-- 邮件发送请求ID的编号对象识别ID -->
      <property name="mailRequestSbnId" value="MAIL_REQUEST_ID" />
 
-     <!-- メールの送信先区分(TO／CC／BCC)を表すコード値 -->
+     <!-- 表示邮件接收方区分(TO／CC／BCC)的代码值 -->
      <property name="recipientTypeTO" value="0" />
      <property name="recipientTypeCC" value="1" />
      <property name="recipientTypeBCC" value="2" />
 
-     <!-- メールの送信状態(未送信／送信済／送信失敗)を表すコード値 -->
+     <!-- 表示邮件发送状态(未发送／已发送／发送失败)的代码值 -->
      <property name="statusUnsent" value="0" />
      <property name="statusSent" value="1" />
      <property name="statusFailure" value="2" />
 
-     <!-- メール送信要求件数出力時のメッセージID -->
+     <!-- 邮件发送请求件数输出时的消息ID -->
      <property name="mailRequestCountMessageId" value="mail.request.count" />
 
-     <!-- メール送信成功時のメッセージID -->
+     <!-- 邮件发送成功时的消息ID -->
      <property name="sendSuccessMessageId" value="mail.send.success" />
 
-     <!-- 送信失敗時の障害コード -->
+     <!-- 发送失败时的故障代码 -->
      <property name="sendFailureCode" value="mail.send.failure" />
 
-     <!-- 送信失敗時の終了コード -->
+     <!-- 发送失败时的结束代码 -->
      <property name="abnormalEndExitCode" value="199" />
 
    </component>
 
 .. _mail-mail_requester_settings:
 
-メール送信要求の設定
- 以下のクラスをコンポーネント定義に追加する。
- 設定項目の詳細はリンク先のJavadocを参照。
+邮件发送请求的设置
+ 将以下类添加到组件定义中。
+ 设置项详情请参考链接处的Javadoc。
 
- * :java:extdoc:`MailRequester<nablarch.common.mail.MailRequester>` (メール送信要求をデータベースに登録するコンポーネント)
- * :java:extdoc:`MailRequestConfig<nablarch.common.mail.MailRequestConfig>` (メール送信要求時の設定値を保持するクラス)
+ * :java:extdoc:`MailRequester<nablarch.common.mail.MailRequester>` (将邮件发送请求注册到数据库的组件)
+ * :java:extdoc:`MailRequestConfig<nablarch.common.mail.MailRequestConfig>` (保存邮件发送请求时设置值的类)
 
- :java:extdoc:`MailRequester<nablarch.common.mail.MailRequester>` は、
- メール送信要求をデータベースに登録する際、
- :ref:`採番<generator>` を使ってメール送信要求IDを生成する。
- そのため、 :ref:`採番<generator>` の設定も別途必要となる。
+ :java:extdoc:`MailRequester<nablarch.common.mail.MailRequester>` 在
+ 将邮件发送请求注册到数据库时，
+ 使用 :ref:`编号<generator>` 生成邮件发送请求ID。
+ 因此，还需要另行设置 :ref:`编号<generator>` 。
 
- 設定例を以下に示す。
+ 设置示例如下。
 
- ポイント
-  * :java:extdoc:`MailRequester<nablarch.common.mail.MailRequester>` は名前でルックアップされるため、
-    コンポーネント名に ``mailRequester`` と指定する。
+ 要点
+  * :java:extdoc:`MailRequester<nablarch.common.mail.MailRequester>` 通过名称查找，
+    因此组件名指定为 ``mailRequester`` 。
 
  .. code-block:: xml
 
-  <!-- メール送信要求コンポーネント。 -->
+  <!-- 邮件发送请求组件。 -->
   <component name="mailRequester" class="nablarch.common.mail.MailRequester">
 
-    <!-- メール送信要求時の設定値(以下のコンポーネント定義を参照) -->
+    <!-- 邮件发送请求时的设置值(参照以下组件定义) -->
     <property name="mailRequestConfig" ref="mailRequestConfig" />
 
-    <!-- メール送信要求IDの採番に使用するIdGenerator -->
+    <!-- 邮件发送请求ID编号所使用的IdGenerator -->
     <property name="mailRequestIdGenerator" ref="idGenerator" />
 
-    <!-- テーブルのスキーマ -->
+    <!-- 表的Schema -->
     <property name="mailRequestTable" ref="mailRequestTable" />
     <property name="mailRecipientTable" ref="mailRecipientTable" />
     <property name="mailAttachedFileTable" ref="mailAttachedFileTable" />
@@ -362,37 +362,37 @@
 
   </component>
 
-  <!-- メール送信要求時の設定値 -->
+  <!-- 邮件发送请求时的设置值 -->
   <component name="mailRequestConfig" class="nablarch.common.mail.MailRequestConfig">
 
-    <!-- デフォルトの返信先メールアドレス -->
+    <!-- 默认的回复邮件地址 -->
     <property name="defaultReplyTo" value="default.reply.to@nablarch.sample" />
 
-    <!-- デフォルトの差戻し先メールアドレス -->
+    <!-- 默认的退信邮件地址 -->
     <property name="defaultReturnPath" value="default.return.path@nablarch.sample" />
 
-    <!-- デフォルトの文字セット -->
+    <!-- 默认的字符集 -->
     <property name="defaultCharset" value="ISO-2022-JP" />
 
-    <!-- 最大宛先数 -->
+    <!-- 最大接收方数 -->
     <property name="maxRecipientCount" value="100" />
 
-    <!-- 最大添付ファイルサイズ(byte数で記述) -->
+    <!-- 最大附件大小(以字节数记述) -->
     <property name="maxAttachedFileSize" value="2097152" />
 
   </component>
 
-※説明のため ``TinyTemplateEngineMailProcessor`` を設定しているが限定的な機能しか持たないため、FreeMarkerなどのテンプレートエンジンの使用を推奨する。
-詳しくは :ref:`mail-template` を参照。
+※为说明起见设置了 ``TinyTemplateEngineMailProcessor`` ，但由于功能有限，建议使用FreeMarker等模板引擎。
+详情请参照 :ref:`mail-template` 。
 
 .. _mail-mail_sender_settings:
 
-メール送信バッチの設定
- メール送信バッチが使用するSMTPサーバへの接続情報を設定する。
- :java:extdoc:`MailSessionConfig<nablarch.common.mail.MailSessionConfig>` をコンポーネント定義に追加する。
- 設定項目の詳細は、リンク先のJavadocを参照。
+邮件发送Batch的设置
+ 设置邮件发送Batch所使用的SMTP服务器连接信息。
+ 将 :java:extdoc:`MailSessionConfig<nablarch.common.mail.MailSessionConfig>` 添加到组件定义中。
+ 设置项详情请参考链接处的Javadoc。
 
- 設定例を以下に示す。
+ 设置示例如下。
 
  .. code-block:: xml
 
@@ -406,90 +406,90 @@
 
 .. _`mail-request`:
 
-メール送信要求を登録する
+注册邮件发送请求
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-メール送信要求の登録には、以下のクラスを使用する。
+注册邮件发送请求使用以下类。
 
-* :java:extdoc:`MailRequester<nablarch.common.mail.MailRequester>` (メール送信要求をデータベースに登録する)
-* :java:extdoc:`MailUtil<nablarch.common.mail.MailUtil>` ( :java:extdoc:`MailRequester<nablarch.common.mail.MailRequester>` を取得する)
-* :java:extdoc:`FreeTextMailContext<nablarch.common.mail.FreeTextMailContext>` (非定型メールの送信要求)
-* :java:extdoc:`TemplateMailContext<nablarch.common.mail.TemplateMailContext>` (定型メールの送信要求)
-* :java:extdoc:`AttachedFile<nablarch.common.mail.AttachedFile>` (添付ファイル)
+* :java:extdoc:`MailRequester<nablarch.common.mail.MailRequester>` (将邮件发送请求注册到数据库)
+* :java:extdoc:`MailUtil<nablarch.common.mail.MailUtil>` (获取 :java:extdoc:`MailRequester<nablarch.common.mail.MailRequester>` )
+* :java:extdoc:`FreeTextMailContext<nablarch.common.mail.FreeTextMailContext>` (非定型邮件的发送请求)
+* :java:extdoc:`TemplateMailContext<nablarch.common.mail.TemplateMailContext>` (定型邮件的发送请求)
+* :java:extdoc:`AttachedFile<nablarch.common.mail.AttachedFile>` (附件)
 
-この機能では、フリーフォーマットの非定型メールと、
-予め登録しておいたテンプレートを使用する定型メールに対応しており、
-それぞれに対応したクラスを使用して、メール送信要求を作成する。
+本功能支持自由格式的非定型邮件和
+使用预先注册的模板的定型邮件，
+使用各自对应的类创建邮件发送请求。
 
-ここでは、定型メールの実装例を以下に示す。
+这里展示定型邮件的实现示例。
 
 .. code-block:: java
 
- // メール送信要求を作成する。
+ // 创建邮件发送请求。
  TemplateMailContext mailRequest = new TemplateMailContext();
  mailRequest.setFrom("from@tis.co.jp");
  mailRequest.addTo("to@tis.co.jp");
  mailRequest.addCc("cc@tis.co.jp");
  mailRequest.addBcc("bcc@tis.co.jp");
- mailRequest.setSubject("件名");
- mailRequest.setTemplateId("テンプレートID");
+ mailRequest.setSubject("主题");
+ mailRequest.setTemplateId("模板ID");
  mailRequest.setLang("ja");
 
- // テンプレートのプレースホルダに対する値を設定する。
- mailRequest.setVariable("name", "名前");
- mailRequest.setVariable("address", "住所");
- mailRequest.setVariable("tel", "電話番号");
- // 以下のように値にnullを設定した場合、空文字列で置き換えが行われる。
+ // 设置模板占位符对应的值。
+ mailRequest.setVariable("name", "姓名");
+ mailRequest.setVariable("address", "地址");
+ mailRequest.setVariable("tel", "电话号码");
+ // 如下在值中设置null时，将用空字符串替换。
  mailRequest.setVariable("opeion", null);
 
- // 添付ファイルを設定する。
+ // 设置附件。
  AttachedFile attachedFile = new AttachedFile("text/plain", new File("path/to/file"));
  mailRequest.addAttachedFile(attachedFile);
 
- // メール送信要求を登録する。
+ // 注册邮件发送请求。
  MailRequester requester = MailUtil.getMailRequester();
  String mailRequestId = requester.requestToSend(mailRequest);
 
 .. important::
- 定型メールで、テンプレートのプレースホルダに対する値を設定する場合は、以下の点に注意する。
+ 定型邮件设置模板占位符对应的值时，请注意以下事项。
 
- - キーに ``null`` を指定した場合は、例外を送出する。
- - 値に ``null`` を指定した場合、空文字列で置き換えを行う。
- - テンプレートのプレースホルダと、プレースホルダに対して設定されたキー/値の整合性をチェックしない。
-   そのため、テンプレート中にプレースホルダがあるにも関わらず、値が設定されなかった場合、プレースホルダが変換されずにメールが送信される。
-   反対に、対応するプレースホルダがない値は、単に無視され、メールが送信される。
+ - 键指定 ``null`` 时，会抛出异常。
+ - 值指定 ``null`` 时，会用空字符串替换。
+ - 不检查模板中的占位符与设置的键/值的一致性。
+   因此，如果模板中有占位符但未设置值，占位符将不会被转换而直接发送邮件。
+   相反，没有对应占位符的值将被忽略，邮件照常发送。
 
 .. _`mail-send`:
 
-メールを送信する(メール送信バッチを実行する)
+发送邮件(执行邮件发送Batch)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-メール送信バッチには、 :java:extdoc:`MailSender<nablarch.common.mail.MailSender>` を使用する。
-:java:extdoc:`MailSender<nablarch.common.mail.MailSender>` は、 :ref:`驻留型Batch<nablarch_batch-resident_batch>`
-を使用して動作させるバッチアクションとして作成している。
+邮件发送Batch使用 :java:extdoc:`MailSender<nablarch.common.mail.MailSender>` 。
+:java:extdoc:`MailSender<nablarch.common.mail.MailSender>` 是作为使用 :ref:`常驻Batch<nablarch_batch-resident_batch>`
+运行的Batch动作创建的。
 
-メール送信処理では、障害発生時に同一のメールが複数送信されないように、以下のような処理の流れとなっている。
-これにより、メール送信成功時にはステータスが確実に送信済みとなっているため、二重送信を防止できる。
+邮件发送处理中，为防止故障发生时同一封邮件被多次发送，采用如下处理流程。
+这样，邮件发送成功时状态必定变为已发送，可以防止重复发送。
 
-メール送信の処理の流れ
+邮件发送的处理流程
   .. image:: images/mail/mail_sender_flow.png
     :scale: 75
 
 .. important::
-  メール送信失敗時に行うステータス更新(送信失敗への変更)で例外(例えばデータベースやネットワーク障害時に発生する)が発生した場合は、ステータスが送信済みのままとなる。
-  この場合は、該当データに対してパッチを適用(ステータスを送信失敗へ変更する)する必要がある。
-  なお、例外にはパッチ適用を促すメッセージが付加されている。
+  邮件发送失败时进行的状态更新(更改为发送失败)中发生异常(例如数据库或网络故障时发生)时，状态将保持已发送。
+  这种情况下，需要对该数据应用补丁(将状态更改为发送失败)。
+  另外，异常中会附加提示应用补丁的消息。
 
 .. tip::
-  上記図の通りステータスの更新処理は別トランザクションで実行される。
-  このため、これらの処理で使用するためのトランザクション設定が必要となる。
-  このトランザクションのコンポーネント名は ``statusUpdateTransaction`` としてコンポーネント設定ファイルに登録する必要がある。
-  詳細は、 :ref:`database-new_transaction` を参照。
+  如上图所示，状态的更新处理在单独的事务中执行。
+  因此，需要使用这些处理的事务设置。
+  该事务的组件名需要以 ``statusUpdateTransaction`` 注册到组件设置文件中。
+  详情请参照 :ref:`database-new_transaction` 。
 
 
-以下に実行例を示す。
-実行方法の詳細については、 :ref:`main-run_application` を参照。
+以下展示执行示例。
+执行方法的详情请参照 :ref:`main-run_application` 。
 
-ポイント
- * requestPathオプションで :java:extdoc:`MailSender<nablarch.common.mail.MailSender>` を指定する。
+要点
+ * requestPath选项指定 :java:extdoc:`MailSender<nablarch.common.mail.MailSender>` 。
 
 .. code-block:: bash
 
@@ -500,169 +500,169 @@
 
 .. _`mail-mail_send_pattern`:
 
-未送信のデータを抽出する際の条件
- :java:extdoc:`MailSender<nablarch.common.mail.MailSender>` は、
- メール送信要求テーブルから未送信のデータを抽出し、メールを送信する。
- 未送信のデータを抽出する際の条件は、次の2つから選択可能となっている。
+提取未发送数据时的条件
+ :java:extdoc:`MailSender<nablarch.common.mail.MailSender>` 从
+ 邮件发送请求表中提取未发送的数据并发送邮件。
+ 提取未发送数据时的条件可从以下2种中选择。
 
-  * テーブル全体から未送信のデータを抽出する
-  * メール送信パターンID毎に未送信のデータを抽出する
+  * 从整个表中提取未发送的数据
+  * 按邮件发送模式ID提取未发送的数据
 
- メール送信パターンIDを使うケースとしては、
- 例えば、送信までの時間をできるだけ短くしたい優先度が高いメールと、
- 1時間に1回程度の間隔で送信すればよい優先度の低いメールを扱うようなシステムが考えられる。
+  使用邮件发送模式ID的用例例如，
+  处理希望尽量缩短发送时间的高优先级邮件和
+  每小时发送一次即可的低优先级邮件的系统。
 
- メール送信パターンID毎に未送信のデータを抽出する場合には、
- 監視対象のメール送信パターンID毎にメール送信バッチのプロセスを起動する。
- そのため、プロセス起動時には、処理対象のメール送信パターンID(mailSendPatternId)を起動引数に指定する。
+  按邮件发送模式ID提取未发送的数据时，
+  需要对每个监控的邮件发送模式ID启动邮件发送Batch的进程。
+  因此，进程启动时需要在启动参数中指定处理对象的邮件发送模式ID(mailSendPatternId)。
 
- 以下に実行例を示す。
+  以下展示执行示例。
 
- ポイント
-  * ``mailSendPatternId`` という名前のオプションでメール送信パターンIDを指定する。
+  要点
+   * 以 ``mailSendPatternId`` 名称的选项指定邮件发送模式ID。
 
- .. code-block:: bash
+  .. code-block:: bash
 
-  java nablarch.fw.launcher.Main \
-    -diConfig file:./mail-batch-config.xml \
-    -requestPath nablarch.common.mail.MailSender/SENDMAIL00 \
-    -userId mailBatchUser
-    -mailSendPatternId 02
+   java nablarch.fw.launcher.Main \
+     -diConfig file:./mail-batch-config.xml \
+     -requestPath nablarch.common.mail.MailSender/SENDMAIL00 \
+     -userId mailBatchUser
+     -mailSendPatternId 02
 
 .. _`mail-mail_error_process`:
 
-メール送信時のエラー処理
+邮件发送时的错误处理
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-:java:extdoc:`MailSender<nablarch.common.mail.MailSender>` は、外部からの入力データ(アドレスやヘッダ)に起因する例外やメール送信失敗の例外が発生した場合、
-対象のメール送信要求のステータスを送信失敗にして次のメール送信処理を行う。
-また、上記以外の例外が発生した場合は、メール送信要求のステータスを送信失敗にしてリトライする。
+:java:extdoc:`MailSender<nablarch.common.mail.MailSender>` 在发生由外部输入数据(地址或头部)引起的异常或邮件发送失败的异常时，
+将目标邮件发送请求的状态设为发送失败，然后继续下一个邮件发送处理。
+另外，发生上述以外的异常时，将邮件发送请求的状态设为发送失败并进行重试。
 
-以下の表に例外の種類とそのエラー処理を示す。
+下表展示异常的种类及其错误处理。
 
- .. list-table:: メール送信時の例外と処理
+ .. list-table:: 邮件发送时的异常与处理
   :class: white-space-normal
   :header-rows: 1
 
-  * - 例外
-    - 処理
-  * - 送信要求のメールアドレス変換時の :java:extdoc:`Jakarta MailのAddressException <jakarta.mail.internet.AddressException>`
-    - 変換に失敗したアドレスをログ出力(ログレベル: ERROR)する。
-  * - :ref:`mail-mail_header_injection` での :java:extdoc:`InvalidCharacterException<nablarch.common.mail.InvalidCharacterException>`
-    - ヘッダ文字列をログ出力(ログレベル: ERROR)する。
-  * - メール送信失敗時の :java:extdoc:`Jakarta MailのSendFailureException <jakarta.mail.SendFailedException>`
-    - 送信されたアドレス、送信されなかったアドレス、不正なアドレスをログ出力(ログレベル: ERROR)する。
-  * - 上記以外のメール送信時の :java:extdoc:`Exception <java.lang.Exception>`
-    - 例外をラップしてリトライ例外を送出する。
+  * - 异常
+    - 处理
+  * - 发送请求的邮件地址转换时的 :java:extdoc:`Jakarta Mail的AddressException <jakarta.mail.internet.AddressException>`
+    - 将转换失败的地址输出到日志(日志级别: ERROR)。
+  * - :ref:`mail-mail_header_injection` 中的 :java:extdoc:`InvalidCharacterException<nablarch.common.mail.InvalidCharacterException>`
+    - 将头部字符串输出到日志(日志级别: ERROR)。
+  * - 邮件发送失败时的 :java:extdoc:`Jakarta Mail的SendFailureException <jakarta.mail.SendFailedException>`
+    - 将已发送的地址、未发送的地址、无效的地址输出到日志(日志级别: ERROR)。
+  * - 上述以外的邮件发送时的 :java:extdoc:`Exception <java.lang.Exception>`
+    - 包装异常并抛出重试异常。
 
-なお、ステータスの送信失敗への更新に失敗した場合、または、リトライ上限に達した場合、メール送信バッチは異常終了する。
+另外，状态更新为发送失败失败时，或者达到重试上限时，邮件发送Batch将异常结束。
 
  .. important::
-  送信失敗の検知は、別プロセスでログファイルをチェックするなどして対応する必要がある。
+  发送失败的检测需要通过在别的进程中检查日志文件等方式来应对。
 
-ログ出力の処理を変更したい場合や、リトライの処理を変更したい場合は、 :ref:`mail-mail_extension_sample` を参照すること。
+想更改日志输出的处理或重试的处理时，请参考 :ref:`mail-mail_extension_sample` 。
 
 .. _`mail-mail_multi_process`:
 
-メール送信をマルチプロセス化する
+将邮件发送多进程化
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-メール送信をマルチプロセス化する場合（例えば冗長構成のサーバで実行する場合）、
-メール送信要求テーブルのプロセスIDカラムを使用して悲観ロックを行い、複数のプロセスが同一の送信要求を処理しないようにする。
-この機能を使用するには、 次の設定が必要となる。
+将邮件发送多进程化时（例如在冗余构成的服务器上执行时），
+使用邮件发送请求表的进程ID列进行悲观锁，防止多个进程处理同一发送请求。
+使用本功能需要以下设置。
 
- 1. メール送信要求テーブルにメール送信バッチのプロセスIDのカラムを定義する
- 2. :java:extdoc:`MailRequestTable<nablarch.common.mail.MailRequestTable>` のsendProcessIdColumnNameのプロパティの値にメール送信バッチのプロセスIDのカラム名を設定し、コンポーネント定義に追加する
- 3. メール送信バッチのプロセスID更新用のトランザクションを ``mailMultiProcessTransaction`` の名前でコンポーネント定義に追加する(トランザクションの設定方法は :ref:`database-new_transaction` を参照)
-
- .. important::
-
-   2. の設定がされていない場合、排他制御がされないため１件のメール送信要求を複数プロセスが処理する可能性がある。
-   しかし、見かけ上メール送信バッチが動作するため、設定漏れを検知しづらい。
-   メール送信をマルチプロセス化する場合は上記の設定を漏れなく行うこと。
+ 1. 在邮件发送请求表中定义邮件发送Batch的进程ID列
+ 2. 设置 :java:extdoc:`MailRequestTable<nablarch.common.mail.MailRequestTable>` 的sendProcessIdColumnName属性值为邮件发送Batch的进程ID列名，并添加到组件定义中
+ 3. 将邮件发送Batch的进程ID更新用的事务以 ``mailMultiProcessTransaction`` 名称添加到组件定义中(事务设置方法请参考 :ref:`database-new_transaction` )
 
  .. important::
 
-  Nablarchのメール送信機能では :ref:`do-not-use-for-campaign-mail` 。マルチプロセス化についても、大量メールを分散して送信することが目的ではなく
-  冗長構成のサーバで一部のサーバに障害が発生してもメール送信機能を継続できることを目的としている。
-  そのため、各プロセスが送信対象とするメールはプロセス起動時点で未送信のメール全て(※)となり、プロセス間での均等分散は行わない。
+   如果未进行2.的设置，则不会进行排他控制，1件邮件发送请求可能被多个进程处理。
+   但是，表面上邮件发送Batch会正常运行，因此难以检测设置遗漏。
+   将邮件发送多进程化时请务必完整进行上述设置。
+
+ .. important::
+
+  Nablarch的邮件发送功能 :ref:`do-not-use-for-campaign-mail` 。关于多进程化，目的也不是分散发送大量邮件，
+  而是即使在冗余构成的服务器中部分服务器发生故障也能继续邮件发送功能。
+  因此，各进程发送的对象邮件为进程启动时未发送的所有邮件(※)，进程间不进行均等分散。
   
-  ※メール送信パターンIDを指定している場合は該当のメール送信パターンIDのうち未送信のメール全てが対象
+  ※指定了邮件发送模式ID时，对应该邮件发送模式ID的未发送邮件全部成为对象
 
 .. _`mail-mail_header_injection`:
 
-メールヘッダインジェクション攻撃への対策
+对邮件头部注入攻击的对策
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-メールヘッダインジェクション攻撃への根本的対策として、以下の対策を実施する必要がある。
+作为对邮件头部注入攻击的根本对策，需要实施以下对策。
 
-* メールヘッダは固定値を使用する。外部からの入力値を使用しない。
-* プログラミング言語の標準APIを使用してメールを送信する。Javaの場合は |JavaMail| を使用する。
+* 邮件头部使用固定值。不使用外部输入值。
+* 使用编程语言的标准API发送邮件。Java的情况下使用 |JavaMail| 。
 
-メールヘッダは固定値を使用する。外部からの入力値を使用しない。
- これについては、プロジェクトで対応する。
- 固定値にできない場合は、改行コードを変換するか、取り除く対応をプロジェクトで行う。
+邮件头部使用固定值。不使用外部输入值。
+ 这由项目在项目中应对。
+ 无法使用固定值时，需要由项目将换行代码转换或删除。
 
-プログラミング言語の標準APIを使用してメールを送信する。Javaの場合は |JavaMail| を使用する。
- 本機能では |JavaMail| を使用している。
- しかし、 |JavaMail| を使用しても、一部のメールヘッダの項目に改行コードが含まれていてもメール送信可能な項目がある。
- そのため、保険的対策として、これらの項目に対して改行コードが含まれている場合にはメール送信を実施しないチェック機能を設けている。
- 改行コードが含まれていた場合には、
- :java:extdoc:`InvalidCharacterException<nablarch.common.mail.InvalidCharacterException>`
- の送出およびログ出力(ログレベル: ERROR)を行い、該当のメールは送信処理を失敗として扱うこととする。
+使用编程语言的标准API发送邮件。Java的情况下使用 |JavaMail| 。
+ 本功能使用 |JavaMail| 。
+ 但是，即使使用 |JavaMail| ，部分邮件头部项目即使包含换行代码也能发送邮件。
+ 因此，作为保险对策，对这些项目设置了包含换行代码时不发送邮件的检查功能。
+ 如果包含换行代码，
+ 抛出 :java:extdoc:`InvalidCharacterException<nablarch.common.mail.InvalidCharacterException>`
+ 并输出日志(日志级别: ERROR)，将该邮件作为发送处理失败处理。
 
- この保険的対策は、脆弱性となる可能性のある以下の項目を対象としている。
+ 该保险对策针对以下可能成为漏洞的项目。
 
- * 件名
- * 差し戻し先メールアドレス
+ * 主题
+ * 退信邮件地址
 
 .. _`mail-mail_extension_sample`:
 
-拡張例
+扩展示例
 ---------------------------------------------------------------------
 
-電子署名を付加したりメール本文を暗号化するなどメール送信処理を変更する
+添加电子签名或加密邮件正文等更改邮件发送处理
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-:java:extdoc:`MailSender<nablarch.common.mail.MailSender>` は、
-メール送信要求やテンプレートで指定された内容をそのまま送信する。
-应用要件によっては、電子署名を付加したりメール本文を暗号化する必要が出てくる。
+:java:extdoc:`MailSender<nablarch.common.mail.MailSender>` 将
+邮件发送请求或模板指定的内容原样发送。
+根据应用程序需求，可能需要添加电子签名或加密邮件正文。
 
-そのような場合は、 :java:extdoc:`MailSender<nablarch.common.mail.MailSender>`
-を継承したクラスをプロジェクトで作成して対応する。
-詳細は、 :java:extdoc:`MailSenderのJavadoc<nablarch.common.mail.MailSender>` を参照。
+这种情况下，请在项目中创建继承 :java:extdoc:`MailSender<nablarch.common.mail.MailSender>`
+的类来应对。
+详情请参照 :java:extdoc:`MailSender的Javadoc<nablarch.common.mail.MailSender>` 。
 
-メール送信に失敗した際の処理を変更する
+更改邮件发送失败时的处理
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-メール送信に失敗した際のエラー処理(詳細は :ref:`mail-mail_error_process` を参照)を、例えば、ログレベルを変更したり、
-リトライ対象の例外を変更するなど、应用の要件によって変更したい場合がある。
+邮件发送失败时的错误处理(详情请参照 :ref:`mail-mail_error_process` )，例如想更改日志级别或
+更改重试对象异常等根据应用程序需求更改时，
 
-そのような場合は、上の例と同様、:java:extdoc:`MailSender<nablarch.common.mail.MailSender>` を継承したクラスを作成して対応する。
+这种情况下，与上面的示例同样，请创建继承 :java:extdoc:`MailSender<nablarch.common.mail.MailSender>` 的类来应对。
 
-メール送信要求時に使用するトランザクションを指定する
+指定邮件发送请求时使用的事务
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-業務应用が失敗してもメール送信要求を確実に行いたい場合など、
-メール送信要求 :java:extdoc:`MailRequester<nablarch.common.mail.MailRequester>` とメール送信要求IDの :ref:`採番<generator>`
-で実行されるトランザクションを、業務应用のトランザクションとは独立して指定したい場合がある。
+业务应用程序失败也想确保进行邮件发送请求等情况下，
+可能想将邮件发送请求 :java:extdoc:`MailRequester<nablarch.common.mail.MailRequester>` 和邮件发送请求ID的 :ref:`编号<generator>`
+中执行的事务与业务应用程序的事务独立指定。
 
-その場合の設定例を以下に示す。
+这种情况下的设置示例如下。
 
- ポイント
-  * トランザクションマネージャとメール送信要求IDの採番で指定するトランザクション名を同じにする。
+ 要点
+  * 将事务管理器和邮件发送请求ID的编号中指定的事务名设为相同。
 
  .. code-block:: xml
 
-  <!-- メール送信要求コンポーネント -->
+  <!-- 邮件发送请求组件 -->
   <component name="mailRequester" class="nablarch.common.mail.MailRequester">
-    <!-- メール送信に用いるトランザクションを指定 -->
+    <!-- 指定邮件发送所使用的事务 -->
     <property name="mailTransactionManager" ref="txManager" />
   </component>
 
-  <!-- トランザクションマネージャ  -->
+  <!-- 事务管理器  -->
   <component name="txManager" class="nablarch.core.db.transaction.SimpleDbTransactionManager">
     <property name="dbTransactionName" value="mail-transaction" />
   </component>
 
-  <!-- メール送信要求IDジェネレータ -->
+  <!-- 邮件发送请求ID生成器 -->
   <component name="mailRequestIdGenerator"
       class="nablarch.common.idgenerator.TableIdGenerator">
-      <!-- トランザクションマネージャで指定したトランザクション名を指定 -->
+      <!-- 指定事务管理器中指定的事务名 -->
       <property name="dbTransactionName" value="mail-transaction" />
   </component>
 
@@ -670,7 +670,7 @@
       class="nablarch.core.repository.initialization.BasicApplicationInitializer">
     <property name="initializeList">
       <list>
-        <!-- TableIdGeneratorは初期化が必要 -->
+        <!-- TableIdGenerator需要初始化 -->
         <component-ref name="mailRequestIdGenerator" />
       </list>
     </property>

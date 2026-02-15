@@ -1,17 +1,17 @@
 .. _http_character_encoding_handler:
 
-HTTP文字エンコード制御ハンドラ
+HTTP字符编码控制handler
 ==================================================
 .. contents:: 目录
   :depth: 3
   :local:
 
-本ハンドラではリクエスト( :java:extdoc:`HttpServletRequest <jakarta.servlet.http.HttpServletRequest>` )
-及びレスポンス( :java:extdoc:`HttpServletResponse <jakarta.servlet.http.HttpServletResponse>` )に対して規定の文字エンコーディングを設定する。
+本handler对请求( :java:extdoc:`HttpServletRequest <jakarta.servlet.http.HttpServletRequest>` )
+及响应( :java:extdoc:`HttpServletResponse <jakarta.servlet.http.HttpServletResponse>` )设置规定的字符编码。
 
 本handler执行以下处理。
 
-* リクエスト及びレスポンスへの規定の文字エンコーディングの設定
+* 设置请求及响应的规定字符编码
 
 处理流程如下。
 
@@ -30,22 +30,22 @@ handler类名
     <artifactId>nablarch-fw-web</artifactId>
   </dependency>
 
-制約
+约束
 ------------------------------
-本ハンドラは、どのハンドラよりも前に設定すること。
-  このハンドラより前にハンドラを設定した場合、以下の問題が発生する可能性がある。
+本handler必须配置在所有handler之前。
+  如果在本handler之前配置了其他handler，可能会发生以下问题。
 
-  * レスポンスに対する規定の文字エンコーディングが設定されない
-  * リクエストパラメータにアクセスすることで規定の文字エンコーディングの設定が有効とならずサーバサイドで文字化けの原因となる
+  * 响应的规定字符编码未被设置
+  * 访问请求参数后规定字符编码设置未生效，导致服务器端出现乱码
 
-  このため、本ハンドラはどのハンドラよりも前に配置すること。
+  因此，本handler必须配置在所有handler之前。
 
-規定の文字エンコーディングを設定する
+设置规定字符编码
 --------------------------------------------------
-文字エンコーディングは、 :java:extdoc:`defaultEncoding <nablarch.fw.web.handler.HttpCharacterEncodingHandler.setDefaultEncoding(java.lang.String)>` プロパティに対して設定する。
-設定を省略した場合は、 ``UTF-8`` が使用される。
+字符编码在 :java:extdoc:`defaultEncoding <nablarch.fw.web.handler.HttpCharacterEncodingHandler.setDefaultEncoding(java.lang.String)>` 属性中设置。
+省略设置时，使用 ``UTF-8`` 。
 
-以下に ``Windows-31J`` を設定する例を示す。
+以下显示设置 ``Windows-31J`` 的示例。
 
 .. code-block:: xml
 
@@ -53,16 +53,16 @@ handler类名
     <property name="defaultEncoding" value="Windows-31J" />
   </component>
 
-レスポンスに対する規定の文字エンコーディングの設定を切り替える
+切换响应的规定字符编码设置
 --------------------------------------------------------------------------------
-本ハンドラでレスポンスに対して規定の文字エンコーディングを設定した場合、
-後続のハンドラで処理した全てのレスポンスに対して文字エンコーディングが設定される。
+使用本handler对响应设置规定字符编码时，
+后续handler处理的所有响应都会被设置字符编码。
 
-例えば、後続で画像を返却した場合に、Content-Typeヘッダが「image/jpeg;charset=UTF-8」となる。
-このため、本ハンドラのデフォルトの動作では、レスポンスに対しては、規定の文字エンコーディングを設定していない。
+例如，后续返回图像时，Content-Type头部会变为「image/jpeg;charset=UTF-8」。
+因此，本handler的默认行为是不对响应设置规定字符编码。
 
-WEB APIのように全てのレスポンスに対して規定の文字エンコーディングを設定する必要がある場合には、
-以下の例を参照し :java:extdoc:`appendResponseCharacterEncoding <nablarch.fw.web.handler.HttpCharacterEncodingHandler.setAppendResponseCharacterEncoding(boolean)>` プロパティに ``true`` を設定すること。
+像WEB API这样需要对所有响应设置规定字符编码时，
+请参考以下示例，将 :java:extdoc:`appendResponseCharacterEncoding <nablarch.fw.web.handler.HttpCharacterEncodingHandler.setAppendResponseCharacterEncoding(boolean)>` 属性设置为 ``true`` 。
 
 .. code-block:: xml
 
@@ -70,17 +70,17 @@ WEB APIのように全てのレスポンスに対して規定の文字エンコ�
     <property name="appendResponseCharacterEncoding" value="true" />
   </component>
 
-一律ではなくリクエストごとに文字エンコーディングを変更したい
+希望按请求而不是统一更改字符编码时
 ----------------------------------------------------------------------
-リクエスト毎に文字エンコーディングを変更する場合には、本ハンドラを継承して対応すること。
+需要按请求更改字符编码时，需要继承本handler来对应。
 
-例えば、外部サイトからのリクエストを処理するシステムで、外部サイト毎にエンコーディングが異なる場合には、この対応が必要となる。
+例如，在处理来自外部站点请求的系统中，当每个外部站点的编码不同时，需要采取这种对应方式。
 
-以下に例を示す。
+以下显示示例。
 
-ポイント
-  * リクエストのエンコーディングを変更する場合は、 :java:extdoc:`resolveRequestEncoding <nablarch.fw.web.handler.HttpCharacterEncodingHandler.resolveRequestEncoding(jakarta.servlet.http.HttpServletRequest)>` をオーバライドする。
-  * レスポンスのエンコーディングを変更する場合は、 :java:extdoc:`resolveResponseEncoding <nablarch.fw.web.handler.HttpCharacterEncodingHandler.resolveResponseEncoding(jakarta.servlet.http.HttpServletRequest)>` をオーバライドする。
+要点
+  * 更改请求编码时，覆盖 :java:extdoc:`resolveRequestEncoding <nablarch.fw.web.handler.HttpCharacterEncodingHandler.resolveRequestEncoding(jakarta.servlet.http.HttpServletRequest)>` 。
+  * 更改响应编码时，覆盖 :java:extdoc:`resolveResponseEncoding <nablarch.fw.web.handler.HttpCharacterEncodingHandler.resolveResponseEncoding(jakarta.servlet.http.HttpServletRequest)>` 。
 
 .. code-block:: java
 
@@ -98,12 +98,12 @@ WEB APIのように全てのレスポンスに対して規定の文字エンコ�
     }
 
     /**
-     * 文字エンコードを解決する。<br />
+     * 解析字符编码。<br />
      *
-     * URIに{@code /shop1}が含まれている場合は、{@code Windows-31J}として扱う。
+     * URI中包含{@code /shop1}时，作为{@code Windows-31J}处理。
      *
-     * @param req リクエスト
-     * @return 文字エンコード
+     * @param req 请求
+     * @return 字符编码
      */
     private Charset resolveCharacterEncoding(HttpServletRequest req) {
       if (req.getRequestURI().contains("/shop1")) {

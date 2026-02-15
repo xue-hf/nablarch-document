@@ -1,36 +1,35 @@
 .. _resource_mapping:
 
-リソースマッピングハンドラ
+资源映射handler
 ==================================================
 .. contents:: 目录
   :depth: 3
   :local:
 
-本ハンドラは、業務アクションを経由せずにレスポンスを返却する機能を提供する。
-本機能は、静的リソースをNablarchのハンドラを経由してダウンロードする際に使用する。
+本handler提供不经过业务action直接返回响应的功能。
+本功能用于通过Nablarch的handler下载静态资源。
 
 .. important::
-  本ハンドラを使用して静的リソースをダウンロードする方法には、「ログが大量に出力される」、
-  「大量アクセスがあるサーバで、应用サーバの負荷が大きい」といったデメリットがある。
+  使用本handler下载静态资源的方法存在"日志大量输出"、
+  "在有大量访问的服务器上，应用服务器负载大"等缺点。
 
-  このため、ハンドラを経由させる必要がない静的リソースのダウンロードについては、
-  本ハンドラの使用を推奨しない。
-  静的リソースについては、ウェブコンテナまたはウェブサーバの機能でダウンロードし、
-  本ハンドラを使用するのは「コンテンツのダウンロードに認可チェックを行う必要がある」など、
-  他のハンドラを経由する必要のあるコンテンツに限って使用すること。
+  因此，对于不需要通过handler的静态资源下载，
+  不推荐使用本handler。
+  静态资源请通过Web容器或Web服务器的功能下载，
+  本handler仅限于"需要对内容下载进行授权检查"等
+  需要经过其他handler的内容使用。
 
 本handler执行以下处理。
 
-* 静的リソースをダウンロードするレスポンスを返す
+* 返回下载静态资源的响应
 
 .. important::
-  本ハンドラは主に、 :ref:`request_handler_entry` と組み合わせて 「特定の拡張子の場合に静的リソースを
-  ダウンロードする」 機能の実現に使用する。
+  本handler主要与 :ref:`request_handler_entry` 组合使用，实现 "当为特定扩展名时下载静态资源" 的功能。
 
-  この用途での使用例は :ref:`リクエストハンドラエントリの使用例 <request_handler_entry_usage>` を参照。
+  此用途的使用示例请参考 :ref:`请求handler入口的使用示例 <request_handler_entry_usage>` 。
 
 处理流程如下。
-なお、図にある通り本ハンドラは後続のハンドラを呼び出さない。
+如图中显示，本handler不调用后续handler。
 
 .. image:: ../images/ResourceMapping/flow.png
 
@@ -47,52 +46,52 @@ handler类名
     <artifactId>nablarch-fw-web</artifactId>
   </dependency>
 
-制約
+约束
 ------------------------------
 
-:ref:`forwarding_handler` よりも後に配置すること
-  本ハンドラは、 :ref:`forwarding_handler` の機能により提供される ``forward://`` スキームを使用できる。
-  このため、本ハンドラは :ref:`forwarding_handler` より後に配置する必要がある。
+配置在 :ref:`forwarding_handler` 之后
+  本handler可以使用 :ref:`forwarding_handler` 的功能提供的 ``forward://`` 方案。
+  因此，本handler需要配置在 :ref:`forwarding_handler` 之后。
 
-:ref:`http_response_handler` よりも後に配置すること
-  本ハンドラは、 :ref:`http_response_handler` の機能により提供される ``servlet://`` 、 ``file://`` 、 ``classpath://`` スキームを使用できる。
-  また、エラーが発生した際は 404(Not Found)の応答を返す。
-  これらの応答を処理するため、本ハンドラは :ref:`http_response_handler` より後に配置する必要がある。
+配置在 :ref:`http_response_handler` 之后
+  本handler可以使用 :ref:`http_response_handler` 的功能提供的 ``servlet://`` 、 ``file://`` 、 ``classpath://`` 方案。
+  另外，发生错误时返回404(Not Found)响应。
+  为处理这些响应，本handler需要配置在 :ref:`http_response_handler` 之后。
 
 .. _resource_mapping_usage:
 
-静的リソースのダウンロード
+静态资源的下载
 ------------------------------
 
-本ハンドラの主たる用途である、静的リソースをダウンロードする際には ``baseUri`` と ``basePath`` 2つのプロパティを以下のように設定する。
+本handler的主要用途下载静态资源时，需要如下设置 ``baseUri`` 和 ``basePath`` 两个属性。
 
 .. code-block:: xml
 
-  <!-- 画像ファイルの静的リソースダウンロードを行うハンドラ -->
+  <!-- 执行图像文件静态资源下载的handler -->
   <component name="imgMapping"
              class="nablarch.fw.web.handler.ResourceMapping">
     <property name="baseUri" value="/"/>
     <property name="basePath" value="servlet:///"/>
   </component>
 
-それぞれの設定項目の意味は下記の通り
+各设置项目的含义如下
 
 ============================= ==========================================================
-設定項目                      意味
+设置项目                      含义
 ============================= ==========================================================
-baseUri                       処理対象のURL。このURLにマッチしない場合、ハンドラは
+baseUri                       处理对象的URL。如果URL不匹配，handler将
                               |br|
-                              HTTPステータス404(NotFound)の応答を返す。
-basePath                      baseUriにマッチした場合のレスポンスのベースURL。
+                              返回HTTP状态404(NotFound)响应。
+basePath                      匹配baseUri时的响应基础URL。
                               |br|
-                              スキーマ指定を省略した場合、 ``servlet://`` スキーマが使用される。
+                              省略方案指定时，使用 ``servlet://`` 方案。
 ============================= ==========================================================
 
-ただし、上記設定のハンドラを単純にhandler队列に入れた場合、サーバに送られたすべてのURLの処理が
-静的リソースとして処理される。
-つまり、handler队列上の本ハンドラ以降のハンドラすべてが実行されなくなる。
+但是，如果直接将上述设置的handler放入handler队列，
+服务器发送的所有URL处理都将作为静态资源处理。
+也就是说，handler队列上本handler之后的所有handler都将不会执行。
 
-このため、  :ref:`request_handler_entry_usage` に記載のとおり、 :ref:`request_handler_entry` と組み合わせて使用する必要がある。
+因此，需要如 :ref:`request_handler_entry_usage` 所述，与 :ref:`request_handler_entry` 组合使用。
 
 
 

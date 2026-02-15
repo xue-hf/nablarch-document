@@ -1,23 +1,23 @@
 .. _body_convert_handler:
 
-リクエストボディ変換ハンドラ
+请求主体转换handler
 ==================================================
 .. contents:: 目录
   :depth: 3
   :local:
 
-本ハンドラでは、リクエストボディとレスポンスボディの変換処理を行う。
+本handler负责请求主体和响应主体的转换处理。
 
-変換時に使用するフォーマットは、リクエストを処理するリソース(アクション)クラスのメソッドに設定された
-:java:extdoc:`Consumes <jakarta.ws.rs.Consumes>` 及び :java:extdoc:`Produces <jakarta.ws.rs.Produces>` アノテーションで指定する。
+转换时使用的格式由处理请求的资源(Action)类的方法中设置的
+:java:extdoc:`Consumes <jakarta.ws.rs.Consumes>` 及 :java:extdoc:`Produces <jakarta.ws.rs.Produces>` 注解指定。
 
 本handler执行以下处理。
 
-* リクエストボディをリソース(アクション)クラスで受け付けるFormに変換する。
-  詳細は、:ref:`body_convert_handler-convert_request` を参照。
+* 将请求主体转换为资源(Action)类接受的Form。
+  详情请参阅 :ref:`body_convert_handler-convert_request`。
 
-* リソース(アクション)クラスの処理結果をレスポンスボディに変換する。
-  詳細は、:ref:`body_convert_handler-convert_response` を参照。
+* 将资源(Action)类的处理结果转换为响应主体。
+  详情请参阅 :ref:`body_convert_handler-convert_response`。
 
 处理流程如下。
 
@@ -37,51 +37,51 @@ handler类名
     <artifactId>nablarch-fw-jaxrs</artifactId>
   </dependency>
 
-制約
+约束
 ------------------------------
-本ハンドラは :ref:`router_adaptor` よりも後ろに設定すること
-  このハンドラは、リソース(アクション)クラスのメソッドに設定された、アノテーションの情報を元に
-  リクエスト及びレスポンスの変換処理を行う。
-  このため、ディスパッチ先を特定する :ref:`router_adaptor` よりも後ろに設定する必要がある。
+本handler应设置在 :ref:`router_adaptor` 之后
+  本handler根据资源(Action)类的方法中设置的注解信息
+  进行请求及响应的转换处理。
+  因此，需要设置在用于确定分发目标的 :ref:`router_adaptor` 之后。
 
-変換処理を行うコンバータを設定する
+设置执行转换处理的converter
 --------------------------------------------------
-このハンドラでは、 :java:extdoc:`bodyConverters <nablarch.fw.jaxrs.BodyConvertHandler.setBodyConverters(java.util.List)>` プロパティに設定された、
-:java:extdoc:`BodyConverter <nablarch.fw.jaxrs.BodyConverter>` の実装クラスを使用してリクエスト及びレスポンスの変換処理を行う。
-:java:extdoc:`bodyConverters <nablarch.fw.jaxrs.BodyConvertHandler.setBodyConverters(java.util.List)>` プロパティには、
-プロジェクトで使用するMIMEに対応した、 :java:extdoc:`BodyConverter <nablarch.fw.jaxrs.BodyConverter>` を設定すること。
+本handler使用设置在 :java:extdoc:`bodyConverters <nablarch.fw.jaxrs.BodyConvertHandler.setBodyConverters(java.util.List)>` 属性中的
+:java:extdoc:`BodyConverter <nablarch.fw.jaxrs.BodyConverter>` 实现类进行请求及响应的转换处理。
+:java:extdoc:`bodyConverters <nablarch.fw.jaxrs.BodyConvertHandler.setBodyConverters(java.util.List)>` 属性中应设置
+项目中使用的MIME对应的 :java:extdoc:`BodyConverter <nablarch.fw.jaxrs.BodyConverter>`。
 
-以下に例を示す。
+以下为例。
 
 .. code-block:: xml
 
   <component class="nablarch.fw.jaxrs.BodyConvertHandler">
     <property name="bodyConverters">
       <list>
-        <!-- application/xmlに対応したリクエスト・レスポンスのコンバータ -->
+        <!-- 对应application/xml的请求/响应converter -->
         <component class="nablarch.fw.jaxrs.JaxbBodyConverter" />
-        <!-- application/x-www-form-urlencodedに対応したリクエスト・レスポンスのコンバータ -->
+        <!-- 对应application/x-www-form-urlencoded的请求/响应converter -->
         <component class="nablarch.fw.jaxrs.FormUrlEncodedConverter" />
       </list>
     </property>
   </component>
 
 .. tip::
-  :java:extdoc:`bodyConverters <nablarch.fw.jaxrs.BodyConvertHandler.setBodyConverters(java.util.List)>` プロパティに設定されたコンバータで、
-  変換出来ないMIMEが使用された場合、サポートしていないメディアタイプであることを示すステータスコード(``415``)を返却する。
+  如果使用了 :java:extdoc:`bodyConverters <nablarch.fw.jaxrs.BodyConvertHandler.setBodyConverters(java.util.List)>` 属性中设置的converter
+  无法转换的MIME，则返回表示不支持的媒体类型的状态码(``415``)。
 
 .. _body_convert_handler-convert_request:
 
-リクエストボディをFormに変換する
+将请求主体转换为Form
 --------------------------------------------------
-リクエストボディの変換処理で使用するフォーマットは、リクエストを処理するメソッドに設定された :java:extdoc:`Consumes <jakarta.ws.rs.Consumes>` により決まる。
-もし、 :java:extdoc:`Consumes <jakarta.ws.rs.Consumes>` に設定されたMIMEと異なるMIMEがリクエストヘッダのContent-Typeに設定されていた場合は、
-サポートしていないメディアタイプであることを示すステータスコード(``415``)を返却する。
+请求主体转换处理使用的格式由处理请求的方法中设置的 :java:extdoc:`Consumes <jakarta.ws.rs.Consumes>` 决定。
+如果请求头部的Content-Type中设置的MIME与 :java:extdoc:`Consumes <jakarta.ws.rs.Consumes>` 中设置的MIME不同，
+则返回表示不支持的媒体类型的状态码(``415``)。
 
-リソース(アクション)のメソッドの実装例を以下に示す。
+资源(Action)方法的实现例如下。
 
-この例では、 ``MediaType.APPLICATION_JSON`` が示す ``application/json`` に対応した
-:java:extdoc:`BodyConverter <nablarch.fw.jaxrs.BodyConverter>` でリクエストボディが ``Person`` に変換される。
+本例中，使用对应 ``MediaType.APPLICATION_JSON`` 所表示的 ``application/json`` 的
+:java:extdoc:`BodyConverter <nablarch.fw.jaxrs.BodyConverter>` 将请求主体转换为 ``Person``。
 
 .. code-block:: java
 
@@ -94,14 +94,14 @@ handler类名
 
 .. _body_convert_handler-convert_response:
 
-リソース(アクション)の処理結果をレスポンスボディに変換する
+将资源(Action)的处理结果转换为响应主体
 ----------------------------------------------------------------------
-レスポンスボディへの変換処理で使用するフォーマットは、リクエストを処理したメソッドに設定された :java:extdoc:`Produces <jakarta.ws.rs.Produces>` により決まる。
+响应主体转换处理使用的格式由处理请求的方法中设置的 :java:extdoc:`Produces <jakarta.ws.rs.Produces>` 决定。
 
-リソース(アクション)のメソッドの実装例を以下に示す。
+资源(Action)方法的实现例如下。
 
-この例では、 ``MediaType.APPLICATION_JSON`` が示す ``application/json`` に対応した
-:java:extdoc:`BodyConverter <nablarch.fw.jaxrs.BodyConverter>` でリクエストボディが ``Person`` に変換される。
+本例中，使用对应 ``MediaType.APPLICATION_JSON`` 所表示的 ``application/json`` 的
+:java:extdoc:`BodyConverter <nablarch.fw.jaxrs.BodyConverter>` 将请求主体转换为 ``Person``。
 
 .. code-block:: java
 

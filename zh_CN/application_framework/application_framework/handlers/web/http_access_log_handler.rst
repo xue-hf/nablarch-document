@@ -1,17 +1,17 @@
 .. _http_access_log_handler:
 
-HTTPアクセスログハンドラ
+HTTP访问日志handler
 ==================================================
 .. contents:: 目录
   :depth: 3
   :local:
 
-:ref:`HTTPアクセスログ <http_access_log>` を出力するハンドラ。
+输出 :ref:`HTTP访问日志 <http_access_log>` 的handler。
 
 本handler执行以下处理。
 
-* リクエスト処理開始時のアクセスログを出力する
-* リクエスト処理完了時のアクセスログを出力する
+* 请求处理开始时输出访问日志
+* 请求处理完成时输出访问日志
 
 处理流程如下。
 
@@ -30,20 +30,20 @@ handler类名
     <artifactId>nablarch-fw-web</artifactId>
   </dependency>
 
-制約
+约束
 --------------------------------------------------
 
-:ref:`thread_context_handler` より後ろに配置すること
-  このハンドラから呼ばれるログ出力の処理内では、通常 :java:extdoc:`ThreadContext <nablarch.core.ThreadContext>` に保持する内容が必要となる。
-  このため、 :ref:`thread_context_handler` より後ろに配置する必要がある。
+应配置在 :ref:`thread_context_handler` 之后
+  从此handler调用的日志输出处理中，通常需要 :java:extdoc:`ThreadContext <nablarch.core.ThreadContext>` 中保存的内容。
+  因此，需要配置在 :ref:`thread_context_handler` 之后。
 
-:ref:`http_error_handler` より前に配置すること
-  また、完了時のログ出力にはエラーコードが必要となるため、 :ref:`http_error_handler` より前に配置する必要がある。
+应配置在 :ref:`http_error_handler` 之前
+  此外，完成时的日志输出需要错误代码，因此需要配置在 :ref:`http_error_handler` 之前。
 
-セッションストアIDを出力する場合は :ref:`session_store_handler` より後ろに配置すること
-  詳細は :ref:`http_access_log-session_store_id` を参照。
+输出会话存储ID时应配置在 :ref:`session_store_handler` 之后
+  详细请参考 :ref:`http_access_log-session_store_id` 。
 
-アクセスログ出力内容の切り替え
+访问日志输出内容的切换
 --------------------------------------------------
 
-アクセスログの出力内容の切り替え方法は、 :ref:`log` および :ref:`http_access_log` を参照すること。
+访问日志输出内容的切换方法请参考 :ref:`log` 和 :ref:`http_access_log` 。

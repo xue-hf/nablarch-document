@@ -1,34 +1,33 @@
 .. _`db_double_submit`:
 
-データベースを使用した二重サブミット防止
+使用数据库防止重复提交
 =====================================================================
 
 .. contents:: 目录
   :depth: 3
   :local:
 
-:ref:`二重サブミット防止 <tag-double_submission>` では、サーバ側のトークンはHTTPセッションに保存される。
-このため、应用サーバをスケールアウトする際には、スティッキーセッションやセッションレプリケーション等を
-使用する必要がある。
+:ref:`重复提交防止 <tag-double_submission>` 中，服务器端令牌保存在HTTP会话中。
+因此，在扩展应用服务器时，需要使用粘性会话或会话复制等。
 
-サーバ側のトークンをデータベースに保管する実装を使用することで、特に应用サーバの設定をしなくても、
-複数の应用サーバ間でトークンを共有できる。
+通过使用将服务器端令牌保存在数据库中的实现，可以在不进行应用服务器特别配置的情况下，
+在多个应用服务器之间共享令牌。
 
 .. tip::
 
-  ブラウザが閉じられた場合などにテーブル上にトークンが残ってしまうことがある。
-  そのため、期限切れのトークンは定期的に削除する必要がある。
+  在浏览器关闭等情况下，令牌可能会残留在表上。
+  因此，需要定期删除已过期的令牌。
 
 .. important::
 
-  HTTPセッションを使用した :ref:`二重サブミット防止 <tag-double_submission>` はCSRF対策に使用できたが、
-  本機能はユーザを識別せずにトークンをDBに格納しているためCSRF対策に使用できない。
-  本機能を使用する場合は、CSRF対策に :ref:`csrf_token_verification_handler` を使用すること。
+  使用HTTP会话的 :ref:`重复提交防止 <tag-double_submission>` 可以用于CSRF防护，
+  但本功能由于不识别用户就将令牌存储在DB中，因此不能用于CSRF防护。
+  使用本功能时，CSRF防护请使用 :ref:`csrf_token_verification_handler` 。
 
-機能概要
+功能概述
 ---------------------------------------------------------------------
 
-サーバ側のトークンをデータベースに保管できる
+可以将服务器端令牌保存在数据库中
 
 模块列表
 ---------------------------------------------------------------------
@@ -43,27 +42,27 @@
 使用方法
 ---------------------------------------------------------------------
 
-データベース上にトークンを保存するためのテーブルが必要となる。
+需要在数据库上创建用于保存令牌的表。
 
-作成するテーブルの定義を以下に示す。
+创建表的定义如下所示。
 
-`DOUBLE_SUBMISSION` テーブル
+`DOUBLE_SUBMISSION` 表
   ==================== ====================
-  カラム名             データ型
+  列名                 数据类型
   ==================== ====================
   TOKEN(PK)            `java.lang.String`
   CREATED_AT           `java.sql.Timestamp`
   ==================== ====================
 
-テーブル名およびカラム名は変更可能である。
-変更する場合は、 :java:extdoc:`DbTokenManager.dbTokenSchema <nablarch.common.web.token.DbTokenManager.setDbTokenSchema(nablarch.common.web.token.DbTokenSchema)>` に
-:java:extdoc:`DbTokenSchema <nablarch.common.web.token.DbTokenSchema>` のコンポーネントを定義する。
+表名和列名可以更改。
+更改时，需在 :java:extdoc:`DbTokenManager.dbTokenSchema <nablarch.common.web.token.DbTokenManager.setDbTokenSchema(nablarch.common.web.token.DbTokenSchema)>` 中
+定义 :java:extdoc:`DbTokenSchema <nablarch.common.web.token.DbTokenSchema>` 的组件。
 
-2種類のコンポーネント定義を追加する。
+需要添加2种组件定义。
 
-``tokenManager`` という名前でコンポーネント定義を追加する。
-これにより、トークンがデータベースで管理されるようになる。
-``tokenManager`` は :ref:`初期化<repository-initialize_object>` が必要。
+添加名为 ``tokenManager`` 的组件定义。
+这样令牌将由数据库管理。
+``tokenManager`` 需要 :ref:`初始化<repository-initialize_object>` 。
 
 .. code-block:: xml
                 
@@ -73,7 +72,7 @@
         <property name="dbTransactionName" value="tokenTransaction"/>
       </component>
     </property>
-    <!-- 上記のテーブル定義からテーブル名、カラム名を変更する場合のみ以下設定が必要 -->
+    <!-- 从上述表定义更改表名、列名时才需要以下配置 -->
     <property name="dbTokenSchema">
       <component class="nablarch.common.web.token.DbTokenSchema">
         <property name="tableName" value="DB_TOKEN"/>
@@ -83,7 +82,7 @@
     </property>
   </component>
 
-  <!-- 初期化が必要なため、以下を設定 -->
+  <!-- 由于需要初始化，请进行以下配置 -->
   <component name="initializer" class="nablarch.core.repository.initialization.BasicApplicationInitializer">
     <property name="initializeList">
       <list>
@@ -93,8 +92,8 @@
   </component>
 
 
-``tokenGenerator`` という名前でコンポーネント定義を追加する。
-これによりトークンにUUIDが使用され、推測および衝突の可能性を考慮しなくてよくなる。
+添加名为 ``tokenGenerator`` 的组件定义。
+这样令牌将使用UUID，无需考虑推测和冲突的可能性。
 
 .. code-block:: xml
 
@@ -103,10 +102,10 @@
 
 .. important::
 
-  :ref:`テスティングフレームワークのトークン発行<how_to_set_token_in_request_unit_test>` はトークンのDB保存に対応していない。
-  そのため、自動テスト実行時には :java:extdoc:`HttpSessionTokenManager <nablarch.common.web.token.HttpSessionTokenManager>` に差し替えてテストする必要がある。
+  :ref:`测试框架的令牌发行<how_to_set_token_in_request_unit_test>` 不支持令牌的数据库保存。
+  因此，自动测试执行时需要替换为 :java:extdoc:`HttpSessionTokenManager <nablarch.common.web.token.HttpSessionTokenManager>` 进行测试。
 
   .. code-block:: xml
 
-    <!-- トークンをHTTPセッションに保存する -->
+    <!-- 将令牌保存在HTTP会话中 -->
     <component name="tokenManager" class="nablarch.common.web.token.HttpSessionTokenManager"/>

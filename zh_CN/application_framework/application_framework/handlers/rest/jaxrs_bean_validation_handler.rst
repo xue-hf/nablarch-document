@@ -1,27 +1,27 @@
 .. _jaxrs_bean_validation_handler:
 
-Jakarta RESTful Web Servcies Bean Validationハンドラ
+Jakarta RESTful Web Services Bean Validation handler
 ======================================================
 .. contents:: 目录
   :depth: 3
   :local:
 
 .. tip::
-  本機能は、Nablarch5までは「JAX-RS BeanValidationハンドラ」という名称だった。
-  しかし、Java EEがEclipse Foundationに移管され仕様名が変わったことに伴い「Jakarta RESTful Web Servcies Bean Validationハンドラ」という名称に変更された。
+  本功能在Nablarch5之前的版本名为"JAX-RS BeanValidation handler"。
+  但随着Java EE移管至Eclipse Foundation导致规范名称变更，现更名为"Jakarta RESTful Web Services Bean Validation handler"。
 
-  変更されたのは名称のみで、機能的な差は無い。
+  仅名称变更，功能上无差异。
 
-  その他、Nablarch6で名称が変更された機能については :ref:`renamed_features_in_nablarch_6` を参照のこと。
+  其他Nablarch6中名称变更的功能请参阅 :ref:`renamed_features_in_nablarch_6`。
 
 
-本ハンドラは、リソース(アクション)クラスが受け取るForm(Bean)に対して、:ref:`bean_validation` を実行する。
-バリデーションでバリデーションエラーが発生した場合には、後続のハンドラに処理は委譲せずに、
-:java:extdoc:`ApplicationException <nablarch.core.message.ApplicationException>` を送出して処理を終了する。
+本handler对资源(Action)类接收的Form(Bean)执行 :ref:`bean_validation`。
+如果验证时发生验证错误，则不将处理委托给后续handler，
+而是抛出 :java:extdoc:`ApplicationException <nablarch.core.message.ApplicationException>` 结束处理。
 
 本handler执行以下处理。
 
-* リソース(アクション)クラスのメソッドが受け取るFormに対する :ref:`bean_validation` を行う。
+* 对资源(Action)类方法接收的Form执行 :ref:`bean_validation`。
 
 处理流程如下。
 
@@ -41,31 +41,31 @@ handler类名
     <artifactId>nablarch-fw-jaxrs</artifactId>
   </dependency>
 
-  <!-- Bean Validationのモジュール -->
+  <!-- Bean Validation的模块 -->
   <dependency>
     <groupId>com.nablarch.framework</groupId>
     <artifactId>nablarch-core-validation-ee</artifactId>
   </dependency>
 
-制約
+约束
 ------------------------------
-:ref:`body_convert_handler` よりも後ろに設定すること
-  このハンドラは、 :ref:`body_convert_handler` がリクエストボディから変換したForm(Bean)に対してバリデーションを行うため。
+应设置在 :ref:`body_convert_handler` 之后
+  本handler对 :ref:`body_convert_handler` 从请求主体转换后的Form(Bean)执行验证。
 
 
 .. _jaxrs_bean_validation_handler_perform_validation:
 
-リソース(アクション)で受け取るForm(Bean)に対してバリデーションを実行する
+对资源(Action)接收的Form(Bean)执行验证
 ----------------------------------------------------------------------------------------------------
-リソース(アクション)のメソッドで受け取るForm(Bean)に対して、バリデーションを実行したい場合は、
-そのメソッドに対して :java:extdoc:`Valid <jakarta.validation.Valid>` アノテーションを設定する。
+如果要对资源(Action)方法接收的Form(Bean)执行验证，
+需要在该方法上设置 :java:extdoc:`Valid <jakarta.validation.Valid>` 注解。
 
-以下に例を示す。
+以下为例。
 
 .. code-block:: java
 
-  // Personオブジェクトに対してバリデーションを実行したいので、
-  // Validアノテーションを設定する。
+  // 要对Person对象执行验证，
+  // 所以设置Valid注解。
   @POST
   @Consumes(MediaType.APPLICATION_JSON)
   @Valid
@@ -75,27 +75,27 @@ handler类名
   }
 
 
-Bean Validationのグループを指定する
+指定Bean Validation的组
 -------------------------------------------------
-:java:extdoc:`Valid <jakarta.validation.Valid>` アノテーションを設定したメソッドに対して
-:java:extdoc:`ConvertGroup <jakarta.validation.groups.ConvertGroup>` アノテーションを設定することで、Bean Validationのグループを指定することができる。
+通过在设置了 :java:extdoc:`Valid <jakarta.validation.Valid>` 注解的方法上
+设置 :java:extdoc:`ConvertGroup <jakarta.validation.groups.ConvertGroup>` 注解，可以指定Bean Validation的组。
 
-:java:extdoc:`ConvertGroup <jakarta.validation.groups.ConvertGroup>` アノテーションは ``from`` 属性と ``to`` 属性の指定が必須である。
-それぞれ以下のように指定すること。
+:java:extdoc:`ConvertGroup <jakarta.validation.groups.ConvertGroup>` 注解必须指定 ``from`` 属性和 ``to`` 属性。
+分别指定如下。
 
-* ``from`` ・・・ :java:extdoc:`Default.class <jakarta.validation.groups.Default>` 固定
+* ``from`` 、、、固定为 :java:extdoc:`Default.class <jakarta.validation.groups.Default>`
 
-  * メソッドに :java:extdoc:`Valid <jakarta.validation.Valid>` アノテーションを設定する場合、
-    バリデーションは :java:extdoc:`Default <jakarta.validation.groups.Default>` グループを設定したものとして実行されるため。
+  * 方法上设置 :java:extdoc:`Valid <jakarta.validation.Valid>` 注解时，
+    验证会作为设置了 :java:extdoc:`Default <jakarta.validation.groups.Default>` 组来执行。
 
-* ``to`` ・・・Bean Validationのグループを指定する
+* ``to`` 、、、指定Bean Validation的组
 
-以下に例を示す。
+以下为例。
 
 .. code-block:: java
 
-  // Personクラス内で設定されたバリデーションルールのうち、
-  // Createグループに所属するルールのみを使用して検証する。
+  // 使用Person类中设置的验证规则中
+  // 属于Create组的规则进行验证。
   @POST
   @Consumes(MediaType.APPLICATION_JSON)
   @Valid

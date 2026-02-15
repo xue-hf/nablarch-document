@@ -1,16 +1,16 @@
 .. _normalize_handler:
 
-ノーマライズハンドラ
+规范化handler
 ==================================================
 .. contents:: 目录
   :depth: 3
   :local:
 
-クライアントから送信されるリクエストパラメータをノーマライズするハンドラ。
+对客户端发送的请求参数进行规范化的handler。
 
 本handler执行以下处理。
 
-* リクエストパラメータのノーマライズ処理
+* 请求参数的规范化处理
 
 处理流程如下。
 
@@ -30,41 +30,41 @@ handler类名
     <artifactId>nablarch-fw-web</artifactId>
   </dependency>
 
-制約
+约束
 ------------------------------
-:ref:`multipart_handler` より後ろに配置すること
-  このハンドラはリクエストパラータにアクセスする。
-  このため、 :ref:`multipart_handler` よりも後ろに設定する必要がある。
+配置在 :ref:`multipart_handler` 之后
+  本handler需要访问请求参数。
+  因此，需要配置在 :ref:`multipart_handler` 之后。
 
-標準で提供しているノーマライズ処理
+标准提供的规范化处理
 --------------------------------------------------
-標準では、以下のノーマライズ処理を提供している。
+标准提供以下规范化处理。
 
-* リクエストパラメータの前後のホワイトスペースを除去するノーマライザ( :java:extdoc:`TrimNormalizer <nablarch.fw.web.handler.normalizer.TrimNormalizer>` ) [#whitespace]_
+* 去除请求参数前后空白字符的规范化器( :java:extdoc:`TrimNormalizer <nablarch.fw.web.handler.normalizer.TrimNormalizer>` ) [#whitespace]_
 
 
-ノーマライズ処理を追加する
+添加规范化处理
 --------------------------------------------------
-このハンドラはデフォルト動作で、リクエストパラメータの前後のホワイトスペース [#whitespace]_ を除去するノーマライザが有効となっている。
+本handler在默认动作下，启用去除请求参数前后空白字符 [#whitespace]_ 的规范化器。
 
-プロジェクト要件で、ノーマライズ処理を追加する場合には、 :java:extdoc:`Normalizer <nablarch.fw.web.handler.normalizer.Normalizer>` の実装クラスを作成し、本ハンドラに設定する。
+如果项目需求需要添加规范化处理，请创建 :java:extdoc:`Normalizer <nablarch.fw.web.handler.normalizer.Normalizer>` 的实现类并设置到本handler。
 
-以下に例を示す。
+以下显示示例。
 
-ノーマライザの実装例
+规范化器实现示例
   .. code-block:: java
 
     public class SampleNormalizer implements Normalizer {
 
         @Override
         public boolean canNormalize(final String key) {
-          // パラメータのキー値にnumが含まれた場合は、そのパラメータをノーマライズする
+          // 当参数键值包含num时，对该参数进行规范化
           return key.contains("num");
         }
 
         @Override
         public String[] normalize(final String[] value) {
-          // パラメータ中のカンマ(,)を除去する
+          // 去除参数中的逗号(,)
           final String[] result = new String[value.length];
           for (int i = 0; i < value.length; i++) {
               result[i] = value[i].replace(",", "");
@@ -73,10 +73,10 @@ handler类名
         }
     }
 
-コンポーネント設定ファイルに定義する
-  以下の設定例のように、適用したいノーマライザを設定する。
-  複数のノーマライザを設定した場合、より上に設定したものから順次ノーマライズ処理が実行される。
-  このため、ノーマライズ処理に順序性がある場合には、設定順に注意すること。
+在组件配置文件中定义
+  如以下设置示例所示，设置要应用的规范化器。
+  设置多个规范化器时，将从上往下依次执行规范化处理。
+  因此，如果规范化处理有顺序要求，请注意设置顺序。
 
   .. code-block:: xml
 
@@ -90,11 +90,11 @@ handler类名
     </component>
 
 .. tip::
-  ノーマライザを設定せずに、以下のようにハンドラを設定した場合、デフォルトで提供される前後のホワイトスペースを除去するノーマライザが自動的に適用される。
+  如果不设置规范化器，仅按以下方式设置handler，将自动应用默认提供的前后空白字符去除规范化器。
 
   .. code-block:: xml
 
     <component class="nablarch.fw.web.handler.NormalizationHandler" />
 
 
-.. [#whitespace] ホワイトスペースの定義は :java:extdoc:`Character#isWhitespace <java.lang.Character.isWhitespace(int)>` を参照
+.. [#whitespace] 空白字符定义请参考 :java:extdoc:`Character#isWhitespace <java.lang.Character.isWhitespace(int)>`

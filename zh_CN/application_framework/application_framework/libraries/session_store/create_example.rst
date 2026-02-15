@@ -1,52 +1,52 @@
 .. _`create_example`:
 
-登録機能での実装例
+注册功能实现示例
 =====================================================================
 
-入力画面の初期表示
+输入画面的初始显示
 ---------------------------------------------------------------------
 .. code-block:: java
 
-  // ブラウザを直接閉じた場合などにセッションが残っている場合があるので削除
+  // 当浏览器被直接关闭等情况时，会话可能会残留，因此需要删除
   SessionUtil.delete(ctx, "project");
 
-入力画面から確認画面へ遷移
+从输入画面跳转到确认画面
 ---------------------------------------------------------------------
 .. code-block:: java
 
-  // リクエストスコープから入力情報を取得
+  // 从请求作用域获取输入信息
   ProjectForm form = context.getRequestScopedVar("form");
 
-  // FormからEntityへ変換
+  // 从Form转换为Entity
   Project project = BeanUtil.createAndCopy(Project.class, form);
 
-  // 入力情報をセッションストアに保存
+  // 将输入信息保存到会话存储中
   SessionUtil.put(ctx, "project", project);
 
-確認画面から入力画面へ戻る
+从确认画面返回输入画面
 ---------------------------------------------------------------------
 .. code-block:: java
 
-  // セッションストアから入力情報を取得
+  // 从会话存储获取输入信息
   Project project = SessionUtil.get(ctx, "project");
 
-  // EntityからFormへ変換
+  // 从Entity转换为Form
   ProjectForm form = BeanUtil.createAndCopy(ProjectForm.class, project);
 
-  // 入力情報をリクエストスコープに設定
+  // 将输入信息设置到请求作用域
   context.setRequestScopedVar("form", form);
 
-  // セッションストアから入力情報を削除
+  // 从会话存储删除输入信息
   SessionUtil.delete(ctx, "project");
 
-登録処理を実行
+执行注册处理
 ---------------------------------------------------------------------
 .. code-block:: java
 
-  // セッションストアから入力情報を取得
+  // 从会话存储获取输入信息
   Project project = SessionUtil.get(ctx, "project");
 
-  // 登録処理は省略
+  // 注册处理省略
 
-  // セッションストアから入力情報を削除
+  // 从会话存储删除输入信息
   SessionUtil.delete(ctx, "project");

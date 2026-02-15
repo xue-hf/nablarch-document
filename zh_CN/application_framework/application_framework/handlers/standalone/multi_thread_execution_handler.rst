@@ -1,21 +1,21 @@
 .. _multi_thread_execution_handler:
 
-マルチスレッド実行制御ハンドラ
+多线程执行控制handler
 ==================================================
 .. contents:: 目录
   :depth: 3
   :local:
 
-本ハンドラは、サブスレッドを作成し、handler队列上の後続ハンドラの処理を各サブスレッド上で並行実行する。
-このハンドラでの処理結果は、各サブスレッドでの実行結果を集約したオブジェクト(:java:extdoc:`MultiStatus <nablarch.fw.Result.MultiStatus>`)となる。
+本handler创建子线程，在handler队列上的后续handler处理在各子线程上并行执行。
+本handler的处理结果是汇总各子线程执行结果的对象(:java:extdoc:`MultiStatus <nablarch.fw.Result.MultiStatus>`)。
 
 本handler执行以下处理。
 
-* :ref:`サブスレッド起動前のコールバック処理 <multi_thread_execution_handler-callback>`
-* :ref:`サブスレッドの起動 <multi_thread_execution_handler-thread_count>`
-* サブスレッドでの後続ハンドラの実行
-* :ref:`サブスレッドで例外及びエラー発生時のコールバック処理 <multi_thread_execution_handler-callback>`
-* :ref:`サブスレッドでの処理終了後のコールバック処理 <multi_thread_execution_handler-callback>`
+* :ref:`子线程启动前的回调处理 <multi_thread_execution_handler-callback>`
+* :ref:`子线程的启动 <multi_thread_execution_handler-thread_count>`
+* 子线程中后续handler的执行
+* :ref:`子线程中发生异常及错误时的回调处理 <multi_thread_execution_handler-callback>`
+* :ref:`子线程处理结束后的回调处理 <multi_thread_execution_handler-callback>`
 
 处理流程如下。
 
@@ -35,64 +35,64 @@ handler类名
     <artifactId>nablarch-fw-standalone</artifactId>
   </dependency>
 
-制約
+约束
 ------------------------------
-特に無し
+无特别约束
 
 .. _multi_thread_execution_handler-thread_count:
 
-スレッド数を指定する
+指定线程数
 --------------------------------------------------
-本ハンドラはデフォルトでは、後続のサブスレッドを1つだけ起動し、ハンドラを実行する。
+本handler默认只启动一个后续子线程并执行handler。
 
-後続の処理（例えばバッチアクションの処理）を並列化することで、パフォーマンス向上が見込まれる場合には、設定値を変更することで後続のハンドラの処理を多重化出来る。
+如果希望通过并行化后续处理（例如批处理action的处理）来提升性能，可以通过更改设置值来多重化后续handler的处理。
 
-以下に例を示す。
+以下显示示例。
 
 .. code-block:: xml
 
   <component class = "nablarch.fw.handler.MultiThreadExecutionHandler">
-    <!-- 後続ハンドラを8多重で実行する -->
+    <!-- 以8重方式执行后续handler -->
     <property name="concurrentNumber" value="8" />
   </component>
 
 .. important::
 
-  本ハンドラ以降の処理を複数スレッドで実行する場合、後続のハンドラやバッチアクションなどはスレッドセーフな実装となっている必要がある。
-  スレッドセーフとなっている保証のない処理を安易に複数スレッドで実行すると、予期せぬ例外が発生したり、データ不整合の原因となるので注意すること。
+  如果本handler之后的处理在多个线程中执行，后续handler和批处理action等需要是线程安全的实现。
+  如果将未保证线程安全的处理随意在多个线程中执行，可能会导致意外异常或数据不一致，请注意。
 
 .. _multi_thread_execution_handler-callback:
 
-スレッド起動前後で任意の処理を実行したい
+希望在线程启动前后执行任意处理
 --------------------------------------------------
-このハンドラは、サブスレッド起動前及び終了後にコールバック処理を行う。
+本handler在子线程启动前及结束后执行回调处理。
 
-コールバック処理は以下の3つのポイントで実行される。
+回调处理在以下3个点执行。
 
-* サブスレッド起動前
-* サブスレッドで例外発生後の全スレッド終了後
-* 全サブスレッド終了後(サブスレッドで例外が発生した場合でも実行される)
+* 子线程启动前
+* 子线程发生异常后的所有线程结束后
+* 所有子线程结束后(子线程发生异常时也执行)
 
-コールバックされる処理は、このハンドラより後続に設定されたハンドラの中で、 :java:extdoc:`ExecutionHandlerCallback <nablarch.fw.handler.ExecutionHandlerCallback>` を実装しているものとなる。
-もし、複数のハンドラが  :java:extdoc:`ExecutionHandlerCallback <nablarch.fw.handler.ExecutionHandlerCallback>` を実装している場合は、より手前に設定されているハンドラから順次コールバック処理を実行する。
-
-.. important::
-
-  複数のハンドラがコールバック処理を実装していた場合で、コールバック処理中にエラーや例外が発生した場合は、 残りのハンドラに対するコールバック処理は実行しないため注意すること。
+被回调的处理是在本handler之后设置的handler中实现了 :java:extdoc:`ExecutionHandlerCallback <nablarch.fw.handler.ExecutionHandlerCallback>` 的处理。
+如果多个handler实现了 :java:extdoc:`ExecutionHandlerCallback <nablarch.fw.handler.ExecutionHandlerCallback>` ，则从设置在前面的handler开始依次执行回调处理。
 
 .. important::
 
-  コールバック処理で行ったデータベース処理は、親スレッド側のhandler队列に設定されたデータベース接続とトランザクションが使用される。
-  このため、これらの処理で行った更新処理は本ハンドラ終了後に、親スレッド側に設定された :ref:`transaction_management_handler` で確定(コミット)される。
+  如果多个handler实现了回调处理，且在回调处理中发生错误或异常，则不会执行剩余handler的回调处理，请注意。
 
-  もし、コールバック処理内で行った処理を即確定する必要がある場合には、親スレッド側に設定されたデータベース接続ではなく、個別のトランザクションを使用して処理を行うこと。
+.. important::
 
-  詳細は、以下を参照。
+  回调处理中进行的数据库处理使用父线程侧handler队列中设置的数据库连接和事务。
+  因此，这些处理进行的更新处理将在本handler结束后，由父线程侧设置的 :ref:`transaction_management_handler` 确定(提交)。
 
-  * :ref:`ユニバーサルDAOで個別トランザクションを使用する <universal_dao-transaction>`
-  * :ref:`データベースアクセス機能で個別トランザクションを使用する <database-new_transaction>`
+  如果需要立即确定回调处理内进行的处理，请不要使用父线程侧设置的数据库连接，而是使用单独的事务进行处理。
 
-以下にコールバック処理の実装例を示す。
+  详情请参考以下文档。
+
+  * :ref:`在UniversalDAO中使用单独事务 <universal_dao-transaction>`
+  * :ref:`在数据库访问功能中使用单独事务 <database-new_transaction>`
+
+以下显示回调处理的实现示例。
 
 .. code-block:: java
 
@@ -100,60 +100,61 @@ handler类名
 
     @Override
     public Result handle(Object input, ExecutionContext context) {
-      // ハンドラの処理を実装する。
+      // 实现handler的处理。
       return context.handleNext(input);
     }
 
     @Override
     public void preExecution(Object input, ExecutionContext context) {
-      // サブスレッド起動前のコールバック処理を実装する
+      // 实现子线程启动前的回调处理
     }
 
     @Override
     public void errorInExecution(Throwable error, ExecutionContext context) {
-      // サブスレッドでエラーが発生した場合のコールバック処理を実装する
+      // 实现子线程发生错误时的回调处理
     }
 
     @Override
     public void postExecution(Result result, ExecutionContext context) {
-      // サブスレッド終了後のコールバック処理を実装する
-      // サブスレッド側の処理が正常に終了したかどうかは、引数のResultから判定できる。
+      // 实现子线程结束后的回调处理
+      // 可从参数的Result判定子线程侧的处理是否正常结束。
       if (result.isSuccess()) {
-          // サブスレッドが正常終了
+          // 子线程正常结束
       } else {
-          // サブスレッドが異常終了
+          // 子线程异常结束
       }
     }
   }
 
-データベース接続に関する設定について
+数据库连接相关设置
 --------------------------------------------------
-親スレッド側の処理でデータベース接続が必要となる場合には、本ハンドラ以前に :ref:`database_connection_management_handler` の設定が必要になる。
-サブスレッド側でデータベースに対するアクセスが必要な場合には、本ハンドラ以降のサブスレッドで実行されるハンドラ構成に :ref:`database_connection_management_handler` の設定が必要となる。
-(親スレッド、サブスレッドともに、データベース接続とセットでトランザクションを制御するハンドラも必要となる)
+如果父线程侧的处理需要数据库连接，需要在本handler之前设置 :ref:`database_connection_management_handler` 。
+如果子线程侧需要访问数据库，需要在本handler之后子线程执行的handler构成中设置 :ref:`database_connection_management_handler` 。
+(父线程和子线程都需要与数据库连接配套控制事务的handler)
 
-このため、親スレッド及びサブスレッドの両方でデータベースアクセスを行うハンドラ構成の場合、最低でも2つのデータベース接続が使用される。
-サブスレッドが複数となる場合には、スレッド数分のデータベース接続が必要となる。例えば、サブスレッド数が10の場合、合計11個のデータベース接続が必要となる。
+因此，在父线程和子线程都进行数据库访问的handler构成中，至少需要使用2个数据库连接。
+如果子线程为多个，则需要线程数分的数据库连接。例如，子线程数为10时，需要合计11个数据库连接。
 
-サブスレッドでの例外発生時の振る舞い
+子线程发生异常时的行为
 --------------------------------------------------
-サブスレッド内で予期せぬ例外が発生した場合は、バッチ应用を異常終了させるために
+子线程内发生预期外异常时，为使批处理应用程序异常结束，
+调用
 :java:extdoc:`ThreadPoolExecutor#shutdownNow()<java.util.concurrent.ThreadPoolExecutor.shutdownNow()>`
-を呼び出して、例外が発生していない他の処理中のサブスレッドを実行中のデータ処理完了後に安全に終了させる。
+，在异常未发生的其他处理中的子线程完成数据处理后安全结束。
 
-サブスレッド側に :ref:`database_connection_management_handler` 及び :ref:`transaction_management_handler` を設定して
-サブスレッド毎にトランザクション管理する場合に、サブスレッドで例外が発生した場合の親スレッド及びサブスレッドの動作を以下に示す。
+以下显示在子线程侧设置 :ref:`database_connection_management_handler` 及 :ref:`transaction_management_handler` ，
+按每个子线程管理事务时，子线程发生异常时父线程和子线程的动作。
 
 .. image:: ../images/MultiThreadExecutionHandler/exception_flow.png
   :scale: 75
 
-1. 例外が発生したサブスレッドは処理が中断されロールバックされる。
-2. 親スレッドは各サブスレッドで使用されるデータリーダをクローズする。
-3. 親スレッドは全てのサブスレッドに対し停止要求を行う。
-4. 各サブスレッドは ``2.`` で既にデータリーダがクローズされているため、
-   実行中の処理が終わったタイミングで正常終了する。
+1. 发生异常的子线程处理中断并回滚。
+2. 父线程关闭各子线程使用的DataReader。
+3. 父线程向所有子线程发出停止请求。
+4. 各子线程由于 ``2.`` 中DataReader已关闭，
+   在执行中的处理结束时正常结束。
 
 .. important::
 
-  :java:extdoc:`InterruptedException<java.lang.InterruptedException>` を捕捉している場合は、
-  割り込み要求により安全に処理できないことを示しているため、例外を送出する等で処理を異常終了させること。
+  如果捕获了 :java:extdoc:`InterruptedException<java.lang.InterruptedException>` ，
+  表示因中断请求无法安全处理，因此需要抛出异常等方式使处理异常结束。

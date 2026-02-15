@@ -1,72 +1,71 @@
 .. _exclusive_control:
 
-排他制御
+并发控制
 =====================================================================
 
 .. contents:: 目录
   :depth: 3
   :local:
 
-この機能では、データベースのデータ更新に対する排他制御を行う。
-この機能により、データベースの同一データに対して、
-複数のトランザクション（ウェブやバッチ）から同時に更新した場合でも、
-データの整合性を保つことができる。
+该功能对数据库的数据更新进行并发控制。
+通过此功能，即使从多个事务（Web或Batch）同时更新数据库的同一数据，
+也能保持数据的完整性。
 
 .. _exclusive_control-deprecated:
 
 .. important::
- この機能は、以下の理由により **非推奨** である。
- 排他制御には、 :ref:`universal_dao` を使用すること。
+ 该功能由于以下原因 **已弃用** 。
+ 并发控制请使用 :ref:`universal_dao` 。
 
- * :ref:`universal_dao` の排他制御は、本機能より簡単に使用できる。
-    :ref:`universal_dao_jpa_optimistic_lock` 、 :ref:`universal_dao_jpa_pessimistic_lock` を参照。
- * 主キーを非文字列型で定義した場合、データベースによってはこの機能を使用することができない。
-    この機能は、主キーの値を全て文字列型( `java.lang.String` )で保持している。
-    主キーのカラム定義が非文字列型(charやvarchar以外)の場合に、
-    データベースによっては型の不一致でSQL文の実行時例外が発生する。
-    例えば、PostgreSQLのように暗黙の型変換が行われないデータベースの場合、この問題が発生する。
+ * :ref:`universal_dao` 的并发控制比本功能更易于使用。
+   请参考 :ref:`universal_dao_jpa_optimistic_lock` 、 :ref:`universal_dao_jpa_pessimistic_lock` 。
+ * 当主键定义为非字符串类型时，某些数据库无法使用此功能。
+   此功能将所有主键值作为字符串类型( `java.lang.String` )保存。
+   当主键的列定义为非字符串类型（char或varchar以外）时，
+   某些数据库会因类型不匹配而在SQL语句执行时发生异常。
+   例如，像PostgreSQL这样不执行隐式类型转换的数据库会发生此问题。
 
-機能概要
+功能概述
 ---------------------------------------------------------------------
 
-楽観的ロック/悲観的ロックができる
+可以进行乐观锁/悲观锁
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-この機能では、テーブルにバージョン番号カラムを定義することで、楽観的ロック/悲観的ロックを行う。
-本フレームワークでは、バージョン番号カラムが定義されたテーブルを **排他制御用テーブル** と呼ぶ。
+该功能通过在表中定义版本号列来实现乐观锁/悲观锁。
+在本框架中，将定义了版本号列的表称为 **并发控制用表** 。
 
-この機能では以下のことが実現できる。
+通过该功能可以实现以下功能。
 
 * :ref:`exclusive_control-optimistic_lock`
 * :ref:`exclusive_control-optimistic_lock-bulk`
 * :ref:`exclusive_control-pessimistic_lock`
 
-この機能が提供する楽観的ロック/悲観的ロックは、同じ排他制御用テーブルを使用して実現するため、
-楽観的ロックと悲観的ロックを並行で使用しても、同一データが同時に更新されるのを防ぐことができる。
-たとえば、楽観的ロックを使用するウェブと、悲観的ロックを使用するバッチを並行稼働させても、
-データの整合性を保つことができる。
+该功能提供的乐观锁/悲观锁由于使用相同的并发控制用表实现，
+即使并行使用乐观锁和悲观锁，也能防止同一数据被同时更新。
+例如，即使并行运行使用乐观锁的Web和使用悲观锁的Batch，
+也能保持数据的完整性。
 
-排他制御用テーブルは、排他制御を行う単位ごとに定義し、競合が許容される最大の単位で定義する。
-たとえば、「ユーザ」という大きな単位でロックすることが業務的に許容されるならば、
-その単位で排他制御用テーブルを定義する。
-ただし、単位を大きくすると、競合する可能性が高くなり、
-更新失敗(楽観的ロックの場合)や処理遅延(悲観的ロックの場合)を招く点に注意すること。
+并发控制用表按并发控制的单位定义，在业务允许的最大单位下定义。
+例如，如果业务上允许以"用户"这样大的单位进行锁定，
+则在该单位下定义并发控制用表。
+但是，单位越大，冲突的可能性越高，
+需要注意会导致更新失败（乐观锁情况下）或处理延迟（悲观锁情况下）。
 
 .. tip::
- 通常、排他制御用テーブルの単位は、業務的な観点で定義する。
- たとえば、売上処理と入金処理による更新が同時に行われる場合は、
- それらの処理に関連するテーブルをまとめた単位で排他制御用テーブルを定義する。
+ 通常，并发控制用表的单位从业务角度定义。
+ 例如，如果销售处理和收款处理的更新同时进行，
+ 则将这些处理相关的表汇总为单位来定义并发控制用表。
 
- また、テーブル設計の観点からも排他制御用テーブルの単位を定義できる。
- たとえば、ヘッダ部(親)と明細部(子)など、テーブルの親子関係が明確であれば、
- 親の単位で排他制御用テーブルを定義する。
- 親子関係が明確でない場合は、どちらを親にするのが良いかを判断し、排他制御用テーブルを定義する。
+ 此外，从表设计的角度也可以定义并发控制用表的单位。
+ 例如，如果表之间的父子关系明确，如头部（父）和明细（子），
+ 则以父的单位定义并发控制用表。
+ 如果父子关系不明确，则需要判断哪个作为父，然后定义并发控制用表。
 
 .. important::
 
- 排他制御用テーブルの設計が終わったら、更新順序を設計する。
- 各テーブルの更新順序を定めることで、デッドロックの防止、及び更新時のデータ整合性の保証を実現する。
- データベースでは、レコードを更新すると行ロックがかかるので、
- 更新順序を定めておかなければデッドロックが発生する可能性が非常に高くなる。
+ 完成并发控制用表的设计后，设计更新顺序。
+ 通过确定各表的更新顺序，实现死锁预防和更新时的数据完整性保证。
+ 在数据库中，更新记录会加上行锁，
+ 如果不确定更新顺序，发生死锁的可能性非常高。
 
 模块列表
 ---------------------------------------------------------------------
@@ -81,7 +80,7 @@
     <artifactId>nablarch-common-exclusivecontrol-jdbc</artifactId>
   </dependency>
 
-  <!-- 楽観的ロックを行う場合のみ -->
+  <!-- 仅在进行乐观锁时 -->
   <dependency>
     <groupId>com.nablarch.framework</groupId>
     <artifactId>nablarch-fw-web-tag</artifactId>
@@ -92,96 +91,96 @@
 
 .. _exclusive_control-optimistic_setting:
 
-排他制御を使うために準備する
+使用并发控制的准备工作
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-排他制御を使うためには、 **設定** と **排他制御に必要な情報を保持するクラスの作成** を行う。
+要使用并发控制，需要进行 **配置** 和 **创建保存并发控制所需信息的类** 。
 
-設定
- :java:extdoc:`BasicExclusiveControlManager <nablarch.common.exclusivecontrol.BasicExclusiveControlManager>` の設定をコンポーネント定義に追加する。
+配置
+ :java:extdoc:`BasicExclusiveControlManager <nablarch.common.exclusivecontrol.BasicExclusiveControlManager>` 的配置添加到组件定义中。
 
  .. code-block:: xml
 
-  <!-- コンポーネント名は"exclusiveControlManager"で設定する。 -->
+  <!-- 组件名称设置为"exclusiveControlManager"。 -->
   <component name="exclusiveControlManager"
              class="nablarch.common.exclusivecontrol.BasicExclusiveControlManager">
-      <!-- 楽観ロックで排他エラーが発生した際に使用するメッセージID -->
+      <!-- 乐观锁发生排他错误时使用的消息ID -->
       <property name="optimisticLockErrorMessageId" value="CUST0001" />
   </component>
 
-排他制御に必要な情報を保持するクラスの作成
- :java:extdoc:`ExclusiveControlContext <nablarch.common.exclusivecontrol.ExclusiveControlContext>` を継承して作成する。
- このクラスは、排他制御用テーブルごとに作成し、排他制御を行うAPI呼び出しで使用する。
+创建保存并发控制所需信息的类
+ 创建继承 :java:extdoc:`ExclusiveControlContext <nablarch.common.exclusivecontrol.ExclusiveControlContext>` 的类。
+ 这个类为每个并发控制用表创建，在调用并发控制API时使用。
 
  .. code-block:: sql
 
-  -- 排他制御用テーブル
+  -- 并发控制用表
   CREATE TABLE USERS (
       USER_ID CHAR(6) NOT NULL,
-      -- 主キー以外の業務データは省略。
+      -- 主键以外的业务数据省略。
       VERSION NUMBER(10) NOT NULL,
       PRIMARY KEY (USER_ID)
   )
 
  .. code-block:: java
 
-  // 排他制御用テーブルUSERSに対応するクラス。
-  // ExclusiveControlContextを継承する。
+  // 对应并发控制用表USERS的类。
+  // 继承ExclusiveControlContext。
   public class UsersExclusiveControl extends ExclusiveControlContext {
 
-      // 排他制御用テーブルの主キーは列挙型で定義する。
+      // 并发控制用表的主键用枚举类型定义。
       private enum PK { USER_ID }
 
-      // 主キーの値をとるコンストラクタを定義する。
+      // 定义获取主键值的构造函数。
       public UsersExclusiveControl(String userId) {
 
-          // 親クラスのsetTableNameメソッドでテーブル名を設定する。
+          // 使用父类的setTableName方法设置表名。
           setTableName("USERS");
 
-          // 親クラスのsetVersionColumnNameメソッドでバージョン番号カラム名を設定する。
+          // 使用父类的setVersionColumnName方法设置版本号列名。
           setVersionColumnName("VERSION");
 
-          // 親クラスのsetPrimaryKeyColumnNamesメソッドで
-          // Enumのvaluesメソッドを使用して、主キーの列挙型を全て設定する。
+          // 使用父类的setPrimaryKeyColumnNames方法
+          // 使用Enum的values方法，设置所有主键的枚举类型。
           setPrimaryKeyColumnNames(PK.values());
 
-          // 親クラスのappendConditionメソッドで主キーの値を追加する。
+          // 使用父类的appendCondition方法添加主键的值。
           appendCondition(PK.USER_ID, userId);
       }
   }
 
 .. _exclusive_control-optimistic_lock:
 
-楽観的ロックを行う
+进行乐观锁
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-楽観的ロックは、更新対象データを取得する時点で、排他制御用テーブルのバージョン番号を取得しておき、
-更新する時点で、事前に取得した排他制御用テーブルのバージョン番号が更新されていないかをチェックすることで実現する。
+乐观锁通过在获取更新目标数据时获取并发控制用表的版本号，
+在更新时检查事先获取的并发控制用表的版本号是否已被更新来实现。
 
-楽観的ロックには、 :java:extdoc:`HttpExclusiveControlUtil <nablarch.common.web.exclusivecontrol.HttpExclusiveControlUtil>` を使用する。
+乐观锁使用 :java:extdoc:`HttpExclusiveControlUtil <nablarch.common.web.exclusivecontrol.HttpExclusiveControlUtil>` 。
 
-入力→確認→完了がある更新機能を例に、楽観的ロックの実装例を示す。
+以具有输入→确认→完成的更新功能为例，展示乐观锁的实现示例。
 
-入力画面の初期表示
+输入画面的初始显示
  .. code-block:: java
 
   public HttpResponse index(HttpRequest request, ExecutionContext context) {
 
-      // (業務処理)
-      // 更新対象データを取得するための主キー条件をリクエストから取得する。
+      // (业务处理)
+      // 从请求获取用于获取更新目标数据的主键条件。
       String userId = getUserId(request);
 
-      // (排他制御)
-      // 主キークラスを生成し、バージョン番号を準備する。
-      // 取得したバージョン番号は、フレームワークにより、指定されたExecutionContextに設定される。
+      // (并发控制)
+      // 生成主键类，准备版本号。
+      // 获取的版本号由框架设置到指定的ExecutionContext中。
       HttpExclusiveControlUtil.prepareVersion(context, new UsersExclusiveControl(userId));
 
-      // (業務処理)
-      // 更新対象データを取得し、入力画面表示のために、リクエストスコープに設定する。
+      // (业务处理)
+      // 获取更新目标数据，为显示输入画面设置到request scope中。
       context.setRequestScopedVar("user", findUser(userId));
 
       return new HttpResponse("/input.jsp");
   }
 
-入力画面の確認ボタン（入力→確認）
+输入画面的确认按钮（输入→确认）
  .. code-block:: java
 
   @OnErrors({
@@ -190,25 +189,25 @@
   })
   public HttpResponse confirm(HttpRequest request, ExecutionContext context) {
 
-      // (排他制御)
-      // バージョン番号の更新チェックを行う。
-      // バージョン番号は、フレームワークにより、指定されたHttpRequestから取得する。
-      // バージョン番号が更新されている場合は、OptimisticLockExceptionが送出されるので、
-      // @OnErrorを指定して遷移先を指定する。
+      // (并发控制)
+      // 进行版本号的更新检查。
+      // 版本号由框架从指定的HttpRequest中获取。
+      // 如果版本号已被更新，会抛出OptimisticLockException，
+      // 因此请指定@OnError来指定跳转目标。
       HttpExclusiveControlUtil.checkVersions(request, context);
 
-      // (業務処理)
-      // 入力データのチェックを行い、確認画面表示のために、リクエストスコープに設定する。
+      // (业务处理)
+      // 进行输入数据的检查，为显示确认画面设置到request scope中。
       context.setRequestScopedVar("user", getUser(request));
 
       return new HttpResponse("/confirm.jsp");
   }
 
  .. important::
-  バージョン番号のチェック( :java:extdoc:`HttpExclusiveControlUtil.checkVersions <nablarch.common.web.exclusivecontrol.HttpExclusiveControlUtil.checkVersions(nablarch.fw.web.HttpRequest,nablarch.fw.ExecutionContext)>` )を行わなければ、
-  画面間でバージョン番号が引き継がれない。
+  如果不进行版本号检查( :java:extdoc:`HttpExclusiveControlUtil.checkVersions <nablarch.common.web.exclusivecontrol.HttpExclusiveControlUtil.checkVersions(nablarch.fw.web.HttpRequest,nablarch.fw.ExecutionContext)>` )，
+  画面间的版本号将无法继承。
 
-確認画面の更新ボタン（確認→完了）
+确认画面的更新按钮（确认→完成）
  .. code-block:: java
 
   @OnErrors({
@@ -217,16 +216,16 @@
   })
   public HttpResponse update(HttpRequest request, ExecutionContext context) {
 
-      // (排他制御)
-      // バージョン番号の更新チェックと更新を行う。
-      // バージョン番号は、フレームワークにより、指定されたHttpRequestから取得する。
-      // バージョン番号が更新されている場合は、OptimisticLockExceptionが送出されるので、
-      // @OnErrorを指定して遷移先を指定する。
+      // (并发控制)
+      // 进行版本号的更新检查和更新。
+      // 版本号由框架从指定的HttpRequest中获取。
+      // 如果版本号已被更新，会抛出OptimisticLockException，
+      // 因此请指定@OnError来指定跳转目标。
       HttpExclusiveControlUtil.updateVersionsWithCheck(request);
 
-      // (業務処理)
-      // 入力データのチェックを行い、更新処理を行う。
-      // 完了画面表示のために、更新データをリクエストスコープに設定する。
+      // (业务处理)
+      // 进行输入数据的检查，执行更新处理。
+      // 为显示完成画面，将更新数据设置到request scope中。
       User user = getUser(request);
       update(user);
       context.setRequestScopedVar("user", user);
@@ -236,76 +235,76 @@
 
 .. _exclusive_control-optimistic_lock-bulk:
 
-一括更新で楽観的ロックを行う
+批量更新时进行乐观锁
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-複数のレコードに対し、特定のプロパティ(論理削除フラグなど)を一括更新するような処理では、
-選択されたレコードのみに楽観的ロックのチェックを行いたい場合がある。
+对于批量更新多个记录的特定属性（如逻辑删除标志等）的处理，
+有时希望仅对选中的记录进行乐观锁检查。
 
-排他制御用テーブルの主キーが、 **複合主キーでない場合** と **複合主キーの場合** で、
-二通りの実装方法がある。
+根据并发控制用表的主键是 **非复合主键** 还是 **复合主键** ，
+有两种实现方法。
 
-複合主キーでない場合
- ユーザの一括削除を行う画面を例に、複合主キーでない場合の実装例を示す。
- バージョン番号の取得部分は、 :java:extdoc:`HttpExclusiveControlUtil#prepareVersions <nablarch.common.web.exclusivecontrol.HttpExclusiveControlUtil.prepareVersions(nablarch.fw.ExecutionContext,java.util.List)>` を呼び出すだけなので、
- 実装例を省略する。
+非复合主键的情况
+ 以批量删除用户的画面为例，展示非复合主键时的实现示例。
+ 版本号的获取部分只需调用 :java:extdoc:`HttpExclusiveControlUtil#prepareVersions <nablarch.common.web.exclusivecontrol.HttpExclusiveControlUtil.prepareVersions(nablarch.fw.ExecutionContext,java.util.List)>` ，
+ 因此省略实现示例。
 
  .. code-block:: html
 
-  <!-- 画面の実装（前後は省略） -->
+  <!-- 画面实现（前后省略） -->
   <tr>
-    <th>削除対象</th>
-    <th>ユーザ名</th>
+    <th>删除对象</th>
+    <th>用户名</th>
   </tr>
   <tr>
-    <!-- リクエストパラメータ "user.deactivate" でユーザの主キーを送る。 -->
+    <!-- 通过请求参数 "user.deactivate" 发送用户的主键。 -->
     <td><checkbox name="user.deactivate" value="user001" /></td>
-    <td>ユーザ001</td>
+    <td>用户001</td>
   </tr>
   <tr>
     <td><checkbox name="user.deactivate" value="user002" /></td>
-    <td>ユーザ002</td>
+    <td>用户002</td>
   </tr>
 
  .. code-block:: java
 
-  // (排他制御:チェック)
-  // リクエストパラメータ "user.deactivate" に設定されたユーザの主キーのみを
-  // チェックの対象とする。
+  // (并发控制:检查)
+  // 仅将请求参数 "user.deactivate" 中设置的用户主键
+  // 作为检查对象。
   HttpExclusiveControlUtil.checkVersions(request, context, "user.deactivate");
 
  .. code-block:: java
 
-  // (排他制御:チェックと更新)
-  // リクエストパラメータ "user.deactivate" に設定されたユーザの主キーのみを
-  // チェックと更新の対象とする。
+  // (并发控制:检查和更新)
+  // 仅将请求参数 "user.deactivate" 中设置的用户主键
+  // 作为检查和更新的对象。
   HttpExclusiveControlUtil.updateVersionsWithCheck(request, "user.deactivate");
 
-複合主キーの場合
- ユーザの一括削除を行う画面を例に、複合主キーの場合の実装例を示す。
- バージョン番号の取得部分は、 :java:extdoc:`HttpExclusiveControlUtil#prepareVersions <nablarch.common.web.exclusivecontrol.HttpExclusiveControlUtil.prepareVersions(nablarch.fw.ExecutionContext,java.util.List)>` を呼び出すだけなので、
- 実装例を省略する。
+复合主键的情况
+ 以批量删除用户的画面为例，展示复合主键时的实现示例。
+ 版本号的获取部分只需调用 :java:extdoc:`HttpExclusiveControlUtil#prepareVersions <nablarch.common.web.exclusivecontrol.HttpExclusiveControlUtil.prepareVersions(nablarch.fw.ExecutionContext,java.util.List)>` ，
+ 因此省略实现示例。
 
  .. code-block:: sql
 
-  -- 複合主キーが定義されたテーブル。
+  -- 定义了复合主键的表。
   CREATE TABLE USERS (
       USER_ID CHAR(6) NOT NULL,
       PK2     CHAR(6) NOT NULL,
       PK3     CHAR(6) NOT NULL,
-      -- 主キー以外の業務データは省略。
+      -- 主键以外的业务数据省略。
       VERSION NUMBER(10) NOT NULL,
       PRIMARY KEY (USER_ID,PK2,PK3)
   )
 
  .. code-block:: java
 
-  // 排他制御用テーブルUSERSに対応したクラス。
+  // 对应并发控制用表USERS的类。
   public class UsersExclusiveControl extends ExclusiveControlContext {
 
-      // 排他制御用テーブルの主キーは列挙型で定義する。
+      // 并发控制用表的主键用枚举类型定义。
       private enum PK { USER_ID, PK2, PK3 }
 
-      // 主キーの値をとるコンストラクタを定義し、親クラスのメソッドで必要な情報を設定する。
+      // 定义获取主键值的构造函数，使用父类的方法设置必要信息。
       public UsersExclusiveControl(String userId, String pk2, String pk3) {
           setTableName("USERS");
           setVersionColumnName("VERSION");
@@ -318,43 +317,43 @@
 
  .. code-block:: html
 
-  <!-- 画面の実装（前後は省略） -->
+  <!-- 画面实现（前后省略） -->
   <tr>
-    <th>削除対象</th>
-    <th>ユーザ名</th>
+    <th>删除对象</th>
+    <th>用户名</th>
   </tr>
   <tr>
     <!--
-    リクエストパラメータ "user.deactivate" でユーザの主キーを送る。
-    複合主キーの場合は、区切り文字(任意、ただし主キーの値にはなり得ないこと)
-    で結合した文字列を指定する。
+    通过请求参数 "user.deactivate" 发送用户的主键。
+    复合主键时，使用分隔符（任意，但不能是主键的值）
+    连接后的字符串指定。
     -->
     <td>
       <input id="checkbox" type="checkbox" name="user.userCompositeKeys"
                                            value="user001,pk2001,pk3001" />
     </td>
-    <td>ユーザ001</td>
+    <td>用户001</td>
   </tr>
   <tr>
     <td>
       <input id="checkbox" type="checkbox" name="user.userCompositeKeys"
                                            value="user002,pk2002,pk3002" />
     </td>
-    <td>ユーザ002</td>
+    <td>用户002</td>
   </tr>
 
  .. tip::
-  複合主キーに対応したカスタムタグと
-  :java:extdoc:`CompositeKey<nablarch.common.web.compositekey.CompositeKey>` を使うと、
-  複合主キーをもっと簡単に扱える。詳細は、 :ref:`tag-composite_key` を参照。
+  使用对应复合主键的自定义标签和
+  :java:extdoc:`CompositeKey<nablarch.common.web.compositekey.CompositeKey>` ，
+  可以更简单地处理复合主键。详情请参考 :ref:`tag-composite_key` 。
 
  .. code-block:: java
 
-  // (排他制御:チェック)
-  // Formには、区切り文字を考慮し、リクエストパラメータから主キーを取り出す処理を実装している。
+  // (并发控制:检查)
+  // Form中考虑了分隔符，实现了从请求参数中提取主键的处理。
   User[] deletedUsers = form.getDeletedUsers();
 
-  // チェックをレコードごとに呼び出す。
+  // 按记录调用检查。
   for(User deletedUser : deletedUsers) {
       HttpExclusiveControlUtil.checkVersion(
           request, context,
@@ -365,10 +364,10 @@
 
  .. code-block:: java
 
-  // (排他制御:チェックと更新)
+  // (并发控制:检查和更新)
   User[] deletedUsers = form.getDeletedUsers();
 
-  // チェックおよび更新をレコードごとに呼び出す。
+  // 按记录调用检查和更新。
   for(User deletedUser : deletedUsers) {
       HttpExclusiveControlUtil.updateVersionWithCheck(
           request, new ExclusiveUserCondition(deletedUser.getUserId(),
@@ -378,28 +377,28 @@
 
 .. _exclusive_control-pessimistic_lock:
 
-悲観的ロックを行う
+进行悲观锁
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-悲観的ロックは、更新対象データを取得する前に、排他制御用テーブルのバージョン番号を更新することで実現する。
+悲观锁通过在获取更新目标数据之前更新并发控制用表的版本号来实现。
 
-更新対象データを取得する前に、排他制御用テーブルのバージョン番号を更新することで、
-更新処理のトランザクションがコミット又はロールバックされるまで、排他制御用テーブルの対象行がロックされる。
-このため、他のトランザクションの更新処理はロックが解除されるまで待たされる。
+通过在获取更新目标数据之前更新并发控制用表的版本号，
+更新处理的事务提交或回滚之前，并发控制用表的目标行会被锁定。
+因此，其他事务的更新处理将等待直到锁被释放。
 
-悲観的ロックには、 :java:extdoc:`ExclusiveControlUtil#updateVersion <nablarch.common.exclusivecontrol.ExclusiveControlUtil.updateVersion(nablarch.common.exclusivecontrol.ExclusiveControlContext)>` を使用する。
+悲观锁使用 :java:extdoc:`ExclusiveControlUtil#updateVersion <nablarch.common.exclusivecontrol.ExclusiveControlUtil.updateVersion(nablarch.common.exclusivecontrol.ExclusiveControlContext)>` 。
 
 .. code-block:: java
 
  ExclusiveControlUtil.updateVersion(new UsersExclusiveControl("U00001"));
 
 .. important::
- バッチ処理では、ロックを行うための主キーのみを取得する前処理を設け、
- 本処理で1件ずつロックを取得してからデータを取得、更新するように実装する。
- 理由は以下の通り。
+ 在批处理中，设置仅获取用于锁定的主键的预处理，
+ 在本处理中逐个获取锁后再获取、更新数据。
+ 理由如下。
 
- * データを取得してから更新するまでの間に、他のプロセスによりデータが更新されてしまうことを防ぐため。
- * ロックしている時間をできるだけ短くし、並列処理に与える影響をできるだけ小さくするため。
+ * 防止从获取数据到更新之间数据被其他进程更新。
+ * 尽量缩短锁定时间，减少对并行处理的影响。
 
-拡張例
+扩展示例
 ---------------------------------------------------------------------
-なし。
+无。

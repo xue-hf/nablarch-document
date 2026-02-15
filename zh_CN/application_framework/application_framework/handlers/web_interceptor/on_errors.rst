@@ -1,18 +1,18 @@
 .. _on_errors_interceptor:
 
-OnErrorsインターセプタ
+OnErrors 拦截器
 ============================
 
 .. contents:: 目录
   :depth: 3
   :local:
 
-業務アクションでの例外発生時に、指定したレスポンスを返却するインターセプタ。
-複数の例外に対してレスポンスを指定できる。
+在业务Action发生异常时，返回指定响应的拦截器。
+可以为多个异常指定响应。
 
-このインターセプタは、業務アクションのメソッドに対して、 :java:extdoc:`OnErrors <nablarch.fw.web.interceptor.OnErrors>` を設定することで有効となる。
+通过在业务Action方法上设置 :java:extdoc:`OnErrors <nablarch.fw.web.interceptor.OnErrors>` 来启用此拦截器。
 
-インターセプタクラス名
+拦截器类名
 --------------------------------------------------
 * :java:extdoc:`nablarch.fw.web.interceptor.OnErrors`
 
@@ -25,18 +25,17 @@ OnErrorsインターセプタ
     <artifactId>nablarch-fw-web</artifactId>
   </dependency>
 
-OnErrorsを使用する
+使用 OnErrors
 --------------------------------------------------
-:java:extdoc:`OnErrors <nablarch.fw.web.interceptor.OnErrors>` アノテーションを、
-業務アクションのリクエストを処理するメソッドに対して設定する。
+将 :java:extdoc:`OnErrors <nablarch.fw.web.interceptor.OnErrors>` 注解设置在业务Action处理请求的方法上。
 
-それぞれの例外に対するレスポンスの指定は、 :java:extdoc:`OnError <nablarch.fw.web.interceptor.OnError>` を使用して行う。
+各个异常对应的响应指定，使用 :java:extdoc:`OnError <nablarch.fw.web.interceptor.OnError>` 进行。
 
-業務アクションのメソッド内で以下の例外を送出する場合の実装例を示す。
+以下展示业务Action方法内抛出以下异常时的实现示例。
 
-* `ApplicationException` (業務エラー)
-* `AuthenticationException` (認証エラー)
-* `UserLockedException` (アカウントロックエラー。 `AuthenticationException` のサブクラス)
+* `ApplicationException` (业务错误)
+* `AuthenticationException` (认证错误)
+* `UserLockedException` (账户锁定错误。 `AuthenticationException` 的子类)
 
 .. code-block:: java
 
@@ -46,11 +45,10 @@ OnErrorsを使用する
           @OnError(type = ApplicationException.class, path = "/WEB-INF/view/login/index.jsp")
   })
   public HttpResponse handle(HttpRequest request, ExecutionContext context) {
-      // 業務処理は省略
+      // 业务处理省略
   }
 
 .. important::
 
-  :java:extdoc:`OnError <nablarch.fw.web.interceptor.OnError>` の定義順に例外を処理するため、
-  継承関係にある例外を定義する場合は、必ずサブクラスの例外から先に定義すること。
-
+  按照 :java:extdoc:`OnError <nablarch.fw.web.interceptor.OnError>` 的定义顺序处理异常，
+  因此定义有继承关系的异常时，必须先从子类异常开始定义。

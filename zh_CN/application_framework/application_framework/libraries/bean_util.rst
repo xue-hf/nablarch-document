@@ -6,12 +6,12 @@ BeanUtil
   :depth: 3
   :local:
 
-Java Beansに関する以下機能を提供する。また、Java16より標準化されたレコードをJava Beansと同様に取り扱うことができる。
-詳細は :ref:`bean_util-use_record` を参照。
+提供与Java Beans相关的以下功能。此外，Java16起标准化的记录(record)也可以像Java Beans一样处理。
+详细请参考 :ref:`bean_util-use_record` 。
 
-* プロパティに対する値の設定と取得
-* 他のJava Beansへの値の移送
-* Java Beansとjava.util.Mapとの間での値の移送
+* 对属性设置值和获取值
+* 向其他Java Beans移送值
+* Java Beans与java.util.Map之间的值移送
 
 模块列表
 ---------------------------------------------------------------------
@@ -26,11 +26,11 @@ Java Beansに関する以下機能を提供する。また、Java16より標準�
 
 使用方法
 --------------------------------------------------
-:java:extdoc:`BeanUtil <nablarch.core.beans.BeanUtil>` が提供するAPIを使用して、任意のJava Beansに対する操作が実現できる。
+使用 :java:extdoc:`BeanUtil <nablarch.core.beans.BeanUtil>` 提供的API，可以实现对任意Java Beans的操作。
 
-BeanUtilの使用例を以下に示す。
+以下显示BeanUtil的使用示例。
 
-Bean定義
+Bean定义
   .. code-block:: java
 
     public class User {
@@ -38,29 +38,29 @@ Bean定義
         private String name;
         private Date birthDay;
         private Address address;
-        // getter & setterは省略
+        // getter & setter省略
     }
 
     public class Address {
         private String postNo;
-        // getter & setterは省略
+        // getter & setter省略
     }
 
     public class UserDto {
         private String name;
         private String birthDay;
-        // getter & setterは省略
+        // getter & setter省略
     }
 
-BeanUtilの使用例
-  幾つかのAPIの使用例を以下に示す。
-  詳細は、BeanUtilの :java:extdoc:`Javadoc <nablarch.core.beans.BeanUtil>` を参照。
+BeanUtil使用示例
+  以下显示若干API的使用示例。
+  详细请参考BeanUtil的 :java:extdoc:`Javadoc <nablarch.core.beans.BeanUtil>` 。
 
   .. code-block:: java
 
     final User user = new User();
     user.setId(1L);
-    user.setName("名前");
+    user.setName("名称");
     user.setBirthDay(new Date());
 
     final Address address = new Address();
@@ -68,42 +68,42 @@ BeanUtilの使用例
     user.setAddress(address);
     
 
-    // プロパティ名を指定して値を取得する(1が取得できる)。
-    // 値はgetter経由で取得される。
+    // 指定属性名获取值(可获取1)
+    // 值通过getter获取
     final Long id = (Long) BeanUtil.getProperty(user, "id");
 
-    // プロパティ名を指定して値を設定する(nameプロパティの値が「新しい名前」に変更される)
-    // 値はsetter経由で設定される。
-    BeanUtil.setProperty(user, "name", "新しい名前");
+    // 指定属性名设置值(name属性的值变更为"新名称")
+    // 值通过setter设置
+    BeanUtil.setProperty(user, "name", "新名称");
 
-    // 他のBeanを作成しつつ値の移送する。
-    // Userのプロパティ名と一致するUserDtoのプロパティに対して値が移送される。
-    // 値の移送はgetter及びsetterを使用して行われる。
-    // 移送先に存在しないプロパティは無視される。
-    // 移送先のプロパティの型が異なる場合は、ConversionUtilにより型変換が行われる。
+    // 创建其他Bean的同时移送值
+    // 向User的属性名与UserDto一致的属性移送值
+    // 值的移送使用getter和setter进行
+    // 目标不存在的属性将被忽略
+    // 目标属性类型不同时，通过ConversionUtil进行类型转换
     final UserDto dto = BeanUtil.createAndCopy(UserDto.class, user);
 
-    // プロパティの値をMapに移送する。
-    // Mapのキーは、プロパティ名で値がgetterで取得した値となる。
-    // ネストしたBeanの値はキー名が「.」で区切られて移送される(Map -> Mapとネストはしない)
-    // 例えば、address.postNoとなる。
+    // 将属性值移送至Map
+    // Map的键为属性名，值为getter获取的值
+    // 嵌套Bean的值键名以"."分隔移送(不做Map -> Map的嵌套)
+    // 例如，address.postNo
     final Map<String, Object> map = BeanUtil.createMapAndCopy(user);
-    final String postNo = (String) map.get("address.postNo");     // 1234が取得できる。
+    final String postNo = (String) map.get("address.postNo");     // 可获取1234
 
-    // Mapの値をBeanに移送する。
-    // Mapのキーと一致するプロパティのsetterを使用してMapの値を移送する。
-    // ネストしたBeanに値を移送する場合は、Mapのキー名が「.」で区切られている必要がある。(Map -> Mapとネストしたものは扱えない)
-    // 例えば、address.postNoとキー名を定義することで、User.addressのpostNoプロパティに値が設定される。
+    // 将Map的值移送至Bean
+    // 使用Map键匹配的属性的setter将Map的值移送
+    // 向嵌套Bean移送值时，Map键名需要以"."分隔(无法处理Map -> Map的嵌套)
+    // 例如，通过定义address.postNo键名，可以向User.address的postNo属性设置值
     final Map<String, Object> userMap = new HashMap<String, Object>();
     userMap.put("id", 1L);
     userMap.put("address.postNo", 54321);
     final User user = BeanUtil.createAndCopy(User.class, userMap);
     final String postNo2 = user.getAddress()
-                          .getPostNo();             // 54321が取得できる。
+                          .getPostNo();             // 可获取54321
 
 .. important::
 
-  BeanUtilはList型の型パラメータに対応していない。List型の型パラメータを使いたい場合は具象クラスでgetterをオーバーライドして対応すること。
+  BeanUtil不支持List型的型参数。要使用List型的型参数，请在具体类中覆盖getter来应对。
 
   .. code-block:: java
 
@@ -118,17 +118,17 @@ BeanUtilの使用例
     }
 
     public class Item implements Serializable {
-        // プロパティは省略
+        // 属性省略
     }
 
-    // 具象クラスでオーバーライドしない場合。
-    // BeanUtil.createAndCopy(BadSampleForm.class, map)を呼び出すと、
-    // List型の型パラメータに対応していないため実行時例外が発生する。
+    // 不在具体类中覆盖的情况
+    // 调用BeanUtil.createAndCopy(BadSampleForm.class, map)时，
+    // 由于不支持List型的型参数，将发生运行时异常
     public class BadSampleForm extends ItemsForm<Item> {
     }
 
-    // 具象クラスでオーバーライドした場合。
-    // BeanUtil.createAndCopy(GoodSampleForm.class, map)が正常に動作する。
+    // 在具体类中覆盖的情况
+    // BeanUtil.createAndCopy(GoodSampleForm.class, map)正常运行
     public static class GoodSampleForm extends ItemsForm<Item> {
         @Override
         public List<Item> getItems() {
@@ -138,44 +138,45 @@ BeanUtilの使用例
 
 .. _utility-conversion:
 
-BeanUtilの型変換ルール
+BeanUtil的类型转换规则
 --------------------------------------------------
-:java:extdoc:`BeanUtil <nablarch.core.beans.BeanUtil>` では、Java BeansオブジェクトやMapオブジェクトから
-別のJava Beansオブジェクトにデータ移行する際にプロパティを型変換している。
+:java:extdoc:`BeanUtil <nablarch.core.beans.BeanUtil>` 在从Java Beans对象或Map对象
+向其他Java Beans对象迁移数据时会转换属性类型。
 
-なお、MapオブジェクトからJava Beansオブジェクトにデータ移行する場合、
-Mapオブジェクトのキーに ``.`` が含まれていればそのプロパティをネストオブジェクトとして扱う。
+另外，从Map对象向Java Beans对象迁移数据时，
+如果Map对象的键包含 ``.`` ，则将该属性作为嵌套对象处理。
 
-型変換ルールについては、 :java:extdoc:`nablarch.core.beans.converter` パッケージ配下に配置されている
-:java:extdoc:`Converter <nablarch.core.beans.Converter>` 実装クラスをそれぞれ参照すること。
-
-.. important::
-
-  デフォルトで提供する型変換ルールでは、精度の小さい型へ変換した場合(例えばLongからIntegerへの変換)で、変換先の精度を超えるような値を指定しても正常に処理を終了する。
-  このため、BeanUtilを使用してコピーする際には、コピーする値がシステムで許容されているかどうかを :ref:`validation` によって事前に検証しておく必要がある。
-  検証しなかった場合、不正な値がシステムに取り込まれ障害の原因となる可能性がある。
+关于类型转换规则，请参考配置在 :java:extdoc:`nablarch.core.beans.converter` 包下的
+各 :java:extdoc:`Converter <nablarch.core.beans.Converter>` 实现类。
 
 .. important::
 
-  型変換ルールは应用共通の設定となる。
-  特定の処理のみ異なる型変換ルールを適用したい場合は、 :ref:`bean_util-format_logical` を参照し、
-  特定のプロパティや型に対して :java:extdoc:`Converter <nablarch.core.beans.Converter>` 実装を適用し対応すること。
+  默认提供的类型转换规则中，转换为精度较小的类型时(例如从Long转换为Integer)，
+  即使指定了超过转换目标精度的值也会正常结束处理。
+  因此，使用BeanUtil进行复制时，需要通过 :ref:`validation` 事先验证要复制的值是否被系统允许。
+  如果不验证，可能会将非法值引入系统导致故障。
+
+.. important::
+
+  类型转换规则是应用共通的设置。
+  如果只想在特定处理中应用不同的类型转换规则，请参考 :ref:`bean_util-format_logical` ，
+  对特定属性或类型应用 :java:extdoc:`Converter <nablarch.core.beans.Converter>` 实现来应对。
 
 .. _utility-conversion-add-rule:
 
-型変換ルールを追加する
+添加类型转换规则
 --------------------------------------------------
 
-型変換ルールを追加するには、以下の手順が必要となる。
+添加类型转换规则需要以下步骤。
 
-1. 必要に応じて以下のインタフェースを実装し型変換処理を実現する。
+1. 根据需要实现以下接口来实现类型转换处理
 
   * :java:extdoc:`Converter <nablarch.core.beans.Converter>`
   * :java:extdoc:`ExtensionConverter <nablarch.core.beans.ExtensionConverter>`
   
-2. :java:extdoc:`ConversionManager <nablarch.core.beans.ConversionManager>` の実装クラスを作成する。
-   今回は標準の型変換ルールに追加でルールを設定するため、 :java:extdoc:`ConversionManager <nablarch.core.beans.ConversionManager>` をプロパティとして持つ、
-   :java:extdoc:`ConversionManager <nablarch.core.beans.ConversionManager>` の実装クラスを作成する。
+2. 创建 :java:extdoc:`ConversionManager <nablarch.core.beans.ConversionManager>` 的实现类。
+   这次是在标准类型转换规则基础上添加规则，因此创建持有 :java:extdoc:`ConversionManager <nablarch.core.beans.ConversionManager>` 作为属性的
+   :java:extdoc:`ConversionManager <nablarch.core.beans.ConversionManager>` 实现类。
 
   .. code-block:: java
 
@@ -187,10 +188,10 @@ Mapオブジェクトのキーに ``.`` が含まれていればそのプロパ�
         public Map<Class<?>, Converter<?>> getConverters() {
             Map<Class<?>, Converter<?>> converters = new HashMap<Class<?>, Converter<?>>();
 
-            // 標準のコンバータ
+            // 标准转换器
             converters.putAll(delegateManager.getConverters());
 
-            // 今回作成したコンバータ
+            // 本次创建的转换器
             converters.put(BigInteger.class, new CustomConverter());
 
             return Collections.unmodifiableMap(converters);
@@ -209,10 +210,10 @@ Mapオブジェクトのキーに ``.`` が含まれていればそのプロパ�
         }
     }
 
-3. コンポーネント設定ファイルに、 :java:extdoc:`ConversionManager <nablarch.core.beans.ConversionManager>` の実装クラスを設定する。
+3. 在组件配置文件中设置 :java:extdoc:`ConversionManager <nablarch.core.beans.ConversionManager>` 的实现类
 
-   ポイント
-    * コンポーネント名は **conversionManager** とすること。
+   要点
+    * 组件名设为 **conversionManager** 。
 
    .. code-block:: xml
 
@@ -222,45 +223,45 @@ Mapオブジェクトのキーに ``.`` が含まれていればそのプロパ�
       </property>
     </component>
 
-型変換時に許容するフォーマットを指定する
+指定类型转换时允许的格式
 --------------------------------------------------
-型変換時には、許容するフォーマットを指定することで日付や数値のフォーマットを解除できる。
-例えば、カンマ編集されたString型の値(1,000,000)を数値型(1000000)に変換できる。
+类型转换时，可以通过指定允许的格式来解除日期和数值的格式。
+例如，可以将String型的逗号编辑值(1,000,000)转换为数值型(1000000)。
 
-許容するフォーマットは、以下の3種類の指定方法がある。優先順位は上に記載したものが高くなる。
+允许的格式有以下3种指定方法。优先顺序为上面记载的较高。
 
-* :ref:`BeanUtil呼び出し時に設定 <bean_util-format_logical>`
-* :ref:`プロパティ単位にアノテーションで設定 <bean_util-format_property_setting>`
-* :ref:`デフォルト設定(システム共通設定) <bean_util-format_default_setting>`
+* :ref:`BeanUtil调用时设置 <bean_util-format_logical>`
+* :ref:`按属性用注解设置 <bean_util-format_property_setting>`
+* :ref:`默认设置(系统共通设置) <bean_util-format_default_setting>`
 
 .. _bean_util-format_default_setting:
 
-デフォルト(システム共通)の許容するフォーマットを設定する
+设置默认(系统共通)的允许格式
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-フォーマットのデフォルト設定は、コンポーネント設定ファイルに設定する。
+格式的默认设置在组件配置文件中设置。
 
-例えば、画面上で入力される数値についてはカンマ編集されているものも許容する場合には、デフォルト設定しておくことで個別指定が不要となる。
+例如，对于画面上输入的数值，如果也要允许逗号编辑的情况，设置为默认值后可以省去个别指定。
 
-以下に設定方法を示す。
+以下显示设置方法。
 
-ポイント
-  * コンポーネント名を **conversionManager** で :java:extdoc:`BasicConversionManager <nablarch.core.beans.BasicConversionManager>` を定義する。
-  * ``datePatterns`` プロパティに許容する日付及び日時形式のフォーマットを設定する。
-  * ``numberPatterns`` プロパティに許容する数値形式のフォーマット定義を設定する。
-  * 複数のフォーマットを許容する場合は複数設定する。
+要点
+  * 以组件名 **conversionManager** 定义 :java:extdoc:`BasicConversionManager <nablarch.core.beans.BasicConversionManager>` 。
+  * 在 ``datePatterns`` 属性中设置允许的日期及日期时间格式。
+  * 在 ``numberPatterns`` 属性中设置允许的数值格式定义。
+  * 允许多种格式时设置多个。
 
-設定例
+设置示例
   .. code-block:: xml
 
     <component name="conversionManager" class="nablarch.core.beans.BasicConversionManager">
-      <!-- 日付及び日時の許容するフォーマットを指定する -->
+      <!-- 指定日期及日期时间的允许格式 -->
       <property name="datePatterns">
         <list>
           <value>yyyy/MM/dd</value>
           <value>yyyy-MM-dd</value>
         </list>
       </property>
-      <!-- 数値の許容するフォーマットを指定する -->
+      <!-- 指定数值的允许格式 -->
       <property name="numberPatterns">
         <list>
           <value>#,###</value>
@@ -270,110 +271,110 @@ Mapオブジェクトのキーに ``.`` が含まれていればそのプロパ�
 
 .. important::
 
-  ``yyyy/MM/dd`` と ``yyyy/MM/dd HH:mm:ss`` の用に日付と日時のフォーマットを指定した場合、
-  日時形式の値も `yyyy/MM/dd` パース出来てしまうため時間情報が欠落してしまうケースがある。
+  如 ``yyyy/MM/dd`` 和 ``yyyy/MM/dd HH:mm:ss`` 这样指定了日期和日期时间格式时，
+  日期时间格式的值也能被 `yyyy/MM/dd` 解析，导致时间信息丢失的情况。
 
-  このため、デフォルト指定では日付のフォーマットのみを指定し、日時形式の項目については :ref:`プロパティ単位にアノテーションで設定 <bean_util-format_property_setting>`
-  を使用してデフォルト設定をオーバライドするなどの対応が必要となる。
+  因此，默认指定时只需指定日期格式，对于日期时间格式的项目需要使用 :ref:`按属性用注解设置 <bean_util-format_property_setting>`
+  覆盖默认设置等应对措施。
 
 .. _bean_util-format_property_setting:
 
-コピー対象のプロパティに対して許容するフォーマットを設定する
+对复制目标的属性设置允许的格式
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-特定機能だけ :ref:`デフォルト設定 <bean_util-format_default_setting>` を適用せずに異なるフォーマットを指定したい場合がある。
-この場合は、コピー対象のBean(コピー元またはコピー先)の該当プロパティに対応したフィールドに対してアノテーションを指定し許容するフォーマットを上書きする。
+有时希望特定功能不应用 :ref:`默认设置 <bean_util-format_default_setting>` 而指定不同格式。
+这种情况下，对复制目标的Bean(复制源或复制目标)的对应属性字段指定注解，覆盖允许的格式。
 
-アノテーションは、コピー元とコピー先のどちらに指定しても動作するが、基本的に許容するフォーマットはString型のプロパティに対応するフィールドに指定するのが好ましい。
-なぜなら、フォーマットした値を持つのはString型のプロパティであり、そのプロパティに対して許容するフォーマットが指定されていることが自然であるためである。
-もし、コピー元とコピー先の両方に指定されている場合は、コピー元の設定を使用する。
+注解在复制源和复制目标任一方指定都可以工作，但基本上建议对String型属性对应的字段指定允许的格式。
+因为持有格式值的是String型属性，对该属性指定允许格式是自然的。
+如果复制源和复制目标双方都指定了，则使用复制源的设置。
 
-例えば、デフォルト設定では日付のフォーマットを指定している場合で、特定機能のみ日時フォーマットを許容する場合に使用するとよい。
+例如，默认设置指定了日期格式，而只有特定功能希望允许日期时间格式时，可以使用此方法。
 
-以下に実装例を示す。
+以下显示实现示例。
 
-ポイント
-  * コピー元(コピー先)のプロパティに対応したフィールドに対して :java:extdoc:`CopyOption <nablarch.core.beans.CopyOption>` アノテーションを設定する。
-  * CopyOptionの ``datePattern`` に許容する日付及び日時のフォーマットを指定する。
-  * CopyOptionの ``numberPattern`` に許容する数値のフォーマットを指定する。
+要点
+  * 对复制源(复制目标)属性对应的字段设置 :java:extdoc:`CopyOption <nablarch.core.beans.CopyOption>` 注解。
+  * 在CopyOption的 ``datePattern`` 中指定允许的日期及日期时间格式。
+  * 在CopyOption的 ``numberPattern`` 中指定允许的数值格式。
 
-実装例
+实现示例
   .. code-block:: java
 
     public class Bean {
-        // 許容する日時フォーマットを指定する
+        // 指定允许的日期时间格式
         @CopyOption(datePattern = "yyyy/MM/dd HH:mm:ss")
         private String timestamp;
 
-        // 許容する数値フォーマットを指定する
+        // 指定允许的数值格式
         @CopyOption(numberPattern = "#,###")
         private String number;
 
-        // setter及びgetterは省略
+        // setter及getter省略
     }
 
 .. _bean_util-format_logical:
 
-BeanUtil呼び出し時に許容するフォーマットを設定する
+在BeanUtil调用时设置允许的格式
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-特定機能だけ :ref:`デフォルト設定 <bean_util-format_default_setting>` を適用せずに異なるフォーマットを指定したいが、
-OSSなどを用いてBeanを自動生成している場合に :ref:`プロパティ単位にアノテーションで設定 <bean_util-format_property_setting>` が使用できない場合がある。
-また、特定プロパティのみ異なる型変換ルールを適用したい場合がある。
+有时希望特定功能不应用 :ref:`默认设置 <bean_util-format_default_setting>` 而指定不同格式，
+但使用OSS等自动生成Bean时可能无法使用 :ref:`按属性用注解设置 <bean_util-format_property_setting>` 。
+此外，有时只想对特定属性应用不同的类型转换规则。
 
-このような場合は、 :java:extdoc:`BeanUtil <nablarch.core.beans.BeanUtil>` 呼び出し時に、許容するフォーマットや型変換ルールを設定し対応する。
+这种情况下，在调用 :java:extdoc:`BeanUtil <nablarch.core.beans.BeanUtil>` 时，设置允许的格式和类型转换规则来应对。
 
-以下に実装例を示す。
+以下显示实现示例。
 
-ポイント
-  * :java:extdoc:`CopyOptions <nablarch.core.beans.CopyOptions>` を使用してプロパティに対して設定する。
-    ``CopyOptions`` の構築方法は、 :java:extdoc:`CopyOptions.Builder <nablarch.core.beans.CopyOptions.Builder>` を参照。
-  * 生成した :java:extdoc:`CopyOptions <nablarch.core.beans.CopyOptions>` を使用して :java:extdoc:`BeanUtil <nablarch.core.beans.BeanUtil>` を呼び出す。
+要点
+  * 使用 :java:extdoc:`CopyOptions <nablarch.core.beans.CopyOptions>` 对属性进行设置。
+    ``CopyOptions`` 的构建方法请参考 :java:extdoc:`CopyOptions.Builder <nablarch.core.beans.CopyOptions.Builder>` 。
+  * 使用生成的 :java:extdoc:`CopyOptions <nablarch.core.beans.CopyOptions>` 调用 :java:extdoc:`BeanUtil <nablarch.core.beans.BeanUtil>` 。
 
-実装例
+实现示例
   .. code-block:: java
 
    final CopyOptions copyOptions = CopyOptions.options()
-           // timestampプロパティに対して許容するフォーマットを指定
-           .datePatternByName("timestamp", "yyyy年MM月dd日 HH時mm分ss秒")
-           // customプロパティに対してCustomDateConverterを適用
+           // 对timestamp属性指定允许的格式
+           .datePatternByName("timestamp", "yyyy年MM月dd日 HH时mm分ss秒")
+           // 对custom属性应用CustomDateConverter
            .converterByName("custom", Date.class, new CustomDateConverter())
            .build();
 
-    // CopyOptionsを指定してBeanUtilを呼び出す。
+    // 指定CopyOptions调用BeanUtil
     final DestBean copy = BeanUtil.createAndCopy(DestBean.class, bean, copyOptions);
 
 
 .. _bean_util-use_record:
 
-BeanUtilでレコードを使用する
+在BeanUtil中使用记录(record)
 --------------------------------------------------
 
-BeanUtilでは、Java16より標準化されたレコードをJava Beansと同様に取り扱うことができる。
+BeanUtil可以像Java Beans一样处理Java16起标准化的记录(record)。
 
-注意点として、一度生成したレコードは後から変更することができない。
-そのため、 :java:extdoc:`BeanUtil.setProperty <nablarch.core.beans.BeanUtil.setProperty(java.lang.Object,java.lang.String,java.lang.Object)>` や
-:java:extdoc:`BeanUtil.copy <nablarch.core.beans.BeanUtil.copy(SRC,DEST)>` といったメソッドの引数に、変更対象のオブジェクトとしてレコードを渡した場合は実行時例外が発生する。
+需要注意，一旦生成的记录之后无法更改。
+因此，如果将记录作为变更对象的对象传递给 :java:extdoc:`BeanUtil.setProperty <nablarch.core.beans.BeanUtil.setProperty(java.lang.Object,java.lang.String,java.lang.Object)>` 或
+:java:extdoc:`BeanUtil.copy <nablarch.core.beans.BeanUtil.copy(SRC,DEST)>` 等method的参数，将发生运行时异常。
 
 使用方法
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-:ref:`Java Beansに対する操作 <bean_util-use_java_beans>` に準ずる。
+与 :ref:`Java Beans的操作 <bean_util-use_java_beans>` 相同。
 
 .. important::
 
-  BeanUtilはList型の型パラメータを含むレコードに対応していない。レコードは継承することができないため、
-  List型の型パラメータは最初から具象型を設定して、レコードを定義すること。
+  BeanUtil不支持包含List型型参数的记录。由于记录无法继承，
+  因此List型的型参数需要从开始就设置为具体类型来定义记录。
 
   .. code-block:: java
 
     public class Item implements Serializable {
-        // プロパティは省略
+        // 属性省略
     }
 
-    // List型の型パラメータに具象型を設定していない場合。
-    // BeanUtil.createAndCopy(BadSampleRecord.class, map)を呼び出すと、
-    // List型の型パラメータに対応していないため実行時例外が発生する。
+    // List型的型参数未设置具体类型的情况
+    // 调用BeanUtil.createAndCopy(BadSampleRecord.class, map)时，
+    // 由于不支持List型的型参数，将发生运行时异常
     public class BadSampleRecord<T>(List<T> items) {}
 
-    // List型の型パラメータに具象型を設定した場合。
-    // BeanUtil.createAndCopy(GoodSampleRecord.class, map)が正常に動作する。
+    // List型的型参数设置了具体类型的情况
+    // BeanUtil.createAndCopy(GoodSampleRecord.class, map)正常运行
     public record GoodSampleRecord(List<Item> items) {}

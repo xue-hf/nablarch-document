@@ -1,65 +1,65 @@
 .. _mom_system_messaging:
 
-MOMメッセージング
+MOM消息传递
 ==================================================
 
 .. contents:: 目录
   :depth: 3
   :local:
 
-MOMを使ったメッセージの送受信を行う機能を提供する。
-なお、ここでは、MOMメッセージングに使うメッセージキューのことをMQと称す。
+提供使用MOM进行消息收发的功能。
+另请注意，本文档中将MOM消息传递使用的消息队列称为MQ。
 
-MOMメッセージングでは、 :ref:`mom_system_messaging-data_model` に示したデータモデルを前提としている。
-また、メッセージのフォーマットには、 :ref:`data_format` を使用する。
+MOM消息传递以 :ref:`mom_system_messaging-data_model` 中所示的数据模型为前提。
+此外，消息的格式使用 :ref:`data_format` 。
 
 .. important::
- :ref:`mom_system_messaging-data_model` の中で、
- :ref:`フレームワーク制御ヘッダ<mom_system_messaging-fw_header>` については、
- Nablarchで独自に規定している項目となり、 :ref:`メッセージボディ<mom_system_messaging-message_body>` に含めることを想定している。
+ 在 :ref:`mom_system_messaging-data_model` 中，
+ :ref:`框架控制头<mom_system_messaging-fw_header>` 是
+ Nablarch独自规定的项目，假设包含在 :ref:`消息体<mom_system_messaging-message_body>` 中。
 
- プロジェクト側で電文フォーマットを設計できる場合は問題ないが、
- 外部システムにより既に電文フォーマットが規定されている場合は、
- この想定が適合しない場合がある。
+ 如果项目侧可以设计电文格式则没有问题，
+ 但如果外部系统已经规定了电文格式，
+ 则此假设可能不适用。
 
- この場合は、 :ref:`mom_system_messaging-change_fw_header` を参照し、
- プロジェクトで実装を追加して対応することになる。
+ 在这种情况下，请参考 :ref:`mom_system_messaging-change_fw_header` ，
+ 在项目侧添加实现来应对。
 
-MOMメッセージングは送受信の種類により、想定している実行制御基盤が異なる。
+MOM消息传递根据收发类型不同，所假设的执行控制基盘也不同。
 
 .. list-table::
    :header-rows: 1
    :class: white-space-normal
    :widths: 50, 50
 
-   * - 送受信の種類
-     - 実行制御基盤
-   * - :ref:`応答不要メッセージ送信<mom_system_messaging-async_message_send>`
+   * - 收发类型
+     - 执行控制基盘
+   * - :ref:`无需响应消息发送<mom_system_messaging-async_message_send>`
      - :ref:`nablarch_batch`
-   * - :ref:`同期応答メッセージ送信<mom_system_messaging-sync_message_send>`
-     - 実行制御基盤に依存しない
-   * - :ref:`応答不要メッセージ受信<mom_system_messaging-async_message_receive>`
+   * - :ref:`同步响应消息发送<mom_system_messaging-sync_message_send>`
+     - 不依赖于执行控制基盘
+   * - :ref:`无需响应消息接收<mom_system_messaging-async_message_receive>`
      - :ref:`mom_messaging`
-   * - :ref:`同期応答メッセージ受信<mom_system_messaging-sync_message_receive>`
+   * - :ref:`同步响应消息接收<mom_system_messaging-sync_message_receive>`
      - :ref:`mom_messaging`
 
-機能概要
+功能概述
 --------------------------
 
-多様なMOMに対応できる
+支持多种MOM
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-MOMメッセージングでは、多様なMOMに対応するため、
-:java:extdoc:`MessagingProvider<nablarch.fw.messaging.MessagingProvider>` インタフェースを設けている。
-MOMに依存するMQ接続やメッセージ送受信は、このインタフェースを実装したクラスが行う。
-そのため、 :java:extdoc:`MessagingProvider<nablarch.fw.messaging.MessagingProvider>` インタフェースを実装したクラスを作成することで、
-本機能を様々なMOMで使用できる。
+为了支持多种MOM，MOM消息传递提供了
+:java:extdoc:`MessagingProvider<nablarch.fw.messaging.MessagingProvider>` 接口。
+依赖于MOM的MQ连接和消息收发由实现该接口的类执行。
+因此，通过创建实现 :java:extdoc:`MessagingProvider<nablarch.fw.messaging.MessagingProvider>` 接口的类，
+本功能可以在各种MOM中使用。
 
-MOMメッセージングはJakarta Messagingに対応しており、
-:java:extdoc:`JmsMessagingProvider<nablarch.fw.messaging.provider.JmsMessagingProvider>` を提供している。
-詳細は、リンク先のJavadocを参照。
+MOM消息传递支持Jakarta Messaging，并提供了
+:java:extdoc:`JmsMessagingProvider<nablarch.fw.messaging.provider.JmsMessagingProvider>` 。
+详情请参考链接的Javadoc。
 
-さらに、MOMとして使用実績が多い IBM MQ にも対応している。
-詳細は、 :ref:`webspheremq_adaptor` を参照。
+此外，还支持作为MOM使用实绩较多的IBM MQ。
+详情请参考 :ref:`webspheremq_adaptor` 。
 
 模块列表
 --------------------------------------------------
@@ -79,43 +79,43 @@ MOMメッセージングはJakarta Messagingに対応しており、
 
 .. _mom_system_messaging-settings:
 
-MOMメッセージングを使うための設定
+使用MOM消息传递的设置
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-MOMメッセージングでは、以下のクラスをコンポーネント定義に追加する。
+在MOM消息传递中，需要在组件定义中添加以下类。
 
-* :java:extdoc:`MessagingProvider<nablarch.fw.messaging.MessagingProvider>` の実装クラス (MQ接続、MQに対する送受信)
-* :ref:`messaging_context_handler` (MQ接続の管理)
+* :java:extdoc:`MessagingProvider<nablarch.fw.messaging.MessagingProvider>` 的实现类 (MQ连接、对MQ的收发)
+* :ref:`messaging_context_handler` (MQ连接的管理)
 
-以下に設定例を示す。
+下面显示设置示例。
 
 .. code-block:: xml
 
- <!-- MessagingProviderの実装クラス -->
+ <!-- MessagingProvider的实现类 -->
  <component name="messagingProvider"
             class="nablarch.fw.messaging.provider.JmsMessagingProvider">
-   <!-- 設定項目はJavadocを参照 -->
+   <!-- 设置项目请参考Javadoc -->
  </component>
 
- <!-- メッセージングコンテキスト管理ハンドラ -->
+ <!-- 消息传递上下文管理处理器 -->
  <component name="messagingContextHandler"
             class="nablarch.fw.messaging.handler.MessagingContextHandler">
    <property name="messagingProvider" ref="messagingProvider" />
  </component>
 
-さらに、メッセージ受信の場合は、データリーダの設定が必要となる。
-以下のクラスをコンポーネント定義に追加する。
+此外，对于消息接收，需要数据读取器的设置。
+需要在组件定义中添加以下类。
 
-* :java:extdoc:`MessageReader<nablarch.fw.messaging.reader.MessageReader>` (MQから電文の読み込み)
-* :java:extdoc:`FwHeaderReader<nablarch.fw.messaging.reader.FwHeaderReader>` (電文からフレームワーク制御ヘッダの読み込み)
+* :java:extdoc:`MessageReader<nablarch.fw.messaging.reader.MessageReader>` (从MQ读取电文)
+* :java:extdoc:`FwHeaderReader<nablarch.fw.messaging.reader.FwHeaderReader>` (从电文读取框架控制头)
 
-以下に設定例を示す。
+下面显示设置示例。
 
-ポイント
-  * データリーダのコンポーネント名には ``dataReader`` を指定する。
-  * :java:extdoc:`MessageReader<nablarch.fw.messaging.reader.MessageReader>` は
-    :java:extdoc:`FwHeaderReader<nablarch.fw.messaging.reader.FwHeaderReader>` の
+要点
+  * 数据读取器的组件名称请指定 ``dataReader`` 。
+  * :java:extdoc:`MessageReader<nablarch.fw.messaging.reader.MessageReader>` 在
     :java:extdoc:`messageReader<nablarch.fw.messaging.reader.FwHeaderReader.setMessageReader(nablarch.fw.DataReader)>`
-    プロパティに指定する。
+    属性中指定
+    :java:extdoc:`FwHeaderReader<nablarch.fw.messaging.reader.FwHeaderReader>` 。
 
 .. code-block:: xml
 
@@ -125,105 +125,104 @@ MOMメッセージングでは、以下のクラスをコンポーネント定�
    <!-- MessageReader -->
    <property name="messageReader">
      <component class = "nablarch.fw.messaging.reader.MessageReader">
-       <!-- 設定項目はJavadocを参照 -->
+       <!-- 设置项目请参考Javadoc -->
      </component>
    </property>
  </component>
 
 .. _mom_system_messaging-async_message_send:
 
-応答不要でメッセージを送信する(応答不要メッセージ送信)
+无需响应地发送消息(无需响应消息发送)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-外部システムに対してメッセージを送信する。
+向外部系统发送消息。
 
 .. image:: ../images/system_messaging/mom_system_messaging-async_message_send.png
   :scale: 80
 
-送信電文に設定する :ref:`共通プロトコルヘッダ<mom_system_messaging-common_protocol_header>` の内容
- 設定する必要があるのは、基本的に送信宛先ヘッダのみである。
+:ref:`共同协议头<mom_system_messaging-common_protocol_header>` 内容
+ 基本上只需要设置发送目的地头。
 
-  :メッセージID: 設定不要(送信後に採番される)
-  :関連メッセージID: 設定不要
-  :送信宛先: 送信宛先の論理名
-  :応答宛先: 設定不要
-  :有効期間: 任意
+  :消息ID: 无需设置(发送后分配)
+  :关联消息ID: 无需设置
+  :发送目的地: 发送目的地的逻辑名称
+  :响应目的地: 无需设置
+  :有效期限: 任意
 
-応答不要メッセージ送信では、送信電文のデータを保持するテーブル(一時テーブルと呼ぶ)から送信対象のデータを取得し、
-電文の作成及び送信の共通的なアクションとして、
-:java:extdoc:`AsyncMessageSendAction<nablarch.fw.messaging.action.AsyncMessageSendAction>`
-を提供している。
-:java:extdoc:`AsyncMessageSendAction<nablarch.fw.messaging.action.AsyncMessageSendAction>` は、
-:ref:`nablarch_batch` で動作するAction类である。
-
-.. tip::
- 一時テーブルへの送信電文の登録は、 :ref:`web_application` や :ref:`batch_application` で、
- :ref:`database_management` を使用して行うことを想定している。
-
-:java:extdoc:`AsyncMessageSendAction<nablarch.fw.messaging.action.AsyncMessageSendAction>`
-を使用することにより、以下の成果物のみを作成すればよく、
-非常に簡単に電文の送信処理を実装できるようになっている。
-
-* 送信電文のデータを保持する一時テーブル
-* 電文のレイアウトを表すフォーマット定義ファイル
-* SQLファイル(3種類のSQL文を定義する)
-
- * ステータスが未送信のデータを取得するためのSELECT文
- * 電文送信に成功した場合に、該当データのステータスを処理済みに更新するためのUPDATE文
- * 電文送信に失敗した場合に、該当データのステータスを送信失敗に更新するためのUPDATE文
-
-* ステータス更新用のフォームクラス
+无需响应消息发送中，作为从保存发送电文数据的表(称为临时表)获取发送目标数据，
+创建电文及发送的共通动作，提供了
+:java:extdoc:`AsyncMessageSendAction<nablarch.fw.messaging.action.AsyncMessageSendAction>` 。
+:java:extdoc:`AsyncMessageSendAction<nablarch.fw.messaging.action.AsyncMessageSendAction>` 是
+在 :ref:`nablarch_batch` 中运行的动作类。
 
 .. tip::
- フォームクラスに必要なプロパティは、ステータス更新に必要なテーブル項目に対応するもののみで良い。
- これにより、一時テーブルのテーブルレイアウトをプロジェクト共通で定義することにより、
- 単一のフォームクラスを全ての応答不要メッセージ送信処理で使用することが出来るようになる。
+ 向临时表注册发送电文，预计在 :ref:`web_application` 或 :ref:`batch_application` 中
+ 使用 :ref:`database_management` 进行。
 
-:ref:`Example应用<example_application-mom_system_messaging>` をベースに、
-プロジェクト情報を送信する場合の実装例を以下に示す。
+通过使用 :java:extdoc:`AsyncMessageSendAction<nablarch.fw.messaging.action.AsyncMessageSendAction>` ，
+只需创建以下成果物，
+就可以非常简单地实现电文发送处理。
 
-実装例
+* 保存发送电文数据的临时表
+* 表示电文布局的格式定义文件
+* SQL文件(定义3种SQL语句)
+
+ * 获取状态为未发送的数据的SELECT语句
+ * 电文发送成功时，将相应数据状态更新为处理完毕的UPDATE语句
+ * 电文发送失败时，将相应数据状态更新为发送失败的UPDATE语句
+
+* 状态更新用的表单类
+
+.. tip::
+ 表单类所需的属性只需对应状态更新所需的表项目即可。
+ 由此，通过将临时表的表布局定义为项目共通，
+ 可以在所有无需响应消息发送处理中使用单一的表单类。
+
+基于 :ref:`示例应用程序<example_application-mom_system_messaging>` ，
+下面显示发送项目信息时的实现示例。
+
+实现示例
  \
 
- 送信電文のデータを保持する一時テーブル
-  ポイント
-   * 主キーは、電文を一意に識別するためのIDを格納するカラムとする。
-   * テーブルの属性情報には、送信する電文の各項目に対応するカラムを定義する。
-   * 各プロジェクトの方式に合わせて共通項目(更新ユーザIDや更新日時など)を定義する。
+ 保存发送电文数据的临时表
+  要点
+   * 主键应为存储用于唯一识别电文的ID的列。
+   * 在表的属性信息中定义与要发送的电文各项目对应的列。
+   * 根据各项目的方式定义共通项目(更新用户ID、更新日期时间等)。
 
   INS_PROJECT_SEND_MESSAGE
    ====================== ======================
-   送信電文連番(PK)       SEND_MESSAGE_SEQUENCE
-   プロジェクト名         PROJECT_NAME
-   プロジェクト種別       PROJECT_TYPE
-   プロジェクト分類       PROJECT_CLASS
+   发送电文序号(PK)       SEND_MESSAGE_SEQUENCE
+   项目名称         PROJECT_NAME
+   项目类型       PROJECT_TYPE
+   项目分类       PROJECT_CLASS
        ：(省略)
-   ステータス             STATUS
-   更新ユーザID           UPDATED_USER_ID
-   更新日時               UPDATED_DATE
+   状态             STATUS
+   更新用户ID           UPDATED_USER_ID
+   更新日期时间               UPDATED_DATE
    ====================== ======================
 
- フォーマット定義ファイル
-  ポイント
-   * ファイル名は ``<送信電文のリクエストID>_SEND.fmt`` とする。
+ 格式定义文件
+  要点
+   * 文件名应为 ``<发送电文的请求ID>_SEND.fmt`` 。
 
   ProjectInsertMessage_SEND.fmt
    .. code-block:: bash
 
-    file-type:        "Fixed" # 固定長
-    text-encoding:    "MS932" # 文字列型フィールドの文字エンコーディング
-    record-length:    2120    # 各レコードの長さ
+    file-type:        "Fixed" # 固定长度
+    text-encoding:    "MS932" # 字符串型字段的字符编码
+    record-length:    2120    # 各记录的长度
 
     [userData]
-    項目定義は省略
+    项目定义省略
 
- SQLファイル
-  ポイント
-   * ファイル名は ``<送信電文のリクエストID>.sql`` とする。
-   * SQL_IDは次の通りとする。
+ SQL文件
+  要点
+   * 文件名应为 ``<发送电文的请求ID>.sql`` 。
+   * SQL_ID如下：
 
-    * ``SELECT_SEND_DATA``: ステータスが未送信のデータを取得するためのSELECT文
-    * ``UPDATE_NORMAL_END``: ステータスを処理済みに更新するためのUPDATE文
-    * ``UPDATE_ABNORMAL_END``: ステータスを送信失敗に更新するためのUPDATE文
+    * ``SELECT_SEND_DATA``: 获取状态为未发送的数据的SELECT语句
+    * ``UPDATE_NORMAL_END``: 将状态更新为处理完毕的UPDATE语句
+    * ``UPDATE_ABNORMAL_END``: 将状态更新为发送失败的UPDATE语句
 
   ProjectInsertMessage.sql
    .. code-block:: bash
@@ -258,38 +257,38 @@ MOMメッセージングでは、以下のクラスをコンポーネント定�
     WHERE
         SEND_MESSAGE_SEQUENCE = :sendMessageSequence
 
- ステータス更新用のフォームクラス
-  ポイント
-   * このフォームクラスは、ステータス更新専用のクラスとなるため、
-     プロパティとして一時テーブルの属性を全て保持する必要はない。
+ 状态更新用的表单类
+  要点
+   * 由于该表单类是状态更新专用的类，
+     因此不需要将临时表的属性全部作为属性保持。
 
   SendMessagingForm.java
    .. code-block:: java
 
     public class SendMessagingForm {
 
-        /** 送信電文連番 */
+        /** 发送电文序号 */
         private String sendMessageSequence;
 
-        /** 更新ユーザID */
+        /** 更新用户ID */
         @UserId
         private String updatedUserId;
 
-        /** 更新日時 */
+        /** 更新日期时间 */
         @CurrentDateTime
         private java.sql.Timestamp updatedDate;
 
-        // コンストラクタとアクセッサは省略
+        // 构造函数和访问器省略
     }
 
- AsyncMessageSendActionの設定
-  ポイント
-   * :java:extdoc:`AsyncMessageSendAction<nablarch.fw.messaging.action.AsyncMessageSendAction>`
-     を使用する場合は、送信先のキュー名やフォーマット定義ファイルの格納ディレクトリなどの設定が必要となる。
-     設定は、
+ AsyncMessageSendAction的设置
+  要点
+   * 使用 :java:extdoc:`AsyncMessageSendAction<nablarch.fw.messaging.action.AsyncMessageSendAction>`
+     时，需要发送目标队列名、格式定义文件存储目录等设置。
+     设置通过将
      :java:extdoc:`AsyncMessageSendActionSettings<nablarch.fw.messaging.action.AsyncMessageSendActionSettings>`
-     をコンポーネント定義に追加することで行う。
-     設定項目については、リンク先のJavadocを参照。
+     添加到组件定义来进行。
+     关于设置项目，请参考链接的Javadoc。
 
   messaging-async-send-component-configuration.xml
    .. code-block:: xml
@@ -309,12 +308,12 @@ MOMメッセージングでは、以下のクラスをコンポーネント定�
       </property>
     </component>
 
- AsyncMessageSendActionの適用
-  ポイント
-   * :java:extdoc:`AsyncMessageSendAction<nablarch.fw.messaging.action.AsyncMessageSendAction>` を
-     :ref:`nablarch_batch` で動作させるためには、
-     :ref:`request_path_java_package_mapping` のコンポーネント定義で
-     :java:extdoc:`AsyncMessageSendAction<nablarch.fw.messaging.action.AsyncMessageSendAction>` を指定する。
+ AsyncMessageSendAction的应用
+  要点
+   * 要在 :ref:`nablarch_batch` 中运行
+     :java:extdoc:`AsyncMessageSendAction<nablarch.fw.messaging.action.AsyncMessageSendAction>` ，
+     需要在 :ref:`request_path_java_package_mapping` 的组件定义中
+     指定 :java:extdoc:`AsyncMessageSendAction<nablarch.fw.messaging.action.AsyncMessageSendAction>` 。
 
   messaging-async-send-component-configuration.xml
    .. code-block:: xml
@@ -327,126 +326,127 @@ MOMメッセージングでは、以下のクラスをコンポーネント定�
 
 .. _mom_system_messaging-sync_message_send:
 
-同期応答でメッセージを送信する(同期応答メッセージ送信)
+同步响应地发送消息(同步响应消息发送)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-外部システムに対してメッセージを送信し、その応答を待機する。応答メッセージを受信するか、待機タイムアウト時間が経過するまでブロックする。
+向外部系统发送消息，并等待其响应。阻塞直到接收到响应消息或等待超时时间经过。
 
 .. image:: ../images/system_messaging/mom_system_messaging-sync_message_send.png
   :scale: 80
 
-:ref:`mom_system_messaging-async_message_send` とは異なり、応答電文を受信するので、
-通信先で処理が正しく行われることをある程度保証できる。
-ただし、何らかの問題により、規定時間内に応答を受信できずにタイムアウトした場合は、何らかのエラー処理(例えば、電文の再試行や障害通知など)を行う必要がある。
+与 :ref:`mom_system_messaging-async_message_send` 不同，由于会接收响应电文，
+可以在一定程度上保证通信目标正确执行了处理。
+但是，如果由于某种问题在规定时间内无法接收到响应而超时，则需要进行某种错误处理(例如，电文重试或故障通知等)。
 
-送信電文に設定する :ref:`共通プロトコルヘッダ<mom_system_messaging-common_protocol_header>` の内容
- 送信宛先ヘッダに加え、応答時の送信宛先となる応答宛先ヘッダを設定しておく必要がある。
+:ref:`共同协议头<mom_system_messaging-common_protocol_header>` 内容
+ 除了发送目的地头外，还需要设置作为响应时发送目的地的响应目的地头。
 
-  :メッセージID: 設定不要(送信後に採番される)
-  :関連メッセージID: 設定不要
-  :送信宛先: 送信宛先の論理名
-  :応答宛先: 応答宛先の論理名
-  :有効期間: 任意
+  :消息ID: 无需设置(发送后分配)
+  :关联消息ID: 无需设置
+  :发送目的地: 发送目的地的逻辑名称
+  :响应目的地: 响应目的地的逻辑名称
+  :有效期限: 任意
 
-外部システムが作成する応答電文の :ref:`共通プロトコルヘッダ<mom_system_messaging-common_protocol_header>` の内容
- 送信処理完了後、应用は、送信した電文のメッセージIDと同じ関連メッセージIDをもつ電文が応答宛先上で受信されるまで待機する。
- そのため、外部システムは応答電文に関連メッセージIDを設定しておく必要がある。
+外部系统创建的响应电文的 :ref:`共同协议头<mom_system_messaging-common_protocol_header>` 内容
+ 发送处理完成后，应用程序会等待在响应目的地上接收到具有与发送电文的消息ID相同的关联消息ID的电文。
+ 因此，外部系统需要在响应电文中设置关联消息ID。
 
-  :メッセージID: 設定不要(送信後に採番される)
-  :関連メッセージID: 送信電文のメッセージIDヘッダの値
-  :送信宛先: 送信電文の応答宛先ヘッダの値
-  :応答宛先: 設定不要
-  :有効期間: 任意
+  :消息ID: 无需设置(发送后分配)
+  :关联消息ID: 发送电文的消息ID头的值
+  :发送目的地: 发送电文的响应目的地头的值
+  :响应目的地: 无需设置
+  :有效期限: 任意
 
-同期応答メッセージ送信では、定型的な処理をラップしたユーティリティクラスとして、
-:java:extdoc:`MessageSender<nablarch.fw.messaging.MessageSender>` を提供している。
-:java:extdoc:`MessageSender<nablarch.fw.messaging.MessageSender>`
-を使用することにより、以下の成果物のみを作成すればよく、
-簡便に同期応答メッセージの送信処理を作成できるようになっている。
+同步响应消息发送中，作为包装定型处理的工具类，
+提供了 :java:extdoc:`MessageSender<nablarch.fw.messaging.MessageSender>` 。
+通过使用
+:java:extdoc:`MessageSender<nablarch.fw.messaging.MessageSender>` ，
+只需创建以下成果物，
+就可以方便地创建同步响应消息的发送处理。
 
-* 送受信に使用するフォーマット定義ファイル
-* :java:extdoc:`MessageSender<nablarch.fw.messaging.MessageSender>` を使った送受信処理
+* 收发使用的格式定义文件
+* 使用 :java:extdoc:`MessageSender<nablarch.fw.messaging.MessageSender>` 的收发处理
 
-:ref:`Example应用<example_application-mom_system_messaging>` をベースに、
-テーブルに格納された送信データから、
-バッチアクションでプロジェクト情報を送信する場合の実装例を以下に示す。
-テーブルからのデータ読み込み部分は、メッセージ送信に関係しないので実装例を省略する。
+基于 :ref:`示例应用程序<example_application-mom_system_messaging>` ，
+下面显示从表中存储的发送数据，
+在批处理动作中发送项目信息时的实现示例。
+从表中读取数据的部分与消息发送无关，故省略实现示例。
 
-実装例
+实现示例
  \
 
- 送受信に使用するフォーマット定義ファイル
-  ポイント
-   * ファイル名は以下とする。
+ 收发使用的格式定义文件
+  要点
+   * 文件名如下：
 
-    * 送信用： ``<電文のリクエストID>_SEND.fmt``
-    * 受信用： ``<電文のリクエストID>_RECEIVE.fmt``
+    * 发送用： ``<电文的请求ID>_SEND.fmt``
+    * 接收用： ``<电文的请求ID>_RECEIVE.fmt``
 
-   * レコードタイプ名は ``data`` 固定である。
+   * 记录类型名固定为 ``data`` 。
 
   ProjectInsertMessage_SEND.fmt
    .. code-block:: bash
 
-    file-type:        "Fixed" # 固定長
-    text-encoding:    "MS932" # 文字列型フィールドの文字エンコーディング
-    record-length:    2120    # 各レコードの長さ
-    record-separator: "\r\n"  # 改行コード
+    file-type:        "Fixed" # 固定长度
+    text-encoding:    "MS932" # 字符串型字段的字符编码
+    record-length:    2120    # 各记录的长度
+    record-separator: "\r\n"  # 换行代码
 
     [data]
-    項目定義は省略
+    项目定义省略
 
   ProjectInsertMessage_RECEIVE.fmt
    .. code-block:: bash
 
-    file-type:        "Fixed" # 固定長
-    text-encoding:    "MS932" # 文字列型フィールドの文字エンコーディング
-    record-length:    130     # 各レコードの長さ
-    record-separator: "\r\n"  # 改行コード
+    file-type:        "Fixed" # 固定长度
+    text-encoding:    "MS932" # 字符串型字段的字符编码
+    record-length:    130     # 各记录的长度
+    record-separator: "\r\n"  # 换行代码
 
     [data]
-    項目定義は省略
+    项目定义省略
 
- MessageSenderを使った送受信処理
-  ポイント
-   * 要求電文は、 :java:extdoc:`SyncMessage<nablarch.fw.messaging.SyncMessage>` で作成する。
-   * メッセージ送信には、
+ 使用MessageSender的收发处理
+  要点
+   * 请求电文使用 :java:extdoc:`SyncMessage<nablarch.fw.messaging.SyncMessage>` 创建。
+   * 消息发送使用
      :java:extdoc:`MessageSender#sendSync<nablarch.fw.messaging.MessageSender.sendSync(nablarch.fw.messaging.SyncMessage)>`
-     を使用する。
-     使い方については、リンク先のJavadocを参照。
+     。
+     使用方法请参考链接的Javadoc。
 
   SendProjectInsertMessageAction.java
    .. code-block:: java
 
         public Result handle(SqlRow inputData, ExecutionContext ctx) {
 
-            // インプットデータを使った業務処理は省略
+            // 使用输入数据的业务处理省略
 
             SyncMessage responseMessage = null;
             try {
                 responseMessage = MessageSender.sendSync(
                     new SyncMessage("ProjectInsertMessage").addDataRecord(inputData));
             } catch (MessagingException e) {
-                // 送信エラー
+                // 发送错误
                 throw new TransactionAbnormalEnd(100, e, "error.sendServer.fail");
             }
 
             Map<String, Object> responseDataRecord = responseMessage.getDataRecord();
 
-            // レスポンスデータを使った業務処理は省略
+            // 使用响应数据的业务处理省略
 
             return new Success();
         }
 
- MessageSenderの設定
-  ポイント
-     * :java:extdoc:`MessageSender<nablarch.fw.messaging.MessageSender>` を使用する場合は、
-       送受信先のキュー名やフォーマット定義ファイルの格納ディレクトリなどの設定が必要となる。
-       設定は、 :ref:`repository-environment_configuration` により行う。
-       設定項目については、
+ MessageSender的设置
+  要点
+     * 使用 :java:extdoc:`MessageSender<nablarch.fw.messaging.MessageSender>` 时，
+       需要收发目标的队列名、格式定义文件存储目录等设置。
+       设置通过 :ref:`repository-environment_configuration` 进行。
+       关于设置项目，请参考
        :java:extdoc:`MessageSenderSettings<nablarch.fw.messaging.MessageSenderSettings.<init>(java.lang.String)>`
-       を参照。
-     * 送受信する電文の変換処理を変更する場合は、コンポーネント設定ファイルに :java:extdoc:`SyncMessageConvertor<nablarch.fw.messaging.SyncMessageConvertor>`
-       を継承したクラスを定義して、コンポーネントの名前を ``messageSender.DEFAULT.messageConvertorName`` に指定することで変更できる。
-       詳細については、 :ref:`フレームワーク制御ヘッダの読み書きを変更する（同期応答メッセージ送信の場合）<mom_system_messaging-change_fw_header_sync_ex>` を参照。
+       。
+     * 要更改收发信电文的转换处理时，可以通过在组件配置文件中定义继承 :java:extdoc:`SyncMessageConvertor<nablarch.fw.messaging.SyncMessageConvertor>`
+       的类，并将组件名称指定为 ``messageSender.DEFAULT.messageConvertorName`` 来更改。
+       详情请参考 :ref:`更改框架控制头的读写（同步响应消息发送的情况）<mom_system_messaging-change_fw_header_sync_ex>` 。
 
   messaging.properties
    .. code-block:: properties
@@ -458,91 +458,91 @@ MOMメッセージングでは、以下のクラスをコンポーネント定�
     messageSender.DEFAULT.formatDir=format
     messageSender.DEFAULT.headerFormatName=HEADER
 
-  コンポーネント設定ファイル
+  组件配置文件
    .. code-block:: xml
 
-    <!-- MessageSender設定を読込 -->
+    <!-- 加载MessageSender设置 -->
     <config-file file="messaging/messaging.properties"/>
 
 
 .. _mom_system_messaging-async_message_receive:
 
-応答不要でメッセージを受信する(応答不要メッセージ受信)
+无需响应地接收消息(无需响应消息接收)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-特定の宛先に送信されるメッセージを受信する。メッセージを受信するか待機タイムアウト時間が経過するまでブロックする。
+接收发送到特定目的地的消息。阻塞直到接收到消息或等待超时时间经过。
 
 .. image:: ../images/system_messaging/mom_system_messaging-async_message_receive.png
   :scale: 80
 
-外部システムが作成する受信電文の :ref:`共通プロトコルヘッダ<mom_system_messaging-common_protocol_header>` の内容
-  :メッセージID: 設定不要(送信後に採番される)
-  :関連メッセージID: 設定不要
-  :送信宛先: 宛先の論理名
-  :応答宛先: 設定不要
-  :有効期間: 任意
+外部系统创建的接收电文的 :ref:`共同协议头<mom_system_messaging-common_protocol_header>` 内容
+  :消息ID: 无需设置(发送后分配)
+  :关联消息ID: 无需设置
+  :发送目的地: 目的地的逻辑名称
+  :响应目的地: 无需设置
+  :有效期限: 任意
 
-応答不要メッセージ受信では、受信した電文を一時テーブル(電文受信テーブル)に保存するための共通的なアクションとして、
+无需响应消息接收中，作为将接收的电文保存到临时表(电文接收表)的共通动作，
+提供了 :java:extdoc:`AsyncMessageReceiveAction<nablarch.fw.messaging.action.AsyncMessageReceiveAction>` 。
 :java:extdoc:`AsyncMessageReceiveAction<nablarch.fw.messaging.action.AsyncMessageReceiveAction>`
-を提供している。
-:java:extdoc:`AsyncMessageReceiveAction<nablarch.fw.messaging.action.AsyncMessageReceiveAction>`
-は、:ref:`mom_messaging` で動作するAction类である。
+是在 :ref:`mom_messaging` 中运行的动作类。
 
 .. tip::
- 一時テーブルに保存したデータは、 :ref:`batch_application` を用いて、
- システムの本テーブルに取り込みを行うことを想定している。
+ 保存在临时表中的数据，预计使用 :ref:`batch_application` 
+ 导入系统的本表中。
 
-:java:extdoc:`AsyncMessageReceiveAction<nablarch.fw.messaging.action.AsyncMessageReceiveAction>`
-を使用することにより、以下の成果物のみを作成すればよく、 非常に簡易的に電文をテーブルに保存することが可能となっている。
+通过使用
+:java:extdoc:`AsyncMessageReceiveAction<nablarch.fw.messaging.action.AsyncMessageReceiveAction>` ，
+只需创建以下成果物，就可以非常简单地将电文保存到表中。
 
-* 電文を登録するための一時テーブル
-* 電文のレイアウトを表すフォーマット定義ファイル
-* 電文を登録するためのINSERT文(SQLファイル)
-* 電文を登録する際に使用するフォームクラス
+* 用于注册电文的临时表
+* 表示电文布局的格式定义文件
+* 用于注册电文的INSERT语句(SQL文件)
+* 注册电文时使用的表单类
 
-:ref:`Example应用<example_application-mom_system_messaging>` をベースに、
-プロジェクト情報を受信する場合の実装例を以下に示す。
+基于 :ref:`示例应用程序<example_application-mom_system_messaging>` ，
+下面显示接收项目信息时的实现示例。
 
-実装例
+实现示例
  \
 
- 電文を登録するための一時テーブル
-  ポイント
-   * 受信した電文は、電文の種類毎に専用の一時テーブルに保存する。
-   * 主キーは、電文を一意に識別するためのIDを格納するカラムとする。
-     このカラムに格納する値は、 :ref:`generator` を用いてフレームワークで採番を行う。
-   * テーブルの属性情報には、受信した電文の各項目に対応するカラムを定義する。
-   * 各プロジェクトの方式に合わせて共通項目(登録ユーザIDや登録日時など)を定義する。
+ 用于注册电文的临时表
+  要点
+   * 接收的电文按电文类型保存在专用的临时表中。
+   * 主键应为存储用于唯一识别电文的ID的列。
+     该列中存储的值由框架使用 :ref:`generator` 进行编号。
+   * 在表的属性信息中定义与接收电文各项目对应的列。
+   * 根据各项目的方式定义共通项目(注册用户ID、注册日期时间等)。
 
   INS_PROJECT_RECEIVE_MESSAGE
    ====================== ======================
-   受信メッセージ連番(PK) RECEIVED_MESSAGE_SEQUENCE
-   プロジェクト名         PROJECT_NAME
-   プロジェクト種別       PROJECT_TYPE
-   プロジェクト分類       PROJECT_CLASS
+   接收消息序号(PK) RECEIVED_MESSAGE_SEQUENCE
+   项目名称         PROJECT_NAME
+   项目类型       PROJECT_TYPE
+   项目分类       PROJECT_CLASS
        ：(省略)
-   ステータス             STATUS
-   登録ユーザID           INSERT_USER_ID
-   登録日時               INSERT_DATE
+   状态             STATUS
+   注册用户ID           INSERT_USER_ID
+   注册日期时间               INSERT_DATE
    ====================== ======================
 
- フォーマット定義ファイル
-  ポイント
-   * ファイル名は ``<受信電文のリクエストID>_RECEIVE.fmt`` とする。
+ 格式定义文件
+  要点
+   * 文件名应为 ``<接收电文的请求ID>_RECEIVE.fmt`` 。
 
   ProjectInsertMessage_RECEIVE.fmt
    .. code-block:: bash
 
-    file-type:        "Fixed" # 固定長
-    text-encoding:    "MS932" # 文字列型フィールドの文字エンコーディング
-    record-length:    2120    # 各レコードの長さ
+    file-type:        "Fixed" # 固定长度
+    text-encoding:    "MS932" # 字符串型字段的字符编码
+    record-length:    2120    # 各记录的长度
 
     [userData]
-    項目定義は省略
+    项目定义省略
 
- SQLファイル
-  ポイント
-   * ファイル名は ``<受信電文のリクエストID>.sql`` とする。
-   * SQL_IDは ``INSERT_MESSAGE`` とする。
+ SQL文件
+  要点
+   * 文件名应为 ``<接收电文的请求ID>.sql`` 。
+   * SQL_ID应为 ``INSERT_MESSAGE`` 。
 
   ProjectInsertMessage.sql
    .. code-block:: bash
@@ -555,27 +555,27 @@ MOMメッセージングでは、以下のクラスをコンポーネント定�
         PROJECT_CLASS,
         以下省略
 
- 電文を登録する際に使用するフォームクラス
-  ポイント
-   * クラス名は ``<受信電文のリクエストID>Form`` とする。
-   * :java:extdoc:`String<java.lang.String>`、:java:extdoc:`RequestMessage<nablarch.fw.messaging.RequestMessage>`
-     の2つの引数を持つコンストラクタを定義する。それぞれのパラメータの意味は以下の通り。
+ 注册电文时使用的表单类
+  要点
+   * 类名应为 ``<接收电文的请求ID>Form`` 。
+   * 定义具有 :java:extdoc:`String<java.lang.String>` 、:java:extdoc:`RequestMessage<nablarch.fw.messaging.RequestMessage>`
+     两个参数的构造函数。各参数的含义如下：
 
-     * :java:extdoc:`String<java.lang.String>` -> 受信電文連番
-     * :java:extdoc:`RequestMessage<nablarch.fw.messaging.RequestMessage>` -> 受信電文
+     * :java:extdoc:`String<java.lang.String>` -> 接收电文序号
+     * :java:extdoc:`RequestMessage<nablarch.fw.messaging.RequestMessage>` -> 接收电文
 
   ProjectInsertMessageForm.java
    .. code-block:: java
 
     public class ProjectInsertMessageForm {
 
-        /** 受信電文連番 */
+        /** 接收电文序号 */
         private String receivedMessageSequence;
 
-        /** プロジェクト名 */
+        /** 项目名称 */
         private String projectName;
 
-        // 他のフィールドは省略
+        // 其他字段省略
 
         public ProjectInsertMessageForm(
                 String receivedMessageSequence, RequestMessage message) {
@@ -585,20 +585,20 @@ MOMメッセージングでは、以下のクラスをコンポーネント定�
 
             projectName = data.getString("projectName");
 
-            // 以降の処理は省略
+            // 后续处理省略
         }
 
-        // アクセッサは省略
+        // 访问器省略
     }
 
- AsyncMessageReceiveActionの設定
-  ポイント
-   * :java:extdoc:`AsyncMessageReceiveAction<nablarch.fw.messaging.action.AsyncMessageReceiveAction>`
-     を使用する場合は、フォーマット定義ファイルやSQLファイルの配置場所などの設定が必要となる。
-     設定は、
+ AsyncMessageReceiveAction的设置
+  要点
+   * 使用 :java:extdoc:`AsyncMessageReceiveAction<nablarch.fw.messaging.action.AsyncMessageReceiveAction>`
+     时，需要格式定义文件和SQL文件的存放位置等设置。
+     设置通过将
      :java:extdoc:`AsyncMessageReceiveActionSettings<nablarch.fw.messaging.action.AsyncMessageReceiveActionSettings>`
-     をコンポーネント定義に追加することで行う。
-     設定項目については、リンク先のJavadocを参照。
+     添加到组件定义来进行。
+     关于设置项目，请参考链接的Javadoc。
 
   messaging-async-receive-component-configuration.xml
    .. code-block:: xml
@@ -617,12 +617,12 @@ MOMメッセージングでは、以下のクラスをコンポーネント定�
       <property name="sqlFilePackage" value="com.nablarch.example.sql" />
     </component>
 
- AsyncMessageReceiveActionの適用
-  ポイント
-   * :java:extdoc:`AsyncMessageReceiveAction<nablarch.fw.messaging.action.AsyncMessageReceiveAction>` を
-     :ref:`mom_messaging` で動作させるためには、
-     :ref:`request_path_java_package_mapping` のコンポーネント定義で
-     :java:extdoc:`AsyncMessageReceiveAction<nablarch.fw.messaging.action.AsyncMessageReceiveAction>` を指定する。
+ AsyncMessageReceiveAction的应用
+  要点
+   * 要在 :ref:`mom_messaging` 中运行
+     :java:extdoc:`AsyncMessageReceiveAction<nablarch.fw.messaging.action.AsyncMessageReceiveAction>` ，
+     需要在 :ref:`request_path_java_package_mapping` 的组件定义中
+     指定 :java:extdoc:`AsyncMessageReceiveAction<nablarch.fw.messaging.action.AsyncMessageReceiveAction>` 。
 
   messaging-async-receive-component-configuration.xml
    .. code-block:: xml
@@ -635,78 +635,79 @@ MOMメッセージングでは、以下のクラスをコンポーネント定�
 
 .. _mom_system_messaging-sync_message_receive:
 
-同期応答でメッセージを受信する(同期応答メッセージ受信)
+同步响应地接收消息(同步响应消息接收)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-通信先から特定の宛先に送信されるメッセージを受信し、そこに設定されていた応答宛先に対して応答電文を送信する。
-このとき、受信した電文のメッセージIDヘッダの値を、応答電文の関連メッセージIDヘッダに設定する。
+从通信目标接收发送到特定目的地的消息，并向设置在那里的响应目的地发送响应电文。
+此时，将接收电文的消息ID头的值设置到响应电文的关联消息ID头中。
 
 .. image:: ../images/system_messaging/mom_system_messaging-sync_message_receive.png
   :scale: 80
 
-送信電文に設定する :ref:`共通プロトコルヘッダ<mom_system_messaging-common_protocol_header>` の内容
+:ref:`共同协议头<mom_system_messaging-common_protocol_header>` 内容
 
-  :メッセージID: 設定不要(送信後に採番される)
-  :関連メッセージID: 受信電文のメッセージIDヘッダの値
-  :送信宛先: 受信電文の応答宛先ヘッダの値
-  :応答宛先: 設定不要
-  :有効期間: 任意
+  :消息ID: 无需设置(发送后分配)
+  :关联消息ID: 接收电文的消息ID头的值
+  :发送目的地: 接收电文的响应目的地头的值
+  :响应目的地: 无需设置
+  :有效期限: 任意
 
-同期応答メッセージ受信では、定型的な処理を行うテンプレートクラスとして、
-:java:extdoc:`MessagingAction<nablarch.fw.messaging.action.MessagingAction>` を提供している。
-:java:extdoc:`MessagingAction<nablarch.fw.messaging.action.MessagingAction>` は、
-:ref:`mom_messaging` で動作するAction类である。
+同步响应消息接收中，作为执行定型处理的模板类，
+提供了 :java:extdoc:`MessagingAction<nablarch.fw.messaging.action.MessagingAction>` 。
+:java:extdoc:`MessagingAction<nablarch.fw.messaging.action.MessagingAction>` 是
+在 :ref:`mom_messaging` 中运行的动作类。
 
-:java:extdoc:`MessagingAction<nablarch.fw.messaging.action.MessagingAction>`
-を使用することにより、以下の成果物のみを作成すればよい。
+通过使用
+:java:extdoc:`MessagingAction<nablarch.fw.messaging.action.MessagingAction>` ，
+只需创建以下成果物即可。
 
-* 電文のレイアウトを表すフォーマット定義ファイル
-* 電文受信時とエラー発生時の処理(Action类)
+* 表示电文布局的格式定义文件
+* 电文接收时和发生错误时的处理(动作类)
 
-:ref:`Example应用<example_application-mom_system_messaging>` をベースに、
-プロジェクト情報を受信する場合の実装例を以下に示す。
+基于 :ref:`示例应用程序<example_application-mom_system_messaging>` ，
+下面显示接收项目信息时的实现示例。
 
-実装例
+实现示例
  \
 
- フォーマット定義ファイル
-  ポイント
-   * ファイル名は以下とする。
+ 格式定义文件
+  要点
+   * 文件名如下：
 
-    * 受信用： ``<電文のリクエストID>_RECEIVE.fmt``
-    * 送信用： ``<電文のリクエストID>_SEND.fmt``
+    * 接收用： ``<电文的请求ID>_RECEIVE.fmt``
+    * 发送用： ``<电文的请求ID>_SEND.fmt``
 
   ProjectInsertMessage_RECEIVE.fmt
    .. code-block:: bash
 
-    file-type:        "Fixed" # 固定長
-    text-encoding:    "MS932" # 文字列型フィールドの文字エンコーディング
-    record-length:    2120    # 各レコードの長さ
-    record-separator: "\r\n"  # 改行コード
+    file-type:        "Fixed" # 固定长度
+    text-encoding:    "MS932" # 字符串型字段的字符编码
+    record-length:    2120    # 各记录的长度
+    record-separator: "\r\n"  # 换行代码
 
     [data]
-    項目定義は省略
+    项目定义省略
 
   ProjectInsertMessage_SEND.fmt
    .. code-block:: bash
 
-    file-type:        "Fixed" # 固定長
-    text-encoding:    "MS932" # 文字列型フィールドの文字エンコーディング
-    record-length:    130     # 各レコードの長さ
-    record-separator: "\r\n"  # 改行コード
+    file-type:        "Fixed" # 固定长度
+    text-encoding:    "MS932" # 字符串型字段的字符编码
+    record-length:    130     # 各记录的长度
+    record-separator: "\r\n"  # 换行代码
 
     [data]
-    項目定義は省略
+    项目定义省略
 
- 電文受信時とエラー発生時の処理(Action类)
-  ポイント
-   * :java:extdoc:`MessagingAction<nablarch.fw.messaging.action.MessagingAction>` を継承し、
-     以下のメソッドをオーバーライドする。
+ 电文接收时和发生错误时的处理(动作类)
+  要点
+   * 继承 :java:extdoc:`MessagingAction<nablarch.fw.messaging.action.MessagingAction>` 并
+     覆盖以下方法：
 
       * :java:extdoc:`MessagingAction#onReceive<nablarch.fw.messaging.action.MessagingAction.onReceive(nablarch.fw.messaging.RequestMessage,nablarch.fw.ExecutionContext)>`
       * :java:extdoc:`MessagingAction#onError<nablarch.fw.messaging.action.MessagingAction.onError(java.lang.Throwable,nablarch.fw.messaging.RequestMessage,nablarch.fw.ExecutionContext)>`
 
-   * 応答電文は、 :java:extdoc:`RequestMessage#reply<nablarch.fw.messaging.RequestMessage.reply()>` で作成する。
-   * 要求電文と応答電文の内容を保持するため、それぞれに対応したフォームクラスを作成する。
+   * 响应电文使用 :java:extdoc:`RequestMessage#reply<nablarch.fw.messaging.RequestMessage.reply()>` 创建。
+   * 为了保存请求电文和响应电文的内容，分别创建对应的表单类。
 
   ProjectInsertMessageAction.java
    .. code-block:: java
@@ -720,18 +721,18 @@ MOMメッセージングでは、以下のクラスをコンポーネント定�
                 = BeanUtil.createAndCopy(
                     ProjectInsertMessageForm.class, request.getParamMap());
 
-            // バリデーション処理を行う。エラー検知時は、ApplicationExceptionが送出される。
+            // 执行验证处理。错误检测时抛出ApplicationException。
             ValidatorUtil.validate(projectInsertMessageForm);
 
             ProjectTemp projectTemp
                 = BeanUtil.createAndCopy(
                     ProjectTemp.class, projectInsertMessageForm);
 
-            // データ設定は省略
+            // 数据设置省略
 
             UniversalDao.insert(projectTemp);
 
-            // 応答データ返却
+            // 响应数据返回
             ProjectInsertMessageResponseForm resForm = new ProjectInsertMessageResponseForm("success", "");
             return request.reply().addRecord(resForm);
         }
@@ -741,10 +742,10 @@ MOMメッセージングでは、以下のクラスをコンポーネント定�
                 Throwable e, RequestMessage request, ExecutionContext context) {
                 
             if (e instanceof InvalidDataFormatException) {
-                //要求電文データレコード部レイアウト不正
+                //请求电文数据记录部布局不正确
                 resForm = new ProjectInsertMessageResponseForm("fatal", "invalid layout.");
             } else if (e instanceof ApplicationException) {
-                //要求電文データレコード部項目バリデーションエラー
+                //请求电文数据记录部项目验证错误
                 resForm = new ProjectInsertMessageResponseForm("error.validation", "");
             } else {
                 resForm = new ProjectInsertMessageResponseForm("fatal", "unexpected exception.");
@@ -753,195 +754,194 @@ MOMメッセージングでは、以下のクラスをコンポーネント定�
         }
     }
 
-拡張例
+扩展示例
 --------------------------------------------------
 
 .. _mom_system_messaging-change_fw_header:
 
-フレームワーク制御ヘッダの読み書きを変更する
+更改框架控制头的读写
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-外部システムで既に電文フォーマットが規定されている場合など、
-フレームワーク制御ヘッダの読み書きを変更したい場合がある。
-この場合は、プロジェクトで実装を追加することで対応する。
-以下に、送受信の種類ごとに対応方法を示す。
+当外部系统已经规定了电文格式等情况时，
+可能希望更改框架控制头的读写。
+此时，通过在项目侧添加实现来应对。
+下面显示按收发类型的应对方法。
 
-応答不要メッセージ送信の場合
- フレームワーク制御ヘッダの書き込みは、以下のメソッドにより行っているので、
- 以下のメソッドをオーバーライドして対応すればよい。
+无需响应消息发送的情况
+ 框架控制头的写入由以下方法执行，
+ 因此只需覆盖以下方法即可应对。
 
  * :java:extdoc:`AsyncMessageSendAction#createHeaderRecordFormatter<nablarch.fw.messaging.action.AsyncMessageSendAction.createHeaderRecordFormatter()>`
  * :java:extdoc:`AsyncMessageSendAction#createHeaderRecord<nablarch.fw.messaging.action.AsyncMessageSendAction.createHeaderRecord(nablarch.core.db.statement.SqlRow)>`
 
 .. _mom_system_messaging-change_fw_header_sync_ex:
 
-同期応答メッセージ送信の場合
- :java:extdoc:`MessageSender<nablarch.fw.messaging.MessageSender>` では、送受信する電文の変換処理を変更できるように、
- 変換処理を :java:extdoc:`SyncMessageConvertor<nablarch.fw.messaging.SyncMessageConvertor>` に委譲しており、
- このクラスがフレームワーク制御ヘッダを読み書きしている。
+同步响应消息发送的情况
+ :java:extdoc:`MessageSender<nablarch.fw.messaging.MessageSender>` 中，为了可以更改收发信电文的转换处理，
+ 将转换处理委托给 :java:extdoc:`SyncMessageConvertor<nablarch.fw.messaging.SyncMessageConvertor>` ，
+ 该类读写框架控制头。
 
- そのため、:java:extdoc:`SyncMessageConvertor<nablarch.fw.messaging.SyncMessageConvertor>` を継承したクラスを作成し、
- :java:extdoc:`MessageSender<nablarch.fw.messaging.MessageSender>` の設定に指定すればよい。
- :java:extdoc:`MessageSender<nablarch.fw.messaging.MessageSender>` の設定については、
- :java:extdoc:`MessageSenderSettings<nablarch.fw.messaging.MessageSenderSettings>` を参照。
+ 因此，创建继承 :java:extdoc:`SyncMessageConvertor<nablarch.fw.messaging.SyncMessageConvertor>` 的类，
+ 并在 :java:extdoc:`MessageSender<nablarch.fw.messaging.MessageSender>` 的设置中指定即可。
+ 关于 :java:extdoc:`MessageSender<nablarch.fw.messaging.MessageSender>` 的设置，请参考
+ :java:extdoc:`MessageSenderSettings<nablarch.fw.messaging.MessageSenderSettings>` 。
 
 .. _mom_system_messaging-change_fw_header_async_receive:
 
-応答不要メッセージ受信の場合
- フレームワーク制御ヘッダの読み込みは、
- :java:extdoc:`FwHeaderReader<nablarch.fw.messaging.reader.FwHeaderReader>` に設定された
- :java:extdoc:`FwHeaderDefinition<nablarch.fw.messaging.FwHeaderDefinition>` インタフェースを実装したクラスが行う。
- デフォルトでは、 :java:extdoc:`StandardFwHeaderDefinition<nablarch.fw.messaging.StandardFwHeaderDefinition>` が使用される。
+无需响应消息接收的情况
+ 框架控制头的读取由实现了设置在
+ :java:extdoc:`FwHeaderReader<nablarch.fw.messaging.reader.FwHeaderReader>` 中的
+ :java:extdoc:`FwHeaderDefinition<nablarch.fw.messaging.FwHeaderDefinition>` 接口的类执行。
+ 默认情况下，使用 :java:extdoc:`StandardFwHeaderDefinition<nablarch.fw.messaging.StandardFwHeaderDefinition>` 。
 
- そのため、 :java:extdoc:`StandardFwHeaderDefinition<nablarch.fw.messaging.StandardFwHeaderDefinition>` を参考に、
- プロジェクトで :java:extdoc:`FwHeaderDefinition<nablarch.fw.messaging.FwHeaderDefinition>` インタフェースを実装したクラスを作成し、
- コンポーネント定義で
+ 因此，参考 :java:extdoc:`StandardFwHeaderDefinition<nablarch.fw.messaging.StandardFwHeaderDefinition>` ，
+ 在项目侧创建实现 :java:extdoc:`FwHeaderDefinition<nablarch.fw.messaging.FwHeaderDefinition>` 接口的类，
+ 并在组件定义中指定到
  :java:extdoc:`FwHeaderReader#fwHeaderDefinition<nablarch.fw.messaging.reader.FwHeaderReader.setFwHeaderDefinition(nablarch.fw.messaging.FwHeaderDefinition)>`
- プロパティに指定すればよい。
+ 属性即可。
 
-同期応答メッセージ受信の場合
- フレームワーク制御ヘッダの読み込みは、
- :ref:`応答不要メッセージ受信の場合<mom_system_messaging-change_fw_header_async_receive>` と同じである。
+同步响应消息接收的情况
+ 框架控制头的读取与 :ref:`无需响应消息接收的情况<mom_system_messaging-change_fw_header_async_receive>` 相同。
 
- フレームワーク制御ヘッダの書き込みについても、
- :java:extdoc:`FwHeaderDefinition<nablarch.fw.messaging.FwHeaderDefinition>` インタフェースを実装したクラスを作成することは同じであるが、
- コンポーネント定義で作成したクラスを :ref:`message_reply_handler` の
+ 关于框架控制头的写入，虽然同样是创建实现
+ :java:extdoc:`FwHeaderDefinition<nablarch.fw.messaging.FwHeaderDefinition>` 接口的类，
+ 但在组件定义中将创建的类指定到 :ref:`message_reply_handler` 的
  :java:extdoc:`fwHeaderDefinition<nablarch.fw.messaging.handler.MessageReplyHandler.setFwHeaderDefinition(nablarch.fw.messaging.FwHeaderDefinition)>`
- プロパティに指定すればよい。
+ 属性中即可。
 
 .. _mom_system_messaging-data_model:
 
-送受信電文のデータモデル
+收发信电文的数据模型
 --------------------------------------------------
-MOMメッセージングでは、送受信電文の内容を以下のデータモデルで表現する。
+MOM消息传递使用以下数据模型表示收发信电文的内容。
 
 .. image:: ../images/system_messaging/mom_system_messaging-data_model.png
   :scale: 80
 
 .. _mom_system_messaging-protocol_header:
 
-プロトコルヘッダ
- 主にMOMによるメッセージ送受信処理において使用される情報を格納したヘッダ領域である。
- プロトコルヘッダはMapインターフェースでアクセスすることが可能となっている。
+协议头
+ 主要存储MOM进行消息收发处理时使用信息的头区域。
+ 协议头可以通过Map接口访问。
 
 .. _mom_system_messaging-common_protocol_header:
 
-共通プロトコルヘッダ
- プロトコルヘッダのうち、フレームワークが使用する以下のヘッダについては、特定のキー名でアクセスできる。
- キー名をカッコで示す。
+共同协议头
+ 在协议头中，对于框架使用的以下头，可以使用特定的键名访问。
+ 键名用括号表示。
 
- メッセージID(MessageId)
-  電文ごとにMOMが採番する文字列
+ 消息ID(MessageId)
+  MOM为每个电文分配的字符串
 
-  :送信時: MOMが採番した値
-  :受信時: 送信側のMOMが発番した値
+  :发送时: MOM分配的值
+  :接收时: 发送侧MOM分配的值
 
- 関連メッセージID(CorrelationId)
-  電文が関連する電文のメッセージID
+ 关联消息ID(CorrelationId)
+  与该电文相关联的电文的消息ID
 
-  :応答電文: 要求電文のメッセージID
-  :再送要求: 応答再送を要求する要求電文のメッセージID
+  :响应电文: 请求电文的消息ID
+  :再送请求: 要求响应再送的请求电文的消息ID
 
- 送信宛先(Destination)
-  電文の送信宛先を表す論理名
+ 发送目的地(Destination)
+  表示电文发送目的地的逻辑名称
 
-  :送信時: 送信キューの論理名
-  :受信時: 受信キューの論理名
+  :发送时: 发送队列的逻辑名称
+  :接收时: 接收队列的逻辑名称
 
- 応答宛先(ReplyTo)
-  この電文に応答を送信する際に使用する宛先を表す論理名
+ 响应目的地(ReplyTo)
+  表示对该电文发送响应时使用的目的地的逻辑名称
 
-  :送信時: 同期応答の場合は応答受信キューの論理名。
-           応答不要の場合は設定不要
-  :受信時: 同期応答の場合は応答宛先キューの論理名。
-           応答不要の場合は通常設定なし
+  :发送时: 同步响应时为响应接收队列的逻辑名称。
+           无需响应时无需设置
+  :接收时: 同步响应时为响应目的地队列的逻辑名称。
+           无需响应时通常不设置
 
- 有効期間(TimeToLive)
-  送信処理開始時点を起点とする電文の有効期間(msec)
+ 有效期限(TimeToLive)
+  以发送处理开始时刻为起点的电文有效期限(毫秒)
 
-  :送信時: 送信電文の有効期間
-  :受信時: 設定なし
+  :发送时: 发送电文的有效期限
+  :接收时: 不设置
 
  .. tip::
-  共通プロトコルヘッダ以外のヘッダについては、各メッセージングプロバイダ側で任意に定義可能である。
-  このようなヘッダは **個別プロトコルヘッダ** と呼ばれる。
-  例えば、JMSメッセージングプロバイダの場合、全てのJMSヘッダ、JMS拡張ヘッダおよび任意属性は、個別プロトコルヘッダとして扱われる。
+  共同协议头以外的头可以由各消息传递提供程序任意定义。
+  这样的头称为 **个别协议头** 。
+  例如，在JMS消息传递提供程序的情况下，所有的JMS头、JMS扩展头和任意属性都作为个别协议头处理。
 
 .. _mom_system_messaging-message_body:
 
-メッセージボディ
- プロトコルヘッダを除いた電文のデータ領域をメッセージボディと呼ぶ。
- MOMに依存する :java:extdoc:`MessagingProvider<nablarch.fw.messaging.MessagingProvider>` は、
- 原則としてプロトコルヘッダ領域のみを使用する。
- それ以外のデータ領域については、未解析の単なるバイナリデータとして扱うものとする。
+消息体
+ 协议头以外的电文数据区域称为消息体。
+ 依赖于MOM的 :java:extdoc:`MessagingProvider<nablarch.fw.messaging.MessagingProvider>`
+ 原则上仅使用协议头区域。
+ 其他数据区域应作为未解析的原始二进制数据处理。
 
- メッセージボディの解析は、 :ref:`data_format` によって行う。
- これにより、電文の内容をフィールド名をキーとするMap形式で読み書き可能である。
+ 消息体的解析由 :ref:`data_format` 执行。
+ 由此，可以以字段名为键的Map形式读写电文内容。
 
 .. _mom_system_messaging-fw_header:
 
-フレームワーク制御ヘッダ
- 本フレームワークが提供する機能の中には、電文中に特定の制御項目が定義されていることを前提として設計されているものが多く存在する。
- そのような制御項目のことを ``フレームワーク制御ヘッダ`` とよぶ。
+框架控制头
+ 本框架提供的许多功能都是基于电文中定义了特定控制项目的前提设计的。
+ 这样的控制项目称为 ``框架控制头`` 。
 
- フレームワーク制御ヘッダとそれを使用するハンドラの対応は以下のとおり。
+ 框架控制头与其使用处理器的对应关系如下。
 
- リクエストID
-  この電文を受信した应用が実行すべき業務処理を識別するためのID。
+ 请求ID
+  用于识别接收该电文的应用程序应执行的业务处理的ID。
 
-  このヘッダを使用する主要なハンドラ：
+  使用该头的主要处理器：
 
   | :ref:`request_path_java_package_mapping`
   | :ref:`message_resend_handler`
   | :ref:`permission_check_handler`
   | :ref:`ServiceAvailabilityCheckHandler`
 
- ユーザID
-  この電文の実行権限を表す文字列
+ 用户ID
+  表示该电文执行权限的字符串
 
-  このヘッダを使用する主要なハンドラ：
+  使用该头的主要处理器：
 
   | :ref:`permission_check_handler`
 
- 再送要求フラグ
-  再送要求電文の送信時に設定されるフラグ
+ 再送请求标志
+  发送再送请求电文时设置的标志
 
-  このヘッダを使用する主要なハンドラ：
+  使用该头的主要处理器：
 
   | :ref:`message_resend_handler`
 
- ステータスコード
-  要求電文に対する処理結果を表すコード値
+ 状态码
+  表示对请求电文处理结果的代码值
 
-  このヘッダを使用する主要なハンドラ：
+  使用该头的主要处理器：
 
   | :ref:`message_reply_handler`
 
- フレームワーク制御ヘッダは、デフォルトの設定では、
- メッセージボディの最初のデータレコード中に、それぞれ以下のフィールド名で定義されている必要がある。
+ 框架控制头在默认设置下，
+ 需要在消息体的第一个数据记录中分别用以下字段名定义。
 
-  :リクエストID: requestId
-  :ユーザID: userId
-  :再送要求フラグ: resendFlag
-  :ステータスコード: statusCode
+  :请求ID: requestId
+  :用户ID: userId
+  :再送请求标志: resendFlag
+  :状态码: statusCode
 
- 以下は、標準的なフレームワーク制御ヘッダの定義例である。
+ 以下是标准框架控制头的定义示例。
 
  .. code-block:: bash
 
   #===================================================================
-  # フレームワーク制御ヘッダ部 (50byte)
+  # 框架控制头部 (50字节)
   #===================================================================
   [NablarchHeader]
-  1   requestId   X(10)       # リクエストID
-  11  userId      X(10)       # ユーザID
-  21  resendFlag  X(1)  "0"   # 再送要求フラグ (0: 初回送信 1: 再送要求)
-  22  statusCode  X(4)  "200" # ステータスコード
-  26 ?filler      X(25)       # 予備領域
+  1   requestId   X(10)       # 请求ID
+  11  userId      X(10)       # 用户ID
+  21  resendFlag  X(1)  "0"   # 再送请求标志 (0: 初次发送 1: 再送请求)
+  22  statusCode  X(4)  "200" # 状态码
+  26 ?filler      X(25)       # 预留区域
   #====================================================================
 
- フォーマット定義にフレームワーク制御ヘッダ以外の項目を含めた場合、
- フレームワーク制御ヘッダの任意ヘッダ項目としてアクセスでき、
- プロジェクト毎にフレームワーク制御ヘッダを簡易的に拡張する目的で使用できる。
+ 如果在格式定义中包含框架控制头以外的项目，
+ 可以作为框架控制头的任意头项目访问，
+ 可用于为每个项目简单扩展框架控制头的目的。
 
- また、将来的な任意項目の追加およびフレームワークの機能追加に伴うヘッダ追加に対応するため、
- 予備領域を設けておくことを強く推奨する。
+ 此外，为了应对将来任意项目的添加以及框架功能添加伴随的头添加，
+ 强烈建议设置预留区域。

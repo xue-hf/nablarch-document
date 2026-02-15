@@ -1,38 +1,38 @@
 .. _`permission_check`:
 
-ハンドラによる認可チェック
+使用handler进行授权检查
 =====================================================================
 
 .. contents:: 目录
   :depth: 3
   :local:
 
-この機能では、应用が提供する機能に対して、認可チェックを行う。
-この機能を使うことで、ウェブにおいてユーザごとに使用できる機能を制限する、
-といったアクセス制御ができるようになる。
+本功能对应用提供的功能进行授权检查。
+通过使用本功能，可以在Web中限制每个用户可用的功能，
+实现访问控制。
 
 .. important::
- 本機能は、应用の要件が合致する場合に限り、使用すること。
+ 本功能仅在应用的需求匹配时使用。
 
- 本機能は、データベースを使用して認可チェックに使用する権限データを管理し、
- リクエスト単位で権限を設定する( :ref:`permission_check-authority_model` に示した概念モデルを参照)。
- 例えば、ウェブの登録機能といった場合、初期表示/確認/戻る/登録といった複数リクエストで構成されるのが一般的である。
+ 本功能使用数据库来管理授权检查所需的权限数据，
+ 以请求为单位设置权限(参考 :ref:`permission_check-authority_model` 中所示的概念模型)。
+ 例如，对于Web的注册功能，通常由初始显示/确认/返回/注册等多个请求构成。
 
- そのため、本機能は、細かく権限を設定できる反面、非常に細かいデータ設計が必要となり、
- 開発時の生産性低下やリリース後の運用負荷が高まる可能性がある。
+ 因此，本功能虽然可以实现细粒度的权限设置，但需要非常细致的数据设计，
+ 可能导致开发时生产效率降低以及发布后的运维负担增加。
 
- また :doc:`role_check` では本機能よりも単純なデータ構造で権限を管理する機能を提供している。
- 本機能の運用が難しい場合は、 :doc:`role_check` も選択肢とすることができる。
+ 此外， :doc:`role_check` 提供了比本功能更简单的数据结构来管理权限。
+ 如果本功能的运维较为困难，可以将 :doc:`role_check` 作为备选方案。
 
-機能概要
+功能概述
 ---------------------------------------------------------------------
 
-リクエスト単位で認可チェックを行うことができる
+可以按请求单位进行授权检查
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-:ref:`permission_check_handler` をhandler队列に設定することで、
-リクエスト単位で認可チェックを行うことができる。
+通过在handler队列中设置 :ref:`permission_check_handler` ，
+可以按请求单位进行授权检查。
 
-詳細は以下を参照。
+详细请参考以下内容。
 
 * :ref:`permission_check-settings`
 * :ref:`permission_check-server_side_check`
@@ -40,29 +40,29 @@
 
 .. _`permission_check-authority_model`:
 
-グループ単位とユーザ単位を併用した権限設定ができる
+可以同时使用组单位和用户单位的权限设置
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-認可チェックに使う権限設定の概念モデルは以下となる。
+授权检查使用的权限设置概念模型如下。
 
 .. image:: images/permission_check/conceptual_model.png
 
-グループは、部署など、組織単位での権限割り当てに使用する。
+组用于部门等组织单位的权限分配。
 
-認可チェック単位は、複数のリクエストをまとめ、認可チェックの最小単位を表す。
-認可チェック単位には、認可チェックを実現するために必要なリクエスト、つまり、ウェブであれば画面のイベントが複数紐付く。
-例えば、ユーザ登録機能であれば、以下のようなデータとなる。
+授权检查单位是将多个请求汇总后，表示授权检查的最小单位。
+授权检查单位关联实现授权检查所需的请求，即在Web中关联多个画面事件。
+例如，对于用户注册功能，数据如下所示。
 
-認可チェック単位
- | ユーザ登録
+授权检查单位
+ | 用户注册
 
-認可チェック単位「ユーザ登録」に紐付くリクエスト
- | 入力画面の初期表示
- | 入力画面の確認ボタン
- | 確認画面の登録ボタン
- | 確認画面の戻るボタン
+授权检查单位"用户注册"关联的请求
+ | 输入画面的初始显示
+ | 输入画面的确认按钮
+ | 确认画面的注册按钮
+ | 确认画面的返回按钮
 
-グループとユーザ、グループと認可チェック単位の関連を設定することで、グループ単位の権限を設定できる。
-さらに、ユーザに直接認可チェック単位を設定できるため、特定ユーザに対するイレギュラーな権限付与に対応できる。
+通过设置组和用户的关联、组和授权检查单位的关联，可以实现组单位的权限设置。
+此外，由于可以直接对用户设置授权检查单位，因此可以应对针对特定用户的异常权限授予。
 
 模块列表
 --------------------------------------------------
@@ -82,131 +82,131 @@
 
 .. _`permission_check-settings`:
 
-認可チェックを使うための設定
+使用授权检查的所需设置
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-この機能では、データベースを使用して認可チェックに使う権限データを管理する。
-テーブルのレイアウトは以下となる。
+本功能使用数据库来管理授权检查所需的权限数据。
+表结构如下。
 
-グループ
+组
  ====================== ===================================================
- グループID(PK)         グループを識別するための値。文字列型
- ====================== ===================================================
-
-システムアカウント
- ====================== ===================================================
- ユーザID(PK)           ユーザを識別するための値。文字列型
- ユーザIDロック状態     ユーザIDのロック状態。文字列型。
- 有効日(From)           ユーザの有効日(From)。文字列型。
- 有効日(To)             ユーザの有効日(To)。文字列型。
+ 组ID(PK)               用于识别组的值。字符串型
  ====================== ===================================================
 
- :ユーザIDロック状態: ロックされていない場合は"0"、ロックされた場合は"0"以外
- :有効日(From): yyyyMMdd形式で、指定しない場合は”19000101”
- :有効日(To): yyyyMMdd形式で、指定しない場合は”99991231”
-
-グループシステムアカウント
+系统账户
  ====================== ===================================================
- グループID(PK)         グループを識別するための値。文字列型
- ユーザID(PK)           ユーザを識別するための値。文字列型
- 有効日(From)(PK)       ユーザの有効日(From)。文字列型
- 有効日(To)             ユーザの有効日(To)。文字列型
+ 用户ID(PK)             用于识别用户的值。字符串型
+ 用户ID锁定状态         用户ID的锁定状态。字符串型。
+ 有效日期(From)         用户的有效日期(From)。字符串型。
+ 有效日期(To)           用户的有效日期(To)。字符串型。
  ====================== ===================================================
 
- :有効日(From): yyyyMMdd形式で、指定しない場合は”19000101”
- :有効日(To): yyyyMMdd形式で、指定しない場合は”99991231”
+ :用户ID锁定状态: 未锁定时为"0"，锁定时为"0"以外的值
+ :有效日期(From): yyyyMMdd格式，不指定时为"19000101"
+ :有效日期(To): yyyyMMdd格式，不指定时为"99991231"
 
-認可チェック単位
+组系统账户
  ====================== ===================================================
- 認可チェック単位ID(PK)         認可チェック単位を識別するための値。文字列型
- ====================== ===================================================
-
-認可チェック単位リクエスト
- ====================== ===================================================
- 認可チェック単位ID(PK)         認可チェック単位を識別するための値。文字列型
- リクエストID(PK)       リクエストを識別するための値。文字列型
+ 组ID(PK)               用于识别组的值。字符串型
+ 用户ID(PK)             用于识别用户的值。字符串型
+ 有效日期(From)(PK)     用户的有效日期(From)。字符串型
+ 有效日期(To)           用户的有效日期(To)。字符串型
  ====================== ===================================================
 
-グループ権限
+ :有效日期(From): yyyyMMdd格式，不指定时为"19000101"
+ :有效日期(To): yyyyMMdd格式，不指定时为"99991231"
+
+授权检查单位
  ====================== ===================================================
- グループID(PK)         グループを識別するための値。文字列型
- 認可チェック単位ID(PK)         認可チェック単位を識別するための値。文字列型
+ 授权检查单位ID(PK)     用于识别授权检查单位的值。字符串型
  ====================== ===================================================
 
-システムアカウント権限
+授权检查单位请求
  ====================== ===================================================
- ユーザID(PK)           ユーザを識別するための値。文字列型
- 認可チェック単位ID(PK)         認可チェック単位を識別するための値。文字列型
+ 授权检查单位ID(PK)     用于识别授权检查单位的值。字符串型
+ 请求ID(PK)             用于识别请求的值。字符串型
  ====================== ===================================================
 
-認可チェックを使うためには、以下のとおり設定する。
+组权限
+ ====================== ===================================================
+ 组ID(PK)               用于识别组的值。字符串型
+ 授权检查单位ID(PK)     用于识别授权检查单位的值。字符串型
+ ====================== ===================================================
 
-* :java:extdoc:`BasicPermissionFactory <nablarch.common.permission.BasicPermissionFactory>`
-  の設定をコンポーネント定義に追加する。
-* :java:extdoc:`BasicPermissionFactory <nablarch.common.permission.BasicPermissionFactory>` は、
-  :ref:`permission_check_handler` に設定して使うので、コンポーネント名は任意の名前を指定する。
+系统账户权限
+ ====================== ===================================================
+ 用户ID(PK)             用于识别用户的值。字符串型
+ 授权检查单位ID(PK)     用于识别授权检查单位的值。字符串型
+ ====================== ===================================================
+
+使用授权检查需要按以下方式进行设置。
+
+* 将 :java:extdoc:`BasicPermissionFactory <nablarch.common.permission.BasicPermissionFactory>`
+  的设置添加到组件定义中。
+* :java:extdoc:`BasicPermissionFactory <nablarch.common.permission.BasicPermissionFactory>` 用于
+  :ref:`permission_check_handler` 的设置，因此组件名可以指定任意名称。
 
 .. code-block:: xml
 
  <component name="permissionFactory" class="nablarch.common.permission.BasicPermissionFactory">
 
-   <!-- グループスキーマ -->
+   <!-- 组schema -->
    <property name="groupTableSchema">
      <component class="nablarch.common.permission.schema.GroupTableSchema">
-       <!-- プロパティへの設定は省略 -->
+       <!-- 省略对属性的设置 -->
      </component>
    </property>
 
-   <!-- システムアカウントスキーマ -->
+   <!-- 系统账户schema -->
    <property name="systemAccountTableSchema">
      <component class="nablarch.common.permission.schema.SystemAccountTableSchema">
-       <!-- プロパティへの設定は省略 -->
+       <!-- 省略对属性的设置 -->
      </component>
    </property>
 
-   <!-- グループシステムアカウントスキーマ -->
+   <!-- 组系统账户schema -->
    <property name="groupSystemAccountTableSchema">
      <component class="nablarch.common.permission.schema.GroupSystemAccountTableSchema">
-       <!-- プロパティへの設定は省略 -->
+       <!-- 省略对属性的设置 -->
      </component>
    </property>
 
-   <!-- 認可チェック単位スキーマ -->
+   <!-- 授权检查单位schema -->
    <property name="permissionUnitTableSchema">
      <component class="nablarch.common.permission.schema.PermissionUnitTableSchema">
-       <!-- プロパティへの設定は省略 -->
+       <!-- 省略对属性的设置 -->
      </component>
    </property>
 
-   <!-- 認可チェック単位リクエストスキーマ -->
+   <!-- 授权检查单位请求schema -->
    <property name="permissionUnitRequestTableSchema">
      <component class="nablarch.common.permission.schema.PermissionUnitRequestTableSchema">
-       <!-- プロパティへの設定は省略 -->
+       <!-- 省略对属性的设置 -->
      </component>
    </property>
 
-   <!-- グループ権限スキーマ -->
+   <!-- 组权限schema -->
    <property name="groupAuthorityTableSchema">
      <component class="nablarch.common.permission.schema.GroupAuthorityTableSchema">
-       <!-- プロパティへの設定は省略 -->
+       <!-- 省略对属性的设置 -->
      </component>
    </property>
 
-   <!-- システムアカウント権限スキーマ -->
+   <!-- 系统账户权限schema -->
    <property name="systemAccountAuthorityTableSchema">
      <component class="nablarch.common.permission.schema.SystemAccountAuthorityTableSchema">
-       <!-- プロパティへの設定は省略 -->
+       <!-- 省略对属性的设置 -->
      </component>
    </property>
 
-   <!-- データベースアクセスに使用するトランザクションマネージャ -->
+   <!-- 数据库访问使用的transaction manager -->
    <property name="dbManager" ref="permissionCheckDbManager"/>
 
-   <!-- 有効日(FROM/TO)の判定に使用する業務日付を提供するプロバイダ -->
+   <!-- 有效日期(FROM/TO)判定使用的业务日期提供provider -->
    <property name="businessDateProvider" ref="businessDateProvider" />
  </component>
 
-:java:extdoc:`BasicPermissionFactory <nablarch.common.permission.BasicPermissionFactory>` は、
-初期化が必要なので、以下のコンポーネント定義も追加する。
+:java:extdoc:`BasicPermissionFactory <nablarch.common.permission.BasicPermissionFactory>` 需要
+初始化，因此还需要添加以下组件定义。
 
 .. code-block:: xml
 
@@ -214,7 +214,7 @@
             class="nablarch.core.repository.initialization.BasicApplicationInitializer">
    <property name="initializeList">
      <list>
-       <!-- BasicPermissionFactoryを初期化する -->
+       <!-- 初始化BasicPermissionFactory -->
        <component-ref name="permissionFactory" />
      </list>
    </property>
@@ -222,37 +222,37 @@
 
 .. _`permission_check-server_side_check`:
 
-サーバサイドで認可チェックを行う
+在服务器端进行授权检查
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-認可チェックは、 :java:extdoc:`Permission <nablarch.common.permission.Permission>` を使用する。
-:ref:`permission_check_handler` により、スレッドコンテキストに
-:java:extdoc:`Permission <nablarch.common.permission.Permission>` が設定されているので、
+授权检查使用 :java:extdoc:`Permission <nablarch.common.permission.Permission>` 。
+通过 :ref:`permission_check_handler` ，
+:java:extdoc:`Permission <nablarch.common.permission.Permission>` 被设置到线程上下文中，
+因此可以使用
 :java:extdoc:`PermissionUtil.getPermission <nablarch.common.permission.PermissionUtil.getPermission()>`
-を使って取得する。
+来获取。
 
 .. code-block:: java
 
  Permission permission = PermissionUtil.getPermission();
  if (permission.permit("/action/user/unlock")) {
-     // 認可チェックがOKの場合の処理がここにくる
+     // 授权检查通过时的处理写在这里
  }
 
 .. _`permission_check-view_control`:
 
-権限に応じて画面表示を制御する
+根据权限控制画面显示
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-権限の有無でボタンやリンクの非表示(非活性)を制御したい場合は、カスタムタグを使用する。
-:ref:`tag-submit_display_control` を参照。
+如果希望根据权限有无来控制按钮或链接的隐藏(禁用)，请使用自定义标签。
+参考 :ref:`tag-submit_display_control` 。
 
-権限データにアクセスする
+访问权限数据
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-应用の要件によっては、特定グループに属するユーザ一覧を取得するといった、
-権限データにアクセスしたい場合がある。
-しかし、本機能では、認可チェックを行う機能しか提供していない。
+根据应用的需求，有时需要获取属于特定组的用户列表等权限数据。
+但是，本功能仅提供进行授权检查的功能。
 
-そのため、権限データにアクセスしたい場合は、 :ref:`universal_dao` を使用し、
-SQLを作成することで対応する。
+因此，如果需要访问权限数据，请使用 :ref:`universal_dao` ，
+通过创建SQL来应对。
 
-拡張例
+扩展示例
 ---------------------------------------------------------------------
-なし。
+无。

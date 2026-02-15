@@ -1,30 +1,30 @@
 .. _nablarch_tag_handler:
 
-Nablarchカスタムタグ制御ハンドラ
+Nablarch自定义标签控制handler
 ==================================================
 
 .. contents:: 目录
   :depth: 3
   :local:
 
-Nablarchの :ref:`tag` に必要なリクエスト処理を行うハンドラ。
+执行Nablarch :ref:`tag` 所需请求处理的handler。
 
 本handler执行以下处理。
 
-* カスタムタグのデフォルト値をJSPで参照できるように、
-  :java:extdoc:`CustomTagConfig<nablarch.common.web.tag.CustomTagConfig>` をリクエストスコープに設定する。
-* :ref:`hidden暗号化<tag-hidden_encryption>` に対応する改竄チェックと復号処理を行う。
-* :ref:`チェックボックスのチェックなしに対する値を指定する<tag-checkbox_off_value>` ために、リクエストにチェックなしに対応する値を設定する。
-* :ref:`ボタン又はリンク毎のパラメータ追加<tag-submit_change_parameter>` のために、リクエストにパラメータを追加する。
-* :ref:`http_access_log` のリクエストパラメータを出力する。
-* :ref:`複合キーを扱える<tag-composite_key>` ようにするため、複合キーを復元する。
+* 为使自定义标签的默认值可在JSP中引用，
+  将 :java:extdoc:`CustomTagConfig<nablarch.common.web.tag.CustomTagConfig>` 设置到请求作用域。
+* 执行对应 :ref:`hidden加密<tag-hidden_encryption>` 的篡改检查和解密处理。
+* 为 :ref:`指定复选框未选中时的值<tag-checkbox_off_value>` ，在请求中设置未选中时对应的值。
+* 为 :ref:`每个按钮或链接添加参数<tag-submit_change_parameter>` ，在请求中添加参数。
+* 输出 :ref:`http_access_log` 的请求参数。
+* 为 :ref:`能够处理复合键<tag-composite_key>` ，还原复合键。
 
 .. tip::
- GETリクエストの場合、カスタムタグではhiddenパラメータを出力しない。
- hiddenパラメータを出力しない理由は、 :ref:`tag-using_get` を参照。
+ GET请求时，自定义标签不输出hidden参数。
+ 不输出hidden参数的原因请参考 :ref:`tag-using_get` 。
 
- カスタムタグに合わせて、本ハンドラでも、GETリクエストの場合はhiddenパラメータに関連する処理を行わず、
- 複合キーの復元処理のみを行う。
+ 配合自定义标签，本handler在GET请求时也不执行与hidden参数相关的处理，
+ 仅执行复合键的还原处理。
 
 处理流程如下。
 
@@ -43,38 +43,37 @@ handler类名
     <artifactId>nablarch-fw-web-tag</artifactId>
   </dependency>
 
-制約
+约束
 ------------------------------
-:ref:`multipart_handler` より後ろに設定すること
-  本ハンドラは、 :ref:`tag` に必要なリクエスト処理でリクエストパラメータにアクセスするため。
+配置在 :ref:`multipart_handler` 之后
+  本handler需要访问 :ref:`tag` 所需请求处理中的请求参数。
 
-:ref:`hidden暗号化<tag-hidden_encryption>` 使用時は、:ref:`thread_context_handler` より後ろに設定すること
-  hidden暗号化対象のリクエストか否かを判定するために、スレッドコンテキストからリクエストIDを取得するため。
+:ref:`hidden加密<tag-hidden_encryption>` 使用时，配置在 :ref:`thread_context_handler` 之后
+  为判断是否为hidden加密对象请求，需要从线程上下文获取请求ID。
 
-復号に失敗(改竄エラー、セッション無効化エラー)した場合のエラーページを設定する
+设置解密失败（篡改错误、会话失效错误）时的错误页面
 ------------------------------------------------------------------------------------
-:ref:`hidden暗号化<tag-hidden_encryption>` の復号処理は、次の2つのケースにおいて失敗する可能性がある。
-改竄の判定基準は、 :ref:`復号処理<tag-hidden_encryption_decryption>` を参照。
+:ref:`hidden加密<tag-hidden_encryption>` 的解密处理可能在以下两种情况失败。
+篡改判定标准请参考 :ref:`解密处理<tag-hidden_encryption_decryption>` 。
 
-* 暗号化したデータが改竄された場合(改竄エラー)
-* セッションから復号に使う鍵を取得できない場合(セッション無効化エラー)
+* 加密数据被篡改时（篡改错误）
+* 无法从会话获取解密所用密钥时（会话失效错误）
 
-それぞれ、
-:java:extdoc:`NablarchTagHandler<nablarch.common.web.handler.NablarchTagHandler>` の設定で、
-エラー発生時のエラーページとステータスコードを指定できる。
+分别可在 :java:extdoc:`NablarchTagHandler<nablarch.common.web.handler.NablarchTagHandler>` 的设置中
+指定错误发生时的错误页面和状态码。
 
 .. code-block:: xml
 
   <component name="nablarchTagHandler"
              class="nablarch.common.web.handler.NablarchTagHandler">
     <!--
-      改竄エラー発生時の設定
+      篡改错误发生时的设置
     -->
     <property name="path" value="/TAMPERING-DETECTED.jsp" />
     <property name="statusCode" value="400" />
     <!--
-      セッション無効化エラー発生時の設定
-      省略した場合は改竄エラー発生時の設定が使用される。
+      会话失效错误发生时的设置
+      省略时使用篡改错误发生时的设置。
     -->
     <property name="sessionExpirePath" value="/SESSION-EXPIRED.jsp" />
     <property name="sessionExpireStatusCode" value="400" />

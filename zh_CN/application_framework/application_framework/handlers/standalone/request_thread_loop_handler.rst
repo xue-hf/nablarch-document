@@ -1,29 +1,29 @@
 .. _request_thread_loop_handler:
 
-リクエストスレッド内ループ制御ハンドラ
+请求线程内循环控制handler
 ==================================================
 .. contents:: 目录
   :depth: 3
   :local:
 
-プロセスの停止要求があるまで、後続のハンドラを繰り返し実行するハンドラ。
-このハンドラは、メッセージキューやデータベース上のテーブルなどを監視し、未処理のデータを随時処理するプロセスで使用する。
+直到有进程停止请求为止，重复执行后续handler的handler。
+本handler用于监视消息队列或数据库上的表等，随时处理未处理数据的进程。
 
 .. tip::
 
-  メッセージキューやデータベース上のテーブルを監視して処理するプロセスでは、個々のリクエスト(データ)は独立して扱われる。
-  1つのリクエスト処理がエラーとなっても他のリクエスト処理はそのまま継続しなければならない。
-  このため、このハンドラで捕捉した例外は、プロセス正常停止要求や致命的な一部の例外を除き処理を継続する。
+  在监视消息队列或数据库上的表并进行处理的进程中，单个请求(数据)独立处理。
+  即使1个请求处理出错，其他请求处理也应继续。
+  因此，本handler捕获的异常除进程正常停止请求和部分致命异常外，都会继续处理。
 
-  詳細は、 :ref:`request_thread_loop_handler-error_handling` を参照。
+  详情请参考 :ref:`request_thread_loop_handler-error_handling` 。
 
 本handler执行以下处理。
 
-* 後続ハンドラを繰り返し実行
-* プロセス停止要求を示す例外発生時の後続ハンドラ実行の停止 |br|
-  詳細は、 :ref:`request_thread_loop_handler-stop` を参照
-* 後続ハンドラで発生した例外(エラー)に応じた処理(ログ出力等) |br|
-  詳細は、 :ref:`request_thread_loop_handler-error_handling` を参照
+* 重复执行后续handler
+* 发生进程停止请求异常时停止后续handler执行 |br|
+  详情请参考 :ref:`request_thread_loop_handler-stop`
+* 根据后续handler发生的异常(错误)进行处理(日志输出等) |br|
+  详情请参考 :ref:`request_thread_loop_handler-error_handling`
 
 处理流程如下。
 
@@ -43,87 +43,87 @@ handler类名
     <artifactId>nablarch-fw-standalone</artifactId>
   </dependency>
 
-制約
+约束
 ------------------------------
-:ref:`retry_handler` より後ろに配置すること
-  このハンドラでは、処理が継続可能な例外の場合に :java:extdoc:`リトライ可能例外(Retryable) <nablarch.fw.handler.retry.Retryable>` を送出する。
-  このため、リトライ可能例外を処理する :ref:`retry_handler` よりも後ろにこのハンドラを設定する必要がある。
+:ref:`retry_handler` 之后配置
+  本handler在处理可继续的异常时会发出 :java:extdoc:`可重试异常(Retryable) <nablarch.fw.handler.retry.Retryable>` 。
+  因此，需要将本handler设置在处理可重试异常的 :ref:`retry_handler` 之后。
 
 .. _request_thread_loop_handler-interval:
 
-サービス閉塞中の待機時間を設定する
+设置服务闭塞中的等待时间
 --------------------------------------------------
-後続のハンドラからサービス閉塞中を示す例外(:java:extdoc:`ServiceUnavailable <nablarch.fw.results.ServiceUnavailable>`)が発生した場合の待機時間を設定することが出来る。
-この時間を設定することで、サービスが開局されたかどうかのチェックタイミングを調整することが出来る。
+可以设置后续handler发出表示服务闭塞中的异常(:java:extdoc:`ServiceUnavailable <nablarch.fw.results.ServiceUnavailable>`)时的等待时间。
+通过设置此时间，可以调整检查服务是否开局的时机。
 
-待機時間を長くし過ぎると、サービスが開局中に変更されても、即処理が開始されない問題があるので、要件にあわせて値を設定すること。
-なお、設定を省略した場合は、1秒待機後に後続ハンドラを再実行する。
+等待时间过长会导致服务已开局变更后无法立即开始处理的问题，因此请根据需求设置值。
+另外，如果省略设置，则等待1秒后重新执行后续handler。
 
-以下に設定例を示す。
+以下显示设置示例。
 
 .. code-block:: xml
 
   <component class="nablarch.fw.handler.RequestThreadLoopHandler">
-    <!-- 待機時間に5秒を設定 -->
+    <!-- 将等待时间设置为5秒 -->
     <property name="serviceUnavailabilityRetryInterval" value="5000" />
   </component>
 
 .. tip::
-  後続ハンドラに :ref:`ServiceAvailabilityCheckHandler` を設定しない場合には、本設定値は設定する必要が無い。
-  (設定したとしても、この値が使われることはない。)
+  如果不在后续handler中设置 :ref:`ServiceAvailabilityCheckHandler` ，则无需设置本设置值。
+  (即使设置了，也不会使用此值。)
 
 .. _request_thread_loop_handler-stop:
 
-本ハンドラの停止方法
+本handler的停止方法
 --------------------------------------------------
-このハンドラは、プロセスの停止要求を示す例外が発生するまで、繰り返し後続のハンドラに対して処理を委譲する。
-このため、メンテナンスなどでプロセスを停止する必要がある場合には、本ハンドラより後続に :ref:`process_stop_handler` を設定し、
-外部からプロセスを停止できるようにする必要がある。
+本handler在发出进程停止请求异常之前，会重复向后续handler委托处理。
+因此，如需在维护等情况下停止进程，需要将本handler后续设置 :ref:`process_stop_handler` ，
+以便从外部停止进程。
 
-プロセス停止要求を示す例外が発生した場合の処理内容は、 :ref:`request_thread_loop_handler-error_handling` を参照。
+发生进程停止请求异常时的处理内容请参考 :ref:`request_thread_loop_handler-error_handling` 。
 
 .. _request_thread_loop_handler-error_handling:
 
-後続ハンドラで発生した例外(エラー)に応じた処理内容
+根据后续handler发生的异常(错误)的处理内容
 ------------------------------------------------------------
-このハンドラで行う後続ハンドラで発生した例外(エラー)に応じた処理内容について解説する。
+对本handler根据后续handler发生的异常(错误)进行的处理内容进行说明。
 
-サービス閉塞中例外(:java:extdoc:`ServiceUnavailable <nablarch.fw.results.ServiceUnavailable>`)
-  一定時間待機後に、再度後続ハンドラに処理を委譲する。
-  待機時間の設定方法は、 :ref:`request_thread_loop_handler-interval` を参照。
+服务闭塞中异常(:java:extdoc:`ServiceUnavailable <nablarch.fw.results.ServiceUnavailable>`)
+  等待一定时间后，再次向后续handler委托处理。
+  等待时间的设置方法请参考 :ref:`request_thread_loop_handler-interval` 。
 
-プロセス停止要求を示す例外(:java:extdoc:`ProcessStop <nablarch.fw.handler.ProcessStopHandler.ProcessStop>`)
-  プロセス停止要求を示す例外であるため、本ハンドラの処理を終了する。
+表示进程停止请求的异常(:java:extdoc:`ProcessStop <nablarch.fw.handler.ProcessStopHandler.ProcessStop>`)
+  由于是表示进程停止请求的异常，因此结束本handler的处理。
 
-プロセスの異常終了を示す例外(:java:extdoc:`ProcessAbnormalEnd <nablarch.fw.launcher.ProcessAbnormalEnd>`)
-  プロセスの異常終了を示す例外のため、捕捉した例外を再送出する。
+表示进程异常结束的异常(:java:extdoc:`ProcessAbnormalEnd <nablarch.fw.launcher.ProcessAbnormalEnd>`)
+  由于是表示进程异常结束的异常，因此重新抛出捕获的异常。
 
-処理を継続することができなかったことを示すサービスエラー(:java:extdoc:`ServiceError <nablarch.fw.results.ServiceError>`)
-  補足した例外クラスにログ出力処理を委譲し、 :java:extdoc:`リトライ可能例外(Retryable) <nablarch.fw.handler.retry.Retryable>` を送出する。
+表示无法继续处理的服务错误(:java:extdoc:`ServiceError <nablarch.fw.results.ServiceError>`)
+  将日志输出处理委托给捕获的异常类，并发出 :java:extdoc:`可重试异常(Retryable) <nablarch.fw.handler.retry.Retryable>` 。
 
-ハンドラの処理が異常終了したことを示す例外(:java:extdoc:`Result.Error <nablarch.fw.Result.Error>`)
-  ``FATAL`` レベルのログを出力し、 :java:extdoc:`リトライ可能例外(Retryable) <nablarch.fw.handler.retry.Retryable>` を送出する。
+表示handler处理异常结束的异常(:java:extdoc:`Result.Error <nablarch.fw.Result.Error>`)
+  输出 ``FATAL`` 级别日志，并发出 :java:extdoc:`可重试异常(Retryable) <nablarch.fw.handler.retry.Retryable>` 。
 
-実行時例外(:java:extdoc:`RuntimeException <java.lang.RuntimeException>`)
-  ``FATAL`` レベルのログを出力し、 :java:extdoc:`リトライ可能例外(Retryable) <nablarch.fw.handler.retry.Retryable>` を送出する。
+运行时异常(:java:extdoc:`RuntimeException <java.lang.RuntimeException>`)
+  输出 ``FATAL`` 级别日志，并发出 :java:extdoc:`可重试异常(Retryable) <nablarch.fw.handler.retry.Retryable>` 。
  
-スレッドの停止を示す例外(:java:extdoc:`ThreadDeath <java.lang.ThreadDeath>`)
-  ``INFO`` レベルのログを出力し、補足した例外(ThreadDeath)を再送出する。
+表示线程停止的异常(:java:extdoc:`ThreadDeath <java.lang.ThreadDeath>`)
+  输出 ``INFO`` 级别日志，并重新抛出捕获的异常(ThreadDeath)。
 
-スタックオーバーフローエラー(:java:extdoc:`StackOverflowError <java.lang.StackOverflowError>`)
-  ``FATAL`` レベルのログを出力し、 :java:extdoc:`リトライ可能例外(Retryable) <nablarch.fw.handler.retry.Retryable>` を送出する。
+堆栈溢出错误(:java:extdoc:`StackOverflowError <java.lang.StackOverflowError>`)
+  输出 ``FATAL`` 级别日志，并发出 :java:extdoc:`可重试异常(Retryable) <nablarch.fw.handler.retry.Retryable>` 。
 
-ヒープ不足のエラー(:java:extdoc:`OutOfMemoryError <java.lang.OutOfMemoryError>`)
-  標準エラー出力にヒープ不足が発生したことを示すメッセージを出力し、 ``FATAL`` レベルのログ出力を行う。
-  (ログ出力時に再度ヒープ不足が発生する可能性があるため、標準エラー出力にメッセージ出力後にログを出力する。)
+堆内存不足错误(:java:extdoc:`OutOfMemoryError <java.lang.OutOfMemoryError>`)
+  向标准错误输出发出表示发生堆内存不足的消息，并输出 ``FATAL`` 级别日志。
+  (由于日志输出时可能再次发生堆内存不足，因此在向标准错误输出消息后进行日志输出。)
 
-  ヒープ不足の原因不足となったオブジェクトへの参照が切れ、処理継続可能な場合があるため :java:extdoc:`リトライ可能例外(Retryable) <nablarch.fw.handler.retry.Retryable>` を送出する。
+  由于可能导致堆内存不足原因的对象引用被切断，处理可能可以继续，因此发出 :java:extdoc:`可重试异常(Retryable) <nablarch.fw.handler.retry.Retryable>` 。
   
-JVMの異常を示すエラー(:java:extdoc:`VirtualMachineError <java.lang.VirtualMachineError>`)
-  発生した例外を再送出する
+表示JVM异常的错误(:java:extdoc:`VirtualMachineError <java.lang.VirtualMachineError>`)
+  重新抛出发生的异常
 
-上記以外のエラー
-  ``FATAL`` レベルのログを出力し、 :java:extdoc:`リトライ可能例外(Retryable) <nablarch.fw.handler.retry.Retryable>` を送出する。
+上述以外的错误
+  输出 ``FATAL`` 级别日志，并发出 :java:extdoc:`可重试异常(Retryable) <nablarch.fw.handler.retry.Retryable)` 。
 
 .. |br| raw:: html
 

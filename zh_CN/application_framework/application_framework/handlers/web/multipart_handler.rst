@@ -1,19 +1,19 @@
 .. _multipart_handler:
 
-マルチパートリクエストハンドラ
+multipart请求handler
 ==================================================
 .. contents:: 目录
   :depth: 3
   :local:
 
 
-HTTPリクエストがマルチパート形式の場合に、ボディ部を解析しアップロードファイルを一時ファイルとして保存するハンドラ。
+当HTTP请求为multipart形式时，解析body部分并将上传文件保存为临时文件的handler。
 
 本handler执行以下处理。
 
-* マリチパートリクエストの解析
-* アップロードファイルを一時ファイルとして保存
-* 保存した一時ファイルの削除
+* multipart请求的解析
+* 将上传文件保存为临时文件
+* 删除保存的临时文件
 
 
 处理流程如下。
@@ -33,7 +33,7 @@ handler类名
     <artifactId>nablarch-fw-web</artifactId>
   </dependency>
 
-  <!-- 一時保存先を指定する場合のみ -->
+  <!-- 仅当需要指定临时保存位置时 -->
   <dependency>
     <groupId>com.nablarch.framework</groupId>
     <artifactId>nablarch-core</artifactId>
@@ -41,35 +41,35 @@ handler类名
 
 .. _multipart_handler-constraint:
 
-制約
+约束
 --------------------------------------------------
-なし。
+无。
 
-このハンドラの動作条件
+本handler的动作条件
 --------------------------------------------------
-このハンドラはマルチパート形式のリクエストの場合のみ、リクエストボディを解析する。マルチパート形式かどうかは、リクエストヘッダの ``Content-Type`` で判断する。
+本handler仅在请求为multipart形式时解析请求body。是否multipart形式通过请求header的 ``Content-Type`` 判断。
 
-``Content-Type`` が ``multipart/form-data`` と一致する場合は、リクエストがマルチパート形式だと判断し、ボディの解析処理を行う。
-それ以外の場合には、このハンドラは何もせずに後続のハンドラに処理を委譲する。
+当 ``Content-Type`` 与 ``multipart/form-data`` 一致时，判断请求为multipart形式，执行body解析处理。
+其他情况下，本handler不执行任何操作，直接委托给后续handler。
 
-アップロードファイルの一時保存先を指定する
+指定上传文件的临时保存位置
 --------------------------------------------------
-アップロードファイルの一時保存先ディレクトリは、 :ref:`file_path_management` に設定する。
+上传文件的临时保存目录在 :ref:`file_path_management` 中设置。
 
-ファイルパス管理に一時保存先ディレクトリの指定がない場合は、デフォルトの保存先としてシステムプロパティの `java.io.tmpdir` の値を使用する。
+如果文件路径管理中未指定临时保存位置，则使用系统属性 `java.io.tmpdir` 的值作为默认保存位置。
 
-以下に一時ファイルの保存先ディレクトリの設定例を示す。
+以下显示临时文件保存目录的设置示例。
 
-ポイント
-  * 保存先ディレクトリの論理名は、 ``uploadFileTmpDir`` とすること。
+要点
+  * 保存目录的逻辑名称应为 ``uploadFileTmpDir`` 。
 
 .. code-block:: xml
 
   <component name="filePathSetting" class="nablarch.core.util.FilePathSetting">
-    <!-- ディレクトリの設定 -->
+    <!-- 目录设置 -->
     <property name="basePathSettings">
       <map>
-        <!-- アップロードファイルの一時保存ディレクトリ -->
+        <!-- 上传文件的临时保存目录 -->
         <entry key="uploadFileTmpDir" value="file:/var/nablarch/uploadTmpDir" />
       </map>
     </property>
@@ -77,30 +77,30 @@ handler类名
 
 .. tip::
 
-  上記の例では、保存先ディレクトリを直接指定しているが、この値は環境ごとに異なることが想定される。
-  このため、直接コンポーネント設定ファイルに設定するのではなく、環境設定ファイルに設定することを推奨する。
+  上述示例中直接指定了保存目录，但该值在不同环境中可能不同。
+  因此，建议不要直接在组件配置文件中设置，而是在环境配置文件中设置。
 
-  詳細は、:ref:`repository-environment_configuration` を参照。
+  详情请参考 :ref:`repository-environment_configuration` 。
 
 
 .. _multipart_handler-file_limit:
 
-巨大なファイルのアップロードを防ぐ
+防止上传巨大文件
 --------------------------------------------------
-巨大なファイルをアップロードされると、ディスクリソースが枯渇するなどが原因でシステムが正常に稼働しなくなる可能性がある。
-このため、このハンドラではアップロードサイズの上限を超過した場合には、413(Payload Too Large)をクライアントに返却する。
+如果被上传巨大文件，可能因磁盘资源耗尽等原因导致系统无法正常运作。
+因此，本handler在上传大小超过上限时，会向客户端返回413(Payload Too Large)。
 
-アップロードサイズの上限は、バイト数で設定する。設定を省略した場合は、無制限となる。
-DoS攻撃を防ぐためにも、アップロードサイズの上限は常に設定しておくこと。
+上传大小上限以字节数设置。省略设置时为无限制。
+为防止DoS攻击，建议始终设置上传大小上限。
 
-以下にアップロードサイズの設定例を示す。
+以下显示上传大小的设置示例。
 
 .. code-block:: xml
 
   <component class="nablarch.fw.web.upload.MultipartHandler" name="multipartHandler">
     <property name="uploadSettings">
       <component class="nablarch.fw.web.upload.UploadSettings">
-        <!-- アップロードサイズ(Content-Length)の上限(約1MB) -->
+        <!-- 上传大小(Content-Length)上限(约1MB) -->
         <property name="contentLengthLimit" value="1000000" />
       </component>
     </property>
@@ -109,110 +109,110 @@ DoS攻撃を防ぐためにも、アップロードサイズの上限は常に�
 
 .. tip::
 
-  アップロードサイズの上限は、ファイル単位ではなく1リクエストでアップロード出来る上限となる。
+  上传大小上限不是单个文件的上限，而是一个请求中可以上传的上限。
 
-  このため、複数のファイルをアップロードした場合には、それらのファイルサイズの合計値(厳密には、Content-Length)により、上限チェックが実施される。
+  因此，当上传多个文件时，将根据这些文件大小的总和（严格来说是Content-Length）执行上限检查。
 
-  もし、ファイル単位でサイズチェックをする必要がある場合には、アクション側で実装すること。
+  如果需要按文件进行大小检查，请在action侧实现。
 
 .. _multipart_handler-max_file_count:
 
-ファイルの大量アップロードを防ぐ
+防止大量文件上传
 --------------------------------------------------
-アップロードサイズの上限を設定しても、1つ1つのファイルサイズを小さくすることで一度に大量のファイルをアップロードできる。
-不必要な処理を減らすため、マルチパートリクエストハンドラでは一度にアップロードできるファイル数に上限を設定できるようになっている。
-上限を超えるファイルがアップロードされた場合、このハンドラは400(Bad Request)を返す。
+即使设置了上传大小上限，也可以通过减小单个文件大小来一次性上传大量文件。
+为减少不必要的处理，multipart请求handler支持设置一次性可上传文件数的上限。
+当上传的文件超过上限时，本handler会返回400(Bad Request)。
 
-以下に設定例を示す。
+以下显示设置示例。
 
 .. code-block:: xml
 
   <component class="nablarch.fw.web.upload.MultipartHandler" name="multipartHandler">
     <property name="uploadSettings">
       <component class="nablarch.fw.web.upload.UploadSettings">
-        <!-- アップロードファイル数の上限 -->
+        <!-- 上传文件数上限 -->
         <property name="maxFileCount" value="100" />
       </component>
     </property>
   </component>
 
-``maxFileCount`` に0以上の値を設定すると、その値が一度にアップロードできるファイル数の上限となる。
-負数を設定した場合は無制限となる。
-未設定の場合はデフォルトで-1となる。
+``maxFileCount`` 设置为0以上的值时，该值即为一次性可上传文件数的上限。
+设置为负数时为无限制。
+未设置时默认为-1。
 
 
-一時ファイルの削除（クリーニング）を行う
+执行临时文件删除（清理）
 --------------------------------------------------
-保存されたアップロードファイルを以下の条件でクリーニングする。
+按以下条件清理保存的上传文件。
 
-* ボディの解析中に例外が発生した場合
-* ハンドラの復路で自動削除設定が有効な場合
+* body解析过程中发生异常时
+* handler返回时自动删除设置启用时
 
-自動削除設定は、デフォルトで有効に設定されている。
-この設定は本番環境で安易に無効にすると、大量の一時ファイルがディスク上に残り、最悪の場合ディスクフルの原因となるため注意すること。
+自动删除设置默认为启用。
+注意，如果轻易在生产环境中禁用此设置，大量临时文件将残留在磁盘上，最坏情况下可能导致磁盘已满。
 
-設定値を無効にする場合には、 :java:extdoc:`UploadSettings#autoCleaning <nablarch.fw.web.upload.UploadSettings.setAutoCleaning(boolean)>` に `false` を設定する。
+要禁用设置值，请在 :java:extdoc:`UploadSettings#autoCleaning <nablarch.fw.web.upload.UploadSettings.setAutoCleaning(boolean)>` 中设置 `false` 。
 
 
-マルチパート解析エラー及びファイルサイズ上限超過時の遷移先画面を設定する
+设置multipart解析错误及文件大小超过上限时的跳转目标画面
 ----------------------------------------------------------------------------------------------------
-このハンドラでは、マルチパート解析エラー [#part_error]_ や :ref:`ファイルサイズの上限超過時 <multipart_handler-file_limit>` に、
-不正なリクエストとしてクライアントに `400(BadRequest)` を返却する。
+本handler在multipart解析错误 [#part_error]_ 或 :ref:`文件大小超过上限时 <multipart_handler-file_limit>` ，
+将作为非法请求向客户端返回 `400(BadRequest)` 。
 
-このため、 `400(BadRequest)` に対応したエラーページの設定を `web.xml` に行う必要がある。
-`web.xml` へのエラーページ設定を省略した場合は、ウェブ应用サーバが持つデフォルトのページなどがクライアントに返却される。
+因此，需要在 `web.xml` 中设置对应 `400(BadRequest)` 的错误页面。
+如果省略 `web.xml` 中的错误页面设置，将返回Web应用服务器持有的默认页面等。
 
 .. important::
 
-  このハンドラは、:ref:`session_store_handler-constraint` にあるとおり、 :ref:`session_store_handler` より手前に設定する必要がある。
-  このため、 :ref:`session_store_handler` の後続に設定される :ref:`http_error_handler` の :ref:`HttpErrorHandler_DefaultPage` は使用できない。
+  本handler需要如 :ref:`session_store_handler-constraint` 所述，配置在 :ref:`session_store_handler` 之前。
+  因此，无法使用配置在 :ref:`session_store_handler` 后续的 :ref:`http_error_handler` 的 :ref:`HttpErrorHandler_DefaultPage` 。
 
 .. [#part_error]
-  マルチパート解析エラーが発生するケース
+  发生multipart解析错误的情况
 
-  * アップロード中にクライアントからの切断要求があり、ボディ部が不完全な場合
-  * バウンダリーが存在しない
+  * 上传过程中客户端发出断开请求，body部分不完整时
+  * boundary不存在时
 
 .. _multipart_handler-read_upload_file:
 
-アップロードしたファイルを読み込む
+读取上传的文件
 ------------------------------------------------------------
-アップロードされたファイル(一時保存されたファイル)は、 :java:extdoc:`HttpRequest <nablarch.fw.web.HttpRequest>` から取得する。
+上传的文件（临时保存的文件）从 :java:extdoc:`HttpRequest <nablarch.fw.web.HttpRequest>` 获取。
 
-以下に実装例を示す。
+以下显示实现示例。
 
-ポイント
-  * :java:extdoc:`HttpRequest#getPart <nablarch.fw.web.HttpRequest.getPart(java.lang.String)>` を呼び出してアップロードされたファイルを取得する。
-  * :java:extdoc:`HttpRequest#getPart <nablarch.fw.web.HttpRequest.getPart(java.lang.String)>` の引数には、パラメータ名を指定する。
+要点
+  * 调用 :java:extdoc:`HttpRequest#getPart <nablarch.fw.web.HttpRequest.getPart(java.lang.String)>` 获取上传的文件。
+  * :java:extdoc:`HttpRequest#getPart <nablarch.fw.web.HttpRequest.getPart(java.lang.String)>` 的参数指定参数名。
 
 .. code-block:: java
 
   public HttpResponse upload(HttpRequest request, ExecutionContext context) throws IOException {
-    // アップロードファイルの取得
+    // 获取上传文件
     List<PartInfo> partInfoList = request.getPart("uploadFile");
 
     if (partInfoList.isEmpty()) {
-      // アップロードファイルが指定されていなかった場合は業務エラー
+      // 未指定上传文件时为业务错误
     }
 
-    // アップロードされたファイルを処理する
+    // 处理上传的文件
     InputStream file = partInfoList.get(0).getInputStream()
 
-    // 以下アップロードファイルを読み込み処理を行う。
+    // 以下执行上传文件读取处理。
   }
 
-アップロードファイルを処理する詳細な実装方法は、以下のドキュメントを参照。
-なお、 :ref:`data_converter` に記載がある通り、 :ref:`data_bind` が推奨となる。
-(:ref:`data_bind` で扱うことのできない形式の場合は、 :ref:`data_format` を使用すること。)
+处理上传文件的详细实现方法请参考以下文档。
+另外，如 :ref:`data_converter` 所述，推荐使用 :ref:`data_bind` 。
+（对于 :ref:`data_bind` 无法处理的格式，请使用 :ref:`data_format` 。）
 
-* :ref:`データバインドを使ってアップロードファイルを処理する <data_bind-upload_file>`
-* :ref:`汎用データフォーマットを使ってアップロードファイルを処理する <data_format-load_upload_file>`
+* :ref:`使用数据绑定处理上传文件 <data_bind-upload_file>`
+* :ref:`使用通用数据格式处理上传文件 <data_format-load_upload_file>`
 
 .. tip::
 
-  アップロードされたファイルが画像ファイル等のバイナリファイルの場合は、読み込んだバイナリデータを使用して処理を行うこと。
+  如果上传的文件是图像文件等二进制文件，请使用读取的二进制数据进行处理。
 
-  以下の様に実装することでアップロードファイルのバイトデータを読み込むことができる。
+  通过如下实现可以读取上传文件的字节数据。
 
   .. code-block:: java
 

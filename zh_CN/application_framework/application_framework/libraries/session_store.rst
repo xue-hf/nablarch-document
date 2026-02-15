@@ -1,73 +1,73 @@
 .. _`session_store`:
 
-セッションストア
+会话存储
 =====================================================================
 
 .. contents:: 目录
   :depth: 3
   :local:
 
-HTTPセッションを抽象化した機能を提供する。
+提供抽象化HTTP会话的功能。
 
-本機能では、セッションを識別するためにセッションIDを発行し、
-クッキー( ``NABLARCH_SID`` (変更可))を使用して、セッションを追跡する。
-そして、セッションIDごとにセッションストアと呼ばれる保存先へ読み書きする機能を提供する。
+本功能中，为识别会话发行会话ID，
+使用Cookie( ``NABLARCH_SID`` (可更改))追踪会话。
+然后，提供按会话ID向称为会话存储的保存目标读写数据的功能。
 
-本機能では、セッションIDごとにセッションストアに読み書きされる値をセッション変数と呼ぶ。
+本功能中，按会话ID在会话存储中读写的值称为会话变量。
 
-簡単な処理の流れを以下の図に示す。
+简单处理流程如下图所示。
 
 .. image:: images/session_store/session_store.png
 
-1. :ref:`session_store_handler` の往路処理で、クッキーから取得したセッションIDをもとに、セッションストアからセッション変数をロードする。
-2. 業務アクションから :java:extdoc:`SessionUtil <nablarch.common.web.session.SessionUtil>` を通して、セッション変数に対して読み書きする。
-3. :ref:`session_store_handler` の復路処理で、セッション変数をセッションストアに保存する。
-4. JSPで参照できるように、セッション変数をリクエストスコープに設定する。(既にリクエストスコープに同名の値が存在する場合は設定しない。)
+1. :ref:`session_store_handler` 的往路处理中，基于从Cookie获取的会话ID，从会话存储加载会话变量。
+2. 从业务动作通过 :java:extdoc:`SessionUtil <nablarch.common.web.session.SessionUtil>` ，对会话变量进行读写。
+3. :ref:`session_store_handler` 的返路处理中，将会话变量保存到会话存储。
+4. 为能在JSP中引用，将会话变量设置到请求作用域。（请求作用域中已存在同名值时不设置。）
 
 .. important::
-  本機能を使用する場合、以下の機能は用途が重複するため非推奨となる。
+  使用本功能时，以下功能因用途重复而不推荐。
 
-  * :ref:`hidden暗号化<tag-hidden_encryption>`
+  * :ref:`hidden加密<tag-hidden_encryption>`
   * :ref:`session_concurrent_access_handler`
-  * :java:extdoc:`ExecutionContext<nablarch.fw.ExecutionContext>` のセッションスコープにアクセスするAPI
+  * 访问 :java:extdoc:`ExecutionContext<nablarch.fw.ExecutionContext>` 的会话作用域的API
 
 .. tip::
- 本機能で使用するクッキー( ``NABLARCH_SID`` )は、HTTPセッションの追跡に使用されるJSESSIONIDとは全く別物である。
+ 本功能使用的Cookie( ``NABLARCH_SID`` )与用于追踪HTTP会话的JSESSIONID是完全不同的东西。
 
 .. tip::
- Nablarch 5u16より、セッションストアの有効期間保存先にHTTPセッション以外も選べるようになった。
+ 从Nablarch 5u16开始，会话存储的有效期保存目标除HTTP会话外也可以选择其他。
 
 .. tip::
- クッキーで使用するセッションIDには、:java:extdoc:`UUID<java.util.UUID>` を使用している。
+ Cookie中使用的会话ID使用 :java:extdoc:`UUID<java.util.UUID>` 。
 
-機能概要
+功能概述
 ---------------------------------------------------------------------
 
-セッション変数の保存先を選択できる
+可以选择会话变量的保存目标
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-セッション変数の保存先を、用途に応じて選択できる。
+可以根据用途选择会话变量的保存目标。
 
-標準では以下の3種類のストアを提供している。
+标准提供以下3种存储。
 
-* :ref:`DBストア <session_store-db_store>`
-* :ref:`HIDDENストア <session_store-hidden_store>`
-* :ref:`HTTPセッションストア <session_store-http_session_store>`
+* :ref:`DB存储 <session_store-db_store>`
+* :ref:`HIDDEN存储 <session_store-hidden_store>`
+* :ref:`HTTP会话存储 <session_store-http_session_store>`
 
-セッションストアの特長や選択基準については、 :ref:`session_store-future_of_store` を参照。
+会话存储的特征和选择标准参见 :ref:`session_store-future_of_store` 。
 
-また、 :ref:`redisstore_lettuce_adaptor` を使用することで、Redisを保存先として使用できる。
+另外，使用 :ref:`redisstore_lettuce_adaptor` 可以将Redis作为保存目标使用。
 
 
 .. _session_store-serialize:
 
-セッション変数の直列化の仕組みを選択できる
+可以选择会话变量的序列化机制
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-セッション変数をセッションストアに保存する際の直列化の仕組みを以下から選択できる。
-各機能の詳細はリンク先のJavadocを参照。
+将会话变量保存到会话存储时的序列化机制可从以下选择。
+各功能详情参见链接的Javadoc。
 
-* :java:extdoc:`Java標準のシリアライズによる直列化(デフォルト) <nablarch.common.web.session.encoder.JavaSerializeStateEncoder>`
-* :java:extdoc:`Java標準のシリアライズによる直列化、および暗号化 <nablarch.common.web.session.encoder.JavaSerializeEncryptStateEncoder>`
-* :java:extdoc:`Jakarta XML BindingによるXMLベースの直列化 <nablarch.common.web.session.encoder.JaxbStateEncoder>`
+* :java:extdoc:`Java标准序列化的序列化(默认) <nablarch.common.web.session.encoder.JavaSerializeStateEncoder>`
+* :java:extdoc:`Java标准序列化的序列化及加密 <nablarch.common.web.session.encoder.JavaSerializeEncryptStateEncoder>`
+* :java:extdoc:`Jakarta XML Binding的XML基础序列化 <nablarch.common.web.session.encoder.JaxbStateEncoder>`
 
 模块列表
 ---------------------------------------------------------------------
@@ -78,7 +78,7 @@ HTTPセッションを抽象化した機能を提供する。
     <artifactId>nablarch-fw-web</artifactId>
   </dependency>
 
-  <!-- DBストアを使用する場合のみ -->
+  <!-- 仅使用DB存储时 -->
   <dependency>
     <groupId>com.nablarch.framework</groupId>
     <artifactId>nablarch-fw-web-dbstore</artifactId>
@@ -86,129 +86,129 @@ HTTPセッションを抽象化した機能を提供する。
 
 .. _session_store-constraint:
 
-制約
+约束
 ---------------------------------------------------------------------
-保存対象はシリアライズ可能なJava Beansオブジェクトであること
+保存目标必须是可序列化的Java Beans对象
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-セッションストアに保存するオブジェクトはシリアライズ可能なJava Beansオブジェクトである必要がある。
+保存到会话存储的对象必须是可序列化的Java Beans对象。
 
-オブジェクトが持つプロパティの型は、Javaの基本型もしくはシリアライズ可能なJava Beansオブジェクトである必要がある。
-また、プロパティには配列やコレクションを使用できる。
+对象持有的属性类型必须是Java的基本类型或可序列化的Java Beans对象。
+另外，属性可以使用数组或集合。
 
 使用方法
 ---------------------------------------------------------------------
 
 .. _session_store-use_config:
 
-セッションストアを使用するための設定
+使用会话存储的设置
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-セッションストアを使用するためには、 :ref:`session_store_handler` の設定に加えて、
-:java:extdoc:`SessionManager <nablarch.common.web.session.SessionManager>` をコンポーネント定義に設定する。
+使用会话存储，除 :ref:`session_store_handler` 的设置外，
+还需要将 :java:extdoc:`SessionManager <nablarch.common.web.session.SessionManager>` 设置到组件定义中。
 
-以下に、標準で提供している全ての保存先を使用する場合の設定例を示す。
+以下展示使用标准提供的所有保存目标时的设置示例。
 
 .. code-block:: xml
 
-  <!-- "sessionManager"というコンポーネント名で設定する -->
+  <!-- 以"sessionManager"组件名设置 -->
   <component name="sessionManager" class="nablarch.common.web.session.SessionManager">
 
     <!--
-      保存先を明示的に指定しなかった場合にデフォルトで使用されるストア名
+      未显式指定保存目标时默认使用的存储名称
     -->
     <property name="defaultStoreName" value="db"/>
 
-    <!-- 应用で使用する保存先に合わせてコンポーネントを追加する -->
+    <!-- 根据应用程序使用的保存目标添加组件 -->
     <property name="availableStores">
       <list>
-        <!-- HIDDENストア -->
+        <!-- HIDDEN存储 -->
         <component class="nablarch.common.web.session.store.HiddenStore">
-          <!-- 設定値の詳細はJavadocを参照 -->
+          <!-- 设置值详情参见Javadoc -->
         </component>
 
-        <!-- DBストア -->
+        <!-- DB存储 -->
         <component-ref name="dbStore" />
 
-        <!-- HTTPセッションストア -->
+        <!-- HTTP会话存储 -->
         <component class="nablarch.common.web.session.store.HttpSessionStore">
-          <!-- 設定値の詳細はJavadocを参照 -->
+          <!-- 设置值详情参见Javadoc -->
         </component>
       </list>
     </property>
   </component>
 
   <component name="dbStore" class="nablarch.common.web.session.store.DbStore">
-    <!-- 設定値の詳細はJavadocを参照 -->
+    <!-- 设置值详情参见Javadoc -->
   </component>
 
-  <!-- DBストアの初期化設定 -->
+  <!-- DB存储的初始化设置 -->
   <component name="initializer"
       class="nablarch.core.repository.initialization.BasicApplicationInitializer">
     <property name="initializeList">
       <list>
-        <!-- 他のコンポーネントは省略 -->
+        <!-- 其他组件省略 -->
         <component-ref name="dbStore" />
       </list>
     </property>
   </component>
 
-なお、DBストアを使用する場合、データベース上にセッション変数を保存するためのテーブルを作成する必要がある。
+另外，使用DB存储时，需要在数据库上创建用于保存会话变量的表。
 
-作成するテーブルの定義を以下に示す。
+创建的表定义如下。
 
-`USER_SESSION` テーブル
+`USER_SESSION` 表
   ==================== ====================
-  カラム名             データ型
+  列名                 数据类型
   ==================== ====================
   SESSION_ID(PK)       `java.lang.String`
   SESSION_OBJECT       `byte[]`
   EXPIRATION_DATETIME  `java.sql.Timestamp`
   ==================== ====================
 
-Oracleで正常に動作しないケースがあるため、 `SESSION_ID` はCHARではなくVARCHARで定義すること。
+由于Oracle可能无法正常工作的案例， `SESSION_ID` 请用VARCHAR而非CHAR定义。
 
-テーブル名およびカラム名は変更可能である。
-変更する場合は、 :java:extdoc:`DbStore.userSessionSchema <nablarch.common.web.session.store.DbStore.setUserSessionSchema(nablarch.common.web.session.store.UserSessionSchema)>` に
-:java:extdoc:`UserSessionSchema <nablarch.common.web.session.store.UserSessionSchema>` のコンポーネントを定義する。
+表名及列名可以更改。
+更改时，在 :java:extdoc:`DbStore.userSessionSchema <nablarch.common.web.session.store.DbStore.setUserSessionSchema(nablarch.common.web.session.store.UserSessionSchema)>` 中
+定义 :java:extdoc:`UserSessionSchema <nablarch.common.web.session.store.UserSessionSchema>` 的组件。
 
 .. code-block:: xml
 
   <property name="userSessionSchema">
     <component class="nablarch.common.web.session.store.UserSessionSchema">
-      <!-- 設定値の詳細はJavadocを参照 -->
+      <!-- 设置值详情参见Javadoc -->
     </component>
   </property>
 
 .. tip::
-  DBストアを使用した場合、ブラウザが閉じられた場合などにテーブル上にセッション情報が残ってしまうことがある。
-  そのため、期限切れのセッション情報は定期的に削除する必要がある。
+  使用DB存储时，浏览器关闭等情况可能导致表上残留会话信息。
+  因此，需要定期删除过期的会话信息。
 
 .. _`session_store-input_data`:
 
-入力～確認～完了画面間で入力情報を保持する
+在输入～确认～完成画面间保持输入信息
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-入力～確認～完了画面間で入力情報を保持する場合、
-複数タブでの画面操作を許容するか否かでセッションストアを使い分ける。
+在输入～确认～完成画面间保持输入信息时，
+根据是否允许多标签页的画面操作来区分使用会话存储。
 
-複数タブでの画面操作を許容しない場合
-  DBストアを使用してデータベース上のテーブルにセッション変数を保持する。
+不允许多标签页的画面操作时
+  使用DB存储在数据库的表上保持会话变量。
 
-複数タブでの画面操作を許容する場合
-  HIDDENストアを使用してクライアントサイドにセッション変数を保持する。
+允许多标签页的画面操作时
+  使用HIDDEN存储在客户端保持会话变量。
 
-  HIDDENストアを使用する場合、以下の様に入力・確認画面のJSPに :ref:`tag-hidden_store_tag` を使用する。
+  使用HIDDEN存储时，在输入·确认画面的JSP中如下使用 :ref:`tag-hidden_store_tag` 。
 
   .. code-block:: jsp
 
     <n:form>
       <!--
-        name属性にはコンポーネント設定ファイルに定義した、
-        HiddenStoreのparameterNameプロパティの値を設定
+        name属性中设置组件设置文件中定义的、
+        HiddenStore的parameterName属性值
       -->
       <n:hiddenStore name="nablarch_hiddenStore" />
-      <!-- その他のタグは省略 -->
+      <!-- 其他标签省略 -->
     </n:form>
 
-入力～確認～完了画面間でのセッションストアの実装例を以下に示す。
+输入～确认～完成画面间会话存储的实现示例如下。
 
 .. toctree::
   :maxdepth: 2
@@ -223,83 +223,82 @@ Oracleで正常に動作しないケースがあるため、 `SESSION_ID` はCHA
 .. _`session_store-form`:
 
 .. tip::
-  セッションストアには、Formではなく、業務ロジックを実行するためのオブジェクト(Entity)を格納すること。
+  会话存储中不要存放Form，而要存放执行业务逻辑的对象(Entity)。
 
-  Entityを格納することで、セッションストアから取り出したオブジェクトを使って、すぐに業務ロジックを実行できる。
-  これにより、余計な処理が業務ロジックに混入することを防ぎ、ソースの凝集性が高まることが期待できる。
+  存放Entity后，可以使用从会话存储取出的对象立即执行业务逻辑。
+  这样可以防止多余处理混入业务逻辑，期待提高源码的内聚性。
+  相反，如果存放Form，会诱发通过Form进行数据传递，业务逻辑中混入不必要的数据转换处理等，
+  可能产生高耦合的源码。
 
-  反対に、Formを格納すると、Formによるデータの受け渡しを誘発し、業務ロジックに不要なデータの変換処理等が入り込み、
-  密結合なソースが生まれる可能性が高まる。
-
-  また、Formは外部の入力値を受け付けるため、バリデーション済みであればよいが、バリデーション前であれば信頼できない値を保持した状態となる。
-  そのため、セキュリティの観点から、セッションストアに保持するデータは生存期間が長くなるので、
-  できるだけ安全なデータを保持しておき、脆弱性を埋め込むリスクを減らすという狙いもある。
+  另外，Form接收外部输入值，如果已验证则没问题，但验证前则保持不可信值状态。
+  因此，从安全角度，会话存储中保持的数据生存期较长，
+  尽量保持安全的数据，以减少嵌入脆弱性风险。
 
 .. _`session_store-authentication_data`:
 
-認証情報を保持する
+保持认证信息
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-認証情報を保持する場合は、DBストアを使用する。
+保持认证信息时使用DB存储。
 
-ログイン、ログアウト時のセッションストアの実装例を以下に示す。
+登录、注销时会话存储的实现示例如下。
 
-应用にログインする
+登录应用程序
   .. code-block:: java
 
-    // ログイン前にセッションIDを変更する
+    // 登录前更改会话ID
     SessionUtil.changeId(ctx);
 
-    // CSRFトークンを再生成する（CSRFトークン検証ハンドラを使用している場合）
+    // 重新生成CSRF令牌（使用CSRF令牌验证handler时）
     CsrfTokenUtil.regenerateCsrfToken(ctx);
 
-    // ログインユーザの情報をセッションストアに保存
+    // 将登录用户信息保存到会话存储
     SessionUtil.put(ctx, "user", user, "db");
 
 .. important::
-  以下の条件を全て満たす場合、ログインのときにCSRFトークンの再生成が必要になる。
+  以下条件全部满足时，登录时需要重新生成CSRF令牌。
 
-  * :ref:`csrf_token_verification_handler` を使用している
-  * ログイン時にセッションIDの変更のみを行う（セッション情報は維持する）
+  * 使用 :ref:`csrf_token_verification_handler`
+  * 登录时仅更改会话ID（维持会话信息）
 
-  詳しくは :ref:`csrf_token_verification_handler-regeneration` を参照。
+  详细参见 :ref:`csrf_token_verification_handler-regeneration` 。
 
-应用からログアウトする
+从应用程序注销
   .. code-block:: java
 
-    // セッションストア全体を破棄
+    // 废弃整个会话存储
     SessionUtil.invalidate(ctx);
 
-JSPからセッション変数の値を参照する
+从JSP引用会话变量的值
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-通常のリクエストスコープやセッションスコープと同様の手順で、
-JSPからセッションストアで保持しているセッション変数の値を参照できる。
+与普通的请求作用域或会话作用域相同，
+可以从JSP引用会话存储保持的会话变量的值。
 
 .. important::
-  ただし、既にリクエストスコープ上に同名の値が存在する場合は、JSPからセッション変数の値を参照できないため、
-  セッション変数にはリクエストスコープと重複しない名前を設定すること。
+  但是，请求作用域上已存在同名值时，无法从JSP引用会话变量的值，
+  因此会话变量请设置与请求作用域不重复的名称。
 
-HIDDENストアの暗号化設定をカスタマイズする
+自定义HIDDEN存储的加密设置
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-:ref:`HIDDENストア <session_store-hidden_store>` の暗号化/復号設定のデフォルトは、以下の通りである。
+:ref:`HIDDEN存储 <session_store-hidden_store>` 的加密/解密设置默认如下。
 
 ======================= ============================================================
-設定項目                設定内容
+设置项目                设置内容
 ======================= ============================================================
-暗号化アルゴリズム      `AES`
-暗号化キー              应用サーバ内で共通の自動生成されたキーを使用
+加密算法                `AES`
+加密密钥                使用应用服务器内通用的自动生成密钥
 ======================= ============================================================
 
-应用サーバが冗長化されている場合、应用サーバごとに異なるキーを生成するため、復号に失敗してしまうケースがある。
-このケースでは、明示的に暗号化/復号のキーを設定する。
+应用服务器冗余化时，每个应用服务器生成不同密钥，可能导致解密失败。
+这种情况下，显式设置加密/解密的密钥。
 
-暗号化アルゴリズムに `AES` を使用し、暗号化/復号のキーを明示的に設定する設定例を以下に示す。
+以下展示使用 `AES` 作为加密算法，显式设置加密/解密密钥的设置示例。
 
 .. code-block:: xml
 
   <component class="nablarch.common.web.session.store.HiddenStore">
-    <!-- 他の設定値は省略 -->
+    <!-- 其他设置值省略 -->
     <property name="encryptor">
       <component class="nablarch.common.encryption.AesEncryptor">
         <property name="base64Key">
@@ -312,28 +311,28 @@ HIDDENストアの暗号化設定をカスタマイズする
     </property>
   </component>
   
-ポイント
-  暗号化の鍵及びIVは、base64でエンコードした値を設定する。
-  鍵の強度を高めるためには、以下の機能を使用して生成すると良い。
+要点
+  加密的密钥及IV设置base64编码的值。
+  为提高密钥强度，使用以下功能生成比较好。
   
-  * :java:extdoc:`KeyGenerator <javax.crypto.KeyGenerator>` を使用して鍵を生成する。
-  * :java:extdoc:`SecureRandom <java.security.SecureRandom>` を使用してIVを生成する。
+  * 使用 :java:extdoc:`KeyGenerator <javax.crypto.KeyGenerator>` 生成密钥。
+  * 使用 :java:extdoc:`SecureRandom <java.security.SecureRandom>` 生成IV。
   
-  なお、base64エンコードは :java:extdoc:`java.util.Base64.getEncoder()` より取得できる :java:extdoc:`java.util.Base64.Encoder` を使用して行うと良い。
+  另外，base64编码使用 :java:extdoc:`java.util.Base64.getEncoder()` 获取的 :java:extdoc:`java.util.Base64.Encoder` 执行比较好。
 
-セッション変数に値が存在しない場合の遷移先画面を指定する
+指定会话变量值不存在时的跳转目标画面
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-正常な画面遷移では必ずセッション変数が存在しているが、ブラウザの戻るボタンを使用され不正な画面遷移が行われることで、
-本来存在しているはずのセッション変数にアクセスできない場合がある。
-この場合、セッション変数が存在しないことを示す例外( :java:extdoc:`SessionKeyNotFoundException <nablarch.common.web.session.SessionKeyNotFoundException>` )が送出されるので、
-この例外を補足することで任意のエラーページに遷移させることが出来る。
+正常画面跳转时会话变量必定存在，但使用浏览器返回按钮等进行非法画面跳转时，
+可能无法访问本应存在的会话变量。
+这种情况下，会抛出表示会话变量不存在的异常( :java:extdoc:`SessionKeyNotFoundException <nablarch.common.web.session.SessionKeyNotFoundException>` )，
+捕获此异常可以跳转到任意错误页面。
 
-以下に実現方法を示す。
+以下展示实现方法。
 
-システムで共通のエラーページに遷移させる
-  システムで共通のエラーページに遷移させる場合は、ハンドラで例外を捕捉し遷移先を指定する。
+跳转到系统通用错误页面
+  跳转到系统通用错误页面时，在handler中捕获异常并指定跳转目标。
   
-  実装例
+  实现示例
     .. code-block:: java
 
       public class SampleErrorHandler implements Handler<Object, Object> {
@@ -344,8 +343,8 @@ HIDDENストアの暗号化設定をカスタマイズする
           try {
             return context.handleNext(data);
           } catch (SessionKeyNotFoundException e) {
-            // セッション変数が存在しないことを示す例外を捕捉し、
-            // 不正な画面遷移を表すエラーページを返す
+            // 捕获表示会话变量不存在的异常，
+            // 返回表示非法画面跳转的错误页面
             throw new HttpErrorResponse(HttpResponse.Status.BAD_REQUEST.getStatusCode(),
                     "/WEB-INF/view/errors/BadTransition.jsp", e);
           }
@@ -353,105 +352,105 @@ HIDDENストアの暗号化設定をカスタマイズする
       }
 
 
-リクエスト毎に遷移先を指定する
-  リクエスト毎に遷移先を切り替える場合には、 :ref:`on_error_interceptor` を使用して遷移先を指定する。
-  なお、上記のシステムで共通のエラーページに遷移させると併用することで、一部のリクエストのみ遷移先を変更することも出来る。
+按请求指定跳转目标
+  按请求切换跳转目标时，使用 :ref:`on_error_interceptor` 指定跳转目标。
+  另外，与上述跳转到系统通用错误页面并用，可以仅更改部分请求的跳转目标。
 
-  実装例
+  实现示例
     .. code-block:: java
 
-      // 対象例外にセッション変数が存在しないことを示す例外を指定して、リクエスト毎の遷移先を指定する
+      // 对目标异常指定表示会话变量不存在的异常，按请求指定跳转目标
       @OnError(type = SessionKeyNotFoundException.class, path = "redirect://error")
       public HttpResponse backToNew(HttpRequest request, ExecutionContext context) {
         Project project = SessionUtil.get(context, "project");
-        // 処理は省略
+        // 处理省略
       }
 
 
-拡張例
+扩展示例
 ---------------------------------------------------------------------
 
-セッション変数の保存先を追加する
+添加会话变量的保存目标
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-セッション変数の保存先を追加するには以下の手順が必要となる。
+添加会话变量的保存目标需要以下步骤。
 
-#. :java:extdoc:`SessionStore <nablarch.common.web.session.SessionStore>` を継承し、追加したい保存先に対応したクラスを作成する。
-#. :java:extdoc:`SessionManager.availableStores <nablarch.common.web.session.SessionManager.setAvailableStores(java.util.List)>` に、作成したクラスのコンポーネント定義を追加する。
+#. 继承 :java:extdoc:`SessionStore <nablarch.common.web.session.SessionStore>` ，创建对应要添加的保存目标的类。
+#. 在 :java:extdoc:`SessionManager.availableStores <nablarch.common.web.session.SessionManager.setAvailableStores(java.util.List)>` 中，添加创建的类的组件定义。
 
 .. _session_store-future_of_store:
 
-セッションストアの特長と選択基準
+会话存储的特征和选择标准
 ---------------------------------------------------------------------
-デフォルトで使用できるセッション変数の保存先は以下の通り。
+默认可用的会话变量保存目标如下。
 
 .. _`session_store-db_store`:
 
-DBストア
-  :保存先: | データベース上のテーブル
+DB存储
+  :保存目标: | 数据库上的表
 
-  :特徴: * ローリングメンテナンス等で应用サーバが停止した場合でもセッション変数の復元が可能。
-          * 应用サーバのヒープ領域を圧迫しない。
-          * 同一セッションの処理が複数スレッドで実行された場合後勝ちとなる。(先に保存されたセッションのデータは消失する)
+  :特征: * 滚动维护等应用服务器停止时也可以恢复会话变量。
+          * 不会压迫应用服务器的堆区域。
+          * 同一会话的处理在多个线程执行时后执行者获胜。（先保存的会话数据会丢失）
 
 
 .. _`session_store-hidden_store`:
 
-HIDDENストア
-  :保存先: | クライアントサイド
-            | ( `hidden` タグを使用して画面間でセッション変数を引き回して実現)
+HIDDEN存储
+  :保存目标: | 客户端
+            | (使用 `hidden` 标签在画面间传递会话变量实现)
 
-  :特徴: * 複数タブでの画面操作を許容できる。
-          * 应用サーバのヒープ領域を圧迫しない。
-          * 同一セッションの処理が複数スレッドで実行された場合、セッションのデータはそれぞれのスレッドに紐付けて保存される。
+  :特征: * 可以允许多标签页的画面操作。
+          * 不会压迫应用服务器的堆区域。
+          * 同一会话的处理在多个线程执行时，会话数据分别与各线程关联保存。
 
 .. _`session_store-http_session_store`:
 
-HTTPセッションストア
-  :保存先: | 应用サーバのヒープ領域
-            | (应用サーバの設定によっては、データベースやファイル等に保存される場合がある。)
+HTTP会话存储
+  :保存目标: | 应用服务器的堆区域
+            | (根据应用服务器的设置，可能保存到数据库或文件等。)
 
-  :特徴: * 認証情報の様な应用全体で頻繁に使用する情報の保持に適している。
-          * APサーバ毎に情報を保持するため、スケールアウトを行う際に工夫が必要となる。
-          * 画面の入力内容の様な大量データを保存すると、ヒープ領域を圧迫する恐れがある。
-          * 同一セッションの処理が複数スレッドで実行された場合後勝ちとなる。(先に保存されたセッションのデータは消失する)
+  :特征: * 适合保持认证信息等应用全体频繁使用的信息。
+          * 因每个AP服务器保持信息，进行横向扩展时需要下功夫。
+          * 保存画面输入内容等大量数据时，可能压迫堆区域。
+          * 同一会话的处理在多个线程执行时后执行者获胜。（先保存的会话数据会丢失）
 
             
 
-上記を踏まえ、各セッションストアの選択基準を以下に示す。
+基于上述，各会话存储的选择标准如下。
 
 ======================================================================== ===============================================================
-用途                                                                     セッションストア
+用途                                                                     会话存储
 ======================================================================== ===============================================================
-入力～確認～完了画面間で入力情報の保持(複数タブでの画面操作を許容しない) :ref:`DBストア <session_store-db_store>`
-入力～確認～完了画面間で入力情報の保持(複数タブでの画面操作を許容する)   :ref:`HIDDENストア <session_store-hidden_store>`
-認証情報の保持                                                           :ref:`DBストア <session_store-db_store>` または :ref:`HTTPセッションストア <session_store-http_session_store>`
-検索条件の保持                                                           使用しない [1]_
-検索結果一覧の保持                                                       使用しない [2]_
-セレクトボックス等の画面表示項目の保持                                   使用しない [3]_
-エラーメッセージの保持                                                   使用しない [3]_
+输入～确认～完成画面间输入信息的保持（不允许多标签页的画面操作）         :ref:`DB存储 <session_store-db_store>`
+输入～确认～完成画面间输入信息的保持（允许多标签页的画面操作）           :ref:`HIDDEN存储 <session_store-hidden_store>`
+认证信息的保持                                                           :ref:`DB存储 <session_store-db_store>` 或 :ref:`HTTP会话存储 <session_store-http_session_store>`
+搜索条件的保持                                                           不使用 [1]_
+搜索结果列表的保持                                                       不使用 [2]_
+选择框等画面显示项目的保持                                               不使用 [3]_
+错误消息的保持                                                           不使用 [3]_
 ======================================================================== ===============================================================
 
-.. [1] 認証情報を除き、セッションストアでは複数機能に跨るデータの保持は想定していない。
-       ブラウザのローカルストレージに検索時のURLを保持するなど、应用の要件に合わせて設計・実装すること。
-.. [2] 一覧情報のような大量データは保存領域を圧迫する可能性があるのでセッションストアには保存しない。
-.. [3] 画面表示に使用する値はリクエストスコープを使用して受け渡せばよい。
+.. [1] 除认证信息外，会话存储不设想保持跨多个功能的数据。
+       搜索时的URL保存在浏览器本地存储等，根据应用程序需求设计·实现。
+.. [2] 列表信息等大量数据可能压迫保存区域，因此不保存到会话存储。
+.. [3] 画面显示使用的值使用请求作用域传递即可。
 
 .. tip::
-  :ref:`redisstore_lettuce_adaptor` については、保存先が異なるだけで特徴はDBストアと同じになる。
+  关于 :ref:`redisstore_lettuce_adaptor` ，保存目标不同但特征与DB存储相同。
 
 .. _`session_store_expiration`:
        
-有効期間の管理方法
+有效期的管理方法
 ------------------
 
-セッションの有効期間はデフォルトではHTTPセッションに保存されている。
-設定を変更することで有効期間の保存先をデータベースに変更できる。
+会话的有效期默认保存在HTTP会话中。
+可以更改设置将有效期的保存目标更改为数据库。
 
-詳細は :ref:`db_managed_expiration` を参照。
+详细参见 :ref:`db_managed_expiration` 。
 
-また、 :ref:`redisstore_lettuce_adaptor` を使用した場合は有効期限をRedisに保存できる。
+另外，使用 :ref:`redisstore_lettuce_adaptor` 时可以将有效期保存到Redis。
 
 .. tip::
-  有効期間をデータベースに保存する意義については :ref:`stateless_web_app` 参照。
+  关于将有效期保存到数据库的意义参见 :ref:`stateless_web_app` 。
 
 

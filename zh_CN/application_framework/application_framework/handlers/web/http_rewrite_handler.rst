@@ -1,20 +1,19 @@
 .. _http_rewrite_handler:
 
-HTTPリライトハンドラ
+HTTP重写handler
 ==================================================
 .. contents:: 目录
   :depth: 3
   :local:
 
-本ハンドラは、HTTPのリクエストおよびレスポンスに対して、リクエストパスとコンテンツパス、
-および変数を書き換える機能を提供する。
-このハンドラは、「未ログイン状態の際は強制的にログイン画面に遷移させる」といった、特殊な
-遷移が必要になった際に使用する。
+本handler对HTTP的请求及响应提供重写请求路径和内容路径以及变量的功能。
+此handler用于「未登录状态时强制跳转到登录画面」等需要特殊
+跳转的情况。
 
 本handler执行以下处理。
 
-* リクエストパスを書き換える
-* コンテンツパスを書き換える
+* 重写请求路径
+* 重写内容路径
 
 处理流程如下。
 
@@ -33,33 +32,33 @@ handler类名
     <artifactId>nablarch-fw-web</artifactId>
   </dependency>
 
-制約
+约束
 ------------------------------
 
-:ref:`http_response_handler` より後ろに配置すること
-  本ハンドラで書き換えたコンテンツパスは、レスポンスハンドラにより使用される。
-  このため、本ハンドラは :ref:`http_response_handler` の後ろに配置する必要がある。
+应配置在 :ref:`http_response_handler` 之后
+  本handler重写的content path将被响应handler使用。
+  因此，本handler必须配置在 :ref:`http_response_handler` 之后。
 
-:ref:`thread_context_handler` より前に配置すること
-  本ハンドラでは、スレッドコンテキストに入れられるリクエストパスを書き換える。
-  このため、本ハンドラは :ref:`thread_context_handler` より前に配置する必要がある。
+应配置在 :ref:`thread_context_handler` 之前
+  本handler重写设置到线程上下文的请求路径。
+  因此，本handler必须配置在 :ref:`thread_context_handler` 之前。
 
 
-書き換えの設定
+重写设置
 ------------------------------
 
-書き換えの設定は、 :java:extdoc:`本ハンドラ <nablarch.fw.web.handler.HttpRewriteHandler>`  のプロパティ requestPathRewriteRules または contentPathRewriteRules に対して行う。
+重写设置在 :java:extdoc:`本handler <nablarch.fw.web.handler.HttpRewriteHandler>`  的属性 requestPathRewriteRules 或 contentPathRewriteRules 中进行。
 
-以下に設定例を示す。
+以下显示配置示例。
 
 .. code-block:: xml
 
   <component class="nablarch.fw.web.handler.HttpRewriteHandler">
-    <!-- リクエストパスに対するリライトルール -->
+    <!-- 对请求路径的重写规则 -->
     <property name="requestPathRewriteRules">
       <list>
-        <!-- サーブレットコンテキストルートへのアクセスに対して、
-             既にログインが成立していればメニュー画面へ遷移させる。 -->
+        <!-- 对Servlet上下文根目录的访问，
+             如果已登录则跳转到菜单画面。 -->
         <component class="nablarch.fw.web.handler.HttpRequestRewriteRule">
           <property name="pattern" value="^/$" />
           <property name="conditions">
@@ -70,7 +69,7 @@ handler类名
           <property name="rewriteTo" value="/action/MenuAction/show" />
         </component>
 
-        <!-- ログインが成立していない場合はログイン画面へ遷移させる。 -->
+        <!-- 未登录时跳转到登录画面。 -->
         <component class="nablarch.fw.web.handler.HttpRequestRewriteRule">
           <property name="pattern"   value="^/$" />
           <property name="rewriteTo" value="/action/LoginAction/authenticate" />
@@ -78,11 +77,11 @@ handler类名
       </list>
     </property>
 
-    <!-- レスポンスのコンテンツパスに対するリライトルール -->
+    <!-- 对响应content path的重写规则 -->
     <property name="contentPathRewriteRules">
       <list>
 
-        <!-- ステータスコードが401であった場合はログイン画面に遷移させる -->
+        <!-- 状态码为401时跳转到登录画面 -->
         <component class="nablarch.fw.web.handler.ContentPathRewriteRule">
           <property name="pattern"   value="^.*" />
           <property name="rewriteTo" value="redirect:///action/LoginAction/authenticate" />
@@ -96,71 +95,71 @@ handler类名
     </property>
   </component>
 
-この例からわかる通り、設定は :java:extdoc:`HttpRequestRewriteRule <nablarch.fw.web.handler.HttpRequestRewriteRule>`
-(リクエストパスを書き換える場合)または :java:extdoc:`ContentPathRewriteRule <nablarch.fw.web.handler.ContentPathRewriteRule>`
-(コンテンツパスを書き換える場合)を使用して行う。
+如本例所示，设置使用 :java:extdoc:`HttpRequestRewriteRule <nablarch.fw.web.handler.HttpRequestRewriteRule>`
+（重写请求路径时）或 :java:extdoc:`ContentPathRewriteRule <nablarch.fw.web.handler.ContentPathRewriteRule>`
+（重写content path时）进行。
 
 :java:extdoc:`HttpRequestRewriteRule <nablarch.fw.web.handler.HttpRequestRewriteRule>`
-および :java:extdoc:`ContentPathRewriteRule <nablarch.fw.web.handler.ContentPathRewriteRule>`
-には、下記のプロパティが存在する。(プロパティは、スーパークラスの
-:java:extdoc:`RewriteRule <nablarch.fw.handler.RewriteRule>` に定義されている。)
+以及 :java:extdoc:`ContentPathRewriteRule <nablarch.fw.web.handler.ContentPathRewriteRule>`
+具有以下属性。（属性定义在父类
+:java:extdoc:`RewriteRule <nablarch.fw.handler.RewriteRule>` 中。）
 
 ==================== ====================================================
-プロパティ名         説明
+属性名         说明
 ==================== ====================================================
-pattern              適用する対象のパスのパターン
-rewriteTo            書き換え後の文字列
-conditions           パス以外の追加の適用条件
-exports              変数の書き換え設定
+pattern              适用目标路径的模式
+rewriteTo            重写后的字符串
+conditions           路径以外的附加适用条件
+exports              变量重写设置
 ==================== ====================================================
 
 :java:extdoc:`HttpRequestRewriteRule <nablarch.fw.web.handler.HttpRequestRewriteRule>`
-および :java:extdoc:`ContentPathRewriteRule <nablarch.fw.web.handler.ContentPathRewriteRule>`
-では、conditionsの設定に変数を使用できる。
+以及 :java:extdoc:`ContentPathRewriteRule <nablarch.fw.web.handler.ContentPathRewriteRule>`
+中，conditions设置可以使用变量。
 :java:extdoc:`HttpRequestRewriteRule <nablarch.fw.web.handler.HttpRequestRewriteRule>`
 、 :java:extdoc:`ContentPathRewriteRule <nablarch.fw.web.handler.ContentPathRewriteRule>`
-それぞれで使用可能な変数は下記の通り。
+各自可使用的变量如下。
 
 ============================ ============================== ===========================================================
-変数種別                     書式                           適用可能なクラス
+变量类型                     格式                           适用类
 ============================ ============================== ===========================================================
-セッションスコープ           %{session:(変数名)}            HttpRequestRewriteRule / ContentPathRewriteRule
-リクエストスコープ           %{request:(変数名)}            HttpRequestRewriteRule / ContentPathRewriteRule
-スレッドコンテキスト         %{thread:(変数名)}             HttpRequestRewriteRule / ContentPathRewriteRule
-リクエストパラメータ         %{param:(変数名)}              HttpRequestRewriteRule
-HTTPヘッダ                   %{header:(ヘッダ名)}           HttpRequestRewriteRule / ContentPathRewriteRule
-HTTPリクエストメソッド       %{httpMethod}                  HttpRequestRewriteRule
-HTTPバージョン               %{httpVersion}                 HttpRequestRewriteRule
-全リクエストパラメータ名     %{paramNames}                  HttpRequestRewriteRule
-ステータスコード             %{statusCode}                  ContentPathRewriteRule
+会话作用域           %{session:(变量名)}            HttpRequestRewriteRule / ContentPathRewriteRule
+请求作用域           %{request:(变量名)}            HttpRequestRewriteRule / ContentPathRewriteRule
+线程上下文         %{thread:(变量名)}             HttpRequestRewriteRule / ContentPathRewriteRule
+请求参数         %{param:(变量名)}              HttpRequestRewriteRule
+HTTP头部                   %{header:(头部名)}           HttpRequestRewriteRule / ContentPathRewriteRule
+HTTP请求方法       %{httpMethod}                  HttpRequestRewriteRule
+HTTP版本               %{httpVersion}                 HttpRequestRewriteRule
+全部请求参数名     %{paramNames}                  HttpRequestRewriteRule
+状态码             %{statusCode}                  ContentPathRewriteRule
 ============================ ============================== ===========================================================
 
 
-変数に値を設定
+设置变量值
 ---------------------------
 
-HTTPリライトハンドラでは、パスの書き換え以外に リクエストスコープ、セッションスコープ、
-スレッドコンテキスト、ウィンドウスコープへ変数を設定できる。
+HTTP重写handler中，除路径重写外还可以向请求作用域、会话作用域、
+线程上下文、窗口作用域设置变量。
 
-変数を設定するには、:java:extdoc:`HttpRequestRewriteRule <nablarch.fw.web.handler.HttpRequestRewriteRule>`
-または :java:extdoc:`ContentPathRewriteRule <nablarch.fw.web.handler.ContentPathRewriteRule>` の
-export プロパティを設定する。
+设置变量时，在 :java:extdoc:`HttpRequestRewriteRule <nablarch.fw.web.handler.HttpRequestRewriteRule>`
+或 :java:extdoc:`ContentPathRewriteRule <nablarch.fw.web.handler.ContentPathRewriteRule>` 的
+export 属性中设置。
 
-以下に設定例を示す。
+以下显示配置示例。
 
 .. code-block:: xml
 
-  <!--リファラヘッダが送信された場合は、リクエストスコープにその値を設定する。-->
+  <!--发送Referer头部时，将其值设置到请求作用域。-->
   <component class="nablarch.fw.web.handler.HttpRequestRewriteRule">
-    <!-- 全リクエストを対象とする。 -->
+    <!-- 以全部请求为对象。 -->
     <property name="pattern" value=".*" />
-    <!-- リファラヘッダが定義されていた場合のみ適用する。-->
+    <!-- 仅在Referer头部定义时适用。-->
     <property name="conditions">
       <list>
         <value>%{header:Referer} ^\S+$</value>
       </list>
     </property>
-    <!-- リクエストスコープ上の変数 prevUrl に、リファラヘッダの値を設定する。-->
+    <!-- 将Referer头部的值设置到请求作用域上的变量prevUrl。-->
     <property name="exports">
       <list>
         <value>%{request:prevUrl} ${header:Referer}</value>
@@ -168,17 +167,16 @@ export プロパティを設定する。
     </property>
   </component>
 
-このように、 exports プロパティに 「設定する変数名」(上記例の場合、"%{request:prevUrl}")と
-「設定する値」(上記例の場合 "${header:Referer}")をリストで設定することで、各スコープへ変数の
-設定ができる。
+这样，通过在 exports 属性中以列表形式设置「要设置的变量名」（上例中为"%{request:prevUrl}"）和
+「要设置的值」（上例中为"${header:Referer}"），可以向各作用域设置变量。
 
-exports で、「設定する変数名」に設定できる変数スコープは下記の通り。
+exports 中「要设置的变量名」可设置的变量作用域如下。
 
 ============================ ======================= ========================================================
-変数スコープ                 書式                    対象
+变量作用域                 格式                    对象
 ============================ ======================= ========================================================
-セッションスコープ           %{session:(変数名)}     HttpRequestRewriteRule / ContentPathRewriteRule
-リクエストスコープ           %{request:(変数名)}     HttpRequestRewriteRule / ContentPathRewriteRule
-スレッドコンテキスト         %{thread:(変数名)}      HttpRequestRewriteRule / ContentPathRewriteRule
-ウィンドウスコープ           %{param:(変数名)}       HttpRequestRewriteRule
+会话作用域           %{session:(变量名)}     HttpRequestRewriteRule / ContentPathRewriteRule
+请求作用域           %{request:(变量名)}     HttpRequestRewriteRule / ContentPathRewriteRule
+线程上下文         %{thread:(变量名)}      HttpRequestRewriteRule / ContentPathRewriteRule
+窗口作用域           %{param:(变量名)}       HttpRequestRewriteRule
 ============================ ======================= ========================================================

@@ -1,21 +1,21 @@
-日付管理
+日期管理
 =====================================================================
 
 .. contents:: 目录
   :depth: 3
   :local:
 
-应用で使用するシステム日時(OS日時)と業務日付を一元的に管理する機能を提供する。
+提供统一管理系统日期时间（OS日期时间）和业务日期的功能。
 
-機能概要
+功能概述
 --------------------------
 
-システム日時(OS日時)と業務日付の切り替えができる
+可以切换系统日期时间（OS日期时间）和业务日期
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-この機能では、コンポーネント定義で指定されたクラスを使用して、システム日時(OS日時)や業務日付を取得する。
-そのため、コンポーネント定義で指定するクラスを差し替えるだけで、
-应用で使用するシステム日時(OS日時)と業務日付の取得方法を切り替えることができる。
-この切り替えは、テストなどで一時的にシステム日時(OS日時)や業務日付を切り替えたい場合に使用できる。
+该功能使用组件定义中指定的类来获取系统日期时间（OS日期时间）和业务日期。
+因此，只需替换组件定义中指定的类，
+就可以切换应用程序中使用的系统日期时间（OS日期时间）和业务日期的获取方式。
+这种切换可用于在测试等情况下临时切换系统日期时间（OS日期时间）和业务日期。
 
 * :ref:`date-system_time_change`
 * :ref:`date-business_date_change`
@@ -29,7 +29,7 @@
     <artifactId>nablarch-core</artifactId>
   </dependency>
 
-  <!-- 業務日付管理機能を使用する場合のみ -->
+  <!-- 仅在使用业务日期管理功能时 -->
   <dependency>
     <groupId>com.nablarch.framework</groupId>
     <artifactId>nablarch-common-jdbc</artifactId>
@@ -40,50 +40,50 @@
 
 .. _date-system_time_settings:
 
-システム日時の管理機能を使うための設定
+使用系统日期时间管理功能的配置
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-システム日時の管理機能を使うためには、
-:java:extdoc:`BasicSystemTimeProvider <nablarch.core.date.BasicSystemTimeProvider>` の設定をコンポーネント定義に追加する。
-コンポーネント名には **systemTimeProvider** と指定する。
+要使用系统日期时间管理功能，
+需要将 :java:extdoc:`BasicSystemTimeProvider <nablarch.core.date.BasicSystemTimeProvider>` 的配置添加到组件定义中。
+组件名称需指定为 **systemTimeProvider** 。
 
 .. code-block:: xml
 
  <component name="systemTimeProvider" class="nablarch.core.date.BasicSystemTimeProvider" />
 
-システム日時を取得する
+获取系统日期时间
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-システム日時の取得は、 :java:extdoc:`SystemTimeUtil <nablarch.core.date.SystemTimeUtil>` を使用する。
+获取系统日期时间使用 :java:extdoc:`SystemTimeUtil <nablarch.core.date.SystemTimeUtil>` 。
 
 .. _date-business_date_settings:
 
-業務日付管理機能を使うための設定
+使用业务日期管理功能的配置
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-業務日付管理機能では、データベースを使用して複数の業務日付を管理する。
-テーブルのレイアウトは以下となる。
+业务日期管理功能使用数据库来管理多个业务日期。
+表的结构如下。
 
 ================ ===================================================
-区分(PK)         業務日付を識別するための値。文字列型
-日付             業務日付。文字列型で値はyyyyMMdd形式
+区分(PK)         用于识别业务日期的值。字符串类型
+日期             业务日期。字符串类型，格式为yyyyMMdd
 ================ ===================================================
 
-業務日付管理機能を使うためには、
-:java:extdoc:`BasicBusinessDateProvider <nablarch.core.date.BasicBusinessDateProvider>` の設定をコンポーネント定義に追加する。
-コンポーネント名には **businessDateProvider** と指定する。
+要使用业务日期管理功能，
+需要将 :java:extdoc:`BasicBusinessDateProvider <nablarch.core.date.BasicBusinessDateProvider>` 的配置添加到组件定义中。
+组件名称需指定为 **businessDateProvider** 。
 
-また初期化が必要なので、初期化対象のリストに設定すること。
+此外，由于需要初始化，请将其设置到初始化目标列表中。
 
 .. code-block:: xml
 
  <component name="businessDateProvider" class="nablarch.core.date.BasicBusinessDateProvider">
-   <!-- テーブル名 -->
+   <!-- 表名 -->
    <property name="tableName" value="BUSINESS_DATE" />
-   <!-- 区分のカラム名 -->
+   <!-- 区分的列名 -->
    <property name="segmentColumnName" value="SEGMENT"/>
-   <!-- 日付のカラム名 -->
+   <!-- 日期的列名 -->
    <property name="dateColumnName" value="BIZ_DATE"/>
-   <!-- 区分を省略して業務日付を取得した場合に使用される区分 -->
+   <!-- 省略区分获取业务日期时使用的区分 -->
    <property name="defaultSegment" value="00"/>
-   <!-- データベースアクセスに使用するトランザクションマネージャ -->
+   <!-- 数据库访问使用的transaction manager -->
    <property name="transactionManager" ref="transactionManager" />
  </component>
 
@@ -91,67 +91,67 @@
      class="nablarch.core.repository.initialization.BasicApplicationInitializer">
    <property name="initializeList">
      <list>
-       <!-- 他のコンポーネントは省略 -->
+       <!-- 其他组件省略 -->
        <component-ref name="businessDateProvider" />
      </list>
    </property>
  </component>
 
-業務日付を取得する
+获取业务日期
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-業務日付の取得は、 :java:extdoc:`BusinessDateUtil <nablarch.core.date.BusinessDateUtil>` を使用する。
+获取业务日期使用 :java:extdoc:`BusinessDateUtil <nablarch.core.date.BusinessDateUtil>` 。
 
-業務日付を任意の日付に上書く
+将业务日期覆盖为任意日期
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-バッチ処理で障害時の再実行時に、過去日付をバッチ実行時の業務日付としたい場合がある。
-このような場合に、再実行するプロセスのみ任意の日付を業務日付として実行できる。
+在批处理故障重新执行时，可能希望将过去日期作为批处理执行时的业务日期。
+在这种情况下，可以仅对重新执行的进程将任意日期作为业务日期执行。
 
 .. tip::
- ウェブ应用のように、全ての機能が１プロセス内で実行される場合は、
- 単純にデータベースで管理されている日付を変更すればよい。
+ 对于像Web应用这样所有功能都在一个进程内执行的情况，
+ 只需简单地更改数据库中管理的日期即可。
 
-業務日付の上書きは、 :ref:`repository-overwrite_environment_configuration` を使用して行う。
-システムプロパティとして、以下の形式で指定する。
+业务日期的覆盖使用 :ref:`repository-overwrite_environment_configuration` 进行。
+作为系统属性，按以下格式指定。
 
-システムプロパティの形式
- BasicBusinessDateProvider.<区分>=日付
+系统属性的格式
+ BasicBusinessDateProvider.<区分>=日期
 
- ※日付はyyyyMMdd形式
+ ※日期格式为yyyyMMdd
 
-システムプロパティの例
- 区分が"batch"の日付を"2016/03/17"に上書きしたい場合
+系统属性的示例
+ 希望将区分"batch"的日期覆盖为"2016/03/17"时
 
  -DBasicBusinessDateProvider.batch=20160317
 
-業務日付を更新する
+更新业务日期
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-業務日付の更新は、 :java:extdoc:`BasicBusinessDateProvider <nablarch.core.date.BasicBusinessDateProvider>` を使用して行う。
+业务日期的更新使用 :java:extdoc:`BasicBusinessDateProvider <nablarch.core.date.BasicBusinessDateProvider>` 进行。
 
 .. code-block:: java
 
- // System RepositoryからBasicBusinessDateProviderを取得する
+ // 从系统仓库获取BasicBusinessDateProvider
  BusinessDateProvider provider = SystemRepository.get("businessDateProvider");
 
- // setDateメソッドを呼び出し、更新する
+ // 调用setDate方法进行更新
  provider.setDate(segment, date);
 
-拡張例
+扩展示例
 --------------------------------------------------
 
 .. _date-system_time_change:
 
-システム日時を切り替える
+切换系统日期时间
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-ユニットテストの実行時など、システム日時を切り替えたい場合は、以下の手順で行う。
+在执行单元测试等需要切换系统日期时间时，按以下步骤进行。
 
-1. :java:extdoc:`SystemTimeProvider <nablarch.core.date.SystemTimeProvider>` を実装したクラスを作成する。
-2. :ref:`date-system_time_settings` に従い設定する。
+1. 创建实现 :java:extdoc:`SystemTimeProvider <nablarch.core.date.SystemTimeProvider>` 的类。
+2. 按照 :ref:`date-system_time_settings` 进行配置。
 
 .. _date-business_date_change:
 
-業務日付を切り替える
+切换业务日期
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-ユニットテストの実行時など、業務日付を切り替えたい場合は、以下の手順で行う。
+在执行单元测试等需要切换业务日期时，按以下步骤进行。
 
-1. :java:extdoc:`BusinessDateProvider <nablarch.core.date.BusinessDateProvider>` を実装したクラスを作成する。
-2. :ref:`date-business_date_settings` に従い設定する。
+1. 创建实现 :java:extdoc:`BusinessDateProvider <nablarch.core.date.BusinessDateProvider>` 的类。
+2. 按照 :ref:`date-business_date_settings` 进行配置。

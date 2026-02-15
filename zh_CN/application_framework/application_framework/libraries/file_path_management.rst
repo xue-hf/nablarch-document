@@ -1,24 +1,24 @@
 .. _file_path_management:
 
-ファイルパス管理
+文件路径管理
 ==================================================
 .. contents:: 目录
   :depth: 3
   :local:
 
-システムで使用するファイルの入出力先のディレクトリや拡張子を管理するための機能を提供する。
+提供管理系统中使用的文件输入输出目标目录和扩展名的功能。
 
 
-機能概要
+功能概述
 --------------------------------------------------
 
-ディレクトリや拡張子を論理名で管理できる
+可以使用逻辑名管理目录和扩展名
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-ディレクトリや拡張子を論理名で管理することが出来る。
+可以使用逻辑名来管理目录和扩展名。
 
-ファイルの入出力などを行う機能では、論理名を指定するだけでそのディレクトリ配下のファイルに対する入出力が実現出来る。
+在进行文件输入输出等功能中，只需指定逻辑名即可实现对相应目录下文件的输入输出。
 
-詳細は、 :ref:`file_path_management-definition` を参照
+详情请参考 :ref:`file_path_management-definition`
 
 模块列表
 --------------------------------------------------
@@ -34,40 +34,39 @@
 
 .. _file_path_management-definition:
 
-ディレクトリと拡張子を設定する
+设置目录和扩展名
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-:java:extdoc:`FilePathSetting <nablarch.core.util.FilePathSetting>` にディレクトリ及び拡張子を設定し、
-コンポーネント設定ファイルに定義する。
+在 :java:extdoc:`FilePathSetting <nablarch.core.util.FilePathSetting>` 中设置目录和扩展名，
+并在组件配置文件中定义。
 
-以下に例を示す。
+以下展示示例。
 
-ポイント
-  * :java:extdoc:`FilePathSetting <nablarch.core.util.FilePathSetting>` のコンポーネント名は ``filePathSetting`` とすること
-  * :java:extdoc:`basePathSettings <nablarch.core.util.FilePathSetting.setBasePathSettings(java.util.Map)>` にディレクトリを設定する
-  * :java:extdoc:`fileExtensions <nablarch.core.util.FilePathSetting.setFileExtensions(java.util.Map)>` に拡張子を設定する
-  * 1つのディレクトリに対して複数の拡張子を設定する場合には、論理名を複数設定する
-  * 拡張子のないファイルの場合には、その論理名の拡張子設定を省略する
-  * スキームは ``file`` と ``classpath`` が使用できる。省略した場合は、 ``classpath`` となる
-  * ``classpath`` スキームの場合、そのパスがディレクトリとして存在している必要がある。(jarなどのアーカイブされたファイル内のパスは指定できない)
-  * パスにはスペースを含めない。（スペースが含まれているパスは指定できない）
+要点
+  * :java:extdoc:`FilePathSetting <nablarch.core.util.FilePathSetting>` 的组件名称需为 ``filePathSetting``
+  * 在 :java:extdoc:`basePathSettings <nablarch.core.util.FilePathSetting.setBasePathSettings(java.util.Map)>` 中设置目录
+  * 在 :java:extdoc:`fileExtensions <nablarch.core.util.FilePathSetting.setFileExtensions(java.util.Map)>` 中设置扩展名
+  * 对一个目录设置多个扩展名时，需设置多个逻辑名
+  * 无扩展名的文件，省略该逻辑名的扩展名设置
+  * 可使用 ``file`` 和 ``classpath`` 两种scheme。省略时为 ``classpath``
+  * 使用 ``classpath`` scheme时，该路径必须作为目录存在。（无法指定jar等归档文件内的路径）
+  * 路径中不能包含空格。（无法指定包含空格的路径）
 
   .. important::
 
-    classpathスキームを使用した場合、一部のウェブ应用サーバでは本機能を使用できない。
-    これは、ウェブ应用サーバが独自のファイルシステムを使用して、
-    クラスパス配下のリソースなどを管理していることに起因する。
+    使用classpath scheme时，在某些Web应用服务器中无法使用本功能。
+    这是因为Web应用服务器使用独立的文件系统来管理类路径下的资源等。
 
-    例えば、JbossやWildflyでは、vfsと呼ばれるバーチャルファイルシステムで、
-    クラスパス配下のリソースが管理されるため、classpathスキームは使用できない。
+    例如，在Jboss和Wildfly中，类路径下的资源由称为vfs的虚拟文件系统管理，
+    因此无法使用classpath scheme。
 
-    このため、classpthスキームではなくfileスキームを使用することを推奨する。
+    因此，建议使用file scheme而非classpath scheme。
 
 
 
 .. code-block:: xml
 
   <component name="filePathSetting" class="nablarch.core.util.FilePathSetting">
-    <!-- ディレクトリの設定 -->
+    <!-- 目录设置 -->
     <property name="basePathSettings">
       <map>
         <entry key="csv-input" value="file:/var/nablarch/input" />
@@ -78,7 +77,7 @@
       </map>
     </property>
 
-    <!-- 拡張子の設定 -->
+    <!-- 扩展名设置 -->
     <property name="fileExtensions">
       <map>
         <entry key="csv-input" value="csv" />
@@ -86,18 +85,18 @@
 
         <entry key="dat-input" value="dat" />
 
-        <!-- fixed-file-inputは拡張子が存在しないので、拡張子の設定は行わない -->
+        <!-- fixed-file-input无扩展名，因此不进行扩展名设置 -->
       </map>
     </property>
 
   </component>
 
-論理名が示すファイルパスを取得する
+获取逻辑名表示的文件路径
 --------------------------------------------------
-:java:extdoc:`FilePathSetting <nablarch.core.util.FilePathSetting>` を使用して、論理名に対応するファイルパスを取得する。
+使用 :java:extdoc:`FilePathSetting <nablarch.core.util.FilePathSetting>` 获取对应逻辑名的文件路径。
 
 
-以下に幾つかの使用例を示す。
+以下展示若干使用示例。
 
 .. code-block:: java
 

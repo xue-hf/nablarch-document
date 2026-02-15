@@ -1,31 +1,31 @@
 .. _session_store_handler:
 
-セッション変数保存ハンドラ
+会话变量保存handler
 ============================
 
 .. contents:: 目录
   :depth: 3
   :local:
 
-後続のハンドラやライブラリで追加・更新・削除されたセッション変数を、セッションストアに保存するハンドラ。
+将后续handler和库中添加、更新、删除的会话变量保存到会话存储的handler。
 
-セッションストア機能の詳細は、 :ref:`session_store` を参照。
+会话存储功能的详细说明请参考 :ref:`session_store` 。
 
-本ハンドラの処理の流れは以下の通りとなる。
+本handler的处理流程如下。
 
 .. image:: ../images/SessionStoreHandler/flow.png
 
 .. important:: 
 
-  同一セッションの処理が複数のスレッドで実行された場合(例えば、タブブラウザで複数タブから同時にリクエストが有った場合)、
-  使用しているストアによっては後勝ちとなる。
-  詳細は、以下のイメージを参照。
+  当同一会话的处理在多个线程中执行时（例如，使用标签浏览器从多个标签同时发起请求），
+  根据使用的存储不同，可能会产生后写入者获胜的情况。
+  详细请参考以下图示。
 
   .. image:: ../images/SessionStoreHandler/multi-thread.png
     :scale: 80
 
-  このため、使用するストアの特性をよく理解し、要件にあったストアを選択する必要がある。
-  ストアの詳細は、 :ref:`session_store-future_of_store` を参照。
+  因此，需要充分理解所使用存储的特性，选择符合需求的存储。
+  存储的详细说明请参考 :ref:`session_store-future_of_store` 。
 
 handler类名
 --------------------------------------------------
@@ -40,7 +40,7 @@ handler类名
     <artifactId>nablarch-fw-web</artifactId>
   </dependency>
 
-  <!-- DBストア・有効期間のDB保存を使用する場合のみ -->
+  <!-- 仅在DB存储、使用有效期DB保存时需要 -->
   <dependency>
     <groupId>com.nablarch.framework</groupId>
     <artifactId>nablarch-fw-web-dbstore</artifactId>
@@ -48,31 +48,31 @@ handler类名
 
 .. _session_store_handler-constraint:
 
-制約
+约束
 ------------------------------
-:ref:`http_response_handler` より後ろに配置すること
-  サーブレットフォワード時、フォワード先でセッションストアの値にアクセスできるようにするため、
-  本ハンドラは :ref:`http_response_handler` より後ろに配置する必要がある。
+应配置在 :ref:`http_response_handler` 之后
+  为了在Servlet forward时，forward目标能够访问会话存储的值，
+  本handler必须配置在 :ref:`http_response_handler` 之后。
 
-HIDDENストア使用時は :ref:`multipart_handler` より後ろに配置すること
-  HIDDENストア使用時にリクエストパラメータにアクセスできるようにするため、
-  本ハンドラは :ref:`multipart_handler` より後ろに配置する必要がある。
+使用HIDDEN存储时应配置在 :ref:`multipart_handler` 之后
+  为了在使用HIDDEN存储时能够访问请求参数，
+  本handler必须配置在 :ref:`multipart_handler` 之后。
 
-:ref:`forwarding_handler` より前に配置すること
-  :ref:`forwarding_handler` を本ハンドラよりも前に設定した場合、セッションストアの読み込み、保存が複数回実行されるが、
-  HIDDENストアはリクエストパラメータからセッション変数を読み込み、リクエストスコープにセッション変数を保存するため、
-  内部フォーワード時にHIDDENストアを使用した場合、最新のセッション変数を取得できない問題がある。
-  このため、本ハンドラは :ref:`forwarding_handler` より前に配置すること。
+应配置在 :ref:`forwarding_handler` 之前
+  如果将 :ref:`forwarding_handler` 配置在本handler之前，会话存储的读取、保存会执行多次，
+  但HIDDEN存储从请求参数中读取会话变量，将会话变量保存到请求作用域，
+  因此在内部forward时使用HIDDEN存储，会出现无法获取最新会话变量的问题。
+  因此，本handler必须配置在 :ref:`forwarding_handler` 之前。
 
-セッションストアを使用するための設定
+使用会话存储的设置
 --------------------------------------------------------------
-セッションストアを使用するには、以下のとおり設定した :java:extdoc:`SessionManager <nablarch.common.web.session.SessionManager>`
-を本ハンドラの :java:extdoc:`sessionManager <nablarch.common.web.session.SessionStoreHandler.setSessionManager(nablarch.common.web.session.SessionManager)>` プロパティに設定する必要がある。
+要使用会话存储，需要将设置了以下内容的 :java:extdoc:`SessionManager <nablarch.common.web.session.SessionManager>`
+配置到本handler的 :java:extdoc:`sessionManager <nablarch.common.web.session.SessionStoreHandler.setSessionManager(nablarch.common.web.session.SessionManager)>` 属性中。
 
-* 应用で使用するセッションストア（複数指定可）
-* デフォルトで使用するセッションストア名
+* 应用中使用的会话存储（可指定多个）
+* 默认使用的会话存储名称
 
-以下の設定例を参考に、本ハンドラを設定すること。
+请参考以下配置示例，设置本handler。
 
 .. code-block:: xml
 
@@ -80,73 +80,72 @@ HIDDENストア使用時は :ref:`multipart_handler` より後ろに配置する
     <property name="sessionManager" ref="sessionManager"/>
   </component>
 
-  <!-- "sessionManager"というコンポーネント名で設定する -->
+  <!-- 以"sessionManager"为组件名进行设置 -->
   <component name="sessionManager" class="nablarch.common.web.session.SessionManager">
-    <!-- プロパティの設定は省略 -->
+    <!-- 属性设置省略 -->
   </component>
 
-:java:extdoc:`SessionManager <nablarch.common.web.session.SessionManager>` に設定するプロパティの詳細は :ref:`session_store-use_config` を参照。
+:java:extdoc:`SessionManager <nablarch.common.web.session.SessionManager>` 中设置的属性详细说明请参考 :ref:`session_store-use_config` 。
 
-セッション変数を直列化してセッションストアに保存する
+将会话变量序列化后保存到会话存储
 --------------------------------------------------------------
-本ハンドラでセッション変数をセッションストアに保存する際、直列化の仕組みを選択できる。
+本handler在将会话变量保存到会话存储时，可以选择序列化机制。
 
-選択可能な直列化の仕組みの詳細は :ref:`session_store-serialize` を参照。
+可选择的序列化机制详细说明请参考 :ref:`session_store-serialize` 。
 
-セッションストアの改竄をチェックする
+检查会话存储是否被篡改
 --------------------------------------------------------------
-セッションストアからセッション変数を読み込む際、セッションストアが改竄されていないかをチェックする。
+从会话存储中读取会话变量时，检查会话存储是否被篡改。
 
-HIDDENストアの改竄を検知した場合
-  ステータスコード400の :java:extdoc:`HttpErrorResponse <nablarch.fw.web.HttpErrorResponse>` を送出する。
+检测到HIDDEN存储被篡改时
+  抛出状态码400的 :java:extdoc:`HttpErrorResponse <nablarch.fw.web.HttpErrorResponse>` 。
 
-それ以外のストアの改竄を検知した場合
-  セッションストアの復号処理時に発生した例外をそのまま送出する。
+检测到其他存储被篡改时
+  直接抛出会话存储解密处理时发生的异常。
 
 .. _session_store_handler-error_forward_path:
 
-改竄エラー時の遷移先を設定する
+设置篡改错误时的跳转目标
 --------------------------------------------------------------
-セッションストアの改竄を検知した場合に表示するエラーページは `web.xml` に記載する必要がある。
-なぜなら、本ハンドラは :ref:`session_store_handler-constraint` に記載の通り、 :ref:`forwarding_handler` よりも前に設定する必要がある。
-この場合、以下の理由により本ハンドラで発生した例外に対して、 :ref:`HttpErrorHandler_DefaultPage` を適用できないため、
-`web.xml` に対する設定が必要となる。
+检测到会话存储被篡改时显示的错误页面需要在 `web.xml` 中配置。
+因为，如 :ref:`session_store_handler-constraint` 所述，本handler必须配置在 :ref:`forwarding_handler` 之前。
+此时，由于以下原因，本handler发生的异常无法应用 :ref:`HttpErrorHandler_DefaultPage` ，
+因此需要在 `web.xml` 中进行设置。
 
-理由
-  :ref:`forwarding_handler` は、 :ref:`http_error_handler` よりも手前に設定する必要がある。
-  これは、 :ref:`http_error_handler`  の :ref:`HttpErrorHandler_DefaultPage` に対して指定した
-  内部フォワードのパスを正しく扱うために必要な設定順となる。
+原因
+  :ref:`forwarding_handler` 必须配置在 :ref:`http_error_handler` 之前。
+  这是为了能够正确处理 :ref:`HttpErrorHandler_DefaultPage` 中指定的内部forward路径所必需的配置顺序。
 
-  この結果、 :ref:`forwarding_handler` より前に設定される本ハンドラで発生した例外に対しては、
-  :ref:`HttpErrorHandler_DefaultPage` への設定値が適用できないため `web.xml` への設定が必要となる。
+  结果，对于配置在 :ref:`forwarding_handler` 之前的本handler发生的异常，
+  无法应用 :ref:`HttpErrorHandler_DefaultPage` 的设置，因此需要在 `web.xml` 中进行配置。
 
-セッションIDを保持するクッキーの名前や属性を変更する
+更改保存会话ID的Cookie名称和属性
 --------------------------------------------------------------
-セッションIDを保持するクッキーは以下のとおり設定されるが、名前や一部の属性を任意の値に変更できる。
+保存会话ID的Cookie按以下方式设置，但可以将名称和部分属性更改为任意值。
 
-:クッキー名:    | NABLARCH_SID
-:Path属性:      | ホスト配下のすべてのパス
-                 | 送信可能なパスを明示的に指定したい場合に別途設定すること
-:Domain属性:    | 指定しない
-                  | 送信可能なドメインを明示的に指定したい場合に別途設定すること
-:Secure属性:    | 使用しない
-                  | HTTPS環境で使用する場合は、``使用する`` に設定すること
-:MaxAge属性:    | 指定しない
-                  | セッションIDを保持するクッキーをセッションクッキー(ブラウザを閉じれば破棄されるクッキー)とするため、MaxAge属性は使用しない
-:HttpOnly属性:  | 使用する
-                  | HttpOnly属性は常に使用され、設定ファイル等からは変更できない
+:Cookie名称:    | NABLARCH_SID
+:Path属性:      | 主机下的所有路径
+                 | 如需明确指定可发送路径，请另行设置
+:Domain属性:    | 不指定
+                  | 如需明确指定可发送域，请另行设置
+:Secure属性:    | 不使用
+                  | 在HTTPS环境中使用时，请设置为 ``使用``
+:MaxAge属性:    | 不指定
+                  | 因为将保存会话ID的Cookie设为会话Cookie（浏览器关闭时删除），所以不使用MaxAge属性
+:HttpOnly属性:  | 使用
+                  | HttpOnly属性始终使用，无法通过配置文件等进行更改
 
 .. important::
-  セッションストアの有効期間は、デフォルトではHTTPセッションに保存される。
-  複数のストア間で異なる有効期間を設定した場合は、最も期間の長い値が使用される。
-  （有効期間の保存先をデータベースに変更する場合は :ref:`db_managed_expiration` を参照）
+  会话存储的有效期默认保存在HTTP会话中。
+  当在多个存储间设置不同的有效期时，将使用最长的期限值。
+  （更改有效期保存位置为数据库时请参考 :ref:`db_managed_expiration` ）
 
-クッキー名や属性を変更したい場合は、以下の例を参考に設定すること。
+要更改Cookie名称或属性时，请参考以下示例进行设置。
 
 .. code-block:: xml
 
     <component class="nablarch.common.web.session.SessionStoreHandler">
-      <!-- クッキー名 -->
+      <!-- Cookie名称 -->
       <property name="cookieName" value="NABLARCH_SID" />
       <!-- Path属性 -->
       <property name="cookiePath" value="/" />
@@ -154,7 +153,7 @@ HIDDENストアの改竄を検知した場合
       <property name="cookieDomain" value="" />
       <!-- Secure属性 -->
       <property name="cookieSecure" value="false" />
-      <!-- セッションマネージャ -->
+      <!-- 会话管理器 -->
       <property name="sessionManager" ref="sessionManager"/>
     </component>
 
@@ -162,73 +161,73 @@ HIDDENストアの改竄を検知した場合
       <property name="availableStores">
         <list>
           <component class="nablarch.common.web.session.store.DbStore">
-            <!-- 有効期間 -->
+            <!-- 有效期 -->
             <property name="expires" value="1800" />
-            <!-- その他のプロパティは省略 -->
+            <!-- 其他属性省略 -->
           </component>
         </list>
       </property>
-      <!-- その他のプロパティは省略 -->
+      <!-- 其他属性省略 -->
     </component>
 
 
 .. _`db_managed_expiration`:
 
-有効期間をデータベースに保存する
+将有效期保存到数据库
 --------------------------------------------------------------
-セッションの有効期間保存先を変更できる。
+可以更改会话有效期的保存位置。
 
-デフォルトでは :java:extdoc:`HttpSessionManagedExpiration <nablarch.common.web.session.HttpSessionManagedExpiration>` 
-が使用されるためセッションの有効期間はHTTPセッションに保存される。
+默认使用 :java:extdoc:`HttpSessionManagedExpiration <nablarch.common.web.session.HttpSessionManagedExpiration>` ，
+因此会话有效期保存在HTTP会话中。
 
-本ハンドラの :java:extdoc:`expiration <nablarch.common.web.session.SessionStoreHandler.setExpiration(nablarch.common.web.session.Expiration)>` 
-プロパティを :java:extdoc:`DbManagedExpiration <nablarch.common.web.session.DbManagedExpiration>` に差し替えることでデータベースに保存できる。
+通过将本handler的 :java:extdoc:`expiration <nablarch.common.web.session.SessionStoreHandler.setExpiration(nablarch.common.web.session.Expiration)>` 
+属性替换为 :java:extdoc:`DbManagedExpiration <nablarch.common.web.session.DbManagedExpiration>` ，可以保存到数据库。
 
 使用方法
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-データベース上に有効期間を保存するためのテーブルは、:ref:`DBストア<session_store-use_config>` に記載のDBストア使用時のテーブルを使用するものとする。
+数据库上用于保存有效期的表，使用 :ref:`DB存储<session_store-use_config>` 中DB存储使用时所述的表。
 
 .. important::
 
-  有効期間をデータベースに保存する場合は、SESSION_OBJECT カラムを必須属性にしてはならない。
-  ログアウト時などに、セッションオブジェクトがNullのレコードが登録され得るため、必ずNull許容で定義すること。
-  5u15以前のアーキタイプから作成したプロジェクトでは、デフォルトで必須属性として定義されている。
-  必要に応じてALTER文の発行または、テーブルの再作成を実施する必要がある。
+  将有效期保存到数据库时，不能将SESSION_OBJECT列设为必填属性。
+  因为在登出时等情况下，可能会注册会话对象为Null的记录，所以必须允许Null。
+  从5u15之前的原型创建的项目中，默认定义为必填属性。
+  根据需要执行ALTER语句或重新创建表。
 
-テーブル名およびカラム名を変更する場合は、 :java:extdoc:`DbManagedExpiration.userSessionSchema <nablarch.common.web.session.DbManagedExpiration.setUserSessionSchema(nablarch.common.web.session.store.UserSessionSchema)>` に
-:java:extdoc:`UserSessionSchema <nablarch.common.web.session.store.UserSessionSchema>` のコンポーネントを定義する。
-DBストアのテーブル・カラムも同じものに変更すること。
+更改表名和列名时，在 :java:extdoc:`DbManagedExpiration.userSessionSchema <nablarch.common.web.session.DbManagedExpiration.setUserSessionSchema(nablarch.common.web.session.store.UserSessionSchema)>` 中
+定义 :java:extdoc:`UserSessionSchema <nablarch.common.web.session.store.UserSessionSchema>` 的组件。
+DB存储的表、列也请更改为相同的设置。
 
-また有効期間は :ref:`初期化<repository-initialize_object>` が必要になる。
+此外，有效期需要 :ref:`初始化<repository-initialize_object>` 。
 
-設定例を以下に示す。
+以下显示配置示例。
 
 .. code-block:: xml
 
   <component name="sessionStoreHandler" class="nablarch.common.web.session.SessionStoreHandler">
-    <!-- その他のプロパティは省略 -->
+    <!-- 其他属性省略 -->
     <property name="expiration" ref="expiration" />
   </component>
 
   <component name="expiration" class="nablarch.common.web.session.DbManagedExpiration">
-    <!-- データベースへのトランザクション制御を行うクラス -->
+    <!-- 控制数据库事务的类 -->
     <property name="dbManager">
       <component class="nablarch.core.db.transaction.SimpleDbTransactionManager">
         <property name="dbTransactionName" value="expirationTransaction"/>
       </component>
     </property>
-    <!-- 上記のテーブル定義からテーブル名、カラム名を変更する場合のみ以下設定が必要 -->
+    <!-- 仅从上述表定义更改表名、列名时需要以下设置 -->
     <property name="userSessionSchema" ref="userSessionSchema" />
   </component>
 
-  <!-- テーブル定義を変更する場合はあわせてDBストアの定義も変更する -->
+  <!-- 更改表定义时请同时更改DB存储的定义 -->
   <component name="dbStore" class="nablarch.common.web.session.store.DbStore">
-    <!-- その他のプロパティは省略 -->
+    <!-- 其他属性省略 -->
     <property name="userSessionSchema" ref="userSessionSchema" />
   </component>
 
-  <!-- 上記のテーブル定義からテーブル名、カラム名を変更する場合のみ以下設定が必要 -->
+  <!-- 仅从上述表定义更改表名、列名时需要以下设置 -->
   <component name="userSessionSchema" class="nablarch.common.web.session.store.UserSessionSchema">
     <property name="tableName" value="USER_SESSION_DB" />
     <property name="sessionIdName" value="SESSION_ID_COL" />
@@ -237,7 +236,7 @@ DBストアのテーブル・カラムも同じものに変更すること。
   </component>
 
   <component name="initializer" class="nablarch.core.repository.initialization.BasicApplicationInitializer">
-    <!-- 有効期間はinitializeが必要。 -->
+    <!-- 有效期需要initialize。 -->
     <property name="initializeList">
       <list>
         <component-ref name="expiration"/>

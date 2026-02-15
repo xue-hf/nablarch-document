@@ -1,37 +1,37 @@
 .. _`service_availability`:
 
-サービス提供可否チェック
+服务可用性检查
 =====================================================================
 
 .. contents:: 目录
   :depth: 3
   :local:
 
-この機能では、应用が提供する機能に対して、サービス提供可否をチェックする。
+本功能检查应用程序提供的功能的服务可用性。
 
-この機能を使うことで、以下のようなことが実現できる。
+使用本功能可以实现以下功能。
 
-* ウェブにおいて一部機能へのアクセスを遮断し、503エラーを返す。
-* 驻留型Batchにおいて、空回り(処理せずに待機する状態)を行う。
+* 在Web中屏蔽部分功能的访问，返回503错误。
+* 在常驻Batch中，进行空转（不处理而等待的状态）。
 
 .. important::
- 本機能は、应用の要件が合致する場合に限り、使用すること。
- 本機能は、データベースを使用してサービス提供可否の状態を管理し、
- リクエスト単位でサービス提供可否を設定する( :ref:`service_availability-settings` を参照)。
- 例えば、ウェブの登録機能といった場合、初期表示/確認/戻る/登録といった複数リクエストで構成されるのが一般的である。
- そのため、本機能は、細かくサービス提供可否を設定できる反面、非常に細かいデータ設計が必要となり、
- 開発時の生産性低下やリリース後の運用負荷が高まる可能性がある。
+ 本功能仅在应用程序需求匹配时使用。
+ 本功能使用数据库管理服务可用性状态，
+ 按请求单位设置服务可用性（参见 :ref:`service_availability-settings` ）。
+ 例如，Web的注册功能一般由初始显示/确认/返回/注册等多个请求构成。
+ 因此，本功能虽然可以细粒度设置服务可用性，但需要非常细致的数据设计，
+ 可能导致开发生产力下降或发布后运维负荷增加。
 
-機能概要
+功能概述
 ---------------------------------------------------------------------
 
-リクエスト単位でサービス提供可否をチェックできる
+可以按请求单位检查服务可用性
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-:ref:`ServiceAvailabilityCheckHandler` をhandler队列に設定することで、
-ウェブでも驻留型Batchでも、リクエスト単位でサービス提供可否をチェックできるようになる。
-この機能は、ウェブや驻留型Batchといった処理方式に依存しない。
+:ref:`ServiceAvailabilityCheckHandler` 设置到handler队列后，
+Web和常驻Batch都可以按请求单位检查服务可用性。
+此功能不依赖于Web或常驻Batch等处理方式。
 
-詳細は以下を参照。
+详细参见以下。
 
 * :ref:`service_availability-settings`
 * :ref:`service_availability-check`
@@ -55,34 +55,34 @@
 
 .. _`service_availability-settings`:
 
-サービス提供可否チェックを使うための設定
+使用服务可用性检查的设置
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-この機能では、データベースを使用してサービス提供可否の状態を管理する。
-テーブルのレイアウトは以下となる。
+本功能使用数据库管理服务可用性状态。
+表的结构如下。
 
 ====================== ===================================================
-リクエストID(PK)       リクエストを識別するための値。文字列型
-サービス提供可否状態   可の場合は"1"。文字列型。設定で値を変更できる。
+请求ID(PK)             用于识别请求的值。字符串型
+服务可用性状态         可用时为"1"。字符串型。可在设置中更改值。
 ====================== ===================================================
 
-サービス提供可否チェックを使うためには、
-:java:extdoc:`BasicServiceAvailability <nablarch.common.availability.BasicServiceAvailability>` の定義をコンポーネント設定ファイルに追加する。
-コンポーネント名には **serviceAvailability** と指定する。
+使用服务可用性检查，
+需要将 :java:extdoc:`BasicServiceAvailability <nablarch.common.availability.BasicServiceAvailability>` 的定义添加到组件设置文件中。
+组件名指定为 **serviceAvailability** 。
 
-また初期化が必要なので、初期化対象のリストに設定する。
+另外由于需要初始化，因此设置到初始化目标列表中。
 
 .. code-block:: xml
 
  <component name="serviceAvailability" class="nablarch.common.availability.BasicServiceAvailability">
-   <!-- テーブル名 -->
+   <!-- 表名 -->
    <property name="tableName" value="REQUEST"/>
-   <!-- リクエストIDのカラム名 -->
+   <!-- 请求ID的列名 -->
    <property name="requestTableRequestIdColumnName" value="REQUEST_ID"/>
-   <!-- サービス提供可否状態のカラム名 -->
+   <!-- 服务可用性状态的列名 -->
    <property name="requestTableServiceAvailableColumnName" value="SERVICE_AVAILABLE"/>
-   <!-- サービス提供可を示す値 -->
+   <!-- 表示服务可用的值 -->
    <property name="requestTableServiceAvailableOkStatus" value="1"/>
-   <!-- データベースアクセスに使用するトランザクションマネージャ -->
+   <!-- 数据库访问使用的事务管理器 -->
    <property name="dbManager" ref="serviceAvailabilityDbManager"/>
  </component>
 
@@ -90,7 +90,7 @@
      class="nablarch.core.repository.initialization.BasicApplicationInitializer">
    <property name="initializeList">
      <list>
-       <!-- 他のコンポーネントは省略 -->
+       <!-- 其他组件省略 -->
        <component-ref name="serviceAvailability" />
      </list>
    </property>
@@ -98,17 +98,17 @@
 
 .. _`service_availability-check`:
 
-サービス提供可否をチェックする
+检查服务可用性
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-サービス提供可否チェックは、 :java:extdoc:`ServiceAvailabilityUtil <nablarch.common.availability.ServiceAvailabilityUtil>` を使用する。
+服务可用性检查使用 :java:extdoc:`ServiceAvailabilityUtil <nablarch.common.availability.ServiceAvailabilityUtil>` 。
 
 .. _`service_availability-view_control`:
 
-サービス提供可否に応じて画面表示を制御する
+根据服务可用性控制画面显示
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-サービス提供可否に応じてボタンやリンクの非表示(非活性)を制御したい場合は、カスタムタグを使用する。
-:ref:`tag-submit_display_control` を参照。
+要根据服务可用性控制按钮或链接的隐藏（非激活），使用自定义标签。
+参见 :ref:`tag-submit_display_control` 。
 
-拡張例
+扩展示例
 ---------------------------------------------------------------------
-なし。
+无。

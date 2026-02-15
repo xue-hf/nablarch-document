@@ -1,21 +1,20 @@
 .. _`permission_check_handler`:
 
-認可チェックハンドラ
+权限检查handler
 =======================================
 
 .. contents:: 目录
   :depth: 3
   :local:
 
-本ハンドラでは、 :ref:`permission_check_handler-request_checking` を行う。
+本handler执行 :ref:`permission_check_handler-request_checking` 。
 
-認可チェックは、ライブラリの :ref:`permission_check` を使用して行う。
-そのため、本ハンドラを使用するには、
-:java:extdoc:`PermissionFactory <nablarch.common.permission.PermissionFactory>` を実装したクラスを本ハンドラに設定する必要がある。
+权限检查使用库的 :ref:`permission_check` 进行。
+因此，要使用本handler，需要将实现了 :java:extdoc:`PermissionFactory <nablarch.common.permission.PermissionFactory>` 的类设置到本handler。
 
 本handler执行以下处理。
 
-* 認可チェック
+* 权限检查
 
 处理流程如下。
 
@@ -34,57 +33,57 @@ handler类名
     <artifactId>nablarch-common-auth</artifactId>
   </dependency>
 
-制約
+约束
 ------------------------------
-:ref:`thread_context_handler` より後ろに配置すること
-  本ハンドラではスレッドコンテキスト上に設定されたリクエストIDとユーザIDをもとに認可チェックを行うため、
-  :ref:`thread_context_handler` より後ろに本ハンドラを配置する必要がある。
+:ref:`thread_context_handler` 之后配置
+  本handler基于线程上下文上设置的请求ID和用户ID进行权限检查，
+  因此需要将本handler配置在 :ref:`thread_context_handler` 之后。
 
-:ref:`forwarding_handler` より後ろに配置すること
-  内部フォーワードが行われた際に、フォーワード先のリクエストID（ :ref:`内部リクエストID <internal_request_id>` ）をもとに
-  認可チェックを行いたい場合は、 :ref:`forwarding_handler` より後ろに本ハンドラを配置する必要がある。
-  合わせて、 :ref:`thread_context_handler` の ``attributes`` に :java:extdoc:`InternalRequestIdAttribute <nablarch.common.handler.threadcontext.InternalRequestIdAttribute>` を追加すること。
+:ref:`forwarding_handler` 之后配置
+  当内部forward执行时，希望基于forward目标请求ID（ :ref:`内部请求ID <internal_request_id>` ）
+  进行权限检查的情况下，需要将本handler配置在 :ref:`forwarding_handler` 之后。
+  同时，需要在 :ref:`thread_context_handler` 的 ``attributes`` 中添加 :java:extdoc:`InternalRequestIdAttribute <nablarch.common.handler.threadcontext.InternalRequestIdAttribute>` 。
 
-:ref:`http_error_handler` より後ろに配置すること
-  認可チェックエラーの場合に表示するエラーページを指定するため、
-  :ref:`http_error_handler` より後ろに本ハンドラを配置する必要がある。
+:ref:`http_error_handler` 之后配置
+  为指定权限不足时显示的错误页面，
+  需要将本handler配置在 :ref:`http_error_handler` 之后。
 
 .. _permission_check_handler-request_checking:
 
-リクエストに対する認可チェック
+对请求进行权限检查
 --------------------------------------------------------------
-ログイン中のユーザが、現在のリクエスト(リクエストID)に対して権限を持っているかをチェックする。
-チェックの詳細は、 :ref:`permission_check` を参照。
+检查登录用户是否对当前请求(请求ID)拥有权限。
+检查详情参考 :ref:`permission_check` 。
 
-権限がある場合
- :ref:`業務ロジック <permission_check-server_side_check>` や
- :ref:`画面表示の制御 <permission_check-view_control>` で参照できるように、
- 認可チェックに使用した :java:extdoc:`Permission <nablarch.common.permission.Permission>` をスレッドローカルに設定する。
- そして、後続ハンドラを呼び出す。
+有权限时
+ :ref:`业务逻辑 <permission_check-server_side_check>` 或
+ :ref:`画面显示控制 <permission_check-view_control>` 需要引用时，
+ 将权限检查使用的 :java:extdoc:`Permission <nablarch.common.permission.Permission>` 设置到线程本地。
+ 然后，调用后续handler。
 
-権限がない場合
- :java:extdoc:`Forbidden(403) <nablarch.fw.results.Forbidden>` を送出する。
+无权限时
+ 抛出 :java:extdoc:`Forbidden(403) <nablarch.fw.results.Forbidden>` 。
 
-チェック対象のリクエストIDをフォーワード先のリクエストIDに変更したい場合は、
-:java:extdoc:`PermissionCheckHandler.setUsesInternalRequestId <nablarch.common.permission.PermissionCheckHandler.setUsesInternalRequestId(boolean)>`
-でtrueを指定する。デフォルトはfalseである。
+希望将检查对象的请求ID改为forward目标请求ID时，
+通过 :java:extdoc:`PermissionCheckHandler.setUsesInternalRequestId <nablarch.common.permission.PermissionCheckHandler.setUsesInternalRequestId(boolean)>`
+指定true。默认值为false。
 
-権限がない場合に表示するエラーページを指定する
+指定无权限时显示的错误页面
 --------------------------------------------------------------
-権限がない場合に表示するエラーページは、HTTPエラー制御ハンドラで指定する。
-指定方法は、 :ref:`HttpErrorHandler_DefaultPage` を参照。
+无权限时显示的错误页面在HTTP错误控制handler中指定。
+指定方法参考 :ref:`HttpErrorHandler_DefaultPage` 。
 
-特定のリクエストを認可チェックから除外する
+将特定请求从权限检查中排除
 --------------------------------------------------------------
-ログイン前のリクエストなど、認可チェックを除外したいリクエストがある場合は、
-:java:extdoc:`PermissionCheckHandler.setIgnoreRequestIds <nablarch.common.permission.PermissionCheckHandler.setIgnoreRequestIds(java.lang.String...)>`
-で指定する。
+对于登录前请求等希望排除权限检查的请求，
+通过 :java:extdoc:`PermissionCheckHandler.setIgnoreRequestIds <nablarch.common.permission.PermissionCheckHandler.setIgnoreRequestIds(java.lang.String...)>`
+指定。
 
 .. code-block:: xml
 
   <component name="permissionCheckHandler"
              class="nablarch.common.permission.PermissionCheckHandler">
     <property name="permissionFactory" ref="permissionFactory"/>
-    <!-- 認可チェックを除外するリクエストIDをカンマ区切りで指定する -->
+    <!-- 以逗号分隔指定要排除权限检查的请求ID -->
     <property name="ignoreRequestIds" value="/action/login,/action/logout" />
   </component>

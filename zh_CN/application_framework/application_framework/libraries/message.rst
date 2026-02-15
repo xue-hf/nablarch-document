@@ -1,50 +1,50 @@
 .. _message:
 
-メッセージ管理
+消息管理
 ======================
 
 .. contents:: 目录
   :depth: 3
   :local:
 
-メッセージとは、画面の固定文言(項目タイトルなど)やエラーメッセージのことを指す。
+消息是指画面的固定文本(项目标题等)或错误消息。
 
-画面の固定文言は、国際化の要件がなければJSPに直接埋め込んでも問題ない。
+如果没有国际化需求，画面的固定文本直接嵌入JSP也没有问题。
 
 .. tip::
 
-  メッセージは、安易に共通化せずに出来るだけ個別に定義すること。
+  消息不要轻易通用化，尽量单独定义。
 
-  安易に共通化を行った場合、以下の問題が発生する可能性がある。
+  如果轻易进行通用化，可能会发生以下问题。
 
-  例えば、他業務のメッセージに使えそうなメッセージがあるからとそのメッセージを使用したとする。
-  他業務の仕様変更でそのメッセージが変更されると、そのメッセージを使っていた箇所に関係のないメッセージが表示される。
+  例如，因为其他业务的消息看起来可以用而使用了该消息。
+  如果其他业务由于规格变更更改了该消息，就会在与该消息使用位置无关的地方显示消息。
 
-機能概要
+功能概述
 --------------------------
 
-メッセージの定義場所を指定できる
+可以指定消息的定义位置
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-メッセージは、データベースやプロパティファイルで管理できる。デフォルトでは、プロパティファイルでの管理となる。
+消息可以在数据库或属性文件中管理。默认为属性文件管理。
 
-プロパティファイルをデフォルトとしている理由は以下のとおり。
+将属性文件设为默认的理由如下。
 
-プロパティファイルで管理した場合、メッセージの追加・変更や確認を簡単に行える。
-例えば、メッセージを追加する際にデータベースへinsertするよりも、プロパティファイルに行追加するほうがはるかに楽である。
+使用属性文件管理时，可以方便地进行消息的添加、更改和确认。
+例如，添加消息时，比起向数据库insert，向属性文件添加行要容易得多。
 
-プロパティファイルでの管理の詳細は以下を参照。
+属性文件管理的详情请参照以下。
 
 * :ref:`message-property_unit`
 * :ref:`message-property_definition`
 
 .. tip::
- メッセージの定義場所に関わらず、本機能では、应用の実行中に、メッセージを更新する機能は提供していない。
- メッセージを更新する場合は、应用の再起動が必要となる。
+ 无论消息的定义位置如何，本功能都不提供在应用程序运行中更新消息的功能。
+ 要更新消息时，需要重启应用程序。
 
-メッセージをフォーマットすることが出来る
+可以格式化消息
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-メッセージは :java:extdoc:`java.text.MessageFormat` の拡張機能を使用してフォーマットする。
-実行時に保持している値をメッセージに埋め込みたい場合は、 :ref:`message-format-spec` に従いパターン文字列を定義する。
+消息使用 :java:extdoc:`java.text.MessageFormat` 的扩展功能进行格式化。
+如果想在运行时嵌入持有的值到消息中，请按照 :ref:`message-format-spec` 定义模式字符串。
 
 模块列表
 --------------------------------------------------
@@ -59,7 +59,7 @@
     <artifactId>nablarch-core-message</artifactId>
   </dependency>
 
-  <!-- メッセージをデータベースで管理する場合のみ -->
+  <!-- 仅在数据库中管理消息时需要 -->
   <dependency>
     <groupId>com.nablarch.framework</groupId>
     <artifactId>nablarch-common-jdbc</artifactId>
@@ -70,67 +70,67 @@
 
 .. _message-property_unit:
 
-プロパティファイルの作成単位
+属性文件的创建单位
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-应用単位に作成する。
-1つのシステムであっても、社内向けとコンシューマ向けの应用がある場合は、それぞれにプロパティファイルを作成する。
+按应用程序单位创建。
+即使是1个系统，如果有面向公司内部和面向消费者的应用程序，请分别创建属性文件。
 
-应用単位に作成することで、メッセージの影響範囲を应用内に限定できるメリットがある。
-（よくある、「その应用で使っているとは思ってませんでした」による、障害を未然に防ぐことができる）
+按应用程序单位创建，可以将消息的影响范围限定在应用程序内。
+（可以防止常见的「没想到那个应用程序也在用」导致的故障）
 
-例
-  コンシューマ向け应用
+示例
+  面向消费者的应用程序
     consumer/main/resources/messages.properties
 
-  社員向け应用
+  面向员工的应用程序
     intra/main/resources/messages.properties
 
 .. _message-property_definition:
 
-プロパティファイルにメッセージを定義する
+在属性文件中定义消息
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-デフォルトの設定では、プロパティファイルのパスは ``classpath:messages.properties`` となる。
+默认设置中，属性文件的路径为 ``classpath:messages.properties`` 。
 
-メッセージは、 :java:extdoc:`java.util.Properties` を使用してロードする。
-なお、Nablarch6はJava17以上を想定しているため、 **UTF-8** で作成すればよくユニコード変換(native2ascii)は必要ない。
+消息使用 :java:extdoc:`java.util.Properties` 加载。
+另外，由于Nablarch6假设使用Java17以上，因此使用 **UTF-8** 创建即可，不需要Unicode转换(native2ascii)。
 
-プロパティファイルの例
+属性文件示例
   .. code-block:: properties
 
-    label.user.register.title=ユーザ登録画面
-    errors.login.alreadyExist=入力されたログインIDは既に登録されています。別のログインIDを入力してください。
-    errors.login=ログインに失敗しました。ログインIDまたはパスワードが誤っています。
-    errors.compare.date={0}は{1}より後の日付を入力してください。
-    success.delete.project=プロジェクトの削除が完了しました。
-    success.update.project=プロジェクトの更新が完了しました。
+    label.user.register.title=用户注册画面
+    errors.login.alreadyExist=输入的登录ID已注册。请输入其他登录ID。
+    errors.login=登录失败。登录ID或密码错误。
+    errors.compare.date={0}请输入晚于{1}的日期。
+    success.delete.project=项目删除已完成。
+    success.update.project=项目更新已完成。
 
 .. _message-multi_lang:
 
-多言語化対応
+多语言化支持
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-メッセージの多言語化を行う場合には、言語ごとのプロパティファイルを用意し、サポートする言語を :java:extdoc:`PropertiesStringResourceLoader.locales <nablarch.core.message.PropertiesStringResourceLoader.setLocales(java.util.List)>` に設定する。
-なお、デフォルトのロケールに対応する言語については、サポートする言語に追加しなくても良い。
+进行消息的多语言化时，需要准备各语言的属性文件，并将支持的语言设置到 :java:extdoc:`PropertiesStringResourceLoader.locales <nablarch.core.message.PropertiesStringResourceLoader.setLocales(java.util.List)>` 中。
+另外，对应默认区域的语言可以不添加到支持的语言中。
 
 .. important:: 
 
-  デフォルトのロケールは、:java:extdoc:`PropertiesStringResourceLoader.defaultLocale  <nablarch.core.message.PropertiesStringResourceLoader.setDefaultLocale(java.lang.String)>` (デフォルトの言語)で設定する。設定しなかった場合、デフォルトのロケールは :java:extdoc:`Locale.getDefault().getLanguage() <java.util.Locale.getLanguage()>` の値が採用される。
+  默认区域通过 :java:extdoc:`PropertiesStringResourceLoader.defaultLocale  <nablarch.core.message.PropertiesStringResourceLoader.setDefaultLocale(java.lang.String)>` (默认语言)设置。如果不设置，默认区域将采用 :java:extdoc:`Locale.getDefault().getLanguage() <java.util.Locale.getLanguage()>` 的值。
   
-  :java:extdoc:`Locale.getDefault().getLanguage() <java.util.Locale.getLanguage()>` の値はOSの設定によって変化するため、この値をデフォルトのロケールとして使用すると実行する環境に応じて値が変わり障害の原因になる可能性がある。必ずデフォルトの言語を設定すること。
+  :java:extdoc:`Locale.getDefault().getLanguage() <java.util.Locale.getLanguage()>` 的值会根据OS设置而变化，如果将此值作为默认区域，可能会因执行环境不同而值发生变化，从而导致故障。请务必设置默认语言。
 
-メッセージ取得時にどの言語が使用されるかは、 :java:extdoc:`ThreadContext#getLanguage <nablarch.core.ThreadContext.getLanguage()>` が返すロケールによって決定される。
-もし、 :java:extdoc:`ThreadContext#getLanguage <nablarch.core.ThreadContext.getLanguage()>` からロケールが取得できない場合は :java:extdoc:`Locale.getDefault() <java.util.Locale.getDefault()>` が使用される。
+获取消息时使用哪种语言由 :java:extdoc:`ThreadContext#getLanguage <nablarch.core.ThreadContext.getLanguage()>` 返回的区域决定。
+如果无法从 :java:extdoc:`ThreadContext#getLanguage <nablarch.core.ThreadContext.getLanguage()>` 获取区域，则使用 :java:extdoc:`Locale.getDefault() <java.util.Locale.getDefault()>` 。
 
   
-PropertiesStringResourceLoaderへの言語設定
-  サポートする言語として、 ``en`` 、 ``zh`` 、 ``de`` を設定する場合の例を示す。
+设置到PropertiesStringResourceLoader的语言
+  作为支持的语言，设置 ``en`` 、 ``zh`` 、 ``de`` 时的示例如下。
 
   .. code-block:: xml
 
     <component class="nablarch.core.cache.BasicStaticDataCache" name="messageCache">
       <property name="loader">
-        <!-- 多言語化したPropertiesStringResourceLoaderの定義 -->
+        <!-- 多语言化的PropertiesStringResourceLoader定义 -->
         <component class="nablarch.core.message.PropertiesStringResourceLoader">
-          <!-- サポートする言語 -->
+          <!-- 支持的语言 -->
           <property name="locales">
             <list>
               <value>en</value>
@@ -139,14 +139,14 @@ PropertiesStringResourceLoaderへの言語設定
             </list>
           </property>
 
-          <!-- デフォルトの言語 -->
+          <!-- 默认的语言 -->
           <property name="defaultLocale" value="ja" />
         </component>
       </property>
     </component>
 
     <component name="stringResourceHolder" class="nablarch.core.message.StringResourceHolder">
-      <!-- 多言語化したPropertiesStringResourceLoaderを持つBasicStaticDataCacheを設定する -->
+      <!-- 设置拥有多语言化PropertiesStringResourceLoader的BasicStaticDataCache -->
       <property name="stringResourceCache" ref="messageCache" />
     </component>
 
@@ -154,43 +154,43 @@ PropertiesStringResourceLoaderへの言語設定
                class="nablarch.core.repository.initialization.BasicApplicationInitializer">
       <property name="initializeList">
         <list>
-          <!-- BasicStaticDataCacheを初期化対象に追加する -->
+          <!-- 将BasicStaticDataCache添加到初始化对象 -->
           <component-ref name="messageCache" />
         </list>
       </property>
     </component>
 
 
-言語ごとのプロパティファイルの作成
-  上記の :java:extdoc:`PropertiesStringResourceLoader <nablarch.core.message.PropertiesStringResourceLoader>` に設定したサポート言語に対応するプロパティファイルの作成例を示す。
+创建各语言的属性文件
+  展示创建对应上述 :java:extdoc:`PropertiesStringResourceLoader <nablarch.core.message.PropertiesStringResourceLoader>` 中设置的支持语言的属性文件示例。
 
-  :java:extdoc:`PropertiesStringResourceLoader <nablarch.core.message.PropertiesStringResourceLoader>` に設定した言語に対応するプロパティファイルを作成する。
-  ファイル名は、 **messages_言語.properties** とする。
+  创建对应 :java:extdoc:`PropertiesStringResourceLoader <nablarch.core.message.PropertiesStringResourceLoader>` 中设置的语言的属性文件。
+  文件名为 **messages_语言.properties** 。
 
-  デフォルトのロケールに対応するプロパティファイルは、言語を入れずに **messages.properties** として作成する。
-  **messages.properties** が存在していない場合は、エラーとして処理を終了するので注意すること。
+  对应默认区域的属性文件，不包含语言，作为 **messages.properties** 创建。
+  如果不存在 **messages.properties** ，将作为错误结束处理，请注意。
 
   .. code-block:: none
 
-    main/resources/messages.properties       # デフォルトの言語に対応したファイル
-                   messages_en.properties    # enに対応したファイル
-                   messages_zh.properties    # zhに対応したファイル
-                   messages_de.properties    # deに対応したファイル
+    main/resources/messages.properties       # 对应默认语言的文件
+                   messages_en.properties    # 对应en的文件
+                   messages_zh.properties    # 对应zh的文件
+                   messages_de.properties    # 对应de的文件
 
-メッセージを持つ業務例外を送出する
+抛出持有消息的业务异常
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-プロパティファイルに設定されたメッセージを持つ業務例外( :java:extdoc:`ApplicationException <nablarch.core.message.ApplicationException>` ) を送出する例を示す。
+展示抛出持有属性文件中设置的消息的业务异常( :java:extdoc:`ApplicationException <nablarch.core.message.ApplicationException>` )的示例。
 
-プロパティファイルに設定されたメッセージを取得するには、 :java:extdoc:`MessageUtil <nablarch.core.message.MessageUtil>` クラスを使用する。
-:java:extdoc:`MessageUtil <nablarch.core.message.MessageUtil>` から取得した :java:extdoc:`Message <nablarch.core.message.Message>` を元に業務例外( :java:extdoc:`ApplicationException <nablarch.core.message.ApplicationException>` )を生成し送出する。
+要获取属性文件中设置的消息，使用 :java:extdoc:`MessageUtil <nablarch.core.message.MessageUtil>` 类。
+使用从 :java:extdoc:`MessageUtil <nablarch.core.message.MessageUtil>` 获取的 :java:extdoc:`Message <nablarch.core.message.Message>` 生成并抛出业务异常( :java:extdoc:`ApplicationException <nablarch.core.message.ApplicationException>` )。
 
 
-プロパティファイル
+属性文件
   .. code-block:: properties
 
-    errors.login.alreadyExist=入力されたログインIDは既に登録されています。別のログインIDを入力してください。
+    errors.login.alreadyExist=输入的登录ID已注册。请输入其他登录ID。
 
-実装例
+实现示例
   .. code-block:: java
 
     Message message = MessageUtil.createMessage(MessageLevel.ERROR, "errors.login.alreadyExist");
@@ -199,42 +199,42 @@ PropertiesStringResourceLoaderへの言語設定
 
 .. _message-format-spec:
 
-埋め込み文字を使用する
+使用嵌入字符
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-:java:extdoc:`java.text.MessageFormat` 形式での埋め込み文字に対応している。
-メッセージに埋め込む値に :java:extdoc:`Map <java.util.Map>` のみを指定した場合は、
-:java:extdoc:`java.text.MessageFormat` を使用せずに :java:extdoc:`Map <java.util.Map>` のキー値を元に値を埋め込む拡張機能を使用する。
+支持 :java:extdoc:`java.text.MessageFormat` 格式的嵌入字符。
+如果在要嵌入消息的值中仅指定 :java:extdoc:`Map <java.util.Map>` ，
+则使用不使用 :java:extdoc:`java.text.MessageFormat` 而基于 :java:extdoc:`Map <java.util.Map>` 的键值嵌入值的扩展功能。
 
-埋め込み文字を使用する場合には、メッセージにパターン文字を使用し、メッセージ取得時に埋め込み文字を指定する。
+使用嵌入字符时，在消息中使用模式字符，获取消息时指定嵌入字符。
 
-埋め込み文字に :java:extdoc:`Map <java.util.Map>` 以外を使用した場合
-  プロパティファイル
-    :java:extdoc:`java.text.MessageFormat` の仕様に従い、メッセージを定義する。
+嵌入字符中使用 :java:extdoc:`Map <java.util.Map>` 以外时
+  属性文件
+    按照 :java:extdoc:`java.text.MessageFormat` 的规格定义消息。
 
     .. code-block:: properties
 
-      success.upload.project={0}件のプロジェクトを登録しました。
+      success.upload.project=已注册{0}件项目。
 
 
-  実装例
-    `projects.size()` が **5** を返した場合、取得されるメッセージは「5件のプロジェクトを登録しました。」となる。
+  实现示例
+    `projects.size()` 返回 **5** 时，获取的消息为「已注册5件项目。」。
 
     .. code-block:: java
 
       MessageUtil.createMessage(MessageLevel.INFO, "success.upload.project", projects.size());
 
-埋め込み文字に :java:extdoc:`Map <java.util.Map>` のみを使用した場合
-  プロパティファイル
-    埋め込み文字部分には、 :java:extdoc:`Map <java.util.Map>` のキー名を ``{`` 、 ``}`` で囲んで定義する。
+嵌入字符中仅使用 :java:extdoc:`Map <java.util.Map>` 时
+  属性文件
+    嵌入字符部分，使用 ``{`` 、 ``}`` 包围 :java:extdoc:`Map <java.util.Map>` 的键名来定义。
 
     .. code-block:: properties
 
-      success.upload.project={projectCount}件のプロジェクトを登録しました。
+      success.upload.project=已注册{projectCount}件项目。
 
-  実装例
-    メッセージ取得時に指定する埋め込み文字に :java:extdoc:`Map <java.util.Map>` を指定する。
+  实现示例
+    获取消息时在嵌入字符中指定 :java:extdoc:`Map <java.util.Map>` 。
 
-    `projects.size()` が **5** を返した場合、取得されるメッセージは「5件のプロジェクトを登録しました。」となる。
+    `projects.size()` 返回 **5** 时，获取的消息为「已注册5件项目。」。
 
     .. code-block:: java
 
@@ -245,22 +245,22 @@ PropertiesStringResourceLoaderへの言語設定
 
     .. important:: 
 
-      埋め込み文字に指定できる値は、 :java:extdoc:`Map <java.util.Map>` のみとなる。
-      複数の :java:extdoc:`Map <java.util.Map>` や、 :java:extdoc:`Map <java.util.Map>` 以外の値とセットで指定された場合は、
-      :java:extdoc:`java.text.MessageFormat` を使用した値の埋め込み処理をおこなう。
+      可指定为嵌入字符的值仅限 :java:extdoc:`Map <java.util.Map>` 。
+      如果指定多个 :java:extdoc:`Map <java.util.Map>` ，或与 :java:extdoc:`Map <java.util.Map>` 以外的值一起指定，
+      将使用 :java:extdoc:`java.text.MessageFormat` 进行值嵌入处理。
 
-メッセージのフォーマット方法を変更したい場合は、 :ref:`message-change_formatter` を参照し対応すること。
+想更改消息的格式化方法时，请参考 :ref:`message-change_formatter` 进行应对。
 
-画面の固定文言をメッセージから取得する    
+从消息获取画面的固定文本
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-画面の固定文言にメッセージの値を出力したい場合は、カスタムタグライブラリの `message` タグを使用する。
+想在画面的固定文本中输出消息值时，使用自定义标签库的 `message` 标签。
 
-`message` タグの詳細な使用方法は、 :ref:`tag-write_message` を参照。
+`message` 标签的详细使用方法请参考 :ref:`tag-write_message` 。
 
-プロパティファイル
+属性文件
   .. code-block:: properties
 
-    login.title=ログイン
+    login.title=登录
 
 JSP
   .. code-block:: jsp
@@ -269,31 +269,31 @@ JSP
       <span><n:message messageId="login.title" /></span>
     </div>
 
-画面表示結果
-  プロパティファイルに定義したメッセージが固定文言として表示される。
+画面显示结果
+  属性文件中定义的消息作为固定文本显示。
 
   .. image:: images/message/jsp_title.png
 
 .. _message-level:
 
-メッセージレベルを使い分ける
+区分使用消息级别
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-メッセージレベルを使い分けることで、画面表示時のスタイルを切り替えることができる。
-スタイルの切り替えは、カスタムタグライブラリの :ref:`errors <tag-write_error_errors_tag>` タグを使用することで実現できる。
+通过区分使用消息级别，可以在画面显示时切换样式。
+样式的切换可以通过使用自定义标签库的 :ref:`errors <tag-write_error_errors_tag>` 标签来实现。
 
 .. important::
 
-  メッセージレベルとカスタムタグを使用したスタイル変更は以下の問題点がある。
+  使用消息级别和自定义标签进行样式更改存在以下问题。
 
-  * カスタムタグライブラリが出力するDOM構造に制約があり、一般的なCSSフレームワークとの相性が悪い
-  * メッセージレベルが3種類しかなくそれより細かい分類ができない
-  * JSP以外のテンプレートエンジンで使用できない
+  * 自定义标签库输出的DOM结构有约束，与一般CSS框架的兼容性差
+  * 消息级别只有3种，无法进行更细致的分类
+  * 不能在JSP以外的模板引擎中使用
   
-  このため、 :ref:`errorsタグを使用したメッセージレベルに応じたスタイル切り替え <message-level_with_tag>` を使用するのではなく以下の実装方法を推奨する。
+  因此，建议不使用 :ref:`使用errors标签根据消息级别切换样式<message-level_with_tag>` ，而是使用以下实现方法。
 
-  サーバサイド
-    サーバサイドでメッセージ文字列を構築し、リクエストスコープに設定する。
-    メッセージを生成する際にはメッセージレベルが必須なため、INFOレベルを指定すれば良い。
+  服务器端
+    在服务器端构建消息字符串，设置到请求作用域中。
+    生成消息时消息级别是必需的，因此指定INFO级别即可。
 
     .. code-block:: java
 
@@ -301,8 +301,8 @@ JSP
           MessageUtil.createMessage(MessageLevel.INFO, "login.message").formatMessage());
 
   View
-    View(JSP等)では、リクエストスコープに設定したメッセージを出力する。
-    JSPを使用する場合は、 :ref:`write <tag-write_tag>` タグを使用してリクエストスコープに設定したメッセージを出力する。
+    在View(JSP等)中输出设置到请求作用域中的消息。
+    使用JSP时，使用 :ref:`write <tag-write_tag>` 标签输出设置到请求作用域中的消息。
 
     .. code-block:: jsp
         
@@ -312,12 +312,12 @@ JSP
 
 .. _message-level_with_tag:
 
-errorsタグを使用したメッセージレベルに応じたスタイル切り替え例
-  メッセージレベルは、 `INFO` 、 `WARN` 、 `ERROR` の3種類があり、
-  :java:extdoc:`MessageLevel <nablarch.core.message.MessageLevel>` に定義されている。
+使用errors标签根据消息级别切换样式示例
+  消息级别有 `INFO` 、 `WARN` 、 `ERROR` 3种，
+  定义在 :java:extdoc:`MessageLevel <nablarch.core.message.MessageLevel>` 中。
 
-  errorsタグを使用すると、メッセージレベルに応じて以下のcssクラスが適用される。
-  `errors` タグの詳細な使用方法は、 :ref:`tag-write_error` を参照。
+  使用errors标签时，根据消息级别会应用以下css类。
+  `errors` 标签的详细使用方法请参考 :ref:`tag-write_error` 。
 
   :INFO: nablarch_info
   :WARN: nablarch_warn
@@ -325,19 +325,19 @@ errorsタグを使用したメッセージレベルに応じたスタイル切�
 
   .. tip::
 
-    :doc:`バリデーション機能 <validation>` から送出される業務例外( :java:extdoc:`ApplicationException <nablarch.core.message.ApplicationException>` )が持つメッセージは、
-    全て `ERROR` レベルとなる。
+    :doc:`验证功能 <validation>` 抛出的业务异常( :java:extdoc:`ApplicationException <nablarch.core.message.ApplicationException>` )所持有的消息，
+    全部为 `ERROR` 级别。
 
 
-  プロパティファイル
+  属性文件
     .. code-block:: properties
 
-      info=インフォメーション
-      warn=ワーニング
-      error=エラー
+      info=信息
+      warn=警告
+      error=错误
 
-  スタイルシート
-    メッセージレベルに対応したスタイルを定義する。
+  样式表
+    定义对应消息级别的样式。
 
     .. code-block:: css
 
@@ -354,7 +354,7 @@ errorsタグを使用したメッセージレベルに応じたスタイル切�
       }
 
   action class
-    `errors` タグで出力するメッセージは、 :java:extdoc:`WebUtil.notifyMessages <nablarch.common.web.WebUtil.notifyMessages(nablarch.fw.ExecutionContext,nablarch.core.message.Message...)>` を使ってリクエストスコープに格納する。
+    `errors` 标签输出的消息，使用 :java:extdoc:`WebUtil.notifyMessages <nablarch.common.web.WebUtil.notifyMessages(nablarch.fw.ExecutionContext,nablarch.core.message.Message...)>` 存储到请求作用域中。
 
     .. code-block:: java
 
@@ -363,36 +363,36 @@ errorsタグを使用したメッセージレベルに応じたスタイル切�
       WebUtil.notifyMessages(context, MessageUtil.createMessage(MessageLevel.ERROR, "error"));
 
   JSP
-    `errors` タグを使用して、 :java:extdoc:`WebUtil <nablarch.common.web.WebUtil>` に格納したメッセージを画面表示する。
+    使用 `errors` 标签显示存储在 :java:extdoc:`WebUtil <nablarch.common.web.WebUtil>` 中的消息。
 
     .. code-block:: jsp
 
       <n:errors />
 
-  画面表示結果
-    メッセージレベルに応じてスタイルが切り替わっていることがわかる。
+  画面显示结果
+    可以看到根据消息级别切换了样式。
 
     .. image:: images/message/message_level.png
 
 
-拡張例
+扩展示例
 --------------------------------------------------
-プロパティファイル名や格納場所を変更する
+更改属性文件名或存储位置
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-:java:extdoc:`PropertiesStringResourceLoader <nablarch.core.message.PropertiesStringResourceLoader>` には、ファイル名やディレクトリのパスを変更するためのプロパティが用意されている。
-デフォルト構成を変更したい場合は、これらのプロパティを用いて変更すること。
+:java:extdoc:`PropertiesStringResourceLoader <nablarch.core.message.PropertiesStringResourceLoader>` 中准备了用于更改文件名和目录路径的属性。
+想更改默认构成时，请使用这些属性进行更改。
 
 
 
-メッセージをデータベースで管理する
+在数据库中管理消息
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-メッセージをデータベースで管理するには :java:extdoc:`BasicStringResourceLoader <nablarch.core.message.BasicStringResourceLoader>` を使用してメッセージをロードする必要がある。
+要在数据库中管理消息，需要使用 :java:extdoc:`BasicStringResourceLoader <nablarch.core.message.BasicStringResourceLoader>` 加载消息。
 
-以下にデータベースで管理するメッセージを使用するための設定例を示す。
+以下展示使用在数据库中管理的消息所需的设置示例。
 
 .. code-block:: xml
 
-  <!-- データベースからメッセージをロードするコンポーネント -->
+  <!-- 从数据库加载消息的组件 -->
   <component name="stringResourceLoader" class="nablarch.core.message.BasicStringResourceLoader">
     <property name="dbManager" ref="defaultDbManager"/>
     <property name="tableName" value="MESSAGE"/>
@@ -401,32 +401,32 @@ errorsタグを使用したメッセージレベルに応じたスタイル切�
     <property name="valueColumnName" value="MESSAGE"/>
   </component>
 
-  <!-- ロードしたメッセージをキャッシュするコンポーネント -->
+  <!-- 缓存加载消息的组件 -->
   <component name="stringResourceCache" class="nablarch.core.cache.BasicStaticDataCache">
-    <!-- ローダーには、データベースからメッセージをロードするクラスを指定する -->
+    <!-- 加载器中指定从数据库加载消息的类 -->
     <property name="loader" ref="stringResourceLoader"/>
-    <!-- 起動時に一括でロードする -->
+    <!-- 启动时批量加载 -->
     <property name="loadOnStartup" value="true"/>
   </component>
 
   <!--
-  メッセージの元となる文字リソースを保持するコンポーネント
-  コンポーネント名はstringResourceHolderとすること
+  保持消息原始字符串资源的组件
+  组件名请设为stringResourceHolder
   -->
   <component name="stringResourceHolder" class="nablarch.core.message.StringResourceHolder">
-    <!-- メッセージをキャッシュするコンポーネントを指定する -->
+    <!-- 指定缓存消息的组件 -->
     <property name="stringResourceCache" ref="stringResourceCache"/>
   </component>
 
 .. _message-change_formatter:
 
-メッセージのフォーマット方法を変更する
+更改消息的格式化方法
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-メッセージのフォーマット方法は、 :java:extdoc:`MessageFormatter <nablarch.core.message.MessageFormatter>` の実装クラスを作成しコンポーネント定義するこどで変更できる。
+消息的格式化方法可以通过创建 :java:extdoc:`MessageFormatter <nablarch.core.message.MessageFormatter>` 的实现类并进行组件定义来更改。
 
-以下に例を示す。
+以下展示示例。
 
-MessageFormatterの実装クラス
+MessageFormatter的实现类
   .. code-block:: java
 
     package sample;
@@ -441,19 +441,18 @@ MessageFormatterの実装クラス
         }
     }
 
-コンポーネント設定ファイル
-  コンポーネント名を ``messageFormatter`` として、 `MessageFormatter` の実装クラスを設定する。
+组件设置文件
+  将组件名设为 ``messageFormatter`` ，设置 `MessageFormatter` 的实现类。
 
   .. code-block:: xml
 
-    <!-- コンポーネント名をmessageFormatterとして定義する。 -->
+    <!-- 将组件名定义为messageFormatter。 -->
     <component name="messageFormatter" class="sample.SampleMessageFormatter" />
 
-なお、 `MessageFormatter` の実装としては以下のクラスを提供している。
+另外，作为 `MessageFormatter` 的实现提供以下类。
 
 :java:extdoc:`BasicMessageFormatter <nablarch.core.message.BasicMessageFormatter>`:
-  :ref:`埋め込み文字の仕様 <message-format-spec>` に従いメッセージをフォーマットする。
-  `MessageFormatter` の実装クラスがコンポーネント定義されていない場合は本クラスが使用される。
+  按照 :ref:`嵌入字符的规格 <message-format-spec>` 格式化消息。
+  如果未进行 `MessageFormatter` 实现类的组件定义，则使用本类。
 :java:extdoc:`JavaMessageFormatBaseMessageFormatter <nablarch.core.message.JavaMessageFormatBaseMessageFormatter>`:
-  :java:extdoc:`MessageFormat <java.text.MessageFormat>` を使用してメッセージをフォーマットする。
-
+  使用 :java:extdoc:`MessageFormat <java.text.MessageFormat>` 格式化消息。

@@ -1,28 +1,28 @@
 .. _http_response_handler:
 
-HTTPレスポンスハンドラ
+HTTP响应handler
 ==================================================
 .. contents:: 目录
   :depth: 3
   :local:
 
-本ハンドラは、後続ハンドラが返す :java:extdoc:`HttpResponse <nablarch.fw.web.HttpResponse>` に従い、サーブレットAPIを
-呼び出しクライアントへのレスポンスを行う。
-応答の方法には、下記4通りが存在する。
+本handler根据后续handler返回的 :java:extdoc:`HttpResponse <nablarch.fw.web.HttpResponse>` ，
+调用Servlet API向客户端进行响应。
+响应方法有以下4种。
 
-サーブレットフォワード
-  サーブレットにフォワードを行い、レスポンスを描画する。主にJSPを使ったレスポンス時に使用する。
+Servlet forward
+  进行Servlet forward，渲染响应。主要用于使用JSP的响应。
 
-カスタムレスポンスライター
-  `カスタムレスポンスライター`_\（後述）を使用して、任意のレスポンス出力処理を行う。\
-  主にテンプレートエンジン等の外部ライブラリを使ったレスポンス時に使用する。
+自定义响应写入器
+  使用 `自定义响应写入器`_ （后述），执行任意响应输出处理。
+  主要用于使用模板引擎等外部库的响应。
 
-リダイレクト
-  クライアントにリダイレクトを行う応答を返す。
+重定向
+  向客户端返回重定向响应。
 
-直接レスポンス
-   :java:extdoc:`ServletResponse <jakarta.servlet.ServletResponse>` の `getOutputStream` メソッドを使用して直接
-   レスポンスを行う。
+直接响应
+   使用 :java:extdoc:`ServletResponse <jakarta.servlet.ServletResponse>` 的 `getOutputStream` 方法直接
+   进行响应。
 
 处理流程如下。
 
@@ -41,19 +41,18 @@ handler类名
     <artifactId>nablarch-fw-web</artifactId>
   </dependency>
 
-制約
+约束
 ------------------------------
 
-なし。
+无。
 
 
-
-応答の変換方法
+响应的转换方法
 ------------------------------------------------------
 
-本ハンドラでは、後続のハンドラから返されるスキーム [#scheme]_ と、ステータスコード  [#statusCode]_ によりクライアントに返すレスポンスの方法を変更する。
+本handler根据后续handler返回的scheme [#scheme]_ 和状态码  [#statusCode]_ 来更改向客户端返回的响应方法。
 
-変換条件と応答方法は下記表の通り。
+转换条件和响应方法如下表所示。
 
 
 .. list-table::
@@ -61,99 +60,99 @@ handler类名
   :widths: 5,5
   :class: white-space-normal
 
-  * -   変換条件
-    -   応答の方法
-  * -   スキームが
-        ``servlet`` の場合
-    -   カスタムレスポンスライターが処理対象と判定した場合はカスタムレスポンスライターに処理を委譲する。それ以外の場合はコンテンツパス別サーブレットへ処理をフォワードする。
-  * -   スキームが
-        ``redirect`` の場合
-    -   指定したURLへのリダイレクトを行う
-  * -   スキームが
-        ``http`` または ``https`` の場合
-    -   指定したURLへのリダイレクトを行う
-  * -   スキームが上記以外で、
-        ステータスコードが400以上の場合
-    -   ステータスコードに合うエラー画面の表示をおこなう。
-  * -   上記以外の場合
-    -   HttpResponse#getBodyStream()の結果を応答する。
+  * -   转换条件
+    -   响应方法
+  * -   scheme为
+        ``servlet`` 时
+    -   自定义响应写入器判定为处理对象时委托给自定义响应写入器。否则将处理转发到内容路径对应的Servlet。
+  * -   scheme为
+        ``redirect`` 时
+    -   重定向到指定URL
+  * -   scheme为
+        ``http`` 或 ``https`` 时
+    -   重定向到指定URL
+  * -   scheme为上述以外且
+        状态码为400以上时
+    -   显示与状态码对应的错误画面。
+  * -   上述以外的情况
+    -   响应HttpResponse#getBodyStream()的结果。
 
 
 
 
 .. [#scheme]
-      ここで言う「スキーム」とは、後続ハンドラが返した
+      此处所说的「scheme」是指后续handler返回的
       :java:extdoc:`HttpResponse#getContentPath() <nablarch.fw.web.HttpResponse.getContentPath()>`
-      で取得した  :java:extdoc:`ResourceLocator <nablarch.fw.web.ResourceLocator>` の
-      :java:extdoc:`getScheme() メソッド <nablarch.fw.web.ResourceLocator.getScheme()>` の戻り値のことを指す。
-      明示的にスキームを指定しない場合のデフォルトスキームは ``servlet`` である。
+      获取的  :java:extdoc:`ResourceLocator <nablarch.fw.web.ResourceLocator>` 的
+      :java:extdoc:`getScheme()方法 <nablarch.fw.web.ResourceLocator.getScheme()>` 的返回值。
+      未显式指定scheme时的默认scheme为 ``servlet`` 。
 
 .. [#statusCode]
-      ここで言う「ステータスコード」とは、後続ハンドラが返す
-      :java:extdoc:`HttpResponse <nablarch.fw.web.HttpResponse>` クラスの
-      :java:extdoc:`getStatusCode() <nablarch.fw.web.HttpResponse.getStatusCode()>` メソッドの戻り値のことを示す。
+      此处所说的「状态码」是指后续handler返回的
+      :java:extdoc:`HttpResponse <nablarch.fw.web.HttpResponse>` 类的
+      :java:extdoc:`getStatusCode() <nablarch.fw.web.HttpResponse.getStatusCode()>` 方法的返回值。
 
 .. _http_response_handler-convert_status_code:
 
 
-カスタムレスポンスライター
+自定义响应写入器
 --------------------------
 
-本ハンドラのプロパティ ``customResponseWriter`` に
+通过在本handler的属性 ``customResponseWriter`` 中设置
 :java:extdoc:`CustomResponseWriter<nablarch.fw.web.handler.responsewriter.CustomResponseWriter>`
-の実装クラスを設定することで、任意のレスポンス出力処理\ [#resp]_ を実行できる。
+的实现类，可以执行任意响应输出处理\ [#resp]_ 。
 
-.. [#resp] 具体例として、JSPではなくテンプレートエンジンを使用してレスポンスを出力するというケースが挙げられる。
-           Nablarchが提供している実装としては、:ref:`web_thymeleaf_adaptor` がある。
+.. [#resp] 具体示例包括不使用JSP而使用模板引擎输出响应的情况。
+           Nablarch提供的实现有 :ref:`web_thymeleaf_adaptor` 。
 
 
-HTTPステータスコードの変更
+HTTP状态码的更改
 ------------------------------------------------------
 
-本ハンドラでは、ステータスコードを一部変更してクライアントへのレスポンスに設定する。
+本handler将部分状态码更改后设置到向客户端的响应中。
 
-HTTPステータスコードを決定する変換条件と、応答のエラーコードは下記表のとおり。
+决定HTTP状态码的转换条件和响应错误码如下表所示。
 
 .. list-table::
   :header-rows: 1
   :widths: 3,7
   :class: white-space-normal
 
-  * -   変換条件
-    -   エラーコード
-  * -   Ajaxのリクエストの場合
-    -   元のステータスコードそのままを返す
-  * -   元のステータスコードが400の場合
-    -   ステータスコード200を返す
-  * -   上記以外の場合
-    -   ステータスコード の結果そのままを返す
+  * -   转换条件
+    -   错误码
+  * -   Ajax请求时
+    -   原样返回原始状态码
+  * -   原始状态码为400时
+    -   返回状态码200
+  * -   上述以外的情况
+    -   原样返回状态码的结果
 
 
 .. _http_response_handler-change_content_path:
 
-言語毎のコンテンツパスの切り替え
+按语言切换内容路径
 ------------------------------------------------------
 
-本ハンドラは、HTTPリクエストに含まれる言語設定をもとにして、フォワード先を動的に切り替える機能を持つ。
-この機能を使用することで、利用者が選んだ言語に合わせてフォワードするJSPを切り替える機能が実現できる。
+本handler具有根据HTTP请求中包含的语言设置动态切换forward目标的功能。
+使用此功能可以实现根据用户选择的语言切换forward的JSP的功能。
 
-この機能を使用する際は、本ハンドラの ``contentPathRule`` プロパティに下記いずれかのクラスを設定する。
+使用此功能时，在本handler的 ``contentPathRule`` 属性中设置以下任一类别。
 
 
 ============================================================================================================================= ============================================================================================
-クラス名                                                                                                                      説明
+类名                                                                                                                      说明
 ============================================================================================================================= ============================================================================================
-:java:extdoc:`DirectoryBasedResourcePathRule <nablarch.fw.web.i18n.DirectoryBasedResourcePathRule>`                           コンテキストルート直下のディレクトリを言語の切り替えに
+:java:extdoc:`DirectoryBasedResourcePathRule <nablarch.fw.web.i18n.DirectoryBasedResourcePathRule>`                           使用上下文根目录下的目录进行语言切换
                                                                                                                               |br|
-                                                                                                                              使用するクラス。
+                                                                                                                              的类。
 
                                                                                                                                .. code-block:: bash
 
-                                                                                                                                # /management/user/search.jspを日本語(ja)と
-                                                                                                                                # 英語(en)に対応する場合の配置例
-                                                                                                                                # コンテキストルート直下に言語ごとにディレクトリを作成する。
-                                                                                                                                # ディレクトリ名は言語名とする。
-                                                                                                                                コンテキストルート
+                                                                                                                                # /management/user/search.jsp对应日语(ja)和
+                                                                                                                                # 英语(en)时的配置示例
+                                                                                                                                # 在上下文根目录下创建按语言的目录。
+                                                                                                                                # 目录名使用语言名。
+                                                                                                                                上下文根目录
                                                                                                                                 ├─en
                                                                                                                                 │  └─management
                                                                                                                                 │      └─user
@@ -163,52 +162,52 @@ HTTPステータスコードを決定する変換条件と、応答のエラー�
                                                                                                                                         └─user
                                                                                                                                              search.jsp
 
-:java:extdoc:`FilenameBasedResourcePathRule <nablarch.fw.web.i18n.FilenameBasedResourcePathRule>`                             ファイル名を言語の切り替えに使用するクラス。
+:java:extdoc:`FilenameBasedResourcePathRule <nablarch.fw.web.i18n.FilenameBasedResourcePathRule>`                             使用文件名进行语言切换的类。
 
                                                                                                                                 .. code-block:: bash
 
-                                                                                                                                 # /management/user/search.jspを日本語(ja)と
-                                                                                                                                 # 英語(en)に対応する場合の配置例
-                                                                                                                                 # 言語毎にファイルを作成する。
-                                                                                                                                 # ファイル名にはサフィックス「"_"＋言語名」を付ける。
-                                                                                                                                 コンテキストルート
+                                                                                                                                 # /management/user/search.jsp对应日语(ja)和
+                                                                                                                                 # 英语(en)时的配置示例
+                                                                                                                                 # 按语言创建文件。
+                                                                                                                                 # 文件名添加后缀「"_"＋语言名」。
+                                                                                                                                 上下文根目录
                                                                                                                                  └─management
                                                                                                                                          └─user
                                                                                                                                               search_en.jsp
                                                                                                                                               search_ja.jsp
 ============================================================================================================================= ============================================================================================
 
-この際の設定例は下記の通り。
+此时的配置示例如下。
 
 .. code-block:: xml
 
-  <!-- リソースパスルール -->
+  <!-- 资源路径规则 -->
   <component name="resourcePathRule" class="nablarch.fw.web.i18n.DirectoryBasedResourcePathRule" />
 
-  <!-- HTTPレスポンスハンドラ -->
+  <!-- HTTP响应handler -->
   <component class="nablarch.fw.web.handler.HttpResponseHandler">
     <property name="contentPathRule" ref="resourcePathRule" />
   </component>
 
 
-上記以外の方法でコンテンツの切り替えを行いたい場合は、 :java:extdoc:`ResourcePathRule <nablarch.fw.web.i18n.ResourcePathRule>`
-クラスを継承したクラスを作成し、作成したクラスを上記同様に ``resourcePathRule`` プロパティに設定すること。
+要使用上述以外的方法进行内容切换时，创建继承 :java:extdoc:`ResourcePathRule <nablarch.fw.web.i18n.ResourcePathRule>`
+类的类，将创建的类像上述一样设置到 ``resourcePathRule`` 属性中。
 
 .. tip::
-   `カスタムレスポンスライター`_ でレスポンス出力を行う場合、本機能は使用できない。
-   これは、テンプレートエンジン等が持っている多言語対応機能と混在させないためである。
+   使用 `自定义响应写入器`_ 进行响应输出时，不能使用本功能。
+   这是为了避免与模板引擎等具有的多语言支持功能混用。
 
-本ハンドラ内で発生した致命的エラーの対応
+本handler内发生致命错误的处理
 ------------------------------------------------------
 
-本ハンドラ内の処理で、下記事象が発生した場合、正常な応答が返せないと判断して、クライアントに対しては
-ステータスコード500で固定的なレスポンスを返す。
+本handler的处理中，当发生以下情况时，判断为无法正常响应，向客户端
+返回状态码500的固定响应。
 
-* サーブレットフォワード時に ServletException が発生した場合
-* RuntimeException およびそのサブクラスの例外が発生した場合
-* Error およびそのサブクラスの例外が発生した場合
+* Servlet forward时发生ServletException
+* 发生RuntimeException及其子类异常
+* 发生Error及其子类异常
 
-この際のレスポンスは下記HTMLとなる。
+此时的响应为以下HTML。
 
 .. code-block:: html
 
@@ -226,11 +225,11 @@ HTTPステータスコードを決定する変換条件と、応答のエラー�
 
 .. important::
 
-    上記HTMLのレスポンスは固定的になっており、設定による変更などはできない。
+    上述HTML响应是固定的，无法通过设置等进行更改。
 
-    このレスポンスは、本ハンドラ内で例外が発生するレアケースのみでしか使われることはない。
-    このため、通常この仕様が問題になることはないが、どんなことがあってもこのレスポンスを
-    出してはいけないシステムにおいては、本ハンドラを参考にハンドラの自作を検討すること。
+    此响应仅在本handler内发生异常的极少数情况下使用。
+    因此，通常此规格不会成为问题，但在任何情况下都绝对不能显示此响应
+    的系统中，请参考本handler考虑自行创建handler。
 
 
 

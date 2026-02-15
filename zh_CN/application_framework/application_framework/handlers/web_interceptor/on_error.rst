@@ -1,30 +1,30 @@
 .. _on_error_interceptor:
 
-OnErrorインターセプタ
+OnError 拦截器
 ============================
 
 .. contents:: 目录
   :depth: 3
   :local:
 
-業務アクションでの例外発生時に、指定したレスポンスを返却するインターセプタ。
+在业务Action发生异常时，返回指定响应的拦截器。
 
-:ref:`inject_form_interceptor` を使用して入力値チェックを行う場合も、
-:ref:`inject_form_interceptor` よりも前にこのインターセプタが実行されるように設定することで、
-バリデーションエラーに対するレスポンスを指定できる。
+使用 :ref:`inject_form_interceptor` 进行输入值检查时，
+也需要将此拦截器配置在 :ref:`inject_form_interceptor` 之前执行，
+以便可以指定验证错误对应的响应。
 
-このインターセプタは、業務アクションのメソッドに対して、 :java:extdoc:`OnError <nablarch.fw.web.interceptor.OnError>` を設定することで有効となる。
+通过在业务Action方法上设置 :java:extdoc:`OnError <nablarch.fw.web.interceptor.OnError>` 来启用此拦截器。
 
 .. tip::
 
-  複数の例外に対するレスポンスを指定したい場合は、 :ref:`on_errors_interceptor` を使用すること。
+  如需指定多个异常对应的响应，请使用 :ref:`on_errors_interceptor` 。
 
 .. important::
 
-  単一の例外に対して複数のレスポンスは指定できない。
-  例外に対して複数のレスポンスを指定したい場合は、 :ref:`on_error-multiple` を参照。
+  不能为单一异常指定多个响应。
+  如需为异常指定多个响应，请参考 :ref:`on_error-multiple` 。
   
-インターセプタクラス名
+拦截器类名
 --------------------------------------------------
 * :java:extdoc:`nablarch.fw.web.interceptor.OnError`
 
@@ -37,44 +37,43 @@ OnErrorインターセプタ
     <artifactId>nablarch-fw-web</artifactId>
   </dependency>
 
-OnErrorを使用する
+使用 OnError
 --------------------------------------------------
-:java:extdoc:`OnError <nablarch.fw.web.interceptor.OnError>` アノテーションを、
-業務アクションのリクエストを処理するメソッドに対して設定する。
+将 :java:extdoc:`OnError <nablarch.fw.web.interceptor.OnError>` 注解设置在业务Action处理请求的方法上。
 
-以下の例では、業務アクションのメソッド内で業務エラー( `ApplicationException` )が発生した場合の遷移先を指定している。
+以下示例中，指定了业务Action方法内发生业务错误( `ApplicationException` )时的跳转目标。
 
-ポイント
- * type属性には、`RuntimeException` 及びそのサブクラスを指定できる。
- * type属性に指定した例外のサブクラスも処理の対象となる。
+要点
+ * type属性可以指定 `RuntimeException` 及其子类。
+ * type属性指定的异常的子类也成为处理对象。
 
 .. code-block:: java
 
   @OnError(type = ApplicationException.class, path = "/WEB-INF/view/project/index.jsp")
   public HttpResponse handle(HttpRequest request, ExecutionContext context) {
-      // 業務処理は省略
+      // 业务处理省略
   }
 
 .. _on_error-forward:
 
-エラー時の遷移先画面に表示するデータを取得する
+获取错误时跳转目标画面显示的数据
 ------------------------------------------------------------
-プルダウンの選択肢のように、エラー時の遷移先画面に表示するデータをデータベースなどから取得したい場合がある。
+有时需要从数据库等获取要在错误时跳转目标画面中显示的数据，如下拉框的选项等。
 
-この場合は、表示データを取得する業務アクションのメソッドに対して内部フォーワードを行い、
-初期表示用のデータをデータベースなどから取得し、リクエストスコープに設定する。
+这种情况下，对获取显示数据的业务Action方法执行内部forward，
+从数据库等获取初始显示数据，并设置到请求作用域。
 
-詳細は :ref:`forwarding_handler`  を参照。
+详情请参考 :ref:`forwarding_handler` 。
 
-バリデーションエラー発生時に初期表示用のメソッドにフォワードする場合の実装例を以下に示す。
+以下展示验证错误发生时forward到初始显示用方法的实现示例。
 
-ポイント
- * path属性に、内部フォワード用のパスを設定する。
+要点
+ * path属性设置为内部forward用的路径。
 
 .. code-block:: java
 
   /**
-   * 入力値のチェックを行う業務アクションのメソッド。
+   * 执行输入值检查的业务Action方法。
    */
   @InjectForm(form = PersonForm.class, prefix = "form")
   @OnError(type = ApplicationException.class, path = "forward://initializeRegisterPage")
@@ -86,30 +85,30 @@ OnErrorを使用する
   }
 
   /**
-   * 登録画面の初期表示データを取得するメソッド。
+   * 获取登记画面初始显示数据的方法。
    */
   public HttpResponse initializeRegisterPage(HttpRequest request, ExecutionContext context) {
-    // 画面表示データをデータベースなどから取得し、リクエストスコープに設定する
+    // 从数据库等获取画面显示数据并设置到请求作用域
 
     return new HttpResponse("/WEB-INF/view/person/inputForRegister.jsp");
   }
 
 .. _on_error-multiple:
 
-複数のレスポンスを指定する
+指定多个响应
 --------------------------------------------------
-本インターセプタでは、単一の例外に対して複数のレスポンスは指定できないため、
-複数のレスポンスを指定したい場合は、業務アクションのメソッド内に個別に :java:extdoc:`HttpErrorResponse <nablarch.fw.web.HttpErrorResponse>` を生成する必要がある。
+本拦截器不能为单一异常指定多个响应，
+因此如需指定多个响应，需要在业务Action方法内单独生成 :java:extdoc:`HttpErrorResponse <nablarch.fw.web.HttpErrorResponse>` 。
 
-以下に実装例を示す。
+以下展示实现示例。
 
 .. code-block:: java
 
   public HttpResponse handle(HttpRequest request, ExecutionContext context) {
       try {
-          // 業務処理は省略
+          // 业务处理省略
       } catch (ApplicationException e) {
-          if (/* 条件式を記述 */) {
+          if (/* 记述条件表达式 */) {
               return new HttpErrorResponse("/WEB-INF/view/project/index.jsp");
           } else {
               return new HttpErrorResponse("/WEB-INF/view/error.jsp");

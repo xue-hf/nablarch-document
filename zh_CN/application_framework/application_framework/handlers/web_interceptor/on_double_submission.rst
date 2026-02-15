@@ -1,21 +1,21 @@
 .. _on_double_submission_interceptor:
 
-OnDoubleSubmissionインターセプタ
+OnDoubleSubmission 拦截器
 =====================================
 
 .. contents:: 目录
   :depth: 3
   :local:
 
-:ref:`二重サブミット(同一リクエストの二重送信)のチェック <tag-double_submission_server_side>` を行うインターセプタ。
+执行 :ref:`重复提交检查(同一请求的双重发送) <tag-double_submission_server_side>` 的拦截器。
 
-このインターセプタを使用するためには、
-:ref:`jspでのformタグによるトークン設定 <tag-double_submission_token_setting>`
-または
-:ref:`UseTokenインターセプタによるトークン設定 <use_token_interceptor>`
-が必要である。
+使用此拦截器需要
+:ref:`在jsp中使用form标签设置令牌 <tag-double_submission_token_setting>`
+或
+:ref:`使用 UseToken 拦截器设置令牌 <use_token_interceptor>`
+。
 
-インターセプタクラス名
+拦截器类名
 --------------------------------------------------
 * :java:extdoc:`nablarch.common.web.token.OnDoubleSubmission`
 
@@ -28,53 +28,53 @@ OnDoubleSubmissionインターセプタ
     <artifactId>nablarch-fw-web-tag</artifactId>
   </dependency>
 
-OnDoubleSubmissionを使用する
+使用 OnDoubleSubmission
 --------------------------------------------------
-:java:extdoc:`OnDoubleSubmission <nablarch.common.web.token.OnDoubleSubmission>` アノテーションを、
-アクションのメソッドに対して設定する。
+将 :java:extdoc:`OnDoubleSubmission <nablarch.common.web.token.OnDoubleSubmission>` 注解设置在Action方法上。
 
 .. code-block:: java
 
- // 二重サブミットと判定した場合の遷移先をpath属性に指定する。
+ // 在path属性中指定判定为重复提交时的跳转目标。
  @OnDoubleSubmission(path = "/WEB-INF/view/error/userError.jsp")
  public HttpResponse register(HttpRequest req, ExecutionContext ctx) {
      // 省略。
  }
 
-OnDoubleSubmissionのデフォルト値を指定する
+指定 OnDoubleSubmission 的默认值
 --------------------------------------------------
-应用全体で使用する
-:java:extdoc:`OnDoubleSubmission <nablarch.common.web.token.OnDoubleSubmission>` アノテーションのデフォルト値を設定する場合は、
+如需设置应用程序整体使用的
+:java:extdoc:`OnDoubleSubmission <nablarch.common.web.token.OnDoubleSubmission>` 注解默认值，
+请将
 :java:extdoc:`BasicDoubleSubmissionHandler <nablarch.common.web.token.BasicDoubleSubmissionHandler>`
-をコンポーネント定義に ``doubleSubmissionHandler`` という名前で追加する。
+以 ``doubleSubmissionHandler`` 名称添加到组件定义中。
 
 :java:extdoc:`BasicDoubleSubmissionHandler <nablarch.common.web.token.BasicDoubleSubmissionHandler>`
-では、アノテーションの属性が指定されなかった場合に、自身のプロパティに設定されたリソースパス、メッセージID、ステータスコードを使用する。
+在注解属性未指定时，使用自身属性中设置的资源路径、消息ID、状态码。
 
-設定例
+配置示例
  .. code-block:: xml
 
   <component name="doubleSubmissionHandler"
              class="nablarch.common.web.token.BasicDoubleSubmissionHandler">
-    <!-- 二重サブミットと判定した場合の遷移先のリソースパス -->
+    <!-- 判定为重复提交时的跳转目标资源路径 -->
     <property name="path" value="/WEB-INF/view/error/userError.jsp" />
-    <!-- 二重サブミットと判定した場合の遷移先画面に表示するエラーメッセージに使用するメッセージID -->
+    <!-- 判定为重复提交时在跳转目标画面上显示错误消息使用的消息ID -->
     <property name="messageId" value="DOUBLE_SUBMISSION_ERROR" />
-    <!-- 二重サブミットと判定した場合のレスポンスステータス。デフォルトは400 -->
+    <!-- 判定为重复提交时的响应状态码。默认为400 -->
     <property name="statusCode" value="200" />
   </component>
 
 .. important::
  :java:extdoc:`OnDoubleSubmission <nablarch.common.web.token.OnDoubleSubmission>`
- と :java:extdoc:`BasicDoubleSubmissionHandler <nablarch.common.web.token.BasicDoubleSubmissionHandler>` の
- どちらもpathの指定がない場合は、二重サブミットと判定した場合に遷移先が不明なため、システムエラーとなる。
+ 和 :java:extdoc:`BasicDoubleSubmissionHandler <nablarch.common.web.token.BasicDoubleSubmissionHandler>` 
+ 两者都未指定path时，由于判定为重复提交时跳转目标不明，将成为系统错误。
 
- このため、 :ref:`トークンを使用した二重サブミットの防止 <tag-double_submission_server_side>`
- を使用する应用では、必ずどちらかのpathを指定すること。
+ 因此，使用 :ref:`使用令牌防止重复提交 <tag-double_submission_server_side>`
+ 的应用程序中，必须指定其中之一的path。
 
-OnDoubleSubmissionの振る舞いを変更する
+更改 OnDoubleSubmission 的行为
 --------------------------------------------------
-:java:extdoc:`OnDoubleSubmission <nablarch.common.web.token.OnDoubleSubmission>` アノテーションの振る舞いは、
+:java:extdoc:`OnDoubleSubmission <nablarch.common.web.token.OnDoubleSubmission>` 注解的行为，
+可以通过实现
 :java:extdoc:`DoubleSubmissionHandler <nablarch.common.web.token.DoubleSubmissionHandler>`
-インタフェースを実装することで変更できる。実装したクラスをコンポーネント定義に ``doubleSubmissionHandler`` という名前で追加する。
-
+接口来更改。将实现的类以 ``doubleSubmissionHandler`` 名称添加到组件定义中。

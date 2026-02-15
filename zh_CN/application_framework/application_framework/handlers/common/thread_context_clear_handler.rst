@@ -1,13 +1,13 @@
 .. _thread_context_clear_handler:
 
-スレッドコンテキスト変数削除ハンドラ
+线程上下文变量删除handler
 =======================================
 
 .. contents:: 目录
   :depth: 3
   :local:
   
-:ref:`thread_context_handler` で設定したスレッドローカル上の変数を削除するハンドラ。
+删除 :ref:`thread_context_handler` 设置的线程本地变量的handler。
 
 本handler执行以下处理。
 
@@ -30,14 +30,13 @@ handler类名
     <artifactId>nablarch-fw</artifactId>
   </dependency>
 
-制約
+约束
 ---------------------------------------
-本ハンドラは極力手前側に配置すること。
-なぜなら復路処理では、本ハンドラより手前のハンドラではスレッドコンテキストにアクセスできなくなるため。
+本handler应尽量配置在靠前位置。
+因为在返回处理中，本handler之前的handler将无法访问线程上下文。
 
 .. _thread_context_clear_handler-clear:
 
-スレッドコンテキストの削除処理
+线程上下文的删除处理
 -----------------------------------------------------------
-:ref:`thread_context_handler` でスレッドローカル上に設定した値を全て削除する。
-
+删除 :ref:`thread_context_handler` 在线程本地设置的所有值。

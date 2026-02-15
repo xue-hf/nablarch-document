@@ -1,26 +1,26 @@
 .. _`main`:
 
-通用启动器
+通用启动launcher
 ==================================================
 
 .. contents:: 目录
   :depth: 3
   :local:
 
-作为独立应用启动的起点的handler。
+standalone启动的应用程序的起点handler。
 
-通过直接使用java命令启动应用时，会初始化System Repository，并执行其中定义的handler队列。
+通过从java命令直接启动，可以初始化系统仓库并执行其中定义的handler队列。
 
-本handler会执行以下处理。
-处理的详细内容请参考Javadoc。
+本handler执行以下处理。
+处理详情请参考括号内的Javadoc。
 
 * 命令行参数解析( :java:extdoc:`CommandLine<nablarch.fw.launcher.CommandLine>` )
 * 启动日志输出( :java:extdoc:`LauncherLogFormatter#getStartLogFormat<nablarch.fw.launcher.logging.LauncherLogFormatter.getStartLogFormat()>` )
-* System Repository初始化
-* 运行上下文初始化( :java:extdoc:`Main#setupExecutionContext <nablarch.fw.launcher.Main.setupExecutionContext(nablarch.fw.launcher.CommandLine,nablarch.fw.ExecutionContext)>` )
-* 应用配置日志输出( :java:extdoc:`ApplicationSettingLogFormatter<nablarch.core.log.app.ApplicationSettingLogFormatter>` )
-* handler队列的执行
-* 异常及错误日志输出
+* 系统仓库初始化
+* 执行上下文初始化( :java:extdoc:`Main#setupExecutionContext <nablarch.fw.launcher.Main.setupExecutionContext(nablarch.fw.launcher.CommandLine,nablarch.fw.ExecutionContext)>` )
+* 应用设置日志输出( :java:extdoc:`ApplicationSettingLogFormatter<nablarch.core.log.app.ApplicationSettingLogFormatter>` )
+* handler队列执行
+* 根据异常及错误的日志输出
 * 结束日志输出( :java:extdoc:`LauncherLogFormatter#getEndLogFormat<nablarch.fw.launcher.logging.LauncherLogFormatter.getEndLogFormat()>` )
 
 处理流程如下。
@@ -42,35 +42,35 @@ handler类名
 
 .. _main-run_application:
 
-应用启动
+启动应用程序
 --------------------------------------------------
-使用java命令启动应用时，需要指定 :java:extdoc:`Main类<nablarch.fw.launcher.Main>` 。
+通过java命令指定 :java:extdoc:`Main类<nablarch.fw.launcher.Main>` 来启动应用程序。
 
-フレームワークの動作に必要となる以下の3つのオプションは、必ず指定する必要がある。
-以下のオプションのうちいずれかが欠けていた場合は、即座に異常終了する。(終了コード = 127)
+框架运行所需的以下3个选项必须指定。
+如果缺少以下任一选项，将立即异常结束。(结束代码 = 127)
 
 \-diConfig
- System Repositoryの設定ファイルのパスを指定する。
- このオプションで指定されたパスを使ってSystem Repositoryを初期化する。
+ 指定系统仓库设置文件的路径。
+ 使用此选项指定的路径初始化系统仓库。
 
 \-requestPath
- 実行するアクションとリクエストIDを指定する。
+ 指定要执行的action和请求ID。
 
- 以下の書式で定義される文字列を設定する。
+ 设置按以下格式定义的字符串。
 
  .. code-block:: bash
 
-  実行するアクションのクラス名/リクエストID
+  要执行的action类名/请求ID
 
- このオプションで指定されたリクエストパスを
+ 此选项指定的请求路径将
  :java:extdoc:`Request#getRequestPath<nablarch.fw.Request.getRequestPath()>`
- が返すようになる。
+ 返回。
 
 \-userId
- ユーザIDを設定する。
- この値はセッションコンテキスト変数に ``user.id`` という名前で格納される。
+ 设置用户ID。
+ 此值将作为 ``user.id`` 名称存储在会话上下文变量中。
 
-以下に実行例を示す。
+以下显示执行示例。
 
 .. code-block:: bash
 
@@ -81,40 +81,40 @@ handler类名
 
 .. _main-option_parameter:
 
-应用起動に任意のオプションを設定する
+为应用程序启动设置任意选项
 --------------------------------------------------
-:java:extdoc:`Mainクラス<nablarch.fw.launcher.Main>` 起動時に、任意のオプションパラメータを指定することが出来る。
+:java:extdoc:`Main类<nablarch.fw.launcher.Main>` 启动时，可以指定任意选项参数。
 
-オプションパラメータは、「オプション名称」と「オプションの値」のペアで設定する。
+选项参数以"选项名称"和"选项值"的配对形式设置。
 
-例えば、オプション名称が ``optionName`` で 値が ``optionValue`` の場合は、以下のように指定する。
+例如，选项名称为 ``optionName`` 且值为 ``optionValue`` 时，指定如下。
 
 .. code-block:: bash
 
  java nablarch.fw.launcher.Main \
    -optionName optionValue
 
-应用でオプションを使用する場合は、 :java:extdoc:`ExecutionContext <nablarch.fw.ExecutionContext>` から取得する。
+在应用程序中使用选项时，从 :java:extdoc:`ExecutionContext <nablarch.fw.ExecutionContext>` 获取。
 
 .. code-block:: java
 
      @Override
     public Result handle(String inputData, ExecutionContext ctx) {
-      // getSessionScopedVarにオプション名称を指定して、値を取得する。
+      // 指定选项名称给getSessionScopedVar，获取值。
       final String value = ctx.getSessionScopedVar("optionName");
 
-      // 処理
+      // 处理
 
       return new Result.Success();
     } 
 
 .. tip::
 
-  应用起動時に必ず指定する必要があるオプションは、 :ref:`main-run_application` を参照
+  应用程序启动时必须指定的选项请参考 :ref:`main-run_application`
 
-异常及错误处理
+根据异常及错误的处理内容
 --------------------------------------------------
-本handler会捕捉到的异常及错误内容，根据其类型执行以下处理。
+本handler根据捕获的异常及错误内容，执行以下处理并返回结果。
 
 .. list-table::
   :header-rows: 1
@@ -126,20 +126,20 @@ handler类名
 
   * - :java:extdoc:`Result.Error <nablarch.fw.Result.Error>`
 
-      (包含其子类)
+      (包含子类)
 
-    - FATALレベルのログ出力を行う。
+    - 输出FATAL级别日志。
 
-      ログ出力後、ハンドラの処理結果として、以下の値を返す。
+      日志输出后，作为handler处理结果返回以下值。
 
-       ステータスコードが0～127の場合
-        ステータスコードをそのまま返す。
+       状态码为0～127时
+        直接返回状态码。
 
-       ステータスコードが0～127以外の場合
-        127を返す。
+       状态码为0～127以外时
+        返回127。
 
-  * - 上記以外の例外クラス
+  * - 上述以外的异常类
 
-    - FATALレベルのログ出力を行う。
+    - 输出FATAL级别日志。
 
-      ログ出力後、ハンドラの処理結果として、127を返す。
+      日志输出后，作为handler处理结果返回127。

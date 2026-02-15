@@ -1,31 +1,31 @@
 .. _validation:
 
-入力値のチェック
+输入值校验
 ==================================================
-クライアントから送信されるユーザ入力値や、システム間連携により外部システムから送信される値が妥当かを検証するための機能を提供する。
+提供用于验证从客户端发送的用户输入值以及通过系统间协作从外部系统发送的值是否合理的功能。
 
-入力値のチェックでは以下のことを行う。
+输入值校验主要进行以下检查：
 
-* 入力値が妥当な形式かどうか(例えば、桁数や文字種などのチェック)
-* システムの状態に適合しているかどうか(例えば、アカウントの重複登録チェック)
+* 输入值是否为合理的格式（例如，位数、字符种类等检查）
+* 是否符合系统状态（例如，账户重复注册检查）
 
-※入力値のチェックでエラーとなった場合に表示するメッセージの定義方法は、 :doc:`message` を参照。
+※关于输入值校验出错时显示的消息的定义方法，请参考 :doc:`message` 。
 
-Nablarchでは、以下の2種類のバリデーション機能を提供している。
+Nablarch提供以下两种验证功能：
 
 .. toctree::
   :maxdepth: 1
 
-  Jakarta EEのJakarta Bean Validationに準拠したバリデーション機能 (Bean Validation) <validation/bean_validation>
-  Nablarch独自のバリデーション機能 (Nablarch Validation) <validation/nablarch_validation>
+  符合Jakarta EE的Jakarta Bean Validation标准的验证功能 (Bean Validation) <validation/bean_validation>
+  Nablarch独有的验证功能 (Nablarch Validation) <validation/nablarch_validation>
 
-どちらの機能を使用しても入力値のチェックは行えるが、以下の理由によりJakarta EEに準拠した機能を使用することを推奨する。
+虽然使用任一功能都可以进行输入值校验，但出于以下原因，建议使用符合Jakarta EE标准的功能：
 
-* Jakarta Bean ValidationはJakarta EEで仕様が定められており情報が豊富である。
-* 開発者がNablarch独自のバリデーションの使い方などを覚える必要がない。
+* Jakarta Bean Validation在Jakarta EE中有规范定义，相关信息丰富。
+* 开发者无需学习Nablarch独有的验证使用方法。
 
 .. tip::
- :ref:`bean_validation` と :ref:`nablarch_validation` で提供している機能の違いは、 :ref:`validation-functional_comparison` を参照。
+ 关于 :ref:`bean_validation` 和 :ref:`nablarch_validation` 提供的功能差异，请参考 :ref:`validation-functional_comparison` 。
 
 .. toctree::
   :hidden:

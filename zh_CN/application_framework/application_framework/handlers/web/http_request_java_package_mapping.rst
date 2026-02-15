@@ -1,6 +1,6 @@
 .. _http_request_java_package_mapping:
 
-HTTPリクエストディスパッチハンドラ
+HTTP请求分发handler
 ==================================================
 
 .. contents:: 目录
@@ -8,53 +8,53 @@ HTTPリクエストディスパッチハンドラ
   :local:
 
 
-本ハンドラは、应用の機能ごとに行う処理を記載するアクションに処理を委譲する。\
-委譲先のクラス、メソッドは、アクセスしたURLによって決定される。\
-本クラスを使用したディスパッチでは、URL形式は下記の通りであることを想定している。
+本handler将处理委托给记录应用各功能处理内容的Action。
+委托的类、方法由访问的URL决定。
+使用本类进行分发时，假定URL格式如下。
 
-URL形式
+URL格式
   /\<baseUri\>/\<className\>/\<methodName\>
 
-上記形式の\<\>で囲まれた部分はそれぞれ下記を意味する。
+上述格式中<>包围的部分分别表示以下内容。
 
 .. list-table::
   :class: white-space-normal
   :header-rows: 1
   :widths: 20 80
 
-  * - ラベル
-    - 意味
+  * - 标签
+    - 含义
   
   * - baseUri
-    - コンテキストルートからの相対パス
+    - 上下文根目录的相对路径
 
   * - className
-    - クラス名
+    - 类名
 
   * - methodName    
-    - Action类のメソッド名は、HTTPのメソッド + メソッド名として実装する。
+    - Action类的方法名，实现为HTTP方法 + 方法名。
 
-      httpのメソッドが ``post`` の場合で、URLのmethodNameが ``register`` の場合には、
-      Action类のメソッド名は、 ``postRegister`` とする。
+      HTTP方法为 ``post`` 且URL的methodName为 ``register`` 时，
+      Action类的方法名为 ``postRegister`` 。
 
-      なお、 ``get`` と ``post`` の場合には、 ``do`` を使用できる。
-      上記の例の場合、 ``doRegister`` となる。
+      此外， ``get`` 和 ``post`` 可以使用 ``do`` 。
+      上述示例中，为 ``doRegister`` 。
 
 .. tip::
-  URLとアクションとのマッピングの指定方法については、 :ref:`java_package_mapping_entry-dispatch_settings` を参照。
+  URL与Action映射的指定方法请参考 :ref:`java_package_mapping_entry-dispatch_settings` 。
 
 .. _http_request_java_package_mapping-router_adaptor:
 
 .. important::
-  HTTPリクエストディスパッチハンドラでは、クラス名を元にURLが決まるため、柔軟なURLを使用できない。
-  例えば、  ``/user/index`` のようなURLを使用したい場合、クラス名を ``user`` とする必要がある。
-  これは、Javaの一般的なクラス名の規約に違反しており、推奨されない。
+  HTTP请求分发handler中，URL由类名决定，无法使用灵活的URL。
+  例如，要使用 ``/user/index`` 这样的URL，需要将类名设为 ``user`` 。
+  这违反了Java一般类名规范，不推荐这样做。
 
-  このため、このハンドラを使うよりも、URLとAction类とのマッピングを柔軟に設定できる :ref:`router_adaptor` を使用することを推奨する。
+  因此，推荐使用能够灵活设置URL与Action类映射的 :ref:`router_adaptor` ，而不是使用本handler。
 
 本handler执行以下处理。
 
-* URIを解析し、対応するアクションのメソッドを呼び出す。
+* 解析URI，调用对应的Action方法。
 
 处理流程如下。
 
@@ -73,21 +73,21 @@ handler类名
     <artifactId>nablarch-fw-web</artifactId>
   </dependency>
   
-制約
+约束
 -----------------------
 
-handler队列の最後に置くこと
-  本ハンドラは、後続のハンドラを呼び出さない。
-  このため、本ハンドラの配置はhandler队列の最後に置くこと。
+放在handler队列的最后
+  本handler不调用后续handler。
+  因此，本handler必须放在handler队列的最后。
 
 
 .. _java_package_mapping_entry-dispatch_settings:
 
-ディスパッチの設定
+分发设置
 ----------------------------------------------------------------------------------------------------
 
-本クラスを使用する際は、前述の baseUri と、アクションを配置するパッケージ(ベースパッケージ)の設定が必須となる。
-以下にbaseUri を ``action`` 、ベースパッケージを ``jp.co.tis.nablarch.example`` に設定する例を示す。
+使用本类时，前述的baseUri和放置Action的包（基础包）设置是必需的。
+以下显示将baseUri设为 ``action`` 、基础包设为 ``jp.co.tis.nablarch.example`` 的示例。
 
 .. code-block:: xml
 
@@ -97,21 +97,20 @@ handler队列の最後に置くこと
     <property name="basePackage" value="jp.co.tis.nablarch.example"/>
   </component>
 
-上記設定の場合のディスパッチ例を以下に示す。
+上述设置时的分发示例如下。
 
 :URL: /action/UserAction/index
-:ディスパッチ先クラス: jp.co.tis.nablarch.example.UserAction
+:分发目标类: jp.co.tis.nablarch.example.UserAction
 
 .. _java_package_mapping_entry-multi_package:
 
-アクションが複数のパッケージに配置される場合の設定
+Action分布在多个包时的设置
 -------------------------------------------------------------------------------------
 
-アクションは、複数のパッケージにまたがって配置できる。
-この場合、前述の :ref:`java_package_mapping_entry-dispatch_settings` に記載のベースパッケージを全Actionが置かれるパッケージに
-設定し、URIのクラス名にベースパッケージから対応づける Action までのパスを記載する。
+Action可以分布在多个包中。
+此时，将前述 :ref:`java_package_mapping_entry-dispatch_settings` 中记载的基础包设为放置所有Action的包，
+在URI的类名中记录从基础包到对应Action的路径。
 
-以下にクラスの配置とURLの対応付けの例を示す。
+以下显示类放置位置和URL映射的示例。
 
 .. image:: ../images/HttpRequestJavaPackageMapping/package_mapping.png
-

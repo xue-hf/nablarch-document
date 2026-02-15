@@ -1,30 +1,30 @@
 .. _jaxrs_response_handler:
 
-Jakarta RESTful Web Servicesレスポンスハンドラ
+Jakarta RESTful Web Services响应handler
 ==================================================
 .. contents:: 目录
   :depth: 3
   :local:
 
 .. tip::
-  本機能は、Nablarch5までは「JAX-RSレスポンスハンドラ」という名称だった。
-  しかし、Java EEがEclipse Foundationに移管され仕様名が変わったことに伴い「Jakarta RESTful Web Servicesレスポンスハンドラ」という名称に変更された。
+  本功能在Nablarch5之前的版本名为"JAX-RS响应handler"。
+  但随着Java EE移管至Eclipse Foundation导致规范名称变更，现更名为"Jakarta RESTful Web Services响应handler"。
 
-  変更されたのは名称のみで、機能的な差は無い。
+  仅名称变更，功能上无差异。
 
-  その他、Nablarch6で名称が変更された機能については :ref:`renamed_features_in_nablarch_6` を参照のこと。
+  其他Nablarch6中名称变更的功能请参阅 :ref:`renamed_features_in_nablarch_6`。
 
-本ハンドラでは、後続のハンドラ(リソース(アクション)クラスや :ref:`body_convert_handler`)
-から戻されたレスポンス情報を、クライアントに返却する。
-後続のハンドラで例外及びエラーが送出された場合には、エラー及び例外に対応したレスポンス情報を構築しクライアントに返却する。
+本handler将后续handler(资源(Action)类或 :ref:`body_convert_handler`)
+返回的响应信息返回给客户端。
+如果后续handler中抛出异常或错误，则构建对应异常及错误的响应信息返回给客户端。
 
 本handler执行以下处理。
 
-* 例外及びエラー発生時のレスポンス情報を生成する。
-  詳細は、 :ref:`jaxrs_response_handler-error_response` を参照。
-* 例外及びエラー発生時のログを出力する。
-  詳細は、 :ref:`jaxrs_response_handler-error_log` を参照
-* クライアントへのレスポンスを返却する。
+* 生成异常及错误发生时的响应信息。
+  详情请参阅 :ref:`jaxrs_response_handler-error_response`。
+* 输出异常及错误发生时的日志。
+  详情请参阅 :ref:`jaxrs_response_handler-error_log`
+* 返回给客户端的响应。
 
 处理流程如下。
 
@@ -44,25 +44,25 @@ handler类名
     <artifactId>nablarch-fw-jaxrs</artifactId>
   </dependency>
 
-制約
+约束
 ------------------------------
-なし。
+无。
 
 
 .. _jaxrs_response_handler-error_response:
 
-例外及びエラーに応じたレスポンスの生成
+根据异常及错误生成响应
 --------------------------------------------------
-例外及びエラーに応じたレスポンス情報の生成は、 :java:extdoc:`errorResponseBuilder <nablarch.fw.jaxrs.JaxRsResponseHandler.setErrorResponseBuilder(nablarch.fw.jaxrs.ErrorResponseBuilder)>` プロパティに設定された
-:java:extdoc:`ErrorResponseBuilder <nablarch.fw.jaxrs.ErrorResponseBuilder>` により行われる。
-ただし、発生した例外クラスが :java:extdoc:`HttpErrorResponse <nablarch.fw.web.HttpErrorResponse>` の場合は、
-:java:extdoc:`HttpErrorResponse#getResponse() <nablarch.fw.web.HttpErrorResponse.getResponse()>` から戻される
-:java:extdoc:`HttpResponse <nablarch.fw.web.HttpResponse>` がクライアントに戻される。
+根据异常及错误生成响应信息由设置在 :java:extdoc:`errorResponseBuilder <nablarch.fw.jaxrs.JaxRsResponseHandler.setErrorResponseBuilder(nablarch.fw.jaxrs.ErrorResponseBuilder)>` 属性中的
+:java:extdoc:`ErrorResponseBuilder <nablarch.fw.jaxrs.ErrorResponseBuilder>` 执行。
+但是，如果发生的异常类为 :java:extdoc:`HttpErrorResponse <nablarch.fw.web.HttpErrorResponse>`，
+则返回 :java:extdoc:`HttpErrorResponse#getResponse() <nablarch.fw.web.HttpErrorResponse.getResponse()>` 
+返回的 :java:extdoc:`HttpResponse <nablarch.fw.web.HttpResponse>` 给客户端。
 
-設定を省略した場合は、デフォルト実装の :java:extdoc:`ErrorResponseBuilder <nablarch.fw.jaxrs.ErrorResponseBuilder>` が使用される。
-デフォルト実装では、プロジェクト要件を満たせない場合は、デフォルト実装クラスを継承して対応すること。
+如果省略设置，则使用默认实现的 :java:extdoc:`ErrorResponseBuilder <nablarch.fw.jaxrs.ErrorResponseBuilder>`。
+如果默认实现无法满足项目需求，可以通过继承默认实现类来对应。
 
-以下に設定例を示す。
+以下为例。
 
 .. code-block:: xml
 
@@ -73,22 +73,23 @@ handler类名
   </component>
 
 .. important::
-  ErrorResponseBuilderは例外及びエラーに応じたレスポンスを生成する役割のため、ErrorResponseBuilderの処理中に例外が発生するとレスポンスが生成されず、クライアントにレスポンスを返せない状態となる。
-  そのため、プロジェクトでErrorResponseBuilderをカスタマイズする場合は、ErrorResponseBuilderの処理中に例外が発生しないように実装すること。
-  ErrorResponseBuilderの処理中に例外が発生した場合、フレームワークはErrorResponseBuilderの処理中に発生した例外をWARNレベルで
-  ログ出力を行い、ステータスコード500のレスポンスを生成し、後続処理を継続する。
+  ErrorResponseBuilder的职责是根据异常及错误生成响应，如果在ErrorResponseBuilder的处理过程中发生异常，
+  则无法生成响应，导致无法向客户端返回响应。
+  因此，项目在自定义ErrorResponseBuilder时，应确保ErrorResponseBuilder的处理过程中不会发生异常。
+  如果在ErrorResponseBuilder的处理过程中发生异常，框架将以WARN级别
+  输出日志，生成状态码500的响应，并继续后续处理。
 
 .. _jaxrs_response_handler-error_log:
 
-例外及びエラーに応じたログ出力
+根据异常及错误输出日志
 --------------------------------------------------
-例外及びエラーに応じたログ出力は :java:extdoc:`errorLogWriter <nablarch.fw.jaxrs.JaxRsResponseHandler.setErrorLogWriter(nablarch.fw.jaxrs.JaxRsErrorLogWriter)>` プロパティに設定された
-:java:extdoc:`JaxRsErrorLogWriter <nablarch.fw.jaxrs.JaxRsErrorLogWriter>` により行われる。
+根据异常及错误输出日志由设置在 :java:extdoc:`errorLogWriter <nablarch.fw.jaxrs.JaxRsResponseHandler.setErrorLogWriter(nablarch.fw.jaxrs.JaxRsErrorLogWriter)>` 属性中的
+:java:extdoc:`JaxRsErrorLogWriter <nablarch.fw.jaxrs.JaxRsErrorLogWriter>` 执行。
 
-設定を省略した場合は、デフォルト実装の :java:extdoc:`JaxRsErrorLogWriter <nablarch.fw.jaxrs.JaxRsErrorLogWriter>` が使用される。
-デフォルト実装では、プロジェクト要件を満たせない場合は、デフォルト実装クラスを継承して対応すること。
+如果省略设置，则使用默认实现的 :java:extdoc:`JaxRsErrorLogWriter <nablarch.fw.jaxrs.JaxRsErrorLogWriter>`。
+如果默认实现无法满足项目需求，可以通过继承默认实现类来对应。
 
-以下に設定例を示す。
+以下为例。
 
 .. code-block:: xml
 
@@ -98,17 +99,17 @@ handler类名
     </property>
   </component>
 
-拡張例
+扩展示例
 --------------------------------------------------
 
 .. _jaxrs_response_handler-error_response_body:
 
-エラー時のレスポンスにメッセージを設定する
+在错误时响应中设置消息
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-バリデーションエラー発生時など、エラーレスポンスのボディにエラーメッセージを設定して返却したい場合がある。
-このような場合は、 :java:extdoc:`ErrorResponseBuilder <nablarch.fw.jaxrs.ErrorResponseBuilder>` の継承クラスを作成して対応する。
+验证错误发生时等，有时希望在错误响应主体中设置错误消息返回。
+这种情况下，可以创建 :java:extdoc:`ErrorResponseBuilder <nablarch.fw.jaxrs.ErrorResponseBuilder>` 的继承类来对应。
 
-以下に、JSON形式のエラーメッセージをレスポンスに設定する場合の実装例を示す。
+以下是在响应中设置JSON格式错误消息时的实现例。
 
 .. code-block:: java
 
@@ -130,7 +131,7 @@ handler类名
           final HttpResponse response = new HttpResponse(400);
           response.setContentType(MediaType.APPLICATION_JSON);
 
-          // エラーメッセージの生成処理は省略
+          // 错误消息生成处理省略
 
           try {
               response.write(objectMapper.writeValueAsString(errorMessages));
@@ -143,15 +144,15 @@ handler类名
 
 .. _jaxrs_response_handler-individually_error_response:
 
-特定のエラーの場合に個別に定義したエラーレスポンスを返却する
+特定错误时返回单独定义的错误响应
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-本ハンドラの後続の処理で発生したエラーに対し、
-個別にステータスコードやボディを定義したエラーレスポンスを返却したい場合がある。
+对于本handler后续处理中发生的错误，
+有时希望返回单独定义了状态码和主体的错误响应。
 
-その場合は :java:extdoc:`ErrorResponseBuilder <nablarch.fw.jaxrs.ErrorResponseBuilder>` の継承クラスを作成し、
-送出された例外に応じたレスポンスの生成処理を個別に実装する。
+这种情况下，可以创建 :java:extdoc:`ErrorResponseBuilder <nablarch.fw.jaxrs.ErrorResponseBuilder>` 的继承类，
+根据抛出的异常单独实现响应的生成处理。
 
-実装例を以下に示す。
+实现例如下。
 
 .. code-block:: java
 
@@ -170,22 +171,22 @@ handler类名
 
 .. _jaxrs_response_handler-response_finisher:
 
-クライアントに返すレスポンスに共通処理を追加する
+给返回客户端的响应添加通用处理
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-正常時やエラー発生時を問わず、クライアントに返すレスポンスに対してCORS対応やセキュリティ対応で共通的にレスポンスヘッダを指定したい場合がある。
+无论正常时还是错误发生时，有时希望对返回客户端的响应统一设置CORS对应或安全对应的响应头部。
 
-そのような場合に対応するため、フレームワークはレスポンスを仕上げる :java:extdoc:`ResponseFinisher <nablarch.fw.jaxrs.ResponseFinisher>` インタフェースを提供している。
-レスポンスに共通処理を追加したい場合は、ResponseFinisherインタフェースを実装したクラスを作成し、
-本ハンドラのresponseFinishersプロパティに指定すればよい。
+为应对此类情况，框架提供了完善响应的 :java:extdoc:`ResponseFinisher <nablarch.fw.jaxrs.ResponseFinisher>` 接口。
+如需给响应添加通用处理，可以创建实现ResponseFinisher接口的类，
+指定到本handler的responseFinishers属性中。
 
-実装例と設定例を以下に示す。
+实现例和设置例如下。
 
 .. code-block:: java
 
   public class CustomResponseFinisher implements ResponseFinisher {
       @Override
       public void finish(HttpRequest request, HttpResponse response, ExecutionContext context) {
-          // レスポンスヘッダを設定するなど、共通処理を行う。
+          // 设置响应头部等，执行通用处理。
       }
   }
 
@@ -194,19 +195,19 @@ handler类名
   <component class="nablarch.fw.jaxrs.JaxRsResponseHandler">
     <property name="responseFinishers">
       <list>
-        <!-- ResponseFinisherを実装したクラスを指定 -->
+        <!-- 指定实现ResponseFinisher的类 -->
         <component class="sample.CustomResponseFinisher" />
       </list>
     </property>
   </component>
 
-セキュリティ関連のレスポンスヘッダを設定する :ref:`secure_handler` のような既存のハンドラをResponseFinisherとして使用したい場合がある。
-このような場合に対応するため、ハンドラをResponseFinisherに適用する
-:java:extdoc:`AdoptHandlerResponseFinisher <nablarch.fw.jaxrs.AdoptHandlerResponseFinisher>` クラスを提供している。
+有时希望将设置安全相关响应头部的 :ref:`secure_handler` 等现有handler作为ResponseFinisher使用。
+为应对此类情况，提供了将handler适配为ResponseFinisher的
+:java:extdoc:`AdoptHandlerResponseFinisher <nablarch.fw.jaxrs.AdoptHandlerResponseFinisher>` 类。
 
-AdoptHandlerResponseFinisherで使用できるハンドラは、自らレスポンスを作成せず、後続ハンドラが返すレスポンスに変更を加えるハンドラに限定される。
+可在AdoptHandlerResponseFinisher中使用的handler，仅限那些不自行创建响应，而是对后续handler返回的响应进行更改的handler。
 
-AdoptHandlerResponseFinisherの使用例を下記に示す。
+AdoptHandlerResponseFinisher使用例如下。
 
 .. code-block:: xml
 
@@ -215,7 +216,7 @@ AdoptHandlerResponseFinisherの使用例を下記に示す。
       <list>
         <!-- AdoptHandlerResponseFinisher -->
         <component class="nablarch.fw.jaxrs.AdoptHandlerResponseFinisher">
-          <!-- handlerプロパティにハンドラを指定 -->
+          <!-- handler属性中指定handler -->
           <property name="handler" ref="secureHandler" />
         </component>
       </list>

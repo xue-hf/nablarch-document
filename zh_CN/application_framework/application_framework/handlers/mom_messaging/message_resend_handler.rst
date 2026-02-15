@@ -1,29 +1,29 @@
 .. _message_resend_handler:
 
-再送電文制御ハンドラ
+消息重发控制handler
 ==================================================
 .. contents:: 目录
   :depth: 3
   :local:
 
-本ハンドラでは、同一の電文を繰り返し受信した際の再送制御を行う。
+本handler用于对重复接收同一电文时进行重发控制。
 
-具体的には、同一の電文を繰り返し受信した際に、その電文に対する処理が終わっているかどうか(応答電文が作成されているかどうか)を判断する。
-もし、既に処理が終わっていた場合(応答電文が作成されていた場合)には、業務処理を再度行うのではなく作成済みの応答電文を自動的に送信する。
+具体来说，当重复接收同一电文时，判断该电文的处理是否已完成（是否已创建响应电文）。
+如果处理已完成（已创建响应电文），则不执行业务处理，而是自动发送已创建的响应电文。
 
-同一電文かの判定方法は :ref:`message_resend_handler-resent_message` を参照。
+判断是否为同一电文的方法请参考 :ref:`message_resend_handler-resent_message` 。
 
 .. tip::
-  本ハンドラを適用するメリットは以下のとおり。
+  应用本handler的优点如下。
 
-  * 既に応答電文が作成済みの場合、業務処理が省略出来るため、システム負荷を低減できる。
-  * データベースへ登録する処理の場合に、業務処理を省略できるため2重取り込みの防止ロジックなどを実装する必要がない。
+  * 如果响应电文已创建，可以省略业务处理，从而降低系统负载。
+  * 对于向数据库注册的处理，可以省略业务处理，因此不需要实现防止重复导入的逻辑。
 
 本handler执行以下处理。
 
-* 応答電文の保存処理
-* 再送電文の場合は、保存した応答電文の送信処理
-* 再送電文以外及び保存済み応答電文がない場合は、後続ハンドラへの処理の委譲
+* 响应电文的保存处理
+* 重发电文时，发送已保存的响应电文
+* 非重发电文或没有已保存响应电文时，委托给后续handler处理
 
 处理流程如下。
 
@@ -43,97 +43,97 @@ handler类名
     <artifactId>nablarch-fw-messaging</artifactId>
   </dependency>
 
-制約
+约束
 ------------------------------
-:ref:`message_reply_handler` よりも後ろに設定すること
-  本ハンドラで作成した応答電文を送信する必要がある。
-  このため、電文を送信するための :ref:`message_reply_handler` よりも後ろに本ハンドラを設定する必要がある。
+:ref:`message_reply_handler` 之后设置
+  本handler需要发送创建的响应电文。
+  因此，需要将本handler设置在用于发送电文的 :ref:`message_reply_handler` 之后。
 
-:ref:`transaction_management_handler` よりも後ろに設定すること
-  本ハンドラでは、応答電文をデータベースに保存する。
-  このため、データベースへのトランザクション制御を実現する :ref:`transaction_management_handler` よりも後ろに本ハンドラを設定する必要がある。
+:ref:`transaction_management_handler` 之后设置
+  本handler将响应电文保存到数据库中。
+  因此，需要将本handler设置在实现数据库事务控制的 :ref:`transaction_management_handler` 之后。
 
 
-応答電文の保存先について
+响应电文的保存位置
 --------------------------------------------------
-後続ハンドラで作成された応答電文は、データベース上のテーブルに格納する。
-このため、予め応答電文の保存用テーブルを作成しておく必要がある。
+后续handler创建的响应电文存储在数据库表中。
+因此，需要预先创建响应电文的保存表。
 
-応答電文を格納するテーブルの定義は以下の通り。
-デフォルトのテーブル名や物理名の値は、 :java:extdoc:`SentMessageTableSchema <nablarch.fw.messaging.tableschema.SentMessageTableSchema>` を参照。
+存储响应电文的表定义如下。
+默认的表名和物理名值请参考 :java:extdoc:`SentMessageTableSchema <nablarch.fw.messaging.tableschema.SentMessageTableSchema>` 。
 
 .. list-table::
   :header-rows: 1
   :class: white-space-normal
   :widths: 30 30 40
 
-  * - カラム名
-    - 制約等
-    - 格納する値
+  * - 列名
+    - 约束等
+    - 存储的值
 
-  * - リクエストID
-    - 主キー |br| 文字列型
-    - 要求電文のリクエストID
+  * - 请求ID
+    - 主键 |br| 字符串型
+    - 请求电文的请求ID
 
-  * - メッセージID
-    - 主キー |br| 文字列型
-    - 要求電文のメッセージID
+  * - 消息ID
+    - 主键 |br| 字符串型
+    - 请求电文的消息ID
 
-      再送電文の場合には、メッセージIDではなく相関メッセージIDを使用する。
+      重发电文时，使用相关消息ID而非消息ID。
 
-      詳細は、 :ref:`message_resend_handler-resent_message` を参照
+      详情请参考 :ref:`message_resend_handler-resent_message`
 
-  * - 宛先キューの論理名
-    - 文字列型
-    - 応答電文を送信するための宛先キューの論理名 |br|
+  * - 目标队列的逻辑名
+    - 字符串型
+    - 发送响应电文的目标队列逻辑名 |br|
       (:java:extdoc:`InterSystemMessage#getDestination() <nablarch.fw.messaging.InterSystemMessage.getDestination()>`)
 
-  * - 処理結果コード
-    - 文字列型
-    - 応答電文の処理結果コード |br| 
+  * - 处理结果代码
+    - 字符串型
+    - 响应电文的处理结果代码 |br| 
       (:java:extdoc:`ResponseMessage#getStatusCode() <nablarch.fw.messaging.ResponseMessage.getStatusCode()>`)
 
-  * - 応答電文
-    - バイナリ型
-    - 応答電文の内容 |br|
+  * - 响应电文
+    - 二进制型
+    - 响应电文的内容 |br|
       (:java:extdoc:`ResponseMessage#getBodyBytes() <nablarch.fw.messaging.ResponseMessage.getBodyBytes()>`)
 
-デフォルトのテーブル名やカラム名を変更したい場合には、設定により変更できる。
-詳細は、 :java:extdoc:`SentMessageTableSchema <nablarch.fw.messaging.tableschema.SentMessageTableSchema>` 及び
-:java:extdoc:`sentMessageTableSchemaプロパティ <nablarch.fw.messaging.handler.MessageResendHandler.setSentMessageTableSchema(nablarch.fw.messaging.tableschema.SentMessageTableSchema)>` を参照。
+如需更改默认的表名和列名，可通过设置进行更改。
+详情请参考 :java:extdoc:`SentMessageTableSchema <nablarch.fw.messaging.tableschema.SentMessageTableSchema>` 以及
+:java:extdoc:`sentMessageTableSchema属性 <nablarch.fw.messaging.handler.MessageResendHandler.setSentMessageTableSchema(nablarch.fw.messaging.tableschema.SentMessageTableSchema)>` 。
 
 .. _message_resend_handler-resent_message:
 
-同一電文(再送電文)の判定方法
+同一电文(重发电文)的判断方法
 --------------------------------------------------
-本ハンドラが受信した電文が以下の条件を満たす場合、既に処理済みの要求電文を受信したと判断し、保存した応答電文を処理結果として返却する。
+本handler接收的电文满足以下条件时，判断为已接收已处理的请求电文，并返回保存的响应电文作为处理结果。
 
-* フレームワーク制御ヘッダの再送要求フラグに値が設定されている
-* 受信した要求電文のリクエストIDとメッセージIDに紐づくデータが、応答電文を保存したテーブルに存在している
+* 框架控制头部的重发请求标志已设置值
+* 接收的请求电文相关联的请求ID和消息ID的数据存在于保存响应电文的表中
 
-フレームワーク制御ヘッダの詳細は、 :ref:`フレームワーク制御ヘッダ <mom_system_messaging-fw_header>` を参照。
+框架控制头部的详情请参考 :ref:`框架控制头部 <mom_system_messaging-fw_header>` 。
 
 .. important::
 
-  相手先システムが要求電文を再送する際には、以下の制約を満たす必要がある。
-  この制約を満たせない場合、本ハンドラを使用できないので、プロジェクト側で再送制御を実現するハンドラを新たに作成する必要がある。
+  对方系统在重发请求电文时，需要满足以下约束。
+  如果无法满足此约束，则不能使用本handler，需要项目方自行创建实现重发控制的handler。
 
-  * 再送電文の相関メッセージIDには、初回送信時の要求電文のメッセージIDを設定すること
-  * フレームワーク制御ヘッダの再送要求フラグに値を設定すること
+  * 重发电文的相关消息ID需设置为初次发送时请求电文的消息ID
+  * 框架控制头部的重发请求标志需设置值
 
-フレームワーク制御ヘッダの設定
+框架控制头部的设置
 --------------------------------------------------
-応答電文内のフレームワーク制御ヘッダの定義を変更する場合には、プロジェクトで拡張したフレームワーク制御ヘッダの定義を設定する必要がある。
-設定しない場合は、デフォルトの :java:extdoc:`StandardFwHeaderDefinition <nablarch.fw.messaging.StandardFwHeaderDefinition>` が使用される。
+如需更改响应电文内的框架控制头部定义，需要设置项目中扩展的框架控制头部定义。
+未设置时，将使用默认的 :java:extdoc:`StandardFwHeaderDefinition <nablarch.fw.messaging.StandardFwHeaderDefinition>` 。
 
-フレームワーク制御ヘッダの詳細は、 :ref:`フレームワーク制御ヘッダ <mom_system_messaging-fw_header>` を参照。
+框架控制头部的详情请参考 :ref:`框架控制头部 <mom_system_messaging-fw_header>` 。
 
-以下に設定例を示す。
+以下显示设置示例。
 
 .. code-block:: xml
 
   <component class="nablarch.fw.messaging.handler.MessageResendHandler">
-    <!-- フレームワーク制御ヘッダの設定 -->
+    <!-- 框架控制头部的设置 -->
     <property name="fwHeaderDefinition">
       <component class="sample.SampleFwHeaderDefinition" />
     </property>
@@ -142,4 +142,3 @@ handler类名
 .. |br| raw:: html
 
   <br />
-

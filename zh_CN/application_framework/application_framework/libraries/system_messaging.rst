@@ -1,18 +1,18 @@
 .. _system_messaging:
 
-システム間メッセージング
+系统间消息传递
 ==================================================
 
 .. contents:: 目录
   :depth: 3
   :local:
 
-外部システムとメッセージの送受信を行う機能を提供する。
+提供与外部系统进行消息收发的功能。
 
-Nablarchでは、以下の2種類のメッセージング機能を提供している。
+Nablarch提供以下两种消息传递功能。
 
 .. toctree::
   :maxdepth: 1
 
-  MOMを使用してメッセージの送受信を行う機能 <system_messaging/mom_system_messaging>
-  HTTPを使用してメッセージの送受信を行う機能 <system_messaging/http_system_messaging>
+  使用MOM进行消息收发的功能 <system_messaging/mom_system_messaging>
+  使用HTTP进行消息收发的功能 <system_messaging/http_system_messaging>
