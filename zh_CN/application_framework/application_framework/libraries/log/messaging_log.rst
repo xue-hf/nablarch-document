@@ -1,38 +1,38 @@
 .. _messaging_log:
 
-メッセージングログの出力
+消息处理日志的输出
 ==================================================
 
 .. contents:: 目录
   :depth: 3
   :local:
 
-メッセージングログは、 :ref:`system_messaging` の中でメッセージ送受信時に出力する。
-应用では、ログ出力を設定することにより出力する。
+消息处理日志是在 :ref:`system_messaging` 中消息收发时输出的。
+应用程序通过设置日志输出来进行输出。
 
-メッセージングログの出力方針
+消息处理日志的输出策略
 --------------------------------------------------
-メッセージングログは、应用全体のログ出力を行う应用ログに出力する。
+消息处理日志输出到应用程序整体日志输出的应用程序日志中。
 
-.. list-table:: メッセージングログの出力方針
+.. list-table:: 消息处理日志的输出策略
    :header-rows: 1
    :class: white-space-normal
    :widths: 50,50
 
-   * - ログレベル
-     - ロガー名
+   * - 日志级别
+     - 日志记录器名称
 
    * - INFO
      - MESSAGING
 
-上記出力方針に対するログ出力の設定例を下記に示す。
+上述输出策略的日志输出设置示例如下。
 
-log.propertiesの設定例
+log.properties的设置示例
  .. code-block:: properties
 
   writerNames=appLog
 
-  # 应用ログの出力先
+  # 应用程序日志的输出目标
   writer.appLog.className=nablarch.core.log.basic.FileLogWriter
   writer.appLog.filePath=/var/log/app/app.log
   writer.appLog.encoding=UTF-8
@@ -42,24 +42,24 @@ log.propertiesの設定例
 
   availableLoggersNamesOrder=MESSAGING,ROO
 
-  # 应用ログの設定
+  # 应用程序日志的设置
   loggers.ROO.nameRegex=.*
   loggers.ROO.level=INFO
   loggers.ROO.writerNames=appLog
 
-  # メッセージングログの設定
+  # 消息处理日志的设置
   loggers.MESSAGING.nameRegex=MESSAGING
   loggers.MESSAGING.level=INFO
   loggers.MESSAGING.writerNames=appLog
 
-app-log.propertiesの設定例
+app-log.properties的设置示例
  .. code-block:: properties
 
   # MessagingLogFormatter
   #messagingLogFormatter.className=
   #messagingLogFormatter.maskingChar=
   #messagingLogFormatter.maskingPatterns=
-  # MOMメッセージング用フォーマット
+  # MOM消息处理用格式
   messagingLogFormatter.sentMessageFormat=@@@@ SENT MESSAGE @@@@\
                                             \n\tthread_name    = [$threadName$]\
                                             \n\tmessage_id     = [$messageId$]\
@@ -75,7 +75,7 @@ app-log.propertiesの設定例
                                                 \n\tcorrelation_id = [$correlationId$]\
                                                 \n\treply_to       = [$replyTo$]\
                                                 \n\tmessage_body   = [$messageBody$]
-  # HTTPメッセージング用フォーマット
+  # HTTP消息处理用格式
   messagingLogFormatter.httpSentMessageFormat=@@@@ HTTP SENT MESSAGE @@@@\
                                                 \n\tthread_name    = [$threadName$]\
                                                 \n\tmessage_id     = [$messageId$]\
@@ -96,46 +96,46 @@ app-log.propertiesの設定例
 
 .. _messaging_log-setting:
 
-メッセージングログの設定
+消息处理日志的设置
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-メッセージングログの設定は、 :ref:`log-app_log_setting` で説明したプロパティファイルに行う。
+消息处理日志的设置是在 :ref:`log-app_log_setting` 中说明的属性文件中进行的。
 
-記述ルール
+记述规则
  \
 
  messagingLogFormatter.className
-  :java:extdoc:`MessagingLogFormatter <nablarch.fw.messaging.logging.MessagingLogFormatter>` を実装したクラス。
-  差し替える場合に指定する。
+  实现 :java:extdoc:`MessagingLogFormatter <nablarch.fw.messaging.logging.MessagingLogFormatter>` 的类。
+  在替换时指定。
 
  messagingLogFormatter.maskingPatterns
-  メッセージ本文のマスク対象文字列を正規表現で指定する。
-  正規表現で指定された最初のキャプチャ部分(括弧で囲まれた部分)がマスク対象となる。
+  用正则表达式指定消息正文的掩码对象字符串。
+  正则表达式中指定的第一个捕获部分（括号内的部分）成为掩码对象。
 
-  例えばパターンとして「<password>(.+?)</password>」と指定し、
-  実電文に「<password>hoge</password>」が含まれる場合、
-  出力される文字列は「<password>****</password>」となる。
+  例如将模式指定为「<password>(.+?)</password>」，
+  实际电文中包含「<password>hoge</password>」时，
+  输出的字符串将变为「<password>****</password>」。
 
-  複数指定する場合はカンマ区切り。
-  指定した正規表現は大文字小文字を区別しない。
+  指定多个时用逗号分隔。
+  指定的正则表达式不区分大小写。
 
  messagingLogFormatter.maskingChar
-  マスクに使用する文字。デフォルトは’*’。
+  掩码使用的字符。默认是'*'。
 
  messagingLogFormatter.sentMessageFormat
-  MOM送信メッセージのログ出力に使用するフォーマット。
+  MOM发送消息的日志输出使用的格式。
 
-  フォーマットに指定可能なプレースホルダ
-   :スレッド名: $threadName$
-   :メッセージID: $messageId$
-   :送信宛先: $destination$
-   :関連メッセージID: $correlationId$
-   :応答宛先: $replyTo$
-   :有効期間: $timeToLive$
-   :メッセージボディの内容: $messageBody$ [#placeholder]_
-   :メッセージボディのヘキサダンプ: $messageBodyHex$ [#placeholder]_
-   :メッセージボディのバイト長: $messageBodyLength$
+  格式中可指定的占位符
+   :线程名: $threadName$
+   :消息ID: $messageId$
+   :发送目标: $destination$
+   :相关消息ID: $correlationId$
+   :响应目标: $replyTo$
+   :有效期: $timeToLive$
+   :消息体的内容: $messageBody$ [#placeholder]_
+   :消息体的十六进制转储: $messageBodyHex$ [#placeholder]_
+   :消息体的字节长度: $messageBodyLength$
 
-  デフォルトのフォーマット
+  默认格式
    .. code-block:: bash
 
     @@@@ SENT MESSAGE @@@@
@@ -148,20 +148,20 @@ app-log.propertiesの設定例
         \n\tmessage_body   = [$messageBody$]
 
  messagingLogFormatter.receivedMessageFormat
-  MOM受信メッセージのログ出力に使用するフォーマット。
+  MOM接收消息的日志输出使用的格式。
 
-  フォーマットに指定可能なプレースホルダ
-   :スレッド名: $threadName$
-   :メッセージID: $messageId$
-   :送信宛先: $destination$
-   :関連メッセージID: $correlationId$
-   :応答宛先: $replyTo$
-   :有効期間: $timeToLive$
-   :メッセージボディの内容: $messageBody$ [#placeholder]_
-   :メッセージボディのヘキサダンプ: $messageBodyHex$ [#placeholder]_
-   :メッセージボディのバイト長: $messageBodyLength$
+  格式中可指定的占位符
+   :线程名: $threadName$
+   :消息ID: $messageId$
+   :发送目标: $destination$
+   :相关消息ID: $correlationId$
+   :响应目标: $replyTo$
+   :有效期: $timeToLive$
+   :消息体的内容: $messageBody$ [#placeholder]_
+   :消息体的十六进制转储: $messageBodyHex$ [#placeholder]_
+   :消息体的字节长度: $messageBodyLength$
 
-  デフォルトのフォーマット
+  默认格式
    .. code-block:: bash
 
     @@@@ RECEIVED MESSAGE @@@@
@@ -173,19 +173,19 @@ app-log.propertiesの設定例
         \n\tmessage_body   = [$messageBody$]
 
  messagingLogFormatter.httpSentMessageFormat
-  HTTP送信メッセージのログ出力に使用するフォーマット。
+  HTTP发送消息的日志输出使用的格式。
 
-  フォーマットに指定可能なプレースホルダ
-   :スレッド名: $threadName$
-   :メッセージID: $messageId$
-   :送信先: $destination$
-   :関連メッセージID: $correlationId$
-   :メッセージボディの内容: $messageBody$ [#placeholder]_
-   :メッセージボディのヘキサダンプ: $messageBodyHex$ [#placeholder]_
-   :メッセージボディのバイト長: $messageBodyLength$
-   :メッセージのヘッダ: $messageHeader$
+  格式中可指定的占位符
+   :线程名: $threadName$
+   :消息ID: $messageId$
+   :发送目标: $destination$
+   :相关消息ID: $correlationId$
+   :消息体的内容: $messageBody$ [#placeholder]_
+   :消息体的十六进制转储: $messageBodyHex$ [#placeholder]_
+   :消息体的字节长度: $messageBodyLength$
+   :消息的头部: $messageHeader$
 
-  デフォルトのフォーマット
+  默认格式
    .. code-block:: bash
 
     @@@@ HTTP SENT MESSAGE @@@@
@@ -197,19 +197,19 @@ app-log.propertiesの設定例
         \n\tmessage_body   = [$messageBody$]
 
  messagingLogFormatter.httpReceivedMessageFormat
-  HTTP受信メッセージのログ出力に使用するフォーマット。
+  HTTP接收消息的日志输出使用的格式。
 
-  フォーマットに指定可能なプレースホルダ
-   :スレッド名: $threadName$
-   :メッセージID: $messageId$
-   :送信先: $destination$
-   :関連メッセージID: $correlationId$
-   :メッセージボディの内容: $messageBody$ [#placeholder]_
-   :メッセージボディのヘキサダンプ: $messageBodyHex$ [#placeholder]_
-   :メッセージボディのバイト長: $messageBodyLength$
-   :メッセージのヘッダ: $messageHeader$
+  格式中可指定的占位符
+   :线程名: $threadName$
+   :消息ID: $messageId$
+   :发送目标: $destination$
+   :相关消息ID: $correlationId$
+   :消息体的内容: $messageBody$ [#placeholder]_
+   :消息体的十六进制转储: $messageBodyHex$ [#placeholder]_
+   :消息体的字节长度: $messageBodyLength$
+   :消息的头部: $messageHeader$
 
-  デフォルトのフォーマット
+  默认格式
    .. code-block:: bash
 
     @@@@ HTTP RECEIVED MESSAGE @@@@
@@ -223,152 +223,152 @@ app-log.propertiesの設定例
 .. [#placeholder]
 
 
-  * **$messageBody$:** 電文をISO-8859-1固定でエンコードした結果を出力する。
-  * **$messageBodyHex$:** $messageBody$の内容をヘキサダンプして出力する。
+  * **$messageBody$:** 以ISO-8859-1固定编码电文的结果输出。
+  * **$messageBodyHex$:** 将$messageBody$的内容进行十六进制转储后输出。
 
-記述例
+记述示例
  .. code-block:: properties
 
   messagingLogFormatter.className=nablarch.fw.messaging.logging.MessagingLogFormatter
   messagingLogFormatter.maskingChar=#
   messagingLogFormatter.maskingPatterns=<password>(.+?)</password>,<mobilePhoneNumber>(.+?)</mobilePhoneNumber>
 
-  # MOMメッセージング用フォーマット
+  # MOM消息处理用格式
   messagingLogFormatter.sentMessageFormat=@@@@ SENT MESSAGE @@@@\n\tthread_name    = [$threadName$]\n\tmessage_id     = [$messageId$]\n\tdestination    = [$destination$]\n\tcorrelation_id = [$correlationId$]\n\treply_to       = [$replyTo$]\n\ttime_to_live   = [$timeToLive$]\n\tmessage_body   = [$messageBody$]
   messagingLogFormatter.receivedMessageFormat=@@@@ RECEIVED MESSAGE @@@@\n\tthread_name    = [$threadName$]\n\tmessage_id     = [$messageId$]\n\tdestination    = [$destination$]\n\tcorrelation_id = [$correlationId$]\n\treply_to       = [$replyTo$]\n\tmessage_body   = [$messageBody$]
 
-  # HTTPメッセージング用フォーマット
+  # HTTP消息处理用格式
   messagingLogFormatter.httpSentMessageFormat=@@@@ HTTP SENT MESSAGE @@@@\n\tthread_name    = [$threadName$]\n\tmessage_id     = [$messageId$]\n\tdestination    = [$destination$]\n\tcorrelation_id = [$correlationId$]\n\tmessage_header = [$messageHeader$]\n\tmessage_body   = [$messageBody$]
   messagingLogFormatter.httpReceivedMessageFormat=@@@@ HTTP RECEIVED MESSAGE @@@@\n\tthread_name    = [$threadName$]\n\tmessage_id     = [$messageId$]\n\tdestination    = [$destination$]\n\tcorrelation_id = [$correlationId$]\n\tmessage_header = [$messageHeader$]\n\tmessage_body   = [$messageBody$]
 
 .. _messaging_log-json_setting:
 
-JSON形式の構造化ログとして出力する
+作为JSON格式的结构化日志输出
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-:ref:`log-json_log_setting` 設定によりログをJSON形式で出力できるが、
-:java:extdoc:`MessagingLogFormatter <nablarch.fw.messaging.logging.MessagingLogFormatter>` では
-メッセージングログの各項目はmessageの値に文字列として出力される。
-メッセージングログの各項目もJSONの値として出力するには、
-:java:extdoc:`MessagingJsonLogFormatter <nablarch.fw.messaging.logging.MessagingJsonLogFormatter>` を使用する。
-設定は、 :ref:`log-app_log_setting` で説明したプロパティファイルに行う。
+通过 :ref:`log-json_log_setting` 设置可以将日志输出为JSON格式，
+但 :java:extdoc:`MessagingLogFormatter <nablarch.fw.messaging.logging.MessagingLogFormatter>` 中
+消息处理日志的各个项目作为字符串输出到message的值中。
+要将消息处理日志的各个项目也作为JSON的值输出，
+请使用 :java:extdoc:`MessagingJsonLogFormatter <nablarch.fw.messaging.logging.MessagingJsonLogFormatter>` 。
+设置是在 :ref:`log-app_log_setting` 中说明的属性文件中进行的。
 
-記述ルール
- :java:extdoc:`MessagingJsonLogFormatter <nablarch.fw.messaging.logging.MessagingJsonLogFormatter>` を用いる際に
- 指定するプロパティは以下の通り。
+记述规则
+ :java:extdoc:`MessagingJsonLogFormatter <nablarch.fw.messaging.logging.MessagingJsonLogFormatter>` 使用时
+ 指定的属性如下。
  
- messagingLogFormatter.className ``必須``
-  JSON形式でログを出力する場合、
-  :java:extdoc:`MessagingJsonLogFormatter <nablarch.fw.messaging.logging.MessagingJsonLogFormatter>` を指定する。
+ messagingLogFormatter.className ``必需``
+  JSON格式输出日志时，
+  指定 :java:extdoc:`MessagingJsonLogFormatter <nablarch.fw.messaging.logging.MessagingJsonLogFormatter>` 。
 
  messagingLogFormatter.maskingPatterns
-  メッセージ本文のマスク対象文字列を正規表現で指定する。
-  正規表現で指定された最初のキャプチャ部分(括弧で囲まれた部分)がマスク対象となる。
+  用正则表达式指定消息正文的掩码对象字符串。
+  正则表达式中指定的第一个捕获部分（括号内的部分）成为掩码对象。
 
-  例えばパターンとして「<password>(.+?)</password>」と指定し、
-  実電文に「<password>hoge</password>」が含まれる場合、
-  出力される文字列は「<password>****</password>」となる。
+  例如将模式指定为「<password>(.+?)</password>」，
+  实际电文中包含「<password>hoge</password>」时，
+  输出的字符串将变为「<password>****</password>」。
 
-  複数指定する場合はカンマ区切り。
-  指定した正規表現は大文字小文字を区別しない。
+  指定多个时用逗号分隔。
+  指定的正则表达式不区分大小写。
 
  messagingLogFormatter.maskingChar
-  マスクに使用する文字。デフォルトは’*’。
+  掩码使用的字符。默认是'*'。
 
  messagingLogFormatter.sentMessageTargets
-  MOM送信メッセージログの出力項目。カンマ区切りで指定する。
+  MOM发送消息日志的输出项目。用逗号分隔指定。
 
-  指定可能な出力項目およびデフォルトの出力項目
-   :ラベル: label ``デフォルト``
-   :スレッド名: threadName ``デフォルト``
-   :メッセージID: messageId ``デフォルト``
-   :送信宛先: destination ``デフォルト``
-   :関連メッセージID: correlationId ``デフォルト``
-   :応答宛先: replyTo ``デフォルト``
-   :有効期間: timeToLive ``デフォルト``
-   :メッセージボディの内容: messageBody [#placeholder_json]_ ``デフォルト``
-   :メッセージボディのヘキサダンプ: messageBodyHex [#placeholder_json]_
-   :メッセージボディのバイト長: messageBodyLength
+  可指定的输出项目和默认输出项目
+   :标签: label ``默认``
+   :线程名: threadName ``默认``
+   :消息ID: messageId ``默认``
+   :发送目标: destination ``默认``
+   :相关消息ID: correlationId ``默认``
+   :响应目标: replyTo ``默认``
+   :有效期: timeToLive ``默认``
+   :消息体的内容: messageBody [#placeholder_json]_ ``默认``
+   :消息体的十六进制转储: messageBodyHex [#placeholder_json]_
+   :消息体的字节长度: messageBodyLength
 
  messagingLogFormatter.receivedMessageTargets
-  MOM受信メッセージログの出力項目。カンマ区切りで指定する。
+  MOM接收消息日志的输出项目。用逗号分隔指定。
 
-  指定可能な出力項目およびデフォルトの出力項目
-   :ラベル: label ``デフォルト``
-   :スレッド名: threadName ``デフォルト``
-   :メッセージID: messageId ``デフォルト``
-   :送信宛先: destination ``デフォルト``
-   :関連メッセージID: correlationId ``デフォルト``
-   :応答宛先: replyTo ``デフォルト``
-   :有効期間: timeToLive
-   :メッセージボディの内容: messageBody [#placeholder_json]_ ``デフォルト``
-   :メッセージボディのヘキサダンプ: messageBodyHex [#placeholder_json]_
-   :メッセージボディのバイト長: messageBodyLength
+  可指定的输出项目和默认输出项目
+   :标签: label ``默认``
+   :线程名: threadName ``默认``
+   :消息ID: messageId ``默认``
+   :发送目标: destination ``默认``
+   :相关消息ID: correlationId ``默认``
+   :响应目标: replyTo ``默认``
+   :有效期: timeToLive
+   :消息体的内容: messageBody [#placeholder_json]_ ``默认``
+   :消息体的十六进制转储: messageBodyHex [#placeholder_json]_
+   :消息体的字节长度: messageBodyLength
 
  messagingLogFormatter.httpSentMessageTargets
-  HTTP送信メッセージログの出力項目。カンマ区切りで指定する。
+  HTTP发送消息日志的输出项目。用逗号分隔指定。
 
-  指定可能な出力項目およびデフォルトの出力項目
-   :ラベル: label ``デフォルト``
-   :スレッド名: threadName ``デフォルト``
-   :メッセージID: messageId ``デフォルト``
-   :送信先: destination ``デフォルト``
-   :関連メッセージID: correlationId ``デフォルト``
-   :メッセージボディの内容: messageBody [#placeholder_json]_ ``デフォルト``
-   :メッセージボディのヘキサダンプ: messageBodyHex [#placeholder_json]_
-   :メッセージボディのバイト長: messageBodyLength
-   :メッセージのヘッダ: messageHeader ``デフォルト``
+  可指定的输出项目和默认输出项目
+   :标签: label ``默认``
+   :线程名: threadName ``默认``
+   :消息ID: messageId ``默认``
+   :发送目标: destination ``默认``
+   :相关消息ID: correlationId ``默认``
+   :消息体的内容: messageBody [#placeholder_json]_ ``默认``
+   :消息体的十六进制转储: messageBodyHex [#placeholder_json]_
+   :消息体的字节长度: messageBodyLength
+   :消息的头部: messageHeader ``默认``
 
  messagingLogFormatter.httpReceivedMessageTargets
-  HTTP受信メッセージログの出力項目。カンマ区切りで指定する。
+  HTTP接收消息日志的输出项目。用逗号分隔指定。
 
-  指定可能な出力項目およびデフォルトの出力項目
-   :ラベル: label ``デフォルト``
-   :スレッド名: threadName ``デフォルト``
-   :メッセージID: messageId ``デフォルト``
-   :送信先: destination ``デフォルト``
-   :関連メッセージID: correlationId ``デフォルト``
-   :メッセージボディの内容: messageBody [#placeholder_json]_ ``デフォルト``
-   :メッセージボディのヘキサダンプ: messageBodyHex [#placeholder_json]_
-   :メッセージボディのバイト長: messageBodyLength
-   :メッセージのヘッダ: messageHeader ``デフォルト``
+  可指定的输出项目和默认输出项目
+   :标签: label ``默认``
+   :线程名: threadName ``默认``
+   :消息ID: messageId ``默认``
+   :发送目标: destination ``默认``
+   :相关消息ID: correlationId ``默认``
+   :消息体的内容: messageBody [#placeholder_json]_ ``默认``
+   :消息体的十六进制转储: messageBodyHex [#placeholder_json]_
+   :消息体的字节长度: messageBodyLength
+   :消息的头部: messageHeader ``默认``
 
  messagingLogFormatter.sentMessageLabel
-  MOM送信メッセージログのlabelに出力する値。
-  デフォルトは ``"SENT MESSAGE"``。
+  MOM发送消息日志的label输出的值。
+  默认是 ``"SENT MESSAGE"``。
 
  messagingLogFormatter.receivedMessageLabel
-  MOM受信メッセージログのlabelに出力する値。
-  デフォルトは ``"RECEIVED MESSAGE"``。
+  MOM接收消息日志的label输出的值。
+  默认是 ``"RECEIVED MESSAGE"``。
 
  messagingLogFormatter.httpSentMessageLabel
-  HTTP送信メッセージログのlabelに出力する値。
-  デフォルトは ``"HTTP SENT MESSAGE"``。
+  HTTP发送消息日志的label输出的值。
+  默认是 ``"HTTP SENT MESSAGE"``。
 
  messagingLogFormatter.httpReceivedMessageLabel
-  HTTP受信メッセージログのlabelに出力する値。
-  デフォルトは ``"HTTP RECEIVED MESSAGE"``。
+  HTTP接收消息日志的label输出的值。
+  默认是 ``"HTTP RECEIVED MESSAGE"``。
 
  messagingLogFormatter.structuredMessagePrefix
-  フォーマット後のメッセージ文字列が JSON 形式に整形されていることを識別できるようにするために、メッセージの先頭に付与するマーカー文字列。
-  メッセージの先頭にあるマーカー文字列が :java:extdoc:`JsonLogFormatter <nablarch.core.log.basic.JsonLogFormatter>` に設定しているマーカー文字列と一致する場合、 :java:extdoc:`JsonLogFormatter <nablarch.core.log.basic.JsonLogFormatter>` はメッセージを JSON データとして処理する。
-  デフォルトは ``"$JSON$"`` となる。
-  変更する場合は、LogWriterの ``structuredMessagePrefix`` プロパティを使用して :java:extdoc:`JsonLogFormatter <nablarch.core.log.basic.JsonLogFormatter>` にも同じ値を設定すること（LogWriterのプロパティについては :ref:`log-basic_setting` を参照）。
+  为了能够识别格式化后的消息字符串已格式化为JSON格式，在消息开头附加的标记字符串。
+  当消息开头的标记字符串与 :java:extdoc:`JsonLogFormatter <nablarch.core.log.basic.JsonLogFormatter>` 中设置的标记字符串一致时， :java:extdoc:`JsonLogFormatter <nablarch.core.log.basic.JsonLogFormatter>` 会将消息作为JSON数据处理。
+  默认是 ``"$JSON$"`` 。
+  更改时，请使用LogWriter的 ``structuredMessagePrefix`` 属性将相同值也设置到 :java:extdoc:`JsonLogFormatter <nablarch.core.log.basic.JsonLogFormatter>` （关于LogWriter的属性请参考 :ref:`log-basic_setting` ）。
 
 .. [#placeholder_json]
 
-  * **messageBody:** 電文をISO-8859-1固定でエンコードした結果を出力する。
-  * **messageBodyHex:** messageBodyの内容をヘキサダンプして出力する。
+  * **messageBody:** 以ISO-8859-1固定编码电文的结果输出。
+  * **messageBodyHex:** 将messageBody的内容进行十六进制转储后输出。
 
-記述例
+记述示例
  .. code-block:: properties
 
   messagingLogFormatter.className=nablarch.fw.messaging.logging.MessagingJsonLogFormatter
   messagingLogFormatter.structuredMessagePrefix=$JSON$
 
-  # MOMメッセージング用フォーマット
+  # MOM消息处理用格式
   messagingLogFormatter.sentMessageTargets=threadName,messageId,destination,correlationId,replyTo,timeToLive,messageBody
   messagingLogFormatter.receivedMessageTargets=threadName,messageId,destination,correlationId,replyTo,messageBody
 
-  # HTTPメッセージング用フォーマット
+  # HTTP消息处理用格式
   messagingLogFormatter.httpSentMessageTargets=threadName,messageId,destination,correlationId,messageHeader,messageBody
   messagingLogFormatter.httpReceivedMessageTargets=threadName,messageId,destination,correlationId,messageHeader,messageBody

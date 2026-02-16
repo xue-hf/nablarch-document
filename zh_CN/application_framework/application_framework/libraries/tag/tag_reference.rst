@@ -1,2025 +1,2025 @@
 .. _tag_reference:
 
 ==================================================
-タグリファレンス
+标签参考
 ==================================================
 
-| このリファレンスには、Nablarchが提供するタグとその属性について記述されている。
-| 各タグの使用方法や使用例などの詳細については :ref:`tag` を参照すること。
+| 本参考描述了Nablarch提供的标签及其属性。
+| 关于各标签的使用方法和使用示例等详细信息，请参阅 :ref:`tag` 。
 
-フォーム
- | :ref:`tag-form_tag` (フォーム)
+表单
+ | :ref:`tag-form_tag` (表单)
 
 .. _tag_reference_input:
 
-入力
- | :ref:`tag-text_tag` (テキスト)
- | :ref:`tag-search_tag` (検索テキスト)
- | :ref:`tag-tel_tag` (電話番号)
+输入
+ | :ref:`tag-text_tag` (文本)
+ | :ref:`tag-search_tag` (搜索文本)
+ | :ref:`tag-tel_tag` (电话号码)
  | :ref:`tag-url_tag` (URL)
- | :ref:`tag-email_tag` (メールアドレス)
- | :ref:`tag-date_tag` (日付)
+ | :ref:`tag-email_tag` (邮件地址)
+ | :ref:`tag-date_tag` (日期)
  | :ref:`tag-month_tag` (月)
- | :ref:`tag-week_tag` (週)
- | :ref:`tag-time_tag` (時間)
- | :ref:`tag-datetimeLocal_tag` (ローカル日時)
- | :ref:`tag-number_tag` (数値)
- | :ref:`tag-range_tag` (レンジ)
- | :ref:`tag-color_tag` (色)
- | :ref:`tag-textarea_tag` (テキストエリア)
- | :ref:`tag-password_tag` (パスワード)
- | :ref:`tag-radio_tag` (ラジオボタン)
- | :ref:`tag-checkbox_tag` (チェックボックス)
- | :ref:`tag-file_tag` (ファイル)
+ | :ref:`tag-week_tag` (周)
+ | :ref:`tag-time_tag` (时间)
+ | :ref:`tag-datetimeLocal_tag` (本地日期时间)
+ | :ref:`tag-number_tag` (数值)
+ | :ref:`tag-range_tag` (范围)
+ | :ref:`tag-color_tag` (颜色)
+ | :ref:`tag-textarea_tag` (文本区域)
+ | :ref:`tag-password_tag` (密码)
+ | :ref:`tag-radio_tag` (单选按钮)
+ | :ref:`tag-checkbox_tag` (复选框)
+ | :ref:`tag-file_tag` (文件)
  | :ref:`tag-plain_hidden_tag` (hidden)
- | :ref:`tag-select_tag` (プルダウン)
- | :ref:`tag-composite_key_radio_button_tag` (複合キーに対応したラジオボタン)
- | :ref:`tag-composite_key_checkbox_tag` (複合キーに対応したチェックボックス)
- | :ref:`tag-radio_buttons_tag` (複数のラジオボタン)
- | :ref:`tag-checkboxes_tag` (複数のチェックボックス)
- | :ref:`tag-code_select_tag` (コード値のプルダウン)
- | :ref:`tag-code_checkbox_tag` (コード値のチェックボックス)
- | :ref:`tag-code_radio_buttons_tag` (コード値の複数のラジオボタン)
- | :ref:`tag-code_checkboxes_tag` (コード値の複数のチェックボッス)
- | :ref:`tag-hidden_tag` (hidden暗号化)
- | :ref:`tag-hidden_store_tag` (HIDDENストア)
+ | :ref:`tag-select_tag` (下拉框)
+ | :ref:`tag-composite_key_radio_button_tag` (对应复合键的单选按钮)
+ | :ref:`tag-composite_key_checkbox_tag` (对应复合键的复选框)
+ | :ref:`tag-radio_buttons_tag` (多个单选按钮)
+ | :ref:`tag-checkboxes_tag` (多个复选框)
+ | :ref:`tag-code_select_tag` (代码值的下拉框)
+ | :ref:`tag-code_checkbox_tag` (代码值的复选框)
+ | :ref:`tag-code_radio_buttons_tag` (代码值的多个单选按钮)
+ | :ref:`tag-code_checkboxes_tag` (代码值的多个复选框)
+ | :ref:`tag-hidden_tag` (hidden加密)
+ | :ref:`tag-hidden_store_tag` (HIDDEN存储)
 
 .. _tag_reference_submit:
 
-サブミット
- フォームのサブミット
-  | :ref:`tag-submit_tag` (inputタグのボタン)
-  | :ref:`tag-button_tag` (buttonタグのボタン)
-  | :ref:`tag-submit_link_tag` (リンク)
+提交
+ 表单的提交
+  | :ref:`tag-submit_tag` (input标签的按钮)
+  | :ref:`tag-button_tag` (button标签的按钮)
+  | :ref:`tag-submit_link_tag` (链接)
 
- 別ウィンドウを開いてサブミット(ポップアップ)
-  | :ref:`tag-popup_submit_tag` (inputタグのボタン)
-  | :ref:`tag-popup_button_tag` (buttonタグのボタン)
-  | :ref:`tag-popup_link_tag` (リンク)
+ 打开别窗口提交(弹出窗口)
+  | :ref:`tag-popup_submit_tag` (input标签的按钮)
+  | :ref:`tag-popup_button_tag` (button标签的按钮)
+  | :ref:`tag-popup_link_tag` (链接)
 
- ダウンロード用のサブミット
-  | :ref:`tag-download_submit_tag` (inputタグのボタン)
-  | :ref:`tag-download_button_tag` (buttonタグのボタン)
-  | :ref:`tag-download_link_tag` (リンク)
+ 用于下载的提交
+  | :ref:`tag-download_submit_tag` (input标签的按钮)
+  | :ref:`tag-download_button_tag` (button标签的按钮)
+  | :ref:`tag-download_link_tag` (链接)
 
- サブミット制御
-  | :ref:`tag-param_tag` (サブミット時に追加するパラメータの指定)
-  | :ref:`tag-change_param_name_tag` (ポップアップ用のサブミット時にパラメータ名の変更)
+ 提交控制
+  | :ref:`tag-param_tag` (指定提交时添加的参数)
+  | :ref:`tag-change_param_name_tag` (弹出窗口提交时更改参数名)
 
 .. _tag_reference_output:
 
-出力
- 値
-  | :ref:`tag-write_tag` (オブジェクトの値)
-  | :ref:`tag-pretty_print_tag` (オブジェクトの値。修飾系のHTML(bタグなど)のみエスケープしない)
-  | :ref:`tag-raw_write_tag` (オブジェクトの値。HTMLエスケープしない)
-  | :ref:`tag-code_tag` (コード値)
-  | :ref:`tag-csp_nonce_tag` (Content Security Policyのnonceの値)
- メッセージ
-  | :ref:`tag-message_tag` (メッセージ)
- エラー
-  | :ref:`tag-errors_tag` (エラーメッセージの一覧表示)
-  | :ref:`tag-error_tag` (エラーメッセージの個別表示)
+输出
+ 值
+  | :ref:`tag-write_tag` (对象的值)
+  | :ref:`tag-pretty_print_tag` (对象的值。仅不转义修饰系HTML(如b标签等))
+  | :ref:`tag-raw_write_tag` (对象的值。不进行HTML转义)
+  | :ref:`tag-code_tag` (代码值)
+  | :ref:`tag-csp_nonce_tag` (Content Security Policy的nonce值)
+ 消息
+  | :ref:`tag-message_tag` (消息)
+ 错误
+  | :ref:`tag-errors_tag` (错误消息一览显示)
+  | :ref:`tag-error_tag` (错误消息个别显示)
 
-URIを指定するHTMLタグ(コンテキストパスの付加とURLリライト)
+指定URI的HTML标签(添加上下文路径和URL重写)
  | :ref:`tag-a_tag`
  | :ref:`tag-img_tag`
  | :ref:`tag-link_tag`
  | :ref:`tag-script_tag`
 
-ユーティリティ
- | :ref:`tag-no_cache_tag` (ブラウザのキャッシュを抑制する)
- | :ref:`tag-set_tag` (変数に値を設定する)
- | :ref:`tag-include_tag` (インクルード)
- | :ref:`tag-include_param_tag` (インクルード時に追加するパラメータの指定)
- | :ref:`tag-confirmation_page_tag` (入力画面と確認画面を共通化)
- | :ref:`tag-ignore_confirmation_tag` (部分的に確認画面の画面状態を無効化する)
- | :ref:`tag-for_input_page_tag` (入力画面のみボディを出力)
- | :ref:`tag-for_confirmation_page_tag` (確認画面のみボディを出力)
+工具
+ | :ref:`tag-no_cache_tag` (抑制浏览器缓存)
+ | :ref:`tag-set_tag` (设置变量值)
+ | :ref:`tag-include_tag` (包含)
+ | :ref:`tag-include_param_tag` (指定包含时添加的参数)
+ | :ref:`tag-confirmation_page_tag` (输入画面和确认画面共用)
+ | :ref:`tag-ignore_confirmation_tag` (部分禁用确认画面的画面状态)
+ | :ref:`tag-for_input_page_tag` (仅输入画面输出body)
+ | :ref:`tag-for_confirmation_page_tag` (仅确认画面输出body)
 
-共通属性
+通用属性
 ========================
-各カスタムタグの定義でここで定義した共通属性を参照する。
+在各自定义标签定义中引用此处定义的通用属性。
 
 .. _tag-generic_attributes_tag:
 
-全てのHTMLタグ
+所有HTML标签
 -------------------------
 
 .. table::
    :class: tag-reference
 
    ============================= ==========================================================================================
-   属性                          説明
+   属性                          说明
    ============================= ==========================================================================================
-   id                            XHTMLのid属性。
-   cssClass                      XHTMLのclass属性。
-   style                         XHTMLのstyle属性。
-   title                         XHTMLのtitle属性。
-   lang                          XHTMLのlang属性。
-   xmlLang                       XHTMLのxml:lang属性。
-   dir                           XHTMLのdir属性。
-   onclick                       XHTMLのonclick属性。
-   ondblclick                    XHTMLのondblclick属性。
-   onmousedown                   XHTMLのonmousedown属性。
-   onmouseup                     XHTMLのonmouseup属性。
-   onmouseover                   XHTMLのonmouseover属性。
-   onmousemove                   XHTMLのonmousemove属性。
-   onmouseout                    XHTMLのonmouseout属性。
-   onkeypress                    XHTMLのonkeypress属性。
-   onkeydown                     XHTMLのonkeydown属性。
-   onkeyup                       XHTMLのonkeyup属性。
+   id                            XHTML的id属性。
+   cssClass                      XHTML的class属性。
+   style                         XHTML的style属性。
+   title                         XHTML的title属性。
+   lang                          XHTML的lang属性。
+   xmlLang                       XHTML的xml:lang属性。
+   dir                           XHTML的dir属性。
+   onclick                       XHTML的onclick属性。
+   ondblclick                    XHTML的ondblclick属性。
+   onmousedown                   XHTML的onmousedown属性。
+   onmouseup                     XHTML的onmouseup属性。
+   onmouseover                   XHTML的onmouseover属性。
+   onmousemove                   XHTML的onmousemove属性。
+   onmouseout                    XHTML的onmouseout属性。
+   onkeypress                    XHTML的onkeypress属性。
+   onkeydown                     XHTML的onkeydown属性。
+   onkeyup                       XHTML的onkeyup属性。
    ============================= ==========================================================================================
 
 .. _tag-focus_attributes_tag:
 
-フォーカスを取得可能なHTMLタグ
+可获取焦点的HTML标签
 --------------------------------------------------
 
 .. table::
    :class: tag-reference
 
    ============================= ==========================================================================================
-   属性                          説明
+   属性                          说明
    ============================= ==========================================================================================
-   accesskey                     XHTMLのaccesskey属性。
-   tabindex                      XHTMLのtabindex属性。
-   onfocus                       XHTMLのonfocus属性。
-   onblur                        XHTMLのonblur属性。
+   accesskey                     XHTML的accesskey属性。
+   tabindex                      XHTML的tabindex属性。
+   onfocus                       XHTML的onfocus属性。
+   onblur                        XHTML的onblur属性。
    ============================= ==========================================================================================
 
 .. _tag-dynamic_attributes_tag:
 
-動的属性の使用
+动态属性的使用
 --------------------------------------------------
 
-動的属性が使用可能なタグでは、定義されていない属性も設定が可能となる。
+在可使用动态属性的标签中，也可以设置未定义的属性。
 
-個別属性
+单独属性
 ======================================================
 
 .. _tag-form_tag:
 
-formタグ
+form标签
 -------------------------
 
-:ref:`動的属性の使用可否 <tag-dynamic_attributes_tag>` ：可
+:ref:`动态属性的使用可否 <tag-dynamic_attributes_tag>` ：可
 
 .. table::
    :class: tag-reference
       
    ====================================== ==========================================================================================
-   属性                                     説明
+   属性                                     说明
    ====================================== ==========================================================================================
    :ref:`tag-generic_attributes_tag`      
-   name                                   XHTMLのname属性。
-   action                                 XHTMLのaction属性。
-   method                                 XHTMLのmethod属性。
-                                          デフォルトは ``post`` 。
-   enctype                                XHTMLのenctype属性。
-   onsubmit                               XHTMLのonsubmit属性。
-   onreset                                XHTMLのonreset属性。
-   accept                                 XHTMLのaccept属性。
-   acceptCharset                          XHTMLのaccept-charset属性。
-   target                                 XHTMLのtarget属性。
-   autocomplete                           HTML5のautocomplete属性。
-   windowScopePrefixes                    ウィンドウスコープ変数のプレフィックス。
-                                          複数指定する場合はカンマ区切り。
-                                          指定されたプレフィックスがマッチするリクエストパラメータをhiddenタグとして出力する。
-   useToken                               トークンを設定するか否か。
-                                          トークンを設定する場合は ``true`` 、設定しない場合は ``false`` 。
-                                          デフォルトは ``false`` 。
-                                          :ref:`tag-confirmation_page_tag` が指定された場合は、デフォルトが ``true`` となる。
-   secure                                 URIをhttpsにするか否か。
-                                          httpsにする場合は ``true`` 、しない場合は ``false`` 。
-   preventPostResubmit                    POST再送信防止機能を使用するか否か。
-                                          デフォルトは ``false`` 。
-                                          使用する場合は ``true`` 、しない場合は ``false`` 。
+   name                                   XHTML的name属性。
+   action                                 XHTML的action属性。
+   method                                 XHTML的method属性。
+                                          默认为 ``post`` 。
+   enctype                                XHTML的enctype属性。
+   onsubmit                               XHTML的onsubmit属性。
+   onreset                                XHTML的onreset属性。
+   accept                                 XHTML的accept属性。
+   acceptCharset                          XHTML的accept-charset属性。
+   target                                 XHTML的target属性。
+   autocomplete                           HTML5的autocomplete属性。
+   windowScopePrefixes                    窗口作用域变量的前缀。
+                                          指定多个时用逗号分隔。
+                                          将匹配指定前缀的请求参数作为hidden标签输出。
+   useToken                               是否设置令牌。
+                                          设置令牌时为 ``true`` ，不设置时为 ``false`` 。
+                                          默认为 ``false`` 。
+                                          指定 :ref:`tag-confirmation_page_tag` 时，默认为 ``true`` 。
+   secure                                 URI是否改为https。
+                                          改为https时为 ``true`` ，不改为 ``false`` 。
+   preventPostResubmit                    是否使用POST重发防止功能。
+                                          默认为 ``false`` 。
+                                          使用时为 ``true`` ，不使用时为 ``false`` 。
    ====================================== ==========================================================================================
 
 .. _tag-text_tag:
 
-textタグ
+text标签
 -------------------------
 
-:ref:`動的属性の使用可否 <tag-dynamic_attributes_tag>` ：可
+:ref:`动态属性的使用可否 <tag-dynamic_attributes_tag>` ：可
 
 .. table::
    :class: tag-reference
       
    ====================================== ====================================================================================================================
-   属性                                   説明
+   属性                                   说明
    ====================================== ====================================================================================================================
    :ref:`tag-generic_attributes_tag`    
    :ref:`tag-focus_attributes_tag`      
-   name ``必須``                          XHTMLのname属性。値表示の際、value属性が指定されていない場合はXHTMLのvalue属性にも使用される
-   value                                  XHTMLのvalue属性。
-   disabled                               XHTMLのdisabled属性 (:ref:`論理属性 <boolean_attribute>`) 。
-   readonly                               XHTMLのreadonly属性 (:ref:`論理属性 <boolean_attribute>`) 。
-   size                                   XHTMLのsize属性。
-   maxlength                              XHTMLのmaxlength属性。
-   onselect                               XHTMLのonselect属性。
-   onchange                               XHTMLのonchange属性。
-   autocomplete                           HTML5のautocomplete属性。
-   autofocus                              HTML5のautofocus属性 (:ref:`論理属性 <boolean_attribute>`) 。
-   placeholder                            HTML5のplaceholder属性。
-   errorCss                               エラーレベルのメッセージに使用するCSSクラス名。
-                                          デフォルトは ``nablarch_error`` 。
-   nameAlias                              name属性のエイリアスを設定する。
-                                          複数指定する場合はカンマ区切り。
-   valueFormat                            出力時のフォーマット。
-                                          指定内容は、 :ref:`tag-format_value` を参照。
+   name ``必须``                          XHTML的name属性。显示值时，如未指定value属性，则也用于XHTML的value属性
+   value                                  XHTML的value属性。
+   disabled                               XHTML的disabled属性 (:ref:`逻辑属性 <boolean_attribute>`) 。
+   readonly                               XHTML的readonly属性 (:ref:`逻辑属性 <boolean_attribute>`) 。
+   size                                   XHTML的size属性。
+   maxlength                              XHTML的maxlength属性。
+   onselect                               XHTML的onselect属性。
+   onchange                               XHTML的onchange属性。
+   autocomplete                           HTML5的autocomplete属性。
+   autofocus                              HTML5的autofocus属性 (:ref:`逻辑属性 <boolean_attribute>`) 。
+   placeholder                            HTML5的placeholder属性。
+   errorCss                               用于错误级别消息的CSS类名。
+                                          默认为 ``nablarch_error`` 。
+   nameAlias                              设置name属性的别名。
+                                          指定多个时用逗号分隔。
+   valueFormat                            输出时的格式。
+                                          指定内容请参阅 :ref:`tag-format_value` 。
    ====================================== ====================================================================================================================
 
 .. _tag-search_tag:
 
-searchタグ
+search标签
 -------------------------
 
-:ref:`動的属性の使用可否 <tag-dynamic_attributes_tag>` ：可
+:ref:`动态属性的使用可否 <tag-dynamic_attributes_tag>` ：可
 
 .. table::
    :class: tag-reference
       
    ====================================== ====================================================================================================================
-   属性                                   説明
+   属性                                   说明
    ====================================== ====================================================================================================================
    :ref:`tag-generic_attributes_tag`    
    :ref:`tag-focus_attributes_tag`      
-   name ``必須``                          XHTMLのname属性。値表示の際、value属性が指定されていない場合はXHTMLのvalue属性にも使用される
-   value                                  XHTMLのvalue属性。
-   disabled                               XHTMLのdisabled属性 (:ref:`論理属性 <boolean_attribute>`) 。
-   autocomplete                           HTML5のautocomplete属性。
-   autofocus                              HTML5のautofocus属性 (:ref:`論理属性 <boolean_attribute>`) 。
-   errorCss                               エラーレベルのメッセージに使用するCSSクラス名。
-                                          デフォルトは ``nablarch_error`` 。
-   nameAlias                              name属性のエイリアスを設定する。
-                                          複数指定する場合はカンマ区切り。
-   valueFormat                            出力時のフォーマット。
-                                          指定内容は、 :ref:`tag-format_value` を参照。
+   name ``必须``                          XHTML的name属性。显示值时，如未指定value属性，则也用于XHTML的value属性
+   value                                  XHTML的value属性。
+   disabled                               XHTML的disabled属性 (:ref:`逻辑属性 <boolean_attribute>`) 。
+   autocomplete                           HTML5的autocomplete属性。
+   autofocus                              HTML5的autofocus属性 (:ref:`逻辑属性 <boolean_attribute>`) 。
+   errorCss                               用于错误级别消息的CSS类名。
+                                          默认为 ``nablarch_error`` 。
+   nameAlias                              设置name属性的别名。
+                                          指定多个时用逗号分隔。
+   valueFormat                            输出时的格式。
+                                          指定内容请参阅 :ref:`tag-format_value` 。
    ====================================== ====================================================================================================================
 
 .. _tag-tel_tag:
 
-telタグ
+tel标签
 -------------------------
 
-:ref:`動的属性の使用可否 <tag-dynamic_attributes_tag>` ：可
+:ref:`动态属性的使用可否 <tag-dynamic_attributes_tag>` ：可
 
 .. table::
    :class: tag-reference
       
    ====================================== ====================================================================================================================
-   属性                                   説明
+   属性                                   说明
    ====================================== ====================================================================================================================
    :ref:`tag-generic_attributes_tag`    
    :ref:`tag-focus_attributes_tag`      
-   name ``必須``                          XHTMLのname属性。値表示の際、value属性が指定されていない場合はXHTMLのvalue属性にも使用される
-   value                                  XHTMLのvalue属性。
-   disabled                               XHTMLのdisabled属性 (:ref:`論理属性 <boolean_attribute>`) 。
-   autocomplete                           HTML5のautocomplete属性。
-   autofocus                              HTML5のautofocus属性 (:ref:`論理属性 <boolean_attribute>`) 。
-   errorCss                               エラーレベルのメッセージに使用するCSSクラス名。
-                                          デフォルトは ``nablarch_error`` 。
-   nameAlias                              name属性のエイリアスを設定する。
-                                          複数指定する場合はカンマ区切り。
-   valueFormat                            出力時のフォーマット。
-                                          指定内容は、 :ref:`tag-format_value` を参照。
+   name ``必须``                          XHTML的name属性。显示值时，如未指定value属性，则也用于XHTML的value属性
+   value                                  XHTML的value属性。
+   disabled                               XHTML的disabled属性 (:ref:`逻辑属性 <boolean_attribute>`) 。
+   autocomplete                           HTML5的autocomplete属性。
+   autofocus                              HTML5的autofocus属性 (:ref:`逻辑属性 <boolean_attribute>`) 。
+   errorCss                               用于错误级别消息的CSS类名。
+                                          默认为 ``nablarch_error`` 。
+   nameAlias                              设置name属性的别名。
+                                          指定多个时用逗号分隔。
+   valueFormat                            输出时的格式。
+                                          指定内容请参阅 :ref:`tag-format_value` 。
    ====================================== ====================================================================================================================
 
 .. _tag-url_tag:
 
-urlタグ
+url标签
 -------------------------
 
-:ref:`動的属性の使用可否 <tag-dynamic_attributes_tag>` ：可
+:ref:`动态属性的使用可否 <tag-dynamic_attributes_tag>` ：可
 
 .. table::
    :class: tag-reference
       
    ====================================== ====================================================================================================================
-   属性                                   説明
+   属性                                   说明
    ====================================== ====================================================================================================================
    :ref:`tag-generic_attributes_tag`    
    :ref:`tag-focus_attributes_tag`      
-   name ``必須``                          XHTMLのname属性。値表示の際、value属性が指定されていない場合はXHTMLのvalue属性にも使用される
-   value                                  XHTMLのvalue属性。
-   disabled                               XHTMLのdisabled属性 (:ref:`論理属性 <boolean_attribute>`) 。
-   autocomplete                           HTML5のautocomplete属性。
-   autofocus                              HTML5のautofocus属性 (:ref:`論理属性 <boolean_attribute>`) 。
-   errorCss                               エラーレベルのメッセージに使用するCSSクラス名。
-                                          デフォルトは ``nablarch_error`` 。
-   nameAlias                              name属性のエイリアスを設定する。
-                                          複数指定する場合はカンマ区切り。
-   valueFormat                            出力時のフォーマット。
-                                          指定内容は、 :ref:`tag-format_value` を参照。
+   name ``必须``                          XHTML的name属性。显示值时，如未指定value属性，则也用于XHTML的value属性
+   value                                  XHTML的value属性。
+   disabled                               XHTML的disabled属性 (:ref:`逻辑属性 <boolean_attribute>`) 。
+   autocomplete                           HTML5的autocomplete属性。
+   autofocus                              HTML5的autofocus属性 (:ref:`逻辑属性 <boolean_attribute>`) 。
+   errorCss                               用于错误级别消息的CSS类名。
+                                          默认为 ``nablarch_error`` 。
+   nameAlias                              设置name属性的别名。
+                                          指定多个时用逗号分隔。
+   valueFormat                            输出时的格式。
+                                          指定内容请参阅 :ref:`tag-format_value` 。
    ====================================== ====================================================================================================================
 
 .. _tag-email_tag:
 
-emailタグ
+email标签
 -------------------------
 
-:ref:`動的属性の使用可否 <tag-dynamic_attributes_tag>` ：可
+:ref:`动态属性的使用可否 <tag-dynamic_attributes_tag>` ：可
 
 .. table::
    :class: tag-reference
       
    ====================================== ====================================================================================================================
-   属性                                   説明
+   属性                                   说明
    ====================================== ====================================================================================================================
    :ref:`tag-generic_attributes_tag`    
    :ref:`tag-focus_attributes_tag`      
-   name ``必須``                          XHTMLのname属性。値表示の際、value属性が指定されていない場合はXHTMLのvalue属性にも使用される
-   value                                  XHTMLのvalue属性。
-   disabled                               XHTMLのdisabled属性 (:ref:`論理属性 <boolean_attribute>`) 。
-   autocomplete                           HTML5のautocomplete属性。
-   autofocus                              HTML5のautofocus属性 (:ref:`論理属性 <boolean_attribute>`) 。
-   errorCss                               エラーレベルのメッセージに使用するCSSクラス名。
-                                          デフォルトは ``nablarch_error`` 。
-   nameAlias                              name属性のエイリアスを設定する。
-                                          複数指定する場合はカンマ区切り。
-   valueFormat                            出力時のフォーマット。
-                                          指定内容は、 :ref:`tag-format_value` を参照。
+   name ``必须``                          XHTML的name属性。显示值时，如未指定value属性，则也用于XHTML的value属性
+   value                                  XHTML的value属性。
+   disabled                               XHTML的disabled属性 (:ref:`逻辑属性 <boolean_attribute>`) 。
+   autocomplete                           HTML5的autocomplete属性。
+   autofocus                              HTML5的autofocus属性 (:ref:`逻辑属性 <boolean_attribute>`) 。
+   errorCss                               用于错误级别消息的CSS类名。
+                                          默认为 ``nablarch_error`` 。
+   nameAlias                              设置name属性的别名。
+                                          指定多个时用逗号分隔。
+   valueFormat                            输出时的格式。
+                                          指定内容请参阅 :ref:`tag-format_value` 。
    ====================================== ====================================================================================================================
 
 .. _tag-date_tag:
 
-dateタグ
+date标签
 -------------------------
 
-:ref:`動的属性の使用可否 <tag-dynamic_attributes_tag>` ：可
+:ref:`动态属性的使用可否 <tag-dynamic_attributes_tag>` ：可
 
 .. table::
    :class: tag-reference
       
    ====================================== ====================================================================================================================
-   属性                                   説明
+   属性                                   说明
    ====================================== ====================================================================================================================
    :ref:`tag-generic_attributes_tag`    
    :ref:`tag-focus_attributes_tag`      
-   name ``必須``                          XHTMLのname属性。値表示の際、value属性が指定されていない場合はXHTMLのvalue属性にも使用される
-   value                                  XHTMLのvalue属性。
-   disabled                               XHTMLのdisabled属性 (:ref:`論理属性 <boolean_attribute>`) 。
-   autocomplete                           HTML5のautocomplete属性。
-   autofocus                              HTML5のautofocus属性 (:ref:`論理属性 <boolean_attribute>`) 。
-   errorCss                               エラーレベルのメッセージに使用するCSSクラス名。
-                                          デフォルトは ``nablarch_error`` 。
-   nameAlias                              name属性のエイリアスを設定する。
-                                          複数指定する場合はカンマ区切り。
-   valueFormat                            出力時のフォーマット。
-                                          指定内容は、 :ref:`tag-format_value` を参照。
+   name ``必须``                          XHTML的name属性。显示值时，如未指定value属性，则也用于XHTML的value属性
+   value                                  XHTML的value属性。
+   disabled                               XHTML的disabled属性 (:ref:`逻辑属性 <boolean_attribute>`) 。
+   autocomplete                           HTML5的autocomplete属性。
+   autofocus                              HTML5的autofocus属性 (:ref:`逻辑属性 <boolean_attribute>`) 。
+   errorCss                               用于错误级别消息的CSS类名。
+                                          默认为 ``nablarch_error`` 。
+   nameAlias                              设置name属性的别名。
+                                          指定多个时用逗号分隔。
+   valueFormat                            输出时的格式。
+                                          指定内容请参阅 :ref:`tag-format_value` 。
    ====================================== ====================================================================================================================
 
 .. _tag-month_tag:
 
-monthタグ
+month标签
 -------------------------
 
-:ref:`動的属性の使用可否 <tag-dynamic_attributes_tag>` ：可
+:ref:`动态属性的使用可否 <tag-dynamic_attributes_tag>` ：可
 
 .. table::
    :class: tag-reference
       
    ====================================== ====================================================================================================================
-   属性                                   説明
+   属性                                   说明
    ====================================== ====================================================================================================================
    :ref:`tag-generic_attributes_tag`    
    :ref:`tag-focus_attributes_tag`      
-   name ``必須``                          XHTMLのname属性。値表示の際、value属性が指定されていない場合はXHTMLのvalue属性にも使用される
-   value                                  XHTMLのvalue属性。
-   disabled                               XHTMLのdisabled属性 (:ref:`論理属性 <boolean_attribute>`) 。
-   autocomplete                           HTML5のautocomplete属性。
-   autofocus                              HTML5のautofocus属性 (:ref:`論理属性 <boolean_attribute>`) 。
-   errorCss                               エラーレベルのメッセージに使用するCSSクラス名。
-                                          デフォルトは ``nablarch_error`` 。
-   nameAlias                              name属性のエイリアスを設定する。
-                                          複数指定する場合はカンマ区切り。
-   valueFormat                            出力時のフォーマット。
-                                          指定内容は、 :ref:`tag-format_value` を参照。
+   name ``必须``                          XHTML的name属性。显示值时，如未指定value属性，则也用于XHTML的value属性
+   value                                  XHTML的value属性。
+   disabled                               XHTML的disabled属性 (:ref:`逻辑属性 <boolean_attribute>`) 。
+   autocomplete                           HTML5的autocomplete属性。
+   autofocus                              HTML5的autofocus属性 (:ref:`逻辑属性 <boolean_attribute>`) 。
+   errorCss                               用于错误级别消息的CSS类名。
+                                          默认为 ``nablarch_error`` 。
+   nameAlias                              设置name属性的别名。
+                                          指定多个时用逗号分隔。
+   valueFormat                            输出时的格式。
+                                          指定内容请参阅 :ref:`tag-format_value` 。
    ====================================== ====================================================================================================================
 
 .. _tag-week_tag:
 
-weekタグ
+week标签
 -------------------------
 
-:ref:`動的属性の使用可否 <tag-dynamic_attributes_tag>` ：可
+:ref:`动态属性的使用可否 <tag-dynamic_attributes_tag>` ：可
 
 .. table::
    :class: tag-reference
       
    ====================================== ====================================================================================================================
-   属性                                   説明
+   属性                                   说明
    ====================================== ====================================================================================================================
    :ref:`tag-generic_attributes_tag`    
    :ref:`tag-focus_attributes_tag`      
-   name ``必須``                          XHTMLのname属性。値表示の際、value属性が指定されていない場合はXHTMLのvalue属性にも使用される
-   value                                  XHTMLのvalue属性。
-   disabled                               XHTMLのdisabled属性 (:ref:`論理属性 <boolean_attribute>`) 。
-   autocomplete                           HTML5のautocomplete属性。
-   autofocus                              HTML5のautofocus属性 (:ref:`論理属性 <boolean_attribute>`) 。
-   errorCss                               エラーレベルのメッセージに使用するCSSクラス名。
-                                          デフォルトは ``nablarch_error`` 。
-   nameAlias                              name属性のエイリアスを設定する。
-                                          複数指定する場合はカンマ区切り。
-   valueFormat                            出力時のフォーマット。
-                                          指定内容は、 :ref:`tag-format_value` を参照。
+   name ``必须``                          XHTML的name属性。显示值时，如未指定value属性，则也用于XHTML的value属性
+   value                                  XHTML的value属性。
+   disabled                               XHTML的disabled属性 (:ref:`逻辑属性 <boolean_attribute>`) 。
+   autocomplete                           HTML5的autocomplete属性。
+   autofocus                              HTML5的autofocus属性 (:ref:`逻辑属性 <boolean_attribute>`) 。
+   errorCss                               用于错误级别消息的CSS类名。
+                                          默认为 ``nablarch_error`` 。
+   nameAlias                              设置name属性的别名。
+                                          指定多个时用逗号分隔。
+   valueFormat                            输出时的格式。
+                                          指定内容请参阅 :ref:`tag-format_value` 。
    ====================================== ====================================================================================================================
 
 .. _tag-time_tag:
 
-timeタグ
+time标签
 -------------------------
 
-:ref:`動的属性の使用可否 <tag-dynamic_attributes_tag>` ：可
+:ref:`动态属性的使用可否 <tag-dynamic_attributes_tag>` ：可
 
 .. table::
    :class: tag-reference
       
    ====================================== ====================================================================================================================
-   属性                                   説明
+   属性                                   说明
    ====================================== ====================================================================================================================
    :ref:`tag-generic_attributes_tag`    
    :ref:`tag-focus_attributes_tag`      
-   name ``必須``                          XHTMLのname属性。値表示の際、value属性が指定されていない場合はXHTMLのvalue属性にも使用される
-   value                                  XHTMLのvalue属性。
-   disabled                               XHTMLのdisabled属性 (:ref:`論理属性 <boolean_attribute>`) 。
-   autocomplete                           HTML5のautocomplete属性。
-   autofocus                              HTML5のautofocus属性 (:ref:`論理属性 <boolean_attribute>`) 。
-   errorCss                               エラーレベルのメッセージに使用するCSSクラス名。
-                                          デフォルトは ``nablarch_error`` 。
-   nameAlias                              name属性のエイリアスを設定する。
-                                          複数指定する場合はカンマ区切り。
-   valueFormat                            出力時のフォーマット。
-                                          指定内容は、 :ref:`tag-format_value` を参照。
+   name ``必须``                          XHTML的name属性。显示值时，如未指定value属性，则也用于XHTML的value属性
+   value                                  XHTML的value属性。
+   disabled                               XHTML的disabled属性 (:ref:`逻辑属性 <boolean_attribute>`) 。
+   autocomplete                           HTML5的autocomplete属性。
+   autofocus                              HTML5的autofocus属性 (:ref:`逻辑属性 <boolean_attribute>`) 。
+   errorCss                               用于错误级别消息的CSS类名。
+                                          默认为 ``nablarch_error`` 。
+   nameAlias                              设置name属性的别名。
+                                          指定多个时用逗号分隔。
+   valueFormat                            输出时的格式。
+                                          指定内容请参阅 :ref:`tag-format_value` 。
    ====================================== ====================================================================================================================
 
 .. _tag-datetimeLocal_tag:
 
-datetimeLocalタグ
+datetimeLocal标签
 -------------------------
 
-:ref:`動的属性の使用可否 <tag-dynamic_attributes_tag>` ：可
+:ref:`动态属性的使用可否 <tag-dynamic_attributes_tag>` ：可
 
 .. table::
    :class: tag-reference
       
    ====================================== ====================================================================================================================
-   属性                                   説明
+   属性                                   说明
    ====================================== ====================================================================================================================
    :ref:`tag-generic_attributes_tag`    
    :ref:`tag-focus_attributes_tag`      
-   name ``必須``                          XHTMLのname属性。値表示の際、value属性が指定されていない場合はXHTMLのvalue属性にも使用される
-   value                                  XHTMLのvalue属性。
-   disabled                               XHTMLのdisabled属性 (:ref:`論理属性 <boolean_attribute>`) 。
-   autocomplete                           HTML5のautocomplete属性。
-   autofocus                              HTML5のautofocus属性 (:ref:`論理属性 <boolean_attribute>`) 。
-   errorCss                               エラーレベルのメッセージに使用するCSSクラス名。
-                                          デフォルトは ``nablarch_error`` 。
-   nameAlias                              name属性のエイリアスを設定する。
-                                          複数指定する場合はカンマ区切り。
-   valueFormat                            出力時のフォーマット。
-                                          指定内容は、 :ref:`tag-format_value` を参照。
+   name ``必须``                          XHTML的name属性。显示值时，如未指定value属性，则也用于XHTML的value属性
+   value                                  XHTML的value属性。
+   disabled                               XHTML的disabled属性 (:ref:`逻辑属性 <boolean_attribute>`) 。
+   autocomplete                           HTML5的autocomplete属性。
+   autofocus                              HTML5的autofocus属性 (:ref:`逻辑属性 <boolean_attribute>`) 。
+   errorCss                               用于错误级别消息的CSS类名。
+                                          默认为 ``nablarch_error`` 。
+   nameAlias                              设置name属性的别名。
+                                          指定多个时用逗号分隔。
+   valueFormat                            输出时的格式。
+                                          指定内容请参阅 :ref:`tag-format_value` 。
    ====================================== ====================================================================================================================
 
 .. _tag-number_tag:
 
-numberタグ
+number标签
 -------------------------
 
-:ref:`動的属性の使用可否 <tag-dynamic_attributes_tag>` ：可
+:ref:`动态属性的使用可否 <tag-dynamic_attributes_tag>` ：可
 
 .. table::
    :class: tag-reference
       
    ====================================== ====================================================================================================================
-   属性                                   説明
+   属性                                   说明
    ====================================== ====================================================================================================================
    :ref:`tag-generic_attributes_tag`    
    :ref:`tag-focus_attributes_tag`      
-   name ``必須``                          XHTMLのname属性。値表示の際、value属性が指定されていない場合はXHTMLのvalue属性にも使用される
-   value                                  XHTMLのvalue属性。
-   disabled                               XHTMLのdisabled属性 (:ref:`論理属性 <boolean_attribute>`) 。
-   autocomplete                           HTML5のautocomplete属性。
-   autofocus                              HTML5のautofocus属性 (:ref:`論理属性 <boolean_attribute>`) 。
-   errorCss                               エラーレベルのメッセージに使用するCSSクラス名。
-                                          デフォルトは ``nablarch_error`` 。
-   nameAlias                              name属性のエイリアスを設定する。
-                                          複数指定する場合はカンマ区切り。
-   valueFormat                            出力時のフォーマット。
-                                          指定内容は、 :ref:`tag-format_value` を参照。
+   name ``必须``                          XHTML的name属性。显示值时，如未指定value属性，则也用于XHTML的value属性
+   value                                  XHTML的value属性。
+   disabled                               XHTML的disabled属性 (:ref:`逻辑属性 <boolean_attribute>`) 。
+   autocomplete                           HTML5的autocomplete属性。
+   autofocus                              HTML5的autofocus属性 (:ref:`逻辑属性 <boolean_attribute>`) 。
+   errorCss                               用于错误级别消息的CSS类名。
+                                          默认为 ``nablarch_error`` 。
+   nameAlias                              设置name属性的别名。
+                                          指定多个时用逗号分隔。
+   valueFormat                            输出时的格式。
+                                          指定内容请参阅 :ref:`tag-format_value` 。
    ====================================== ====================================================================================================================
 
 .. _tag-range_tag:
 
-rangeタグ
+range标签
 -------------------------
 
-:ref:`動的属性の使用可否 <tag-dynamic_attributes_tag>` ：可
+:ref:`动态属性的使用可否 <tag-dynamic_attributes_tag>` ：可
 
 .. table::
    :class: tag-reference
       
    ====================================== ====================================================================================================================
-   属性                                   説明
+   属性                                   说明
    ====================================== ====================================================================================================================
    :ref:`tag-generic_attributes_tag`    
    :ref:`tag-focus_attributes_tag`      
-   name ``必須``                          XHTMLのname属性。値表示の際、value属性が指定されていない場合はXHTMLのvalue属性にも使用される
-   value                                  XHTMLのvalue属性。
-   disabled                               XHTMLのdisabled属性 (:ref:`論理属性 <boolean_attribute>`) 。
-   autocomplete                           HTML5のautocomplete属性。
-   autofocus                              HTML5のautofocus属性 (:ref:`論理属性 <boolean_attribute>`) 。
-   errorCss                               エラーレベルのメッセージに使用するCSSクラス名。
-                                          デフォルトは ``nablarch_error`` 。
-   nameAlias                              name属性のエイリアスを設定する。
-                                          複数指定する場合はカンマ区切り。
-   valueFormat                            出力時のフォーマット。
-                                          指定内容は、 :ref:`tag-format_value` を参照。
+   name ``必须``                          XHTML的name属性。显示值时，如未指定value属性，则也用于XHTML的value属性
+   value                                  XHTML的value属性。
+   disabled                               XHTML的disabled属性 (:ref:`逻辑属性 <boolean_attribute>`) 。
+   autocomplete                           HTML5的autocomplete属性。
+   autofocus                              HTML5的autofocus属性 (:ref:`逻辑属性 <boolean_attribute>`) 。
+   errorCss                               用于错误级别消息的CSS类名。
+                                          默认为 ``nablarch_error`` 。
+   nameAlias                              设置name属性的别名。
+                                          指定多个时用逗号分隔。
+   valueFormat                            输出时的格式。
+                                          指定内容请参阅 :ref:`tag-format_value` 。
    ====================================== ====================================================================================================================
 
 .. _tag-color_tag:
 
-colorタグ
+color标签
 -------------------------
 
-:ref:`動的属性の使用可否 <tag-dynamic_attributes_tag>` ：可
+:ref:`动态属性的使用可否 <tag-dynamic_attributes_tag>` ：可
 
 .. table::
    :class: tag-reference
       
    ====================================== ====================================================================================================================
-   属性                                   説明
+   属性                                   说明
    ====================================== ====================================================================================================================
    :ref:`tag-generic_attributes_tag`    
    :ref:`tag-focus_attributes_tag`      
-   name ``必須``                          XHTMLのname属性。値表示の際、value属性が指定されていない場合はXHTMLのvalue属性にも使用される
-   value                                  XHTMLのvalue属性。
-   disabled                               XHTMLのdisabled属性 (:ref:`論理属性 <boolean_attribute>`) 。
-   autocomplete                           HTML5のautocomplete属性。
-   autofocus                              HTML5のautofocus属性 (:ref:`論理属性 <boolean_attribute>`) 。
-   errorCss                               エラーレベルのメッセージに使用するCSSクラス名。
-                                          デフォルトは ``nablarch_error`` 。
-   nameAlias                              name属性のエイリアスを設定する。
-                                          複数指定する場合はカンマ区切り。
-   valueFormat                            出力時のフォーマット。
-                                          指定内容は、 :ref:`tag-format_value` を参照。
+   name ``必须``                          XHTML的name属性。显示值时，如未指定value属性，则也用于XHTML的value属性
+   value                                  XHTML的value属性。
+   disabled                               XHTML的disabled属性 (:ref:`逻辑属性 <boolean_attribute>`) 。
+   autocomplete                           HTML5的autocomplete属性。
+   autofocus                              HTML5的autofocus属性 (:ref:`逻辑属性 <boolean_attribute>`) 。
+   errorCss                               用于错误级别消息的CSS类名。
+                                          默认为 ``nablarch_error`` 。
+   nameAlias                              设置name属性的别名。
+                                          指定多个时用逗号分隔。
+   valueFormat                            输出时的格式。
+                                          指定内容请参阅 :ref:`tag-format_value` 。
    ====================================== ====================================================================================================================
 
 .. _tag-textarea_tag:
 
-textareaタグ
+textarea标签
 -------------------------
 
-:ref:`動的属性の使用可否 <tag-dynamic_attributes_tag>` ：可
+:ref:`动态属性的使用可否 <tag-dynamic_attributes_tag>` ：可
 
 .. table::
    :class: tag-reference
          
    ====================================== ==========================================================================================
-   属性                                   説明
+   属性                                   说明
    ====================================== ==========================================================================================
    :ref:`tag-generic_attributes_tag`    
    :ref:`tag-focus_attributes_tag`      
-   name ``必須``                          XHTMLのname属性。
-   rows ``必須``                          XHTMLのrows属性。
-   cols ``必須``                          XHTMLのcols属性。
-   disabled                               XHTMLのdisabled属性 (:ref:`論理属性 <boolean_attribute>`) 。
-   readonly                               XHTMLのreadonly属性 (:ref:`論理属性 <boolean_attribute>`) 。
-   onselect                               XHTMLのonselect属性。
-   onchange                               XHTMLのonchange属性。
-   autofocus                              HTML5のautofocus属性 (:ref:`論理属性 <boolean_attribute>`) 。
-   placeholder                            HTML5のplaceholder属性。
-   maxlength                              HTML5のmaxlength属性。
-   errorCss                               エラーレベルのメッセージに使用するCSSクラス名。
-                                          デフォルトは ``nablarch_error`` 。
-   nameAlias                              name属性のエイリアスを設定する。
-                                          複数指定する場合はカンマ区切り。
+   name ``必须``                          XHTML的name属性。
+   rows ``必须``                          XHTML的rows属性。
+   cols ``必须``                          XHTML的cols属性。
+   disabled                               XHTML的disabled属性 (:ref:`逻辑属性 <boolean_attribute>`) 。
+   readonly                               XHTML的readonly属性 (:ref:`逻辑属性 <boolean_attribute>`) 。
+   onselect                               XHTML的onselect属性。
+   onchange                               XHTML的onchange属性。
+   autofocus                              HTML5的autofocus属性 (:ref:`逻辑属性 <boolean_attribute>`) 。
+   placeholder                            HTML5的placeholder属性。
+   maxlength                              HTML5的maxlength属性。
+   errorCss                               用于错误级别消息的CSS类名。
+                                          默认为 ``nablarch_error`` 。
+   nameAlias                              设置name属性的别名。
+                                          指定多个时用逗号分隔。
    ====================================== ==========================================================================================
 
 .. _tag-password_tag:
 
-passwordタグ
+password标签
 -------------------------
 
-:ref:`動的属性の使用可否 <tag-dynamic_attributes_tag>` ：可
+:ref:`动态属性的使用可否 <tag-dynamic_attributes_tag>` ：可
 
 .. table::
    :class: tag-reference
             
    ====================================== ==========================================================================================
-   属性                                   説明
+   属性                                   说明
    ====================================== ==========================================================================================
    :ref:`tag-generic_attributes_tag`    
    :ref:`tag-focus_attributes_tag`      
-   name ``必須``                          XHTMLのname属性。
-   disabled                               XHTMLのdisabled属性 (:ref:`論理属性 <boolean_attribute>`) 。
-   readonly                               XHTMLのreadonly属性 (:ref:`論理属性 <boolean_attribute>`) 。
-   size                                   XHTMLのsize属性。
-   maxlength                              XHTMLのmaxlength属性。
-   onselect                               XHTMLのonselect属性。
-   onchange                               XHTMLのonchange属性。
-   autocomplete                           HTML5のautocomplete属性。
-   autofocus                              HTML5のautofocus属性 (:ref:`論理属性 <boolean_attribute>`) 。
-   placeholder                            HTML5のplaceholder属性。
-   restoreValue                           入力画面の再表示時に入力データを復元するか否か。
-                                          復元する場合は ``true`` 、復元しない場合は ``false`` 。
-                                          デフォルトは ``false`` 。
-   replacement                            確認画面用の出力時に使用する置換文字。
-                                          デフォルトは ``*`` 。
-   errorCss                               エラーレベルのメッセージに使用するCSSクラス名。
-                                          デフォルトは ``nablarch_error`` 。
-   nameAlias                              name属性のエイリアスを設定する。
-                                          複数指定する場合はカンマ区切り。
+   name ``必须``                          XHTML的name属性。
+   disabled                               XHTML的disabled属性 (:ref:`逻辑属性 <boolean_attribute>`) 。
+   readonly                               XHTML的readonly属性 (:ref:`逻辑属性 <boolean_attribute>`) 。
+   size                                   XHTML的size属性。
+   maxlength                              XHTML的maxlength属性。
+   onselect                               XHTML的onselect属性。
+   onchange                               XHTML的onchange属性。
+   autocomplete                           HTML5的autocomplete属性。
+   autofocus                              HTML5的autofocus属性 (:ref:`逻辑属性 <boolean_attribute>`) 。
+   placeholder                            HTML5的placeholder属性。
+   restoreValue                           输入画面重新显示时是否恢复输入数据。
+                                          恢复时为 ``true`` ，不恢复时为 ``false`` 。
+                                          默认为 ``false`` 。
+   replacement                            确认画面用输出时的替换字符。
+                                          默认为 ``*`` 。
+   errorCss                               用于错误级别消息的CSS类名。
+                                          默认为 ``nablarch_error`` 。
+   nameAlias                              设置name属性的别名。
+                                          指定多个时用逗号分隔。
    ====================================== ==========================================================================================
 
 .. _tag-radio_tag:
 
-radioButtonタグ
+radioButton标签
 -------------------------
 
-:ref:`動的属性の使用可否 <tag-dynamic_attributes_tag>` ：可
+:ref:`动态属性的使用可否 <tag-dynamic_attributes_tag>` ：可
 
 .. table::
    :class: tag-reference
 
    ====================================== ==========================================================================================
-   属性                                   説明
+   属性                                   说明
    ====================================== ==========================================================================================
    :ref:`tag-generic_attributes_tag`
    :ref:`tag-focus_attributes_tag`
-   name ``必須``                          XHTMLのname属性。
-   value ``必須``                         XHTMLのvalue属性。
-   label ``必須``                         ラベル。
-   disabled                               XHTMLのdisabled属性 (:ref:`論理属性 <boolean_attribute>`) 。
-   onchange                               XHTMLのonchange属性。
-   autofocus                              HTML5のautofocus属性 (:ref:`論理属性 <boolean_attribute>`) 。
-   errorCss                               エラーレベルのメッセージに使用するCSSクラス名。
-                                          デフォルトは ``nablarch_error`` 。
-   nameAlias                              name属性のエイリアスを設定する。
-                                          複数指定する場合はカンマ区切り。
+   name ``必须``                          XHTML的name属性。
+   value ``必须``                         XHTML的value属性。
+   label ``必须``                         标签。
+   disabled                               XHTML的disabled属性 (:ref:`逻辑属性 <boolean_attribute>`) 。
+   onchange                               XHTML的onchange属性。
+   autofocus                              HTML5的autofocus属性 (:ref:`逻辑属性 <boolean_attribute>`) 。
+   errorCss                               用于错误级别消息的CSS类名。
+                                          默认为 ``nablarch_error`` 。
+   nameAlias                              设置name属性的别名。
+                                          指定多个时用逗号分隔。
    ====================================== ==========================================================================================
 
 .. _tag-checkbox_tag:
 
-checkboxタグ
+checkbox标签
 -------------------------
 
-:ref:`動的属性の使用可否 <tag-dynamic_attributes_tag>` ：可
+:ref:`动态属性的使用可否 <tag-dynamic_attributes_tag>` ：可
 
 .. table::
    :class: tag-reference
 
    ====================================== ==========================================================================================
-   属性                                   説明
+   属性                                   说明
    ====================================== ==========================================================================================
    :ref:`tag-generic_attributes_tag`    
    :ref:`tag-focus_attributes_tag`      
-   name ``必須``                          XHTMLのname属性。
-   value                                  XHTMLのvalue属性。
-                                          チェックありの場合に使用する値。
-                                          デフォルトは ``1`` 。
-   autofocus                              HTML5のautofocus属性 (:ref:`論理属性 <boolean_attribute>`) 。
-   label                                  チェックありの場合に使用するラベル。
-                                          入力画面では、このラベルが表示される。
-   useOffValue                            チェックなしの値設定を使用するか否か。
-                                          デフォルトは ``true`` 。
-   offLabel                               チェックなしの場合に使用するラベル。
-   offValue                               チェックなしの場合に使用する値。
-                                          デフォルトは ``0`` 。
-   disabled                               XHTMLのdisabled属性 (:ref:`論理属性 <boolean_attribute>`) 。
-   onchange                               XHTMLのonchange属性。
-   errorCss                               エラーレベルのメッセージに使用するCSSクラス名。
-                                          デフォルトは ``nablarch_error`` 。
-   nameAlias                              name属性のエイリアスを設定する。
-                                          複数指定する場合はカンマ区切り。
+   name ``必须``                          XHTML的name属性。
+   value                                  XHTML的value属性。
+                                          选中时使用的值。
+                                          默认为 ``1`` 。
+   autofocus                              HTML5的autofocus属性 (:ref:`逻辑属性 <boolean_attribute>`) 。
+   label                                  选中时使用的标签。
+                                          在输入画面中显示此标签。
+   useOffValue                            是否使用未选中时的值设置。
+                                          默认为 ``true`` 。
+   offLabel                               未选中时使用的标签。
+   offValue                               未选中时使用的值。
+                                          默认为 ``0`` 。
+   disabled                               XHTML的disabled属性 (:ref:`逻辑属性 <boolean_attribute>`) 。
+   onchange                               XHTML的onchange属性。
+   errorCss                               用于错误级别消息的CSS类名。
+                                          默认为 ``nablarch_error`` 。
+   nameAlias                              设置name属性的别名。
+                                          指定多个时用逗号分隔。
    ====================================== ==========================================================================================
  
 .. _tag-composite_key_checkbox_tag:
 
-compositeKeyCheckboxタグ
+compositeKeyCheckbox标签
 -------------------------
 
-:ref:`動的属性の使用可否 <tag-dynamic_attributes_tag>` ：可
+:ref:`动态属性的使用可否 <tag-dynamic_attributes_tag>` ：可
 
 .. table::
    :class: tag-reference
 
    ====================================== ==========================================================================================
-   属性                                   説明
+   属性                                   说明
    ====================================== ==========================================================================================
    :ref:`tag-generic_attributes_tag`    
    :ref:`tag-focus_attributes_tag`      
-   name ``必須``                          XHTMLのname属性。
-   valueObject ``必須``                   XHTMLのvalue属性の代わりに使用するオブジェクト。
-                                          keyNames属性で指定したプロパティを持つ必要がある。
-   keyNames ``必須``                      複合キーのキー名。
-                                          キー名をカンマ区切りで指定する。
-   namePrefix ``必須``                    リクエストパラメータに展開する際に使用するプレフィクス。
-                                          通常のname属性と異なり、この名称に ``.`` と\
-                                          keyNames属性で指定したキー名と合致する値を通常のname属性と同様に取り扱う。
-                                          例えばnamePrefix属性に ``form`` 、keyNames属性に ``key1`` 、 ``key2`` を指定した場合、\
-                                          表示時には ``form.key1`` 、 ``form.key2`` で\
-                                          リクエストスコープに含まれる値を使用してこのチェックボックスの値を出力する。
-                                          また、サブミットしたリクエストの処理では、\
-                                          ``form.key1`` 、 ``form.key2`` というリクエストパラメータから選択された値が取得できる。
-                                          なお、name属性は、namePrefix属性とkeyNames属性で指定した\
-                                          キーの組み合わせと異なる名称にしなければならない特殊な制約がある。\
-                                          実装時はこの点に十分注意すること。
-   autofocus                              HTML5のautofocus属性 (:ref:`論理属性 <boolean_attribute>`) 。
-   label                                  チェックありの場合に使用するラベル。
-                                          入力画面では、このラベルが表示される。
-   disabled                               XHTMLのdisabled属性 (:ref:`論理属性 <boolean_attribute>`) 。
-   onchange                               XHTMLのonchange属性。
-   errorCss                               エラーレベルのメッセージに使用するCSSクラス名。
-                                          デフォルトは ``nablarch_error`` 。
-   nameAlias                              name属性のエイリアスを設定する。
-                                          複数指定する場合はカンマ区切り。
+   name ``必须``                          XHTML的name属性。
+   valueObject ``必须``                   代替XHTML的value属性使用的对象。
+                                          需要具有keyNames属性指定的属性。
+   keyNames ``必须``                      复合键的键名。
+                                          以逗号分隔指定键名。
+   namePrefix ``必须``                    展开到请求参数时使用的前缀。
+                                          与通常的name属性不同，将与此名称和\
+                                          keyNames属性指定的键名匹配的值与通常的name属性一样处理。
+                                          例如在namePrefix属性中指定 ``form`` 、keyNames属性中指定 ``key1`` 、 ``key2`` 时，\
+                                          显示时使用 ``form.key1`` 、 ``form.key2`` \
+                                          中包含的值输出此复选框的值。
+                                          此外，在提交请求的处理中，\
+                                          可从 ``form.key1`` 、 ``form.key2`` 这一请求参数中获取选中的值。
+                                          另外，name属性有一个特殊约束，必须与namePrefix属性和keyNames属性指定的\
+                                          键组合使用不同的名称。\
+                                          实现时请充分注意这一点。
+   autofocus                              HTML5的autofocus属性 (:ref:`逻辑属性 <boolean_attribute>`) 。
+   label                                  选中时使用的标签。
+                                          在输入画面中显示此标签。
+   disabled                               XHTML的disabled属性 (:ref:`逻辑属性 <boolean_attribute>`) 。
+   onchange                               XHTML的onchange属性。
+   errorCss                               用于错误级别消息的CSS类名。
+                                          默认为 ``nablarch_error`` 。
+   nameAlias                              设置name属性的别名。
+                                          指定多个时用逗号分隔。
    ====================================== ==========================================================================================
 
 .. _tag-composite_key_radio_button_tag:
 
-compositeKeyRadioButtonタグ
+compositeKeyRadioButton标签
 ---------------------------
 
-:ref:`動的属性の使用可否 <tag-dynamic_attributes_tag>` ：可
+:ref:`动态属性的使用可否 <tag-dynamic_attributes_tag>` ：可
 
 .. table::
    :class: tag-reference
 
    ====================================== ==========================================================================================
-   属性                                   説明
+   属性                                   说明
    ====================================== ==========================================================================================
    :ref:`tag-generic_attributes_tag`    
    :ref:`tag-focus_attributes_tag`      
-   name ``必須``                          XHTMLのname属性。
-   valueObject ``必須``                   XHTMLのvalue属性の代わりに使用するオブジェクト。
-                                          keyNames属性で指定したプロパティを持つ必要がある。
-   keyNames ``必須``                      複合キーのキー名。
-                                          キー名をカンマ区切りで指定する。
-   namePrefix ``必須``                    リクエストパラメータに展開する際に使用するプレフィクス。
-                                          通常のname属性と異なり、この名称に ``.`` と\
-                                          keyNames属性で指定したキー名と合致する値を通常のname属性と同様に取り扱う。
-                                          例えばnamePrefix属性に ``form`` 、keyNames属性に ``key1`` 、 ``key2`` を指定した場合、\
-                                          表示時には ``form.key1`` 、 ``form.key2`` で\
-                                          リクエストスコープに含まれる値を使用してこのチェックボックスの値を出力する。
-                                          また、サブミットしたリクエストの処理では、\
-                                          ``form.key1`` 、 ``form.key2`` というリクエストパラメータから選択された値が取得できる。
-                                          なお、name属性は、namePrefix属性とkeyNames属性で指定した\
-                                          キーの組み合わせと異なる名称にしなければならない特殊な制約がある。\
-                                          実装時はこの点に十分注意すること。
-   autofocus                              HTML5のautofocus属性 (:ref:`論理属性 <boolean_attribute>`) 。
-   label                                  チェックありの場合に使用するラベル。
-                                          入力画面では、このラベルが表示される。
-   disabled                               XHTMLのdisabled属性 (:ref:`論理属性 <boolean_attribute>`) 。
-   onchange                               XHTMLのonchange属性。
-   errorCss                               エラーレベルのメッセージに使用するCSSクラス名。
-                                          デフォルトは ``nablarch_error`` 。
-   nameAlias                              name属性のエイリアスを設定する。
-                                          複数指定する場合はカンマ区切り。
+   name ``必须``                          XHTML的name属性。
+   valueObject ``必须``                   代替XHTML的value属性使用的对象。
+                                          需要具有keyNames属性指定的属性。
+   keyNames ``必须``                      复合键的键名。
+                                          以逗号分隔指定键名。
+   namePrefix ``必须``                    展开到请求参数时使用的前缀。
+                                          与通常的name属性不同，将与此名称和\
+                                          keyNames属性指定的键名匹配的值与通常的name属性一样处理。
+                                          例如在namePrefix属性中指定 ``form`` 、keyNames属性中指定 ``key1`` 、 ``key2`` 时，\
+                                          显示时使用 ``form.key1`` 、 ``form.key2`` \
+                                          中包含的值输出此复选框的值。
+                                          此外，在提交请求的处理中，\
+                                          可从 ``form.key1`` 、 ``form.key2`` 这一请求参数中获取选中的值。
+                                          另外，name属性有一个特殊约束，必须与namePrefix属性和keyNames属性指定的\
+                                          键组合使用不同的名称。\
+                                          实现时请充分注意这一点。
+   autofocus                              HTML5的autofocus属性 (:ref:`逻辑属性 <boolean_attribute>`) 。
+   label                                  选中时使用的标签。
+                                          在输入画面中显示此标签。
+   disabled                               XHTML的disabled属性 (:ref:`逻辑属性 <boolean_attribute>`) 。
+   onchange                               XHTML的onchange属性。
+   errorCss                               用于错误级别消息的CSS类名。
+                                          默认为 ``nablarch_error`` 。
+   nameAlias                              设置name属性的别名。
+                                          指定多个时用逗号分隔。
    ====================================== ==========================================================================================
 
 .. _tag-file_tag:
 
-fileタグ
+file标签
 -------------------------
 
-:ref:`動的属性の使用可否 <tag-dynamic_attributes_tag>` ：可
+:ref:`动态属性的使用可否 <tag-dynamic_attributes_tag>` ：可
 
 .. table::
    :class: tag-reference
 
    ====================================== ==========================================================================================
-   属性                                   説明
+   属性                                   说明
    ====================================== ==========================================================================================
    :ref:`tag-generic_attributes_tag`    
    :ref:`tag-focus_attributes_tag`      
-   name ``必須``                          XHTMLのname属性。
-   disabled                               XHTMLのdisabled属性 (:ref:`論理属性 <boolean_attribute>`) 。
-   readonly                               XHTMLのreadonly属性 (:ref:`論理属性 <boolean_attribute>`) 。
-   size                                   XHTMLのsize属性。
-   maxlength                              XHTMLのmaxlength属性。
-   onselect                               XHTMLのonselect属性。
-   onchange                               XHTMLのonchange属性。
-   accept                                 XHTMLのaccept属性。
-   autofocus                              HTML5のautofocus属性 (:ref:`論理属性 <boolean_attribute>`) 。
-   multiple                               HTML5のmultiple属性 (:ref:`論理属性 <boolean_attribute>`) 。
-   errorCss                               エラーレベルのメッセージに使用するCSSクラス名。
-                                          デフォルトは ``nablarch_error`` 。
-   nameAlias                              name属性のエイリアスを設定する。
-                                          複数指定する場合はカンマ区切り。
+   name ``必须``                          XHTML的name属性。
+   disabled                               XHTML的disabled属性 (:ref:`逻辑属性 <boolean_attribute>`) 。
+   readonly                               XHTML的readonly属性 (:ref:`逻辑属性 <boolean_attribute>`) 。
+   size                                   XHTML的size属性。
+   maxlength                              XHTML的maxlength属性。
+   onselect                               XHTML的onselect属性。
+   onchange                               XHTML的onchange属性。
+   accept                                 XHTML的accept属性。
+   autofocus                              HTML5的autofocus属性 (:ref:`逻辑属性 <boolean_attribute>`) 。
+   multiple                               HTML5的multiple属性 (:ref:`逻辑属性 <boolean_attribute>`) 。
+   errorCss                               用于错误级别消息的CSS类名。
+                                          默认为 ``nablarch_error`` 。
+   nameAlias                              设置name属性的别名。
+                                          指定多个时用逗号分隔。
    ====================================== ==========================================================================================
 
 .. _tag-hidden_tag:
 
-hiddenタグ
+hidden标签
 -------------------------
 
-:ref:`動的属性の使用可否 <tag-dynamic_attributes_tag>` ：可
+:ref:`动态属性的使用可否 <tag-dynamic_attributes_tag>` ：可
 
-HTMLタグを出力せず、ウィンドウスコープに値を出力する。
+不输出HTML标签，而将值输出到窗口作用域。
 
 .. important::
 
-  ウィンドウスコープは非推奨である。
-  詳細は、 :ref:`tag-window_scope` を参照。
+  窗口作用域已弃用。
+  详情请参阅 :ref:`tag-window_scope` 。
 
 .. table::
    :class: tag-reference
 
    ====================================== ==========================================================================================
-   属性                                   説明
+   属性                                   说明
    ====================================== ==========================================================================================
    :ref:`tag-generic_attributes_tag`    
    :ref:`tag-focus_attributes_tag`      
-   name ``必須``                          XHTMLのname属性。
-   disabled                               XHTMLのdisabled属性 (:ref:`論理属性 <boolean_attribute>`) 。
+   name ``必须``                          XHTML的name属性。
+   disabled                               XHTML的disabled属性 (:ref:`逻辑属性 <boolean_attribute>`) 。
    ====================================== ==========================================================================================
 
 .. _tag-plain_hidden_tag:
 
-plainHiddenタグ
+plainHidden标签
 -------------------------
 
-:ref:`動的属性の使用可否 <tag-dynamic_attributes_tag>` ：可
+:ref:`动态属性的使用可否 <tag-dynamic_attributes_tag>` ：可
 
 .. table::
    :class: tag-reference
 
    ====================================== ==========================================================================================
-   属性                                   説明
+   属性                                   说明
    ====================================== ==========================================================================================
    :ref:`tag-generic_attributes_tag`    
    :ref:`tag-focus_attributes_tag`      
-   name ``必須``                          XHTMLのname属性。
-   disabled                               XHTMLのdisabled属性 (:ref:`論理属性 <boolean_attribute>`) 。
+   name ``必须``                          XHTML的name属性。
+   disabled                               XHTML的disabled属性 (:ref:`逻辑属性 <boolean_attribute>`) 。
    ====================================== ==========================================================================================
 
 .. _tag-hidden_store_tag:
 
-hiddenStoreタグ
+hiddenStore标签
 -------------------------
 
-:ref:`動的属性の使用可否 <tag-dynamic_attributes_tag>` ：可
+:ref:`动态属性的使用可否 <tag-dynamic_attributes_tag>` ：可
 
 .. table::
    :class: tag-reference
 
    ====================================== ==========================================================================================
-   属性                                   説明
+   属性                                   说明
    ====================================== ==========================================================================================
    :ref:`tag-generic_attributes_tag`
    :ref:`tag-focus_attributes_tag`
-   name ``必須``                          XHTMLのname属性。
-   disabled                               XHTMLのdisabled属性 (:ref:`論理属性 <boolean_attribute>`) 。
+   name ``必须``                          XHTML的name属性。
+   disabled                               XHTML的disabled属性 (:ref:`逻辑属性 <boolean_attribute>`) 。
    ====================================== ==========================================================================================
 
 .. _tag-select_tag:
 
-selectタグ
+select标签
 -------------------------
 
-:ref:`動的属性の使用可否 <tag-dynamic_attributes_tag>` ：可
+:ref:`动态属性的使用可否 <tag-dynamic_attributes_tag>` ：可
 
 .. table::
    :class: tag-reference
 
    ====================================== ======================================================================================================================
-   属性                                   説明
+   属性                                   说明
    ====================================== ======================================================================================================================
    :ref:`tag-generic_attributes_tag`    
-   name ``必須``                          XHTMLのname属性。
-   listName ``必須``                      選択肢リストの名前。
-                                          カスタムタグはこの名前を使用してリクエストスコープから選択肢リストを取得する。
-                                          リクエストスコープから取得した選択肢リストが空の場合、画面には何も表示しない。
-   elementLabelProperty ``必須``          リスト要素からラベルを取得するためのプロパティ名。
-   elementValueProperty ``必須``          リスト要素から値を取得するためのプロパティ名。
-   size                                   XHTMLのsize属性。
-   multiple                               XHTMLのmultiple属性 (:ref:`論理属性 <boolean_attribute>`) 。
-   disabled                               XHTMLのdisabled属性 (:ref:`論理属性 <boolean_attribute>`) 。
-   tabindex                               XHTMLのtabindex属性。
-   onfocus                                XHTMLのonfocus属性。
-   onblur                                 XHTMLのonblur属性。
-   onchange                               XHTMLのonchange属性。
-   autofocus                              HTML5のautofocus属性 (:ref:`論理属性 <boolean_attribute>`) 。
-   elementLabelPattern                    ラベルを整形するためのパターン。
-                                          プレースホルダを下記に示す。
-                                          ``$LABEL$`` : ラベル
-                                          ``$VALUE$`` : 値
-                                          デフォルトは ``$LABEL$`` 。
-   listFormat                             リスト表示時に使用するフォーマット。
-                                          下記のいずれかを指定する。
-                                          br(brタグ)
-                                          div(divタグ)
-                                          span(spanタグ)
-                                          ul(ulタグ)
-                                          ol(olタグ)
-                                          sp(スペース区切り)
-                                          デフォルトはbr。
-   withNoneOption                         リスト先頭に選択なしのオプションを追加するか否か。
-                                          追加する場合は ``true`` 、追加しない場合は ``false`` 。
-                                          デフォルトは ``false`` 。
-   noneOptionLabel                        リスト先頭に選択なしのオプションを追加する場合に使用するラベル。
-                                          この属性は、withNoneOptionに ``true`` を指定した場合のみ有効となる。
-                                          デフォルトは ``""``。
-   errorCss                               エラーレベルのメッセージに使用するCSSクラス名。
-                                          デフォルトは ``nablarch_error`` 。
-   nameAlias                              name属性のエイリアスを設定する。
-                                          複数指定する場合はカンマ区切り。
+   name ``必须``                          XHTML的name属性。
+   listName ``必须``                      选项列表的名称。
+                                          自定义标签使用此名称从请求作用域获取选项列表。
+                                          如从请求作用域获取的选项列表为空，则画面中不显示任何内容。
+   elementLabelProperty ``必须``          从列表元素获取标签的属性名。
+   elementValueProperty ``必须``          从列表元素获取值的属性名。
+   size                                   XHTML的size属性。
+   multiple                               XHTML的multiple属性 (:ref:`逻辑属性 <boolean_attribute>`) 。
+   disabled                               XHTML的disabled属性 (:ref:`逻辑属性 <boolean_attribute>`) 。
+   tabindex                               XHTML的tabindex属性。
+   onfocus                                XHTML的onfocus属性。
+   onblur                                 XHTML的onblur属性。
+   onchange                               XHTML的onchange属性。
+   autofocus                              HTML5的autofocus属性 (:ref:`逻辑属性 <boolean_attribute>`) 。
+   elementLabelPattern                    用于格式化标签的模式。
+                                          占位符如下所示。
+                                          ``$LABEL$`` : 标签
+                                          ``$VALUE$`` : 值
+                                          默认为 ``$LABEL$`` 。
+   listFormat                             列表显示时使用的格式。
+                                          指定以下之一。
+                                          br(br标签)
+                                          div(div标签)
+                                          span(span标签)
+                                          ul(ul标签)
+                                          ol(ol标签)
+                                          sp(空格分隔)
+                                          默认为br。
+   withNoneOption                         是否在列表开头添加"未选择"选项。
+                                          添加时为 ``true`` ，不添加时为 ``false`` 。
+                                          默认为 ``false`` 。
+   noneOptionLabel                        在列表开头添加"未选择"选项时使用的标签。
+                                          此属性仅在withNoneOption指定为 ``true`` 时有效。
+                                          默认为 ``""``。
+   errorCss                               用于错误级别消息的CSS类名。
+                                          默认为 ``nablarch_error`` 。
+   nameAlias                              设置name属性的别名。
+                                          指定多个时用逗号分隔。
    ====================================== ======================================================================================================================
 
 .. _tag-radio_buttons_tag:
 
-radioButtonsタグ
+radioButtons标签
 -------------------------
 
-:ref:`動的属性の使用可否 <tag-dynamic_attributes_tag>` ：可
+:ref:`动态属性的使用可否 <tag-dynamic_attributes_tag>` ：可
 
 .. table::
    :class: tag-reference
 
    ====================================== ======================================================================================================================
-   属性                                   説明
+   属性                                   说明
    ====================================== ======================================================================================================================
-   :ref:`tag-generic_attributes_tag`      id属性は指定不可。
-   :ref:`tag-focus_attributes_tag`        accesskey属性は指定不可。
-   name ``必須``                          XHTMLのname属性。
-   listName ``必須``                      選択肢リストの名前。
-                                          カスタムタグはこの名前を使用してリクエストスコープから選択肢リストを取得する。
-                                          リクエストスコープから取得した選択肢リストが空の場合、画面には何も表示しない。
-   elementLabelProperty ``必須``          リスト要素からラベルを取得するためのプロパティ名。
-   elementValueProperty ``必須``          リスト要素から値を取得するためのプロパティ名。
-   disabled                               XHTMLのdisabled属性 (:ref:`論理属性 <boolean_attribute>`) 。
-   onchange                               XHTMLのonchange属性。
-   autofocus                              HTML5のautofocus属性 (:ref:`論理属性 <boolean_attribute>`) 。
-                                          選択肢のうち、先頭要素のみautofocus属性を出力する。
-   elementLabelPattern                    ラベルを整形するためのパターン。
-                                          プレースホルダを下記に示す。
-                                          ``$LABEL$`` : ラベル
-                                          ``$VALUE$`` : 値
-                                          デフォルトは ``$LABEL$`` 。
-   listFormat                             リスト表示時に使用するフォーマット。
-                                          下記のいずれかを指定する。
-                                          br(brタグ)
-                                          div(divタグ)
-                                          span(spanタグ)
-                                          ul(ulタグ)
-                                          ol(olタグ)
-                                          sp(スペース区切り)
-                                          デフォルトはbr。
-   errorCss                               エラーレベルのメッセージに使用するCSSクラス名。
-                                          デフォルトは ``nablarch_error`` 。
-   nameAlias                              name属性のエイリアスを設定する。
-                                          複数指定する場合はカンマ区切り。
+   :ref:`tag-generic_attributes_tag`      id属性不能指定。
+   :ref:`tag-focus_attributes_tag`        accesskey属性不能指定。
+   name ``必须``                          XHTML的name属性。
+   listName ``必须``                      选项列表的名称。
+                                          自定义标签使用此名称从请求作用域获取选项列表。
+                                          如从请求作用域获取的选项列表为空，则画面中不显示任何内容。
+   elementLabelProperty ``必须``          从列表元素获取标签的属性名。
+   elementValueProperty ``必须``          从列表元素获取值的属性名。
+   disabled                               XHTML的disabled属性 (:ref:`逻辑属性 <boolean_attribute>`) 。
+   onchange                               XHTML的onchange属性。
+   autofocus                              HTML5的autofocus属性 (:ref:`逻辑属性 <boolean_attribute>`) 。
+                                          仅在选项中的第一个元素输出autofocus属性。
+   elementLabelPattern                    用于格式化标签的模式。
+                                          占位符如下所示。
+                                          ``$LABEL$`` : 标签
+                                          ``$VALUE$`` : 值
+                                          默认为 ``$LABEL$`` 。
+   listFormat                             列表显示时使用的格式。
+                                          指定以下之一。
+                                          br(br标签)
+                                          div(div标签)
+                                          span(span标签)
+                                          ul(ul标签)
+                                          ol(ol标签)
+                                          sp(空格分隔)
+                                          默认为br。
+   errorCss                               用于错误级别消息的CSS类名。
+                                          默认为 ``nablarch_error`` 。
+   nameAlias                              设置name属性的别名。
+                                          指定多个时用逗号分隔。
    ====================================== ======================================================================================================================
 
 .. _tag-checkboxes_tag:
 
-checkboxesタグ
+checkboxes标签
 -------------------------
 
-:ref:`動的属性の使用可否 <tag-dynamic_attributes_tag>` ：可
+:ref:`动态属性的使用可否 <tag-dynamic_attributes_tag>` ：可
 
 .. table::
    :class: tag-reference
 
    ====================================== ==========================================================================================
-   属性                                   説明
+   属性                                   说明
    ====================================== ==========================================================================================
-   :ref:`tag-generic_attributes_tag`      id属性は指定不可。
-   :ref:`tag-focus_attributes_tag`        accesskey属性は指定不可。
-   name ``必須``                          XHTMLのname属性。
-   listName ``必須``                      選択肢リストの名前。
-                                          カスタムタグはこの名前を使用してリクエストスコープから選択肢リストを取得する。
-                                          リクエストスコープから取得した選択肢リストが空の場合、画面には何も表示しない。
-   elementLabelProperty ``必須``          リスト要素からラベルを取得するためのプロパティ名。
-   elementValueProperty ``必須``          リスト要素から値を取得するためのプロパティ名。
-   disabled                               XHTMLのdisabled属性 (:ref:`論理属性 <boolean_attribute>`) 。
-   onchange                               XHTMLのonchange属性。
-   autofocus                              HTML5のautofocus属性 (:ref:`論理属性 <boolean_attribute>`) 。
-                                          選択肢のうち、先頭要素のみautofocus属性を出力する。
-   elementLabelPattern                    ラベルを整形するためのパターン。
-                                          プレースホルダを下記に示す。
-                                          ``$LABEL$`` : ラベル
-                                          ``$VALUE$`` : 値
-                                          デフォルトは ``$LABEL$`` 。
-   listFormat                             リスト表示時に使用するフォーマット。
-                                          下記のいずれかを指定する。
-                                          br(brタグ)
-                                          div(divタグ)
-                                          span(spanタグ)
-                                          ul(ulタグ)
-                                          ol(olタグ)
-                                          sp(スペース区切り)
-                                          デフォルトはbr。
-   errorCss                               エラーレベルのメッセージに使用するCSSクラス名。
-                                          デフォルトは ``nablarch_error`` 。
-   nameAlias                              name属性のエイリアスを設定する。
-                                          複数指定する場合はカンマ区切り。
+   :ref:`tag-generic_attributes_tag`      id属性不能指定。
+   :ref:`tag-focus_attributes_tag`        accesskey属性不能指定。
+   name ``必须``                          XHTML的name属性。
+   listName ``必须``                      选项列表的名称。
+                                          自定义标签使用此名称从请求作用域获取选项列表。
+                                          如从请求作用域获取的选项列表为空，则画面中不显示任何内容。
+   elementLabelProperty ``必须``          从列表元素获取标签的属性名。
+   elementValueProperty ``必须``          从列表元素获取值的属性名。
+   disabled                               XHTML的disabled属性 (:ref:`逻辑属性 <boolean_attribute>`) 。
+   onchange                               XHTML的onchange属性。
+   autofocus                              HTML5的autofocus属性 (:ref:`逻辑属性 <boolean_attribute>`) 。
+                                          仅在选项中的第一个元素输出autofocus属性。
+   elementLabelPattern                    用于格式化标签的模式。
+                                          占位符如下所示。
+                                          ``$LABEL$`` : 标签
+                                          ``$VALUE$`` : 值
+                                          默认为 ``$LABEL$`` 。
+   listFormat                             列表显示时使用的格式。
+                                          指定以下之一。
+                                          br(br标签)
+                                          div(div标签)
+                                          span(span标签)
+                                          ul(ul标签)
+                                          ol(ol标签)
+                                          sp(空格分隔)
+                                          默认为br。
+   errorCss                               用于错误级别消息的CSS类名。
+                                          默认为 ``nablarch_error`` 。
+   nameAlias                              设置name属性的别名。
+                                          指定多个时用逗号分隔。
    ====================================== ==========================================================================================
 
 .. _tag-submit_tag:
 
-submitタグ
+submit标签
 -------------------------
 
-:ref:`動的属性の使用可否 <tag-dynamic_attributes_tag>` ：可
+:ref:`动态属性的使用可否 <tag-dynamic_attributes_tag>` ：可
 
 .. table::
    :class: tag-reference
 
    ====================================== ==========================================================================================
-   属性                                   説明
+   属性                                   说明
    ====================================== ==========================================================================================
    :ref:`tag-generic_attributes_tag`    
    :ref:`tag-focus_attributes_tag`      
-   name                                   XHTMLのname属性。
-   type ``必須``                          XHTMLのtype属性。
-   uri ``必須``                           URI。
-                                          :ref:`tag-specify_uri` を参照。
-   disabled                               XHTMLのdisabled属性 (:ref:`論理属性 <boolean_attribute>`) 。
-   value                                  XHTMLのvalue属性。
-   src                                    XHTMLのsrc属性。
-   alt                                    XHTMLのalt属性。
-   usemap                                 XHTMLのusemap属性。
-   align                                  XHTMLのalign属性。
-   autofocus                              HTML5のautofocus属性 (:ref:`論理属性 <boolean_attribute>`) 。
-   allowDoubleSubmission                  二重サブミットを許可するか否か。
-                                          許可する場合は ``true`` 、許可しない場合は ``false`` 。
-                                          デフォルトは ``true`` 。
-   secure                                 URIをhttpsにするか否か。
-                                          httpsにする場合は ``true`` 、しない場合は ``false`` 。
-   displayMethod                          認可判定とサービス提供可否判定の結果に応じて表示制御を行う場合の表示方法。
-                                          下記のいずれかを指定する。
-                                          NODISPLAY (非表示)
-                                          DISABLED (非活性)
-                                          NORMAL (通常表示)
-   suppressDefaultSubmit                  デフォルトで生成するサブミット用の関数呼び出しをonclick属性に設定しないよう抑制するか否か。
-                                          抑制する場合は ``true`` 、抑制しない場合は ``false`` 。
-                                          デフォルトは ``false`` 。
+   name                                   XHTML的name属性。
+   type ``必须``                          XHTML的type属性。
+   uri ``必须``                           URI。
+                                          请参阅 :ref:`tag-specify_uri` 。
+   disabled                               XHTML的disabled属性 (:ref:`逻辑属性 <boolean_attribute>`) 。
+   value                                  XHTML的value属性。
+   src                                    XHTML的src属性。
+   alt                                    XHTML的alt属性。
+   usemap                                 XHTML的usemap属性。
+   align                                  XHTML的align属性。
+   autofocus                              HTML5的autofocus属性 (:ref:`逻辑属性 <boolean_attribute>`) 。
+   allowDoubleSubmission                  是否允许双重提交。
+                                          允许时为 ``true`` ，不允许时为 ``false`` 。
+                                          默认为 ``true`` 。
+   secure                                 URI是否改为https。
+                                          改为https时为 ``true`` ，不改为 ``false`` 。
+   displayMethod                          根据授权判断和服务提供可否判断的结果进行显示控制时的显示方法。
+                                          指定以下之一。
+                                          NODISPLAY (不显示)
+                                          DISABLED (禁用)
+                                          NORMAL (正常显示)
+   suppressDefaultSubmit                  是否抑制在onclick属性中设置默认生成的提交用函数调用。
+                                          抑制时为 ``true`` ，不抑制时为 ``false`` 。
+                                          默认为 ``false`` 。
    ====================================== ==========================================================================================
 
 .. _tag-button_tag:
 
-buttonタグ
+button标签
 -------------------------
 
-:ref:`動的属性の使用可否 <tag-dynamic_attributes_tag>` ：可
+:ref:`动态属性的使用可否 <tag-dynamic_attributes_tag>` ：可
 
 .. table::
    :class: tag-reference
 
    ====================================== ==========================================================================================
-   属性                                   説明
+   属性                                   说明
    ====================================== ==========================================================================================
    :ref:`tag-generic_attributes_tag`    
    :ref:`tag-focus_attributes_tag`      
-   name                                   XHTMLのname属性。
-   uri ``必須``                           URI。
-                                          :ref:`tag-specify_uri` を参照。
-   value                                  XHTMLのvalue属性。
-   type                                   XHTMLのtype属性。
-   disabled                               XHTMLのdisabled属性 (:ref:`論理属性 <boolean_attribute>`) 。
-   autofocus                              HTML5のautofocus属性 (:ref:`論理属性 <boolean_attribute>`) 。
-   allowDoubleSubmission                  二重サブミットを許可するか否か。
-                                          許可する場合は ``true`` 、許可しない場合は ``false`` 。
-                                          デフォルトは ``true`` 。
-   secure                                 URIをhttpsにするか否か。
-                                          httpsにする場合は ``true`` 、しない場合は ``false`` 。
-   displayMethod                          認可判定とサービス提供可否判定の結果に応じて表示制御を行う場合の表示方法。
-                                          下記のいずれかを指定する。
-                                          NODISPLAY (非表示)
-                                          DISABLED (非活性)
-                                          NORMAL (通常表示)
-   suppressDefaultSubmit                  デフォルトで生成するサブミット用の関数呼び出しをonclick属性に設定しないよう抑制するか否か。
-                                          抑制する場合は ``true`` 、抑制しない場合は ``false`` 。
-                                          デフォルトは ``false`` 。
+   name                                   XHTML的name属性。
+   uri ``必须``                           URI。
+                                          请参阅 :ref:`tag-specify_uri` 。
+   value                                  XHTML的value属性。
+   type                                   XHTML的type属性。
+   disabled                               XHTML的disabled属性 (:ref:`逻辑属性 <boolean_attribute>`) 。
+   autofocus                              HTML5的autofocus属性 (:ref:`逻辑属性 <boolean_attribute>`) 。
+   allowDoubleSubmission                  是否允许双重提交。
+                                          允许时为 ``true`` ，不允许时为 ``false`` 。
+                                          默认为 ``true`` 。
+   secure                                 URI是否改为https。
+                                          改为https时为 ``true`` ，不改为 ``false`` 。
+   displayMethod                          根据授权判断和服务提供可否判断的结果进行显示控制时的显示方法。
+                                          指定以下之一。
+                                          NODISPLAY (不显示)
+                                          DISABLED (禁用)
+                                          NORMAL (正常显示)
+   suppressDefaultSubmit                  是否抑制在onclick属性中设置默认生成的提交用函数调用。
+                                          抑制时为 ``true`` ，不抑制时为 ``false`` 。
+                                          默认为 ``false`` 。
    ====================================== ==========================================================================================
 
 .. _tag-submit_link_tag:
 
-submitLinkタグ
+submitLink标签
 -------------------------
 
-:ref:`動的属性の使用可否 <tag-dynamic_attributes_tag>` ：可
+:ref:`动态属性的使用可否 <tag-dynamic_attributes_tag>` ：可
 
 .. table::
    :class: tag-reference
 
    ====================================== ==========================================================================================
-   属性                                   説明
+   属性                                   说明
    ====================================== ==========================================================================================
    :ref:`tag-generic_attributes_tag`    
    :ref:`tag-focus_attributes_tag`      
-   name                                   XHTMLのname属性。
-   uri ``必須``                           URI。
-                                          :ref:`tag-specify_uri` を参照。
-   shape                                  XHTMLのshape属性。
-   coords                                 XHTMLのcoords属性。
-   allowDoubleSubmission                  二重サブミットを許可するか否か。
-                                          許可する場合は ``true`` 、許可しない場合は ``false`` 。
-                                          デフォルトは ``true`` 。
-   secure                                 URIをhttpsにするか否か。
-                                          httpsにする場合は ``true`` 、しない場合は ``false`` 。
-   displayMethod                          認可判定とサービス提供可否判定の結果に応じて表示制御を行う場合の表示方法。
-                                          下記のいずれかを指定する。
-                                          NODISPLAY (非表示)
-                                          DISABLED (非活性)
-                                          NORMAL (通常表示)
-   suppressDefaultSubmit                  デフォルトで生成するサブミット用の関数呼び出しをonclick属性に設定しないよう抑制するか否か。
-                                          抑制する場合は ``true`` 、抑制しない場合は ``false`` 。
-                                          デフォルトは ``false`` 。
+   name                                   XHTML的name属性。
+   uri ``必须``                           URI。
+                                          请参阅 :ref:`tag-specify_uri` 。
+   shape                                  XHTML的shape属性。
+   coords                                 XHTML的coords属性。
+   allowDoubleSubmission                  是否允许双重提交。
+                                          允许时为 ``true`` ，不允许时为 ``false`` 。
+                                          默认为 ``true`` 。
+   secure                                 URI是否改为https。
+                                          改为https时为 ``true`` ，不改为 ``false`` 。
+   displayMethod                          根据授权判断和服务提供可否判断的结果进行显示控制时的显示方法。
+                                          指定以下之一。
+                                          NODISPLAY (不显示)
+                                          DISABLED (禁用)
+                                          NORMAL (正常显示)
+   suppressDefaultSubmit                  是否抑制在onclick属性中设置默认生成的提交用函数调用。
+                                          抑制时为 ``true`` ，不抑制时为 ``false`` 。
+                                          默认为 ``false`` 。
    ====================================== ==========================================================================================
 
 .. _tag-popup_submit_tag:
 
-popupSubmitタグ
+popupSubmit标签
 -------------------------
 
-:ref:`動的属性の使用可否 <tag-dynamic_attributes_tag>` ：可
+:ref:`动态属性的使用可否 <tag-dynamic_attributes_tag>` ：可
 
 .. table::
    :class: tag-reference
 
    ====================================== ==========================================================================================
-   属性                                   説明
+   属性                                   说明
    ====================================== ==========================================================================================
    :ref:`tag-generic_attributes_tag`    
    :ref:`tag-focus_attributes_tag`      
-   name                                   XHTMLのname属性。
-   type ``必須``                          XHTMLのtype属性。
-   uri ``必須``                           URI。
-                                          :ref:`tag-specify_uri` を参照。
-   disabled                               XHTMLのdisabled属性 (:ref:`論理属性 <boolean_attribute>`) 。
-   value                                  XHTMLのvalue属性。
-   src                                    XHTMLのsrc属性。
-   alt                                    XHTMLのalt属性。
-   usemap                                 XHTMLのusemap属性。
-   align                                  XHTMLのalign属性。
-   autofocus                              HTML5のautofocus属性 (:ref:`論理属性 <boolean_attribute>`) 。
-   secure                                 URIをhttpsにするか否か。
-                                          httpsにする場合は ``true`` 、しない場合は ``false`` 。
-   popupWindowName                        ポップアップのウィンドウ名。
-                                          新しいウィンドウを開く際にwindow.open関数の第2引数(JavaScript)に指定する。
-   popupOption                            ポップアップのオプション情報。
-                                          新しいウィンドウを開く際にwindow.open関数の第3引数(JavaScript)に指定する。
-   displayMethod                          認可判定とサービス提供可否判定の結果に応じて表示制御を行う場合の表示方法。
-                                          下記のいずれかを指定する。
-                                          NODISPLAY (非表示)
-                                          DISABLED (非活性)
-                                          NORMAL (通常表示)
-   suppressDefaultSubmit                  デフォルトで生成するサブミット用の関数呼び出しをonclick属性に設定しないよう抑制するか否か。
-                                          抑制する場合は ``true`` 、抑制しない場合は ``false`` 。
-                                          デフォルトは ``false`` 。
+   name                                   XHTML的name属性。
+   type ``必须``                          XHTML的type属性。
+   uri ``必须``                           URI。
+                                          请参阅 :ref:`tag-specify_uri` 。
+   disabled                               XHTML的disabled属性 (:ref:`逻辑属性 <boolean_attribute>`) 。
+   value                                  XHTML的value属性。
+   src                                    XHTML的src属性。
+   alt                                    XHTML的alt属性。
+   usemap                                 XHTML的usemap属性。
+   align                                  XHTML的align属性。
+   autofocus                              HTML5的autofocus属性 (:ref:`逻辑属性 <boolean_attribute>`) 。
+   secure                                 URI是否改为https。
+                                          改为https时为 ``true`` ，不改为 ``false`` 。
+   popupWindowName                        弹出窗口的窗口名称。
+                                          打开新窗口时指定为window.open函数的第2个参数(JavaScript)。
+   popupOption                            弹出窗口的选项信息。
+                                          打开新窗口时指定为window.open函数的第3个参数(JavaScript)。
+   displayMethod                          根据授权判断和服务提供可否判断的结果进行显示控制时的显示方法。
+                                          指定以下之一。
+                                          NODISPLAY (不显示)
+                                          DISABLED (禁用)
+                                          NORMAL (正常显示)
+   suppressDefaultSubmit                  是否抑制在onclick属性中设置默认生成的提交用函数调用。
+                                          抑制时为 ``true`` ，不抑制时为 ``false`` 。
+                                          默认为 ``false`` 。
    ====================================== ==========================================================================================
 
 .. _tag-popup_button_tag:
 
-popupButtonタグ
+popupButton标签
 -------------------------
 
-:ref:`動的属性の使用可否 <tag-dynamic_attributes_tag>` ：可
+:ref:`动态属性的使用可否 <tag-dynamic_attributes_tag>` ：可
 
 .. table::
    :class: tag-reference
 
    ====================================== ==========================================================================================
-   属性                                   説明
+   属性                                   说明
    ====================================== ==========================================================================================
    :ref:`tag-generic_attributes_tag`    
    :ref:`tag-focus_attributes_tag`      
-   name                                   XHTMLのname属性。
-   uri ``必須``                           URI。
-                                          :ref:`tag-specify_uri` を参照。
-   value                                  XHTMLのvalue属性。
-   type                                   XHTMLのtype属性。
-   disabled                               XHTMLのdisabled属性 (:ref:`論理属性 <boolean_attribute>`) 。
-   autofocus                              HTML5のautofocus属性 (:ref:`論理属性 <boolean_attribute>`) 。
-   secure                                 URIをhttpsにするか否か。
-                                          httpsにする場合は ``true`` 、しない場合は ``false`` 。
-   popupWindowName                        ポップアップのウィンドウ名。
-                                          新しいウィンドウを開く際にwindow.open関数の第2引数(JavaScript)に指定する。
-   popupOption                            ポップアップのオプション情報。
-                                          新しいウィンドウを開く際にwindow.open関数の第3引数(JavaScript)に指定する。
-   displayMethod                          認可判定とサービス提供可否判定の結果に応じて表示制御を行う場合の表示方法。
-                                          下記のいずれかを指定する。
-                                          NODISPLAY (非表示)
-                                          DISABLED (非活性)
-                                          NORMAL (通常表示)
-   suppressDefaultSubmit                  デフォルトで生成するサブミット用の関数呼び出しをonclick属性に設定しないよう抑制するか否か。
-                                          抑制する場合は ``true`` 、抑制しない場合は ``false`` 。
-                                          デフォルトは ``false`` 。
+   name                                   XHTML的name属性。
+   uri ``必须``                           URI。
+                                          请参阅 :ref:`tag-specify_uri` 。
+   value                                  XHTML的value属性。
+   type                                   XHTML的type属性。
+   disabled                               XHTML的disabled属性 (:ref:`逻辑属性 <boolean_attribute>`) 。
+   autofocus                              HTML5的autofocus属性 (:ref:`逻辑属性 <boolean_attribute>`) 。
+   secure                                 URI是否改为https。
+                                          改为https时为 ``true`` ，不改为 ``false`` 。
+   popupWindowName                        弹出窗口的窗口名称。
+                                          打开新窗口时指定为window.open函数的第2个参数(JavaScript)。
+   popupOption                            弹出窗口的选项信息。
+                                          打开新窗口时指定为window.open函数的第3个参数(JavaScript)。
+   displayMethod                          根据授权判断和服务提供可否判断的结果进行显示控制时的显示方法。
+                                          指定以下之一。
+                                          NODISPLAY (不显示)
+                                          DISABLED (禁用)
+                                          NORMAL (正常显示)
+   suppressDefaultSubmit                  是否抑制在onclick属性中设置默认生成的提交用函数调用。
+                                          抑制时为 ``true`` ，不抑制时为 ``false`` 。
+                                          默认为 ``false`` 。
    ====================================== ==========================================================================================
 
 .. _tag-popup_link_tag:
 
-popupLinkタグ
+popupLink标签
 -------------------------
 
-:ref:`動的属性の使用可否 <tag-dynamic_attributes_tag>` ：可
+:ref:`动态属性的使用可否 <tag-dynamic_attributes_tag>` ：可
 
 .. table::
    :class: tag-reference
 
    ====================================== ==========================================================================================
-   属性                                   説明
+   属性                                   说明
    ====================================== ==========================================================================================
    :ref:`tag-generic_attributes_tag`    
    :ref:`tag-focus_attributes_tag`      
-   name                                   XHTMLのname属性。
-   uri ``必須``                           URI。
-                                          :ref:`tag-specify_uri` を参照。
-   shape                                  XHTMLのshape属性。
-   coords                                 XHTMLのcoords属性。
-   secure                                 URIをhttpsにするか否か。
-                                          httpsにする場合は ``true`` 、しない場合は ``false`` 。
-   popupWindowName                        ポップアップのウィンドウ名。
-                                          新しいウィンドウを開く際にwindow.open関数の第2引数(JavaScript)に指定する。
-   popupOption                            ポップアップのオプション情報。
-                                          新しいウィンドウを開く際にwindow.open関数の第3引数(JavaScript)に指定する。
-   displayMethod                          認可判定とサービス提供可否判定の結果に応じて表示制御を行う場合の表示方法。
-                                          下記のいずれかを指定する。
-                                          NODISPLAY (非表示)
-                                          DISABLED (非活性)
-                                          NORMAL (通常表示)
-   suppressDefaultSubmit                  デフォルトで生成するサブミット用の関数呼び出しをonclick属性に設定しないよう抑制するか否か。
-                                          抑制する場合は ``true`` 、抑制しない場合は ``false`` 。
-                                          デフォルトは ``false`` 。
+   name                                   XHTML的name属性。
+   uri ``必须``                           URI。
+                                          请参阅 :ref:`tag-specify_uri` 。
+   shape                                  XHTML的shape属性。
+   coords                                 XHTML的coords属性。
+   secure                                 URI是否改为https。
+                                          改为https时为 ``true`` ，不改为 ``false`` 。
+   popupWindowName                        弹出窗口的窗口名称。
+                                          打开新窗口时指定为window.open函数的第2个参数(JavaScript)。
+   popupOption                            弹出窗口的选项信息。
+                                          打开新窗口时指定为window.open函数的第3个参数(JavaScript)。
+   displayMethod                          根据授权判断和服务提供可否判断的结果进行显示控制时的显示方法。
+                                          指定以下之一。
+                                          NODISPLAY (不显示)
+                                          DISABLED (禁用)
+                                          NORMAL (正常显示)
+   suppressDefaultSubmit                  是否抑制在onclick属性中设置默认生成的提交用函数调用。
+                                          抑制时为 ``true`` ，不抑制时为 ``false`` 。
+                                          默认为 ``false`` 。
    ====================================== ==========================================================================================
 
 .. _tag-download_submit_tag:
 
-downloadSubmitタグ
+downloadSubmit标签
 -------------------------
 
-:ref:`動的属性の使用可否 <tag-dynamic_attributes_tag>` ：可
+:ref:`动态属性的使用可否 <tag-dynamic_attributes_tag>` ：可
 
 .. table::
    :class: tag-reference
 
    ====================================== ==========================================================================================
-   属性                                   説明
+   属性                                   说明
    ====================================== ==========================================================================================
    :ref:`tag-generic_attributes_tag`    
    :ref:`tag-focus_attributes_tag`      
-   name                                   XHTMLのname属性。
-   type ``必須``                          XHTMLのtype属性。
-   uri ``必須``                           URI。
-                                          :ref:`tag-specify_uri` を参照。
-   disabled                               XHTMLのdisabled属性 (:ref:`論理属性 <boolean_attribute>`) 。
-   value                                  XHTMLのvalue属性。
-   src                                    XHTMLのsrc属性。
-   alt                                    XHTMLのalt属性。
-   usemap                                 XHTMLのusemap属性。
-   align                                  XHTMLのalign属性。
-   autofocus                              HTML5のautofocus属性 (:ref:`論理属性 <boolean_attribute>`) 。
-   allowDoubleSubmission                  二重サブミットを許可するか否か。
-                                          許可する場合は ``true`` 、許可しない場合は ``false`` 。
-                                          デフォルトは ``true`` 。
-   secure                                 URIをhttpsにするか否か。
-                                          httpsにする場合は ``true`` 、しない場合は ``false`` 。
-   displayMethod                          認可判定とサービス提供可否判定の結果に応じて表示制御を行う場合の表示方法。
-                                          下記のいずれかを指定する。
-                                          NODISPLAY (非表示)
-                                          DISABLED (非活性)
-                                          NORMAL (通常表示)
-   suppressDefaultSubmit                  デフォルトで生成するサブミット用の関数呼び出しをonclick属性に設定しないよう抑制するか否か。
-                                          抑制する場合は ``true`` 、抑制しない場合は ``false`` 。
-                                          デフォルトは ``false`` 。
+   name                                   XHTML的name属性。
+   type ``必须``                          XHTML的type属性。
+   uri ``必须``                           URI。
+                                          请参阅 :ref:`tag-specify_uri` 。
+   disabled                               XHTML的disabled属性 (:ref:`逻辑属性 <boolean_attribute>`) 。
+   value                                  XHTML的value属性。
+   src                                    XHTML的src属性。
+   alt                                    XHTML的alt属性。
+   usemap                                 XHTML的usemap属性。
+   align                                  XHTML的align属性。
+   autofocus                              HTML5的autofocus属性 (:ref:`逻辑属性 <boolean_attribute>`) 。
+   allowDoubleSubmission                  是否允许双重提交。
+                                          允许时为 ``true`` ，不允许时为 ``false`` 。
+                                          默认为 ``true`` 。
+   secure                                 URI是否改为https。
+                                          改为https时为 ``true`` ，不改为 ``false`` 。
+   displayMethod                          根据授权判断和服务提供可否判断的结果进行显示控制时的显示方法。
+                                          指定以下之一。
+                                          NODISPLAY (不显示)
+                                          DISABLED (禁用)
+                                          NORMAL (正常显示)
+   suppressDefaultSubmit                  是否抑制在onclick属性中设置默认生成的提交用函数调用。
+                                          抑制时为 ``true`` ，不抑制时为 ``false`` 。
+                                          默认为 ``false`` 。
    ====================================== ==========================================================================================
 
 .. _tag-download_button_tag:
 
-downloadButtonタグ
+downloadButton标签
 -------------------------
 
-:ref:`動的属性の使用可否 <tag-dynamic_attributes_tag>` ：可
+:ref:`动态属性的使用可否 <tag-dynamic_attributes_tag>` ：可
 
 .. table::
    :class: tag-reference
 
    ====================================== ==========================================================================================
-   属性                                   説明
+   属性                                   说明
    ====================================== ==========================================================================================
    :ref:`tag-generic_attributes_tag`    
    :ref:`tag-focus_attributes_tag`      
-   name                                   XHTMLのname属性。
-   uri ``必須``                           URI。
-                                          :ref:`tag-specify_uri` を参照。
-   value                                  XHTMLのvalue属性。
-   type                                   XHTMLのtype属性。
-   disabled                               XHTMLのdisabled属性 (:ref:`論理属性 <boolean_attribute>`) 。
-   autofocus                              HTML5のautofocus属性 (:ref:`論理属性 <boolean_attribute>`) 。
-   allowDoubleSubmission                  二重サブミットを許可するか否か。
-                                          許可する場合は ``true`` 、許可しない場合は ``false`` 。
-                                          デフォルトは ``true`` 。
-   secure                                 URIをhttpsにするか否か。
-                                          httpsにする場合は ``true`` 、しない場合は ``false`` 。
-   displayMethod                          認可判定とサービス提供可否判定の結果に応じて表示制御を行う場合の表示方法。
-                                          下記のいずれかを指定する。
-                                          NODISPLAY (非表示)
-                                          DISABLED (非活性)
-                                          NORMAL (通常表示)
-   suppressDefaultSubmit                  デフォルトで生成するサブミット用の関数呼び出しをonclick属性に設定しないよう抑制するか否か。
-                                          抑制する場合は ``true`` 、抑制しない場合は ``false`` 。
-                                          デフォルトは ``false`` 。
+   name                                   XHTML的name属性。
+   uri ``必须``                           URI。
+                                          请参阅 :ref:`tag-specify_uri` 。
+   value                                  XHTML的value属性。
+   type                                   XHTML的type属性。
+   disabled                               XHTML的disabled属性 (:ref:`逻辑属性 <boolean_attribute>`) 。
+   autofocus                              HTML5的autofocus属性 (:ref:`逻辑属性 <boolean_attribute>`) 。
+   allowDoubleSubmission                  是否允许双重提交。
+                                          允许时为 ``true`` ，不允许时为 ``false`` 。
+                                          默认为 ``true`` 。
+   secure                                 URI是否改为https。
+                                          改为https时为 ``true`` ，不改为 ``false`` 。
+   displayMethod                          根据授权判断和服务提供可否判断的结果进行显示控制时的显示方法。
+                                          指定以下之一。
+                                          NODISPLAY (不显示)
+                                          DISABLED (禁用)
+                                          NORMAL (正常显示)
+   suppressDefaultSubmit                  是否抑制在onclick属性中设置默认生成的提交用函数调用。
+                                          抑制时为 ``true`` ，不抑制时为 ``false`` 。
+                                          默认为 ``false`` 。
    ====================================== ==========================================================================================
 
 .. _tag-download_link_tag:
 
-downloadLinkタグ
+downloadLink标签
 -------------------------
 
-:ref:`動的属性の使用可否 <tag-dynamic_attributes_tag>` ：可
+:ref:`动态属性的使用可否 <tag-dynamic_attributes_tag>` ：可
 
 .. table::
    :class: tag-reference
 
    ====================================== ==========================================================================================
-   属性                                   説明
+   属性                                   说明
    ====================================== ==========================================================================================
    :ref:`tag-generic_attributes_tag`    
    :ref:`tag-focus_attributes_tag`      
-   name                                   XHTMLのname属性。
-   uri ``必須``                           URI。
-                                          :ref:`tag-specify_uri` を参照。
-   shape                                  XHTMLのshape属性。
-   coords                                 XHTMLのcoords属性。
-   allowDoubleSubmission                  二重サブミットを許可するか否か。
-                                          許可する場合は ``true`` 、許可しない場合は ``false`` 。
-                                          デフォルトは ``true`` 。
-   secure                                 URIをhttpsにするか否か。
-                                          httpsにする場合は ``true`` 、しない場合は ``false`` 。
-   displayMethod                          認可判定とサービス提供可否判定の結果に応じて表示制御を行う場合の表示方法。
-                                          下記のいずれかを指定する。
-                                          NODISPLAY (非表示)
-                                          DISABLED (非活性)
-                                          NORMAL (通常表示)
-   suppressDefaultSubmit                  デフォルトで生成するサブミット用の関数呼び出しをonclick属性に設定しないよう抑制するか否か。
-                                          抑制する場合は ``true`` 、抑制しない場合は ``false`` 。
-                                          デフォルトは ``false`` 。
+   name                                   XHTML的name属性。
+   uri ``必须``                           URI。
+                                          请参阅 :ref:`tag-specify_uri` 。
+   shape                                  XHTML的shape属性。
+   coords                                 XHTML的coords属性。
+   allowDoubleSubmission                  是否允许双重提交。
+                                          允许时为 ``true`` ，不允许时为 ``false`` 。
+                                          默认为 ``true`` 。
+   secure                                 URI是否改为https。
+                                          改为https时为 ``true`` ，不改为 ``false`` 。
+   displayMethod                          根据授权判断和服务提供可否判断的结果进行显示控制时的显示方法。
+                                          指定以下之一。
+                                          NODISPLAY (不显示)
+                                          DISABLED (禁用)
+                                          NORMAL (正常显示)
+   suppressDefaultSubmit                  是否抑制在onclick属性中设置默认生成的提交用函数调用。
+                                          抑制时为 ``true`` ，不抑制时为 ``false`` 。
+                                          默认为 ``false`` 。
    ====================================== ==========================================================================================
 
 .. _tag-param_tag:
 
-paramタグ
+param标签
 -------------------------
 
-:ref:`動的属性の使用可否 <tag-dynamic_attributes_tag>` ：否
+:ref:`动态属性的使用可否 <tag-dynamic_attributes_tag>` ：否
 
 .. table::
    :class: tag-reference
 
    ====================================== ==========================================================================================
-   属性                                   説明
+   属性                                   说明
    ====================================== ==========================================================================================
-   paramName ``必須``                     サブミット時に使用するパラメータの名前。
-   name                                   値を取得するための名前。
-                                          リクエストスコープなどスコープ上のオブジェクトを参照する場合に指定する。
-                                          name属性とvalue属性のどちらか一方を指定する。
-   value                                  値。
-                                          直接値を指定する場合に使用する。
-                                          name属性とvalue属性のどちらか一方を指定する。
+   paramName ``必须``                     提交时使用的参数名称。
+   name                                   用于获取值的名称。
+                                          引用请求作用域等作用域上的对象时指定。
+                                          指定name属性或value属性之一。
+   value                                  值。
+                                          用于直接指定值。
+                                          指定name属性或value属性之一。
    ====================================== ==========================================================================================
 
 .. _tag-change_param_name_tag:
 
-changeParamNameタグ
+changeParamName标签
 -------------------------
 
-:ref:`動的属性の使用可否 <tag-dynamic_attributes_tag>` ：否
+:ref:`动态属性的使用可否 <tag-dynamic_attributes_tag>` ：否
 
 .. table::
    :class: tag-reference
 
    ====================================== ==========================================================================================
-   属性                                   説明
+   属性                                   说明
    ====================================== ==========================================================================================
-   paramName ``必須``                     サブミット時に使用するパラメータの名前。
-   inputName ``必須``                     変更元となる元画面のinput要素のname属性。
+   paramName ``必须``                     提交时使用的参数名称。
+   inputName ``必须``                     作为更改来源的原画面的input元素的name属性。
    ====================================== ==========================================================================================
 
 .. _tag-a_tag:
 
-aタグ
+a标签
 -------------------------
 
-:ref:`動的属性の使用可否 <tag-dynamic_attributes_tag>` ：可
+:ref:`动态属性的使用可否 <tag-dynamic_attributes_tag>` ：可
 
 .. table::
    :class: tag-reference
 
    ====================================== ==========================================================================================
-   属性                                   説明
+   属性                                   说明
    ====================================== ==========================================================================================
    :ref:`tag-generic_attributes_tag`    
    :ref:`tag-focus_attributes_tag`      
-   charset                                XHTMLのcharset属性。
-   type                                   XHTMLのtype属性。
-   name                                   XHTMLのname属性。
-   href                                   XHTMLのhref属性。
-                                          :ref:`tag-specify_uri` を参照。
-   hreflang                               XHTMLのhreflang属性。
-   rel                                    XHTMLのrel属性。
-   rev                                    XHTMLのrev属性。
-   shape                                  XHTMLのshape属性。
-   coords                                 XHTMLのcoords属性。
-   target                                 XHTMLのtarget属性。
-   secure                                 URIをhttpsにするか否か。
-                                          httpsにする場合は ``true`` 、しない場合は ``false`` 。
+   charset                                XHTML的charset属性。
+   type                                   XHTML的type属性。
+   name                                   XHTML的name属性。
+   href                                   XHTML的href属性。
+                                          请参阅 :ref:`tag-specify_uri` 。
+   hreflang                               XHTML的hreflang属性。
+   rel                                    XHTML的rel属性。
+   rev                                    XHTML的rev属性。
+   shape                                  XHTML的shape属性。
+   coords                                 XHTML的coords属性。
+   target                                 XHTML的target属性。
+   secure                                 URI是否改为https。
+                                          改为https时为 ``true`` ，不改为 ``false`` 。
    ====================================== ==========================================================================================
 
 .. _tag-img_tag:
 
-imgタグ
+img标签
 -------------------------
 
-:ref:`動的属性の使用可否 <tag-dynamic_attributes_tag>` ：可
+:ref:`动态属性的使用可否 <tag-dynamic_attributes_tag>` ：可
 
 .. table::
    :class: tag-reference
 
    ====================================== ==========================================================================================
-   属性                                   説明
+   属性                                   说明
    ====================================== ==========================================================================================
    :ref:`tag-generic_attributes_tag`    
-   src ``必須``                           XHTMLのcharsrc属性。
-                                          :ref:`tag-specify_uri` を参照。
-   alt ``必須``                           XHTMLのalt属性。
-   name                                   XHTMLのname属性。
-   longdesc                               XHTMLのlongdesc属性。
-   height                                 XHTMLのheight属性。
-   width                                  XHTMLのwidth属性。
-   usemap                                 XHTMLのusemap属性。
-   ismap                                  XHTMLのismap属性。
-   align                                  XHTMLのalign属性。
-   border                                 XHTMLのborder属性。
-   hspace                                 XHTMLのhspace属性。
-   vspace                                 XHTMLのvspace属性。
-   secure                                 URIをhttpsにするか否か。
-                                          httpsにする場合は ``true`` 、しない場合は ``false`` 。
+   src ``必须``                           XHTML的charsrc属性。
+                                          请参阅 :ref:`tag-specify_uri` 。
+   alt ``必须``                           XHTML的alt属性。
+   name                                   XHTML的name属性。
+   longdesc                               XHTML的longdesc属性。
+   height                                 XHTML的height属性。
+   width                                  XHTML的width属性。
+   usemap                                 XHTML的usemap属性。
+   ismap                                  XHTML的ismap属性。
+   align                                  XHTML的align属性。
+   border                                 XHTML的border属性。
+   hspace                                 XHTML的hspace属性。
+   vspace                                 XHTML的vspace属性。
+   secure                                 URI是否改为https。
+                                          改为https时为 ``true`` ，不改为 ``false`` 。
    ====================================== ==========================================================================================
 
 .. _tag-link_tag:
 
-linkタグ
+link标签
 -------------------------
 
-:ref:`動的属性の使用可否 <tag-dynamic_attributes_tag>` ：可
+:ref:`动态属性的使用可否 <tag-dynamic_attributes_tag>` ：可
 
 .. table::
    :class: tag-reference
 
    ====================================== ==========================================================================================
-   属性                                   説明
+   属性                                   说明
    ====================================== ==========================================================================================
    :ref:`tag-generic_attributes_tag`    
-   charset                                XHTMLのcharset属性。
-   href                                   XHTMLのhref属性。
-                                          :ref:`tag-specify_uri` を参照。
-   hreflang                               XHTMLのhreflang属性。
-   type                                   XHTMLのtype属性。
-   rel                                    XHTMLのrel属性。
-   rev                                    XHTMLのrev属性。
-   media                                  XHTMLのmedia属性。
-   target                                 XHTMLのtarget属性。
-   secure                                 URIをhttpsにするか否か。
-                                          httpsにする場合は ``true`` 、しない場合は ``false`` 。
+   charset                                XHTML的charset属性。
+   href                                   XHTML的href属性。
+                                          请参阅 :ref:`tag-specify_uri` 。
+   hreflang                               XHTML的hreflang属性。
+   type                                   XHTML的type属性。
+   rel                                    XHTML的rel属性。
+   rev                                    XHTML的rev属性。
+   media                                  XHTML的media属性。
+   target                                 XHTML的target属性。
+   secure                                 URI是否改为https。
+                                          改为https时为 ``true`` ，不改为 ``false`` 。
    ====================================== ==========================================================================================
 
 .. _tag-script_tag:
 
-scriptタグ
+script标签
 -------------------------
 
-:ref:`動的属性の使用可否 <tag-dynamic_attributes_tag>` ：可
+:ref:`动态属性的使用可否 <tag-dynamic_attributes_tag>` ：可
 
 .. table::
    :class: tag-reference
 
    ====================================== ==========================================================================================
-   属性                                   説明
+   属性                                   说明
    ====================================== ==========================================================================================
-   type ``必須``                          XHTMLのtype属性。
-   id                                     XHTMLのid属性。
-   charset                                XHTMLのcharset属性。
-   language                               XHTMLのlanguage属性。
-   src                                    XHTMLのsrc属性。
-                                          :ref:`tag-specify_uri` を参照。
-   defer                                  XHTMLのdefer属性。
-   xmlSpace                               XHTMLのxml:space属性。
-   secure                                 URIをhttpsにするか否か。
-                                          httpsにする場合は ``true`` 、しない場合は ``false`` 。
+   type ``必须``                          XHTML的type属性。
+   id                                     XHTML的id属性。
+   charset                                XHTML的charset属性。
+   language                               XHTML的language属性。
+   src                                    XHTML的src属性。
+                                          请参阅 :ref:`tag-specify_uri` 。
+   defer                                  XHTML的defer属性。
+   xmlSpace                               XHTML的xml:space属性。
+   secure                                 URI是否改为https。
+                                          改为https时为 ``true`` ，不改为 ``false`` 。
    ====================================== ==========================================================================================
 
 .. _tag-errors_tag:
 
-errorsタグ
+errors标签
 -------------------------
 
-:ref:`動的属性の使用可否 <tag-dynamic_attributes_tag>` ：否
+:ref:`动态属性的使用可否 <tag-dynamic_attributes_tag>` ：否
 
 .. table::
    :class: tag-reference
 
    ====================================== =================================================================================================
-   属性                                   説明
+   属性                                   说明
    ====================================== =================================================================================================
-   cssClass                               リスト表示においてulタグに使用するCSSクラス名。
-                                          デフォルトは ``nablarch_errors`` 。
-   infoCss                                情報レベルのメッセージに使用するCSSクラス名。
-                                          デフォルトは ``nablarch_info`` 。
-   warnCss                                警告レベルのメッセージに使用するCSSクラス名。
-                                          デフォルトは ``nablarch_warn`` 。
-   errorCss                               エラーレベルのメッセージに使用するCSSクラス名。
-                                          デフォルトは ``nablarch_error`` 。
-   filter                                 リストに含めるメッセージのフィルタ条件。
-                                          下記のいずれかを指定する。
-                                          all(全てのメッセージを表示する)
-                                          global(入力項目に対応しないメッセージのみを表示)
-                                          デフォルトは ``all`` 。
-                                          globalの場合、\
-                                          :java:extdoc:`ValidationResultMessage<nablarch.core.validation.ValidationResultMessage>`\
-                                          のプロパティ名が入っているメッセージを取り除いて出力する。
+   cssClass                               列表显示中ul标签使用的CSS类名。
+                                          默认为 ``nablarch_errors`` 。
+   infoCss                                用于信息级别消息的CSS类名。
+                                          默认为 ``nablarch_info`` 。
+   warnCss                                用于警告级别消息的CSS类名。
+                                          默认为 ``nablarch_warn`` 。
+   errorCss                               用于错误级别消息的CSS类名。
+                                          默认为 ``nablarch_error`` 。
+   filter                                 列表中包含的消息的过滤条件。
+                                          指定以下之一。
+                                          all(显示所有消息)
+                                          global(仅显示与输入项目不对应的消息)
+                                          默认为 ``all`` 。
+                                          指定global时，\
+                                          去除包含 :java:extdoc:`ValidationResultMessage<nablarch.core.validation.ValidationResultMessage>`\
+                                          属性名的消息后输出。
    ====================================== =================================================================================================
 
 .. _tag-error_tag:
 
-errorタグ
+error标签
 -------------------------
 
-:ref:`動的属性の使用可否 <tag-dynamic_attributes_tag>` ：否
+:ref:`动态属性的使用可否 <tag-dynamic_attributes_tag>` ：否
 
 .. table::
    :class: tag-reference
 
    ====================================== ==========================================================================================
-   属性                                   説明
+   属性                                   说明
    ====================================== ==========================================================================================
-   name ``必須``                          エラーメッセージを表示する入力項目のname属性。
-   errorCss                               エラーレベルのメッセージに使用するCSSクラス名。
-                                          デフォルトは ``nablarch_error`` 。
-   messageFormat                          メッセージ表示時に使用するフォーマット。
-                                          下記のいずれかを指定する。
-                                          div(divタグ)
-                                          span(spanタグ)
-                                          デフォルトはdiv。
+   name ``必须``                          显示错误消息的输入项目的name属性。
+   errorCss                               用于错误级别消息的CSS类名。
+                                          默认为 ``nablarch_error`` 。
+   messageFormat                          消息显示时使用的格式。
+                                          指定以下之一。
+                                          div(div标签)
+                                          span(span标签)
+                                          默认为div。
    ====================================== ==========================================================================================
 
 .. _tag-no_cache_tag:
 
-noCacheタグ
+noCache标签
 -------------------------
 
-:ref:`動的属性の使用可否 <tag-dynamic_attributes_tag>` ：否
+:ref:`动态属性的使用可否 <tag-dynamic_attributes_tag>` ：否
 
-属性なし。
+无属性。
 
 .. _tag-code_select_tag:
 
-codeSelectタグ
+codeSelect标签
 -------------------------
 
-:ref:`動的属性の使用可否 <tag-dynamic_attributes_tag>` ：可
+:ref:`动态属性的使用可否 <tag-dynamic_attributes_tag>` ：可
 
 .. table::
    :class: tag-reference
 
    ====================================== ==========================================================================================
-   属性                                   説明
+   属性                                   说明
    ====================================== ==========================================================================================
    :ref:`tag-generic_attributes_tag`    
-   name ``必須``                          XHTMLのname属性。
-   codeId ``必須``                        コードID。
-   size                                   XHTMLのsize属性。
-   multiple                               XHTMLのmultiple属性 (:ref:`論理属性 <boolean_attribute>`) 。
-   disabled                               XHTMLのdisabled属性 (:ref:`論理属性 <boolean_attribute>`) 。
-   tabindex                               XHTMLのtabindex属性。
-   onfocus                                XHTMLのonfocus属性。
-   onblur                                 XHTMLのonblur属性。
-   onchange                               XHTMLのonchange属性。
-   autofocus                              HTML5のautofocus属性 (:ref:`論理属性 <boolean_attribute>`) 。
-   pattern                                使用するパターンのカラム名。
-                                          デフォルトは指定なし。
-   optionColumnName                       取得するオプション名称のカラム名。
-   labelPattern                           ラベルを整形するパターン。
-                                          プレースホルダを下記に示す。
-                                          ``$NAME$`` : コード値に対応するコード名称
-                                          ``$SHORTNAME$`` : コード値に対応するコードの略称
-                                          ``$OPTIONALNAME$`` : コード値に対応するコードのオプション名称
-                                          ``$VALUE$``: コード値
-                                          ``$OPTIONALNAME$`` を使用する場合は、optionColumnName属性の指定が必須となる。
-                                          デフォルトは ``$NAME$`` 。
-   listFormat                             リスト表示時に使用するフォーマット。
-                                          下記のいずれかを指定する。
-                                          br(brタグ)
-                                          div(divタグ)
-                                          span(spanタグ)
-                                          ul(ulタグ)
-                                          ol(olタグ)
-                                          sp(スペース区切り)
-                                          デフォルトはbr。
-   withNoneOption                         リスト先頭に選択なしのオプションを追加するか否か。
-                                          追加する場合は ``true`` 、追加しない場合は ``false`` 。
-                                          デフォルトは ``false`` 。
-   noneOptionLabel                        リスト先頭に選択なしのオプションを追加する場合に使用するラベル。
-                                          この属性は、withNoneOptionに ``true`` を指定した場合のみ有効となる。
-                                          デフォルトは ``""`` 。
-   errorCss                               エラーレベルのメッセージに使用するCSSクラス名。
-                                          デフォルトは ``nablarch_error`` 。
-   nameAlias                              name属性のエイリアスを設定する。
-                                          複数指定する場合はカンマ区切り。
+   name ``必须``                          XHTML的name属性。
+   codeId ``必须``                        代码ID。
+   size                                   XHTML的size属性。
+   multiple                               XHTML的multiple属性 (:ref:`逻辑属性 <boolean_attribute>`) 。
+   disabled                               XHTML的disabled属性 (:ref:`逻辑属性 <boolean_attribute>`) 。
+   tabindex                               XHTML的tabindex属性。
+   onfocus                                XHTML的onfocus属性。
+   onblur                                 XHTML的onblur属性。
+   onchange                               XHTML的onchange属性。
+   autofocus                              HTML5的autofocus属性 (:ref:`逻辑属性 <boolean_attribute>`) 。
+   pattern                                使用的模式的列名。
+                                          默认为未指定。
+   optionColumnName                       获取的选项名称的列名。
+   labelPattern                           格式化标签的模式。
+                                          占位符如下所示。
+                                          ``$NAME$`` : 对应代码值的代码名称
+                                          ``$SHORTNAME$`` : 对应代码值的代码的简称
+                                          ``$OPTIONALNAME$`` : 对应代码值的代码的选项名称
+                                          ``$VALUE$``: 代码值
+                                          使用 ``$OPTIONALNAME$`` 时必须指定optionColumnName属性。
+                                          默认为 ``$NAME$`` 。
+   listFormat                             列表显示时使用的格式。
+                                          指定以下之一。
+                                          br(br标签)
+                                          div(div标签)
+                                          span(span标签)
+                                          ul(ul标签)
+                                          ol(ol标签)
+                                          sp(空格分隔)
+                                          默认为br。
+   withNoneOption                         是否在列表开头添加"未选择"选项。
+                                          添加时为 ``true`` ，不添加时为 ``false`` 。
+                                          默认为 ``false`` 。
+   noneOptionLabel                        在列表开头添加"未选择"选项时使用的标签。
+                                          此属性仅在withNoneOption指定为 ``true`` 时有效。
+                                          默认为 ``""`` 。
+   errorCss                               用于错误级别消息的CSS类名。
+                                          默认为 ``nablarch_error`` 。
+   nameAlias                              设置name属性的别名。
+                                          指定多个时用逗号分隔。
    ====================================== ==========================================================================================
 
 
 .. _tag-code_radio_buttons_tag:
 
-codeRadioButtonsタグ
+codeRadioButtons标签
 -------------------------
 
-:ref:`動的属性の使用可否 <tag-dynamic_attributes_tag>` ：可
+:ref:`动态属性的使用可否 <tag-dynamic_attributes_tag>` ：可
 
 .. table::
    :class: tag-reference
 
    ====================================== ==========================================================================================
-   属性                                   説明
+   属性                                   说明
    ====================================== ==========================================================================================
-   :ref:`tag-generic_attributes_tag`      id属性は指定不可。
-   :ref:`tag-focus_attributes_tag`        accesskey属性は指定不可。
-   name ``必須``                          XHTMLのname属性。
-   codeId ``必須``                        コードID。
-   disabled                               XHTMLのdisabled属性 (:ref:`論理属性 <boolean_attribute>`) 。
-   onchange                               XHTMLのonchange属性。
-   autofocus                              HTML5のautofocus属性 (:ref:`論理属性 <boolean_attribute>`) 。
-                                          選択肢のうち、先頭要素のみautofocus属性を出力する。
-   pattern                                使用するパターンのカラム名。
-                                          デフォルトは指定なし。
-   optionColumnName                       取得するオプション名称のカラム名。
-   labelPattern                           ラベルを整形するパターン。
-                                          プレースホルダを下記に示す。
-                                          ``$NAME$`` : コード値に対応するコード名称
-                                          ``$SHORTNAME$`` : コード値に対応するコードの略称
-                                          ``$OPTIONALNAME$`` : コード値に対応するコードのオプション名称
-                                          ``$VALUE$``: コード値
-                                          ``$OPTIONALNAME$`` を使用する場合は、optionColumnName属性の指定が必須となる。
-                                          デフォルトは ``$NAME$`` 。
-   listFormat                             リスト表示時に使用するフォーマット。
-                                          下記のいずれかを指定する。 
-                                          br(brタグ)
-                                          div(divタグ)
-                                          span(spanタグ)
-                                          ul(ulタグ)
-                                          ol(olタグ)
-                                          sp(スペース区切り) 
-                                          デフォルトはbr。
-   errorCss                               エラーレベルのメッセージに使用するCSSクラス名。
-                                          デフォルトは ``nablarch_error`` 。
-   nameAlias                              name属性のエイリアスを設定する。
-                                          複数指定する場合はカンマ区切り。
+   :ref:`tag-generic_attributes_tag`      id属性不能指定。
+   :ref:`tag-focus_attributes_tag`        accesskey属性不能指定。
+   name ``必须``                          XHTML的name属性。
+   codeId ``必须``                        代码ID。
+   disabled                               XHTML的disabled属性 (:ref:`逻辑属性 <boolean_attribute>`) 。
+   onchange                               XHTML的onchange属性。
+   autofocus                              HTML5的autofocus属性 (:ref:`逻辑属性 <boolean_attribute>`) 。
+                                          仅在选项中的第一个元素输出autofocus属性。
+   pattern                                使用的模式的列名。
+                                          默认为未指定。
+   optionColumnName                       获取的选项名称的列名。
+   labelPattern                           格式化标签的模式。
+                                          占位符如下所示。
+                                          ``$NAME$`` : 对应代码值的代码名称
+                                          ``$SHORTNAME$`` : 对应代码值的代码的简称
+                                          ``$OPTIONALNAME$`` : 对应代码值的代码的选项名称
+                                          ``$VALUE$``: 代码值
+                                          使用 ``$OPTIONALNAME$`` 时必须指定optionColumnName属性。
+                                          默认为 ``$NAME$`` 。
+   listFormat                             列表显示时使用的格式。
+                                          指定以下之一。 
+                                          br(br标签)
+                                          div(div标签)
+                                          span(span标签)
+                                          ul(ul标签)
+                                          ol(ol标签)
+                                          sp(空格分隔) 
+                                          默认为br。
+   errorCss                               用于错误级别消息的CSS类名。
+                                          默认为 ``nablarch_error`` 。
+   nameAlias                              设置name属性的别名。
+                                          指定多个时用逗号分隔。
    ====================================== ==========================================================================================
 
 .. _tag-code_checkboxes_tag:
 
-codeCheckboxesタグ
+codeCheckboxes标签
 -------------------------
 
-:ref:`動的属性の使用可否 <tag-dynamic_attributes_tag>` ：可
+:ref:`动态属性的使用可否 <tag-dynamic_attributes_tag>` ：可
 
 .. table::
    :class: tag-reference
 
    ====================================== ==========================================================================================
-   属性                                   説明
+   属性                                   说明
    ====================================== ==========================================================================================
-   :ref:`tag-generic_attributes_tag`      id属性は指定不可。
-   :ref:`tag-focus_attributes_tag`        accesskey属性は指定不可。
-   name ``必須``                          XHTMLのname属性。
-   codeId ``必須``                        コードID。
-   disabled                               XHTMLのdisabled属性 (:ref:`論理属性 <boolean_attribute>`) 。
-   onchange                               XHTMLのonchange属性。
-   autofocus                              HTML5のautofocus属性 (:ref:`論理属性 <boolean_attribute>`) 。
-                                          選択肢のうち、先頭要素のみautofocus属性を出力する。
-   pattern                                使用するパターンのカラム名。
-                                          デフォルトは指定なし。
-   optionColumnName                       取得するオプション名称のカラム名。
-   labelPattern                           ラベルを整形するパターン。
-                                          プレースホルダを下記に示す。
-                                          ``$NAME$`` : コード値に対応するコード名称
-                                          ``$SHORTNAME$`` : コード値に対応するコードの略称
-                                          ``$OPTIONALNAME$`` : コード値に対応するコードのオプション名称
-                                          ``$VALUE$``: コード値
-                                          ``$OPTIONALNAME$`` を使用する場合は、optionColumnName属性の指定が必須となる。
-                                          デフォルトは ``$NAME$`` 。
-   listFormat                             リスト表示時に使用するフォーマット。
-                                          下記のいずれかを指定する。 
-                                          br(brタグ)
-                                          div(divタグ)
-                                          span(spanタグ)
-                                          ul(ulタグ)
-                                          ol(olタグ)
-                                          sp(スペース区切り) 
-                                          デフォルトはbr。
-   errorCss                               エラーレベルのメッセージに使用するCSSクラス名。
-                                          デフォルトは ``nablarch_error`` 。
-   nameAlias                              name属性のエイリアスを設定する。
-                                          複数指定する場合はカンマ区切り。
+   :ref:`tag-generic_attributes_tag`      id属性不能指定。
+   :ref:`tag-focus_attributes_tag`        accesskey属性不能指定。
+   name ``必须``                          XHTML的name属性。
+   codeId ``必须``                        代码ID。
+   disabled                               XHTML的disabled属性 (:ref:`逻辑属性 <boolean_attribute>`) 。
+   onchange                               XHTML的onchange属性。
+   autofocus                              HTML5的autofocus属性 (:ref:`逻辑属性 <boolean_attribute>`) 。
+                                          仅在选项中的第一个元素输出autofocus属性。
+   pattern                                使用的模式的列名。
+                                          默认为未指定。
+   optionColumnName                       获取的选项名称的列名。
+   labelPattern                           格式化标签的模式。
+                                          占位符如下所示。
+                                          ``$NAME$`` : 对应代码值的代码名称
+                                          ``$SHORTNAME$`` : 对应代码值的代码的简称
+                                          ``$OPTIONALNAME$`` : 对应代码值的代码的选项名称
+                                          ``$VALUE$``: 代码值
+                                          使用 ``$OPTIONALNAME$`` 时必须指定optionColumnName属性。
+                                          默认为 ``$NAME$`` 。
+   listFormat                             列表显示时使用的格式。
+                                          指定以下之一。 
+                                          br(br标签)
+                                          div(div标签)
+                                          span(span标签)
+                                          ul(ul标签)
+                                          ol(ol标签)
+                                          sp(空格分隔) 
+                                          默认为br。
+   errorCss                               用于错误级别消息的CSS类名。
+                                          默认为 ``nablarch_error`` 。
+   nameAlias                              设置name属性的别名。
+                                          指定多个时用逗号分隔。
    ====================================== ==========================================================================================
 
 .. _tag-code_checkbox_tag:
 
-codeCheckboxタグ
+codeCheckbox标签
 -------------------------
 
-:ref:`動的属性の使用可否 <tag-dynamic_attributes_tag>` ：可
+:ref:`动态属性的使用可否 <tag-dynamic_attributes_tag>` ：可
 
 .. table::
    :class: tag-reference
 
    ====================================== ==========================================================================================
-   属性                                   説明
+   属性                                   说明
    ====================================== ==========================================================================================
    :ref:`tag-generic_attributes_tag`    
    :ref:`tag-focus_attributes_tag`      
-   name ``必須``                          XHTMLのname属性。
-   value                                  XHTMLのvalue属性。
-                                          チェックありの場合に使用するコード値。
-                                          デフォルトは ``1`` 。
-   autofocus                              HTML5のautofocus属性 (:ref:`論理属性 <boolean_attribute>`) 。
-   codeId ``必須``                        コードID。
-   optionColumnName                       取得するオプション名称のカラム名。
-   labelPattern                           ラベルを整形するパターン。
-                                          プレースホルダを下記に示す。
-                                          ``$NAME$`` : コード値に対応するコード名称
-                                          ``$SHORTNAME$`` : コード値に対応するコードの略称
-                                          ``$OPTIONALNAME$`` : コード値に対応するコードのオプション名称
-                                          ``$VALUE$``: コード値
-                                          ``$OPTIONALNAME$`` を使用する場合は、optionColumnName属性の指定が必須となる。
-                                          デフォルトは ``$NAME$`` 。
-   offCodeValue                           チェックなしの場合に使用するコード値。
-                                          offCodeValue属性が指定されない場合は、
-                                          codeId属性の値からチェックなしの場合に使用するコード値を検索する。
-                                          検索結果が2件、かつ1件がvalue属性の値である場合は、
-                                          残りの1件をチェックなしのコード値として使用する。
-                                          検索で見つからない場合は、デフォルト値の ``0`` を使用する。
-   disabled                               XHTMLのdisabled属性 (:ref:`論理属性 <boolean_attribute>`) 。
-   onchange                               XHTMLのonchange属性。
-   errorCss                               エラーレベルのメッセージに使用するCSSクラス名。
-                                          デフォルトは ``nablarch_error`` 。
-   nameAlias                              name属性のエイリアスを設定する。
-                                          複数指定する場合はカンマ区切り。
+   name ``必须``                          XHTML的name属性。
+   value                                  XHTML的value属性。
+                                          选中时使用的代码值。
+                                          默认为 ``1`` 。
+   autofocus                              HTML5的autofocus属性 (:ref:`逻辑属性 <boolean_attribute>`) 。
+   codeId ``必须``                        代码ID。
+   optionColumnName                       获取的选项名称的列名。
+   labelPattern                           格式化标签的模式。
+                                          占位符如下所示。
+                                          ``$NAME$`` : 对应代码值的代码名称
+                                          ``$SHORTNAME$`` : 对应代码值的代码的简称
+                                          ``$OPTIONALNAME$`` : 对应代码值的代码的选项名称
+                                          ``$VALUE$``: 代码值
+                                          使用 ``$OPTIONALNAME$`` 时必须指定optionColumnName属性。
+                                          默认为 ``$NAME$`` 。
+   offCodeValue                           未选中时使用的代码值。
+                                          如未指定offCodeValue属性，
+                                          从codeId属性的值中搜索未选中时使用的代码值。
+                                          搜索结果为2件且1件为value属性的值时，
+                                          将剩余的1件作为未选中的代码值使用。
+                                          搜索未找到时，使用默认值 ``0`` 。
+   disabled                               XHTML的disabled属性 (:ref:`逻辑属性 <boolean_attribute>`) 。
+   onchange                               XHTML的onchange属性。
+   errorCss                               用于错误级别消息的CSS类名。
+                                          默认为 ``nablarch_error`` 。
+   nameAlias                              设置name属性的别名。
+                                          指定多个时用逗号分隔。
    ====================================== ==========================================================================================
 
 .. _tag-code_tag:
 
-codeタグ
+code标签
 -------------------------
 
-:ref:`動的属性の使用可否 <tag-dynamic_attributes_tag>` ：可
+:ref:`动态属性的使用可否 <tag-dynamic_attributes_tag>` ：可
 
 .. table::
    :class: tag-reference
 
    ====================================== ==========================================================================================
-   属性                                   説明
+   属性                                   说明
    ====================================== ==========================================================================================
-   name                                   表示対象のコード値を変数スコープから取得する際に使用する名前
-                                          省略した場合は、コードID属性とpattern属性にて絞り込んだコードの一覧を表示する。
-   codeId ``必須``                        コードID。
-   pattern                                使用するパターンのカラム名。
-                                          デフォルトは指定なし。
-   optionColumnName                       取得するオプション名称のカラム名。
-   labelPattern                           ラベルを整形するパターン。
-                                          プレースホルダを下記に示す。
-                                          ``$NAME$`` : コード値に対応するコード名称
-                                          ``$SHORTNAME$`` : コード値に対応するコードの略称
-                                          ``$OPTIONALNAME$`` : コード値に対応するコードのオプション名称
-                                          ``$VALUE$``: コード値
-                                          ``$OPTIONALNAME$`` を使用する場合は、optionColumnName属性の指定が必須となる。
-                                          デフォルトは ``$NAME$`` 。
-   listFormat                             リスト表示時に使用するフォーマット。
-                                          下記のいずれかを指定する。 
-                                          br(brタグ)
-                                          div(divタグ)
-                                          span(spanタグ)
-                                          ul(ulタグ)
-                                          ol(olタグ)
-                                          sp(スペース区切り) 
-                                          デフォルトはbr。
+   name                                   从变量作用域获取显示目标的代码值时使用的名称
+                                          省略时，显示按代码ID属性和pattern属性筛选的代码列表。
+   codeId ``必须``                        代码ID。
+   pattern                                使用的模式的列名。
+                                          默认为未指定。
+   optionColumnName                       获取的选项名称的列名。
+   labelPattern                           格式化标签的模式。
+                                          占位符如下所示。
+                                          ``$NAME$`` : 对应代码值的代码名称
+                                          ``$SHORTNAME$`` : 对应代码值的代码的简称
+                                          ``$OPTIONALNAME$`` : 对应代码值的代码的选项名称
+                                          ``$VALUE$``: 代码值
+                                          使用 ``$OPTIONALNAME$`` 时必须指定optionColumnName属性。
+                                          默认为 ``$NAME$`` 。
+   listFormat                             列表显示时使用的格式。
+                                          指定以下之一。 
+                                          br(br标签)
+                                          div(div标签)
+                                          span(span标签)
+                                          ul(ul标签)
+                                          ol(ol标签)
+                                          sp(空格分隔) 
+                                          默认为br。
    ====================================== ==========================================================================================
 
 .. _tag-csp_nonce_tag:
 
-cspNonceタグ
+cspNonce标签
 -------------------------
 
-:ref:`動的属性の使用可否 <tag-dynamic_attributes_tag>` ：否
+:ref:`动态属性的使用可否 <tag-dynamic_attributes_tag>` ：否
 
-:ref:`セキュアハンドラでnonceを生成する設定<content_security_policy>` を行っている場合に、セキュアハンドラが生成したnonceを出力する。
+进行 :ref:`在安全处理程序中生成nonce的设置<content_security_policy>` 时，输出生成的nonce。
 
 .. table::
    :class: tag-reference
 
    ====================================== ==========================================================================================
-   属性                                   説明
+   属性                                   说明
    ====================================== ==========================================================================================
-   sourceFormat                           nonceを出力する際のフォーマットを制御する。
-                                          出力する際にプレフィックスとして ``nonce-`` を付与する場合は ``true`` 、
-                                          しない場合は ``false`` 。プレフィックスを付与する場合はmeta要素で使用する。
-                                          デフォルトは ``false`` 。
+   sourceFormat                           控制输出nonce时的格式。
+                                          输出时作为前缀添加 ``nonce-`` 时为 ``true`` ，
+                                          不添加时为 ``false`` 。添加前缀时用于meta元素。
+                                          默认为 ``false`` 。
    ====================================== ==========================================================================================
 
 .. _tag-message_tag:
 
-messageタグ
+message标签
 -------------------------
 
-:ref:`動的属性の使用可否 <tag-dynamic_attributes_tag>` ：否
+:ref:`动态属性的使用可否 <tag-dynamic_attributes_tag>` ：否
 
 .. table::
    :class: tag-reference
 
    ====================================== ==========================================================================================
-   属性                                   説明
+   属性                                   说明
    ====================================== ==========================================================================================
-   messageId ``必須``                     メッセージID。
-   option0～option9                       メッセージフォーマットに使用するインデックスが0～9のオプション引数。
-                                          最大10個までオプション引数が指定できる。
-   language                               メッセージの言語。
-                                          デフォルトはスレッドコンテキストに設定された言語。
-   var                                    リクエストスコープに格納する際に使用する変数名。
-                                          var属性が指定された場合はメッセージを出力せずにリクエストスコープに設定する。
-                                          リクエストスコープに設定する場合はHTMLエスケープとHTMLフォーマットを行わない。
-   htmlEscape                             HTMLエスケープをするか否か。
-                                          HTMLエスケープをする場合は ``true`` 、しない場合は ``false`` 。
-                                          デフォルトは ``true`` 。
-   withHtmlFormat                         HTMLフォーマット(改行と半角スペースの変換)をするか否か。
-                                          HTMLフォーマットはHTMLエスケープをする場合のみ有効となる。
-                                          デフォルトは ``true`` 。
+   messageId ``必须``                     消息ID。
+   option0～option9                       消息格式中使用的索引为0～9的可选参数。
+                                          最多可指定10个可选参数。
+   language                               消息的语言。
+                                          默认为线程上下文中设置的语言。
+   var                                    存储到请求作用域时使用的变量名。
+                                          指定var属性时不输出消息而设置到请求作用域。
+                                          设置到请求作用域时不进行HTML转义和HTML格式化。
+   htmlEscape                             是否进行HTML转义。
+                                          进行HTML转义时为 ``true`` ，不进行时为 ``false`` 。
+                                          默认为 ``true`` 。
+   withHtmlFormat                         是否进行HTML格式化(换行和半角空格转换)。
+                                          HTML格式化仅在执行HTML转义时有效。
+                                          默认为 ``true`` 。
    ====================================== ==========================================================================================
 
 .. _tag-write_tag:
 
-writeタグ
+write标签
 -------------------------
 
-:ref:`動的属性の使用可否 <tag-dynamic_attributes_tag>` ：否
+:ref:`动态属性的使用可否 <tag-dynamic_attributes_tag>` ：否
 
 .. table::
    :class: tag-reference
 
    ====================================== ======================================================================================================================
-   属性                                   説明
+   属性                                   说明
    ====================================== ======================================================================================================================
-   name                                   表示対象の値を変数スコープから取得する際に使用する名前。value属性と同時に指定できない。
-   value                                  表示対象の値。直接値を指定する場合に使用する。name属性と同時に指定できない。
-   withHtmlFormat                         HTMLフォーマット(改行と半角スペースの変換)をするか否か。
-                                          HTMLフォーマットはHTMLエスケープをする場合のみ有効となる。
-                                          デフォルトは ``true`` 。
-   valueFormat                            出力時のフォーマット。
-                                          指定内容は、 :ref:`tag-format_value` を参照。
+   name                                   从变量作用域获取显示目标值时使用的名称。不能与value属性同时指定。
+   value                                  显示目标的值。用于直接指定值。不能与name属性同时指定。
+   withHtmlFormat                         是否进行HTML格式化(换行和半角空格转换)。
+                                          HTML格式化仅在执行HTML转义时有效。
+                                          默认为 ``true`` 。
+   valueFormat                            输出时的格式。
+                                          指定内容请参阅 :ref:`tag-format_value` 。
    ====================================== ======================================================================================================================
 
 
 .. _tag-pretty_print_tag:
 
-prettyPrintタグ
+prettyPrint标签
 -------------------------
 
-:ref:`動的属性の使用可否 <tag-dynamic_attributes_tag>` ：否
+:ref:`动态属性的使用可否 <tag-dynamic_attributes_tag>` ：否
 
 .. important::
 
-  このタグは非推奨であるため使用しないこと。
-  詳細は、 :ref:`prettyPrintタグの使用を推奨しない理由 <tag-pretty_print_tag-deprecated>` を参照。
+  此标签已弃用，请勿使用。
+  详情请参阅 :ref:`不推荐使用prettyPrint标签的理由 <tag-pretty_print_tag-deprecated>` 。
 
 .. table::
    :class: tag-reference
 
    ====================================== ==========================================================================================
-   属性                                   説明
+   属性                                   说明
    ====================================== ==========================================================================================
-   name ``必須``                          表示対象の値を変数スコープから取得する際に使用する名前
+   name ``必须``                          从变量作用域获取显示目标值时使用的名称
    ====================================== ==========================================================================================
 
 
 
 .. _tag-raw_write_tag:
 
-rawWriteタグ
+rawWrite标签
 -------------------------
 
-:ref:`動的属性の使用可否 <tag-dynamic_attributes_tag>` ：否
+:ref:`动态属性的使用可否 <tag-dynamic_attributes_tag>` ：否
 
 .. table::
    :class: tag-reference
 
    ====================================== ==========================================================================================
-   属性                                   説明
+   属性                                   说明
    ====================================== ==========================================================================================
-   name ``必須``                          表示対象の値を変数スコープから取得する際に使用する名前
+   name ``必须``                          从变量作用域获取显示目标值时使用的名称
    ====================================== ==========================================================================================
 
 
 .. _tag-set_tag:
 
-setタグ
+set标签
 -------------------------
 
-:ref:`動的属性の使用可否 <tag-dynamic_attributes_tag>` ：否
+:ref:`动态属性的使用可否 <tag-dynamic_attributes_tag>` ：否
 
 .. table::
    :class: tag-reference
 
    ====================================== ==========================================================================================
-   属性                                   説明
+   属性                                   说明
    ====================================== ==========================================================================================
-   var ``必須``                           リクエストスコープに格納する際に使用する変数名。
-   name                                   値を取得するための名前。name属性とvalue属性のどちらか一方を指定する。
-   value                                  値。直接値を指定する場合に使用する。name属性とvalue属性のどちらか一方を指定する。
-   scope                                  変数を格納するスコープを設定する。
-                                          指定できるスコープを下記に示す。
-                                          page: ページスコープ
-                                          request: リクエストスコープ
-                                          デフォルトはリクエストスコープ。
-   bySingleValue                          name属性に対応する値を単一値として取得するか否か。
-                                          デフォルトは ``true`` 。
+   var ``必须``                           存储到请求作用域时使用的变量名。
+   name                                   用于获取值的名称。指定name属性或value属性之一。
+   value                                  值。用于直接指定值。指定name属性或value属性之一。
+   scope                                  设置存储变量的作用域。
+                                          可指定的作用域如下所示。
+                                          page: 页面作用域
+                                          request: 请求作用域
+                                          默认为请求作用域。
+   bySingleValue                          是否将对应于name属性的值作为单一值获取。
+                                          默认为 ``true`` 。
    ====================================== ==========================================================================================
 
 .. _tag-include_tag:
 
-includeタグ
+include标签
 -------------------------
 
-:ref:`動的属性の使用可否 <tag-dynamic_attributes_tag>` ：否
+:ref:`动态属性的使用可否 <tag-dynamic_attributes_tag>` ：否
 
 .. table::
    :class: tag-reference
 
    ====================================== ==========================================================================================
-   属性                                   説明
+   属性                                   说明
    ====================================== ==========================================================================================
-   path ``必須``                          インクルードするリソースのパス。
+   path ``必须``                          要包含的资源的路径。
    ====================================== ==========================================================================================
 
 .. _tag-include_param_tag:
 
-includeParamタグ
+includeParam标签
 -------------------------
 
-:ref:`動的属性の使用可否 <tag-dynamic_attributes_tag>` ：否
+:ref:`动态属性的使用可否 <tag-dynamic_attributes_tag>` ：否
 
 .. table::
    :class: tag-reference
 
    ====================================== ==========================================================================================
-   属性                                   説明
+   属性                                   说明
    ====================================== ==========================================================================================
-   paramName ``必須``                     インクルード時に使用するパラメータの名前。
-   name                                   値を取得するための名前。name属性とvalue属性のどちらか一方を指定する。
-   value                                  値。直接値を指定する場合に使用する。name属性とvalue属性のどちらか一方を指定する。
+   paramName ``必须``                     包含时使用的参数名称。
+   name                                   用于获取值的名称。指定name属性或value属性之一。
+   value                                  值。用于直接指定值。指定name属性或value属性之一。
    ====================================== ==========================================================================================
 
 .. _tag-confirmation_page_tag:
 
-confirmationPageタグ
+confirmationPage标签
 -------------------------
 
-:ref:`動的属性の使用可否 <tag-dynamic_attributes_tag>` ：否
+:ref:`动态属性的使用可否 <tag-dynamic_attributes_tag>` ：否
 
 .. table::
    :class: tag-reference
 
    ====================================== ==========================================================================================
-   属性                                   説明
+   属性                                   说明
    ====================================== ==========================================================================================
-   path                                   フォワード先（入力画面）のパス。
+   path                                   转发目标（输入画面）的路径。
    ====================================== ==========================================================================================
 
 .. _tag-ignore_confirmation_tag:
 
-ignoreConfirmationタグ
+ignoreConfirmation标签
 -------------------------
 
-:ref:`動的属性の使用可否 <tag-dynamic_attributes_tag>` ：否
+:ref:`动态属性的使用可否 <tag-dynamic_attributes_tag>` ：否
 
-属性なし。
+无属性。
 
 .. _tag-for_input_page_tag:
 
-forInputPageタグ
+forInputPage标签
 -------------------------
 
-:ref:`動的属性の使用可否 <tag-dynamic_attributes_tag>` ：否
+:ref:`动态属性的使用可否 <tag-dynamic_attributes_tag>` ：否
 
-属性なし。
+无属性。
  
 .. _tag-for_confirmation_page_tag:
 
-forConfirmationPageタグ
+forConfirmationPage标签
 -------------------------
 
-:ref:`動的属性の使用可否 <tag-dynamic_attributes_tag>` ：否
+:ref:`动态属性的使用可否 <tag-dynamic_attributes_tag>` ：否
 
-属性なし。
+无属性。

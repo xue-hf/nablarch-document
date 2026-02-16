@@ -7,9 +7,9 @@
 | 项目 | 数量 |
 |------|------|
 | 总文件数 | 334 |
-| 已翻译文件 | 176 |
-| 未翻译文件 | 158 |
-| 翻译进度 | **52.7%** |
+| 已翻译文件 | 195 |
+| 未翻译文件 | 139 |
+| 翻译进度 | **58.4%** |
 
 > **判断标准**：文件中不包含日文假名（平假名/片假名）即认为已翻译
 
@@ -22,10 +22,10 @@
 | 处理器 (Handlers) | 65 | 0 | 100% ✅ |
 | Web 应用 | 23 | 0 | 100% ✅ |
 | Web 服务 | 17 | 0 | 100% ✅ |
-| 批处理 (Batch) | 24 | 5 | 82.8% |
+| 批处理 (Batch) | 29 | 0 | 100% ✅ |
 | 关于 Nablarch | 4 | 1 | 80% |
 | Nablarch 核心 | 5 | 0 | 100% ✅ |
-| 类库 (Libraries) | 33 | 16 | 67.3% |
+| 类库 (Libraries) | 49 | 0 | 100% ✅ |
 | 空白项目 (Blank Project) | 1 | 19 | 5% |
 | 适配器 (Adaptors) | 1 | 15 | 6.3% |
 | 消息处理 (Messaging) | 0 | 12 | 0% |
@@ -71,6 +71,26 @@
 - platform.rst
 - policy.rst
 
+### ✅ 批处理 (Batch) - 29个文件
+
+包含：
+- **JSR352 批处理**: 16个文件
+  - 应用设计、架构、功能详情、入门教程
+- **Nablarch 批处理**: 12个文件
+  - 应用设计、架构、功能详情、入门教程
+- **功能对比文档**: 1个文件
+
+### ✅ 类库 (Libraries) - 49个文件
+
+包含：
+- **数据访问**: database, universal_dao, generator, data_bind
+- **数据转换**: data_converter, format, data_io, data_format
+- **验证**: bean_validation, nablarch_validation
+- **日志**: log, failure_log, http_access_log, jaxrs_access_log, messaging_log, performance_log, sql_log
+- **会话管理**: session_store
+- **系统消息**: system_messaging, http_system_messaging, mom_system_messaging
+- **其他**: code, mail, message, repository, transaction, exclusive_control, static_data_cache, stateless_web_app 等
+
 ---
 
 ## 未翻译文件分布
@@ -108,22 +128,13 @@
 - web_thymeleaf_adaptor.rst
 - webspheremq_adaptor.rst
 
-### 3. 类库 (Libraries) - 16个文件
+### 3. 类库 (Libraries) - 0个文件 ✅
 
-包含日文，需要翻译：
-- database/*.rst (数据库相关, 5个文件)
-- log/*.rst (日志相关, 6个文件)
-- data_io/data_format/format_definition.rst
-- repository.rst (部分)
-- session_store.rst (部分)
-- stateless_web_app.rst (部分)
-- static_data_cache.rst (部分)
-- system_messaging.rst (部分)
+所有文件已翻译完成！
 
-### 4. 批处理 (Batch) - 5个文件
+### 4. 批处理 (Batch) - 0个文件 ✅
 
-- `nablarch_batch/architecture.rst` - 含日文
-- 其他4个未开始（与原文相同）
+所有文件已翻译完成！
 
 ### 5. 消息处理 (Messaging) - 12个文件
 
@@ -183,6 +194,8 @@
 | 日期 | 更新内容 |
 |------|----------|
 | 2026-02-15 | 更新翻译进度：已翻译 176 个文件，进度 52.7% |
+| 2026-02-15 | 新增翻译 16 个文件（批处理 1 个，类库 15 个），已翻译 192 个文件，进度 57.5% |
+| 2026-02-16 | 确认并更新：类库和批处理模块已 100% 完成翻译，已翻译 195 个文件，进度 58.4% |
 
 ---
 

@@ -1,43 +1,43 @@
 .. _log:
 
-ログ出力
+日志输出
 ==================================================
 
 .. contents:: 目录
   :depth: 3
   :local:
 
-ログ出力を行う機能を提供する。
+提供日志输出功能。
 
-機能概要
+功能概要
 --------------------------------------------------
 
-ログ出力機能の実装を差し替えることができる
+可以替换日志输出功能的实现
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-ログ出力は、３つの処理から構成されており、それぞれの実装を差し替えることができる。
+日志输出由三个处理组成，每个实现都可以替换。
 
   .. image:: images/log/log-structure.png
 
-应用の要件に応じて、
-:java:extdoc:`LogWriter <nablarch.core.log.basic.LogWriter>` や
+根据应用程序的需求，
+可以按 :java:extdoc:`LogWriter <nablarch.core.log.basic.LogWriter>` 或
 :java:extdoc:`LogFormatter <nablarch.core.log.basic.LogFormatter>`
-の単位で差し替えることもできるし、
-これらだけでは要件を満たせなければ
-:java:extdoc:`Logger <nablarch.core.log.Logger>` /
+的单位进行替换，
+如果这些无法满足需求，
+还可以实现 :java:extdoc:`Logger <nablarch.core.log.Logger>` /
 :java:extdoc:`LoggerFactory <nablarch.core.log.LoggerFactory>`
-を実装してほぼ全ての処理を差し替えることもできる。
+来替换几乎所有的处理。
 
-例えば、オープンソースのログ出力ライブラリを使用したい場合などは
-:java:extdoc:`Logger <nablarch.core.log.Logger>` /
-:java:extdoc:`LoggerFactory <nablarch.core.log.LoggerFactory>` を差し替えればよい。
+例如，如果想要使用开源的日志输出库，
+可以替换 :java:extdoc:`Logger <nablarch.core.log.Logger>` /
+:java:extdoc:`LoggerFactory <nablarch.core.log.LoggerFactory>`。
 
-なお、オープンソースで使用実績の多いロギングフレームワークは、専用のLogger/LoggerFactoryを既に用意している。
+此外，对于使用实绩较多的开源日志框架，已经提供了专用的Logger/LoggerFactory。
 
-詳細は、:ref:`log_adaptor` を参照。
+详情请参考 :ref:`log_adaptor`。
 
-本機能と使用実績の多いlog4jとの機能比較は、 :ref:`log-functional_comparison` を参照。
+本功能与使用实绩较多的log4j的功能比较，请参考 :ref:`log-functional_comparison`。
 
-ログ出力機能がデフォルトで提供しているクラスを示す。
+下面列出日志输出功能默认提供的类。
 
 Logger/LoggerFactory
  * :java:extdoc:`BasicLogger <nablarch.core.log.basic.BasicLogger>`
@@ -46,37 +46,37 @@ Logger/LoggerFactory
 .. _log-log_writers:
 
 LogWriter
- * :java:extdoc:`FileLogWriter (ファイルへ出力。ログのローテーション。) <nablarch.core.log.basic.FileLogWriter>`
- * :java:extdoc:`SynchronousFileLogWriter (複数プロセスから1ファイルへの出力) <nablarch.core.log.basic.SynchronousFileLogWriter>`
- * :java:extdoc:`StandardOutputLogWriter (標準出力へ出力) <nablarch.core.log.basic.StandardOutputLogWriter>`
- * :java:extdoc:`LogPublisher (任意のリスナーへ出力) <nablarch.core.log.basic.LogPublisher>`
+ * :java:extdoc:`FileLogWriter (输出到文件。日志轮转。) <nablarch.core.log.basic.FileLogWriter>`
+ * :java:extdoc:`SynchronousFileLogWriter (从多个进程输出到单个文件) <nablarch.core.log.basic.SynchronousFileLogWriter>`
+ * :java:extdoc:`StandardOutputLogWriter (输出到标准输出) <nablarch.core.log.basic.StandardOutputLogWriter>`
+ * :java:extdoc:`LogPublisher (输出到任意监听器) <nablarch.core.log.basic.LogPublisher>`
 
 .. _log-log_formatters:
 
 LogFormatter
- * :java:extdoc:`BasicLogFormatter (パターン文字列によるフォーマット) <nablarch.core.log.basic.BasicLogFormatter>`
+ * :java:extdoc:`BasicLogFormatter (通过模式字符串进行格式化) <nablarch.core.log.basic.BasicLogFormatter>`
 
 .. _log-log_policies:
 
 RotatePolicy
- * :java:extdoc:`DateRotatePolicy (日時によるログのローテーション) <nablarch.core.log.basic.DateRotatePolicy>`
- * :java:extdoc:`FileSizeRotatePolicy (ファイルサイズによるログのローテーション) <nablarch.core.log.basic.FileSizeRotatePolicy>`
+ * :java:extdoc:`DateRotatePolicy (按日期时间进行日志轮转) <nablarch.core.log.basic.DateRotatePolicy>`
+ * :java:extdoc:`FileSizeRotatePolicy (按文件大小进行日志轮转) <nablarch.core.log.basic.FileSizeRotatePolicy>`
   
 .. important::
  :java:extdoc:`SynchronousFileLogWriter <nablarch.core.log.basic.SynchronousFileLogWriter>`
- を使う場合は、 :ref:`log-synchronous_file_log_writer_attention` を参照すること。
+ 使用时，请参考 :ref:`log-synchronous_file_log_writer_attention`。
 
 .. tip::
- ログ出力機能で使用するログレベルについては、 :ref:`log-log_level` を参照。
+ 关于日志输出功能使用的日志级别，请参考 :ref:`log-log_level`。
 
-各種ログの出力機能を予め提供している
+预先提供了各种日志的输出功能
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-本フレームワークでは、应用に共通で必要とされる各種ログの出力機能を予め提供している。
-应用の要件に応じて、ログのフォーマットを設定で変更して使用できる。
-なお、:ref:`log-app_log_setting` にも記載の通り、各種ログの出力機能はフォーマット処理のみを行っており、
-ログの出力処理自体は本機能を使用している。
-Nablarchの提供するアーキタイプから生成したブランクプロジェクトでは各種ログのフォーマットが設定してある。
-各設定値は :download:`デフォルト設定一覧 <../configuration/デフォルト設定一覧.xlsx>` を参照。
+本框架预先提供了应用程序普遍需要的各种日志的输出功能。
+根据应用程序的需求，可以通过配置更改日志的格式来使用。
+此外，正如 :ref:`log-app_log_setting` 中所述，各种日志的输出功能仅进行格式处理，
+日志的输出处理本身使用的是本功能。
+从Nablarch提供的原型生成的空白项目中，已经设置了各种日志的格式。
+各配置值请参考 :download:`默认设置一览 <../configuration/default_settings.xlsx>`。
 
 .. toctree::
   :hidden:
@@ -89,46 +89,46 @@ Nablarchの提供するアーキタイプから生成したブランクプロジ
   log/jaxrs_access_log
   log/messaging_log
 
-.. list-table:: ログの種類
+.. list-table:: 日志类型
    :header-rows: 1
    :class: white-space-normal
    :widths: 20,80
 
-   * - ログの種類
-     - 説明
+   * - 日志类型
+     - 说明
 
-   * - :ref:`障害通知ログ <failure_log>`
-     - 障害発生時に1次切り分け担当者を特定するのに必要な情報を出力する。
+   * - :ref:`故障通知日志 <failure_log>`
+     - 输出故障发生时识别一级排查负责人所需的信息。
 
-   * - :ref:`障害解析ログ <failure_log>`
-     - 障害原因の特定に必要な情報を出力する。
+   * - :ref:`故障分析日志 <failure_log>`
+     - 输出确定故障原因所需的信息。
 
-   * - :ref:`SQLログ <sql_log>`
-     - 深刻なパフォーマンス劣化の要因となりやすいSQL文の実行について、
-       パフォーマンスチューニングに使用するために、SQL文の実行時間とSQL文を出力する。
+   * - :ref:`SQL日志 <sql_log>`
+     - 对于容易导致严重性能劣化的SQL语句执行，
+       为进行性能调优而输出SQL语句的执行时间和SQL语句。
 
-   * - :ref:`パフォーマンスログ <performance_log>`
-     - 任意の処理について、パフォーマンスチューニングに使用するために実行時間とメモリ使用量を出力する。
+   * - :ref:`性能日志 <performance_log>`
+     - 对于任意处理，为进行性能调优而输出执行时间和内存使用量。
 
-   * - :ref:`HTTPアクセスログ <http_access_log>`
-     - ウェブ应用で、应用の実行状況を把握するための情報を出力する。
-       应用の性能測定に必要な情報、应用の負荷測定に必要な情報の出力も含む。
-       さらに、应用の不正使用を検知するために、
-       全てのリクエスト及びレスポンス情報を出力する証跡ログとしても使用する。
+   * - :ref:`HTTP访问日志 <http_access_log>`
+     - 在Web应用程序中，输出用于把握应用程序执行状况的信息。
+       包括应用程序性能测量所需的信息、应用程序负载测量所需的信息的输出。
+       此外，为检测应用程序的不当使用，
+       也作为输出所有请求及响应信息的审计日志使用。
 
-   * - :ref:`HTTPアクセスログ（RESTfulウェブサービス用） <jaxrs_access_log>`
-     - RESTfulウェブサービス应用で、应用の実行状況を把握するための情報を出力する。
-       应用の性能測定に必要な情報、应用の負荷測定に必要な情報の出力も含む。
-       さらに、应用の不正使用を検知するために、
-       全てのリクエスト及びレスポンス情報を出力する証跡ログとしても使用する。
+   * - :ref:`HTTP访问日志（RESTful Web服务用） <jaxrs_access_log>`
+     - 在RESTful Web服务应用程序中，输出用于把握应用程序执行状况的信息。
+       包括应用程序性能测量所需的信息、应用程序负载测量所需的信息的输出。
+       此外，为检测应用程序的不当使用，
+       也作为输出所有请求及响应信息的审计日志使用。
 
-   * - :ref:`メッセージングログ <messaging_log>`
-     - メッセージング処理において、メッセージ送受信の状況を把握するための情報を出力する。
+   * - :ref:`消息处理日志 <messaging_log>`
+     - 在消息处理中，输出用于把握消息收发状况的信息。
 
 .. tip::
- 本フレームワークでは、 :ref:`障害通知ログ <failure_log>` と :ref:`障害解析ログ <failure_log>` を合わせて障害ログと呼ぶ。
+ 在本框架中，将 :ref:`故障通知日志 <failure_log>` 和 :ref:`故障分析日志 <failure_log>` 合称为故障日志。
 
-模块列表
+模块一览
 --------------------------------------------------
 .. code-block:: xml
 
@@ -141,25 +141,25 @@ Nablarchの提供するアーキタイプから生成したブランクプロジ
     <artifactId>nablarch-core-applog</artifactId>
   </dependency>
 
-  <!-- SQLログを使用する場合のみ -->
+  <!-- 仅在使用SQL日志时需要 -->
   <dependency>
     <groupId>com.nablarch.framework</groupId>
     <artifactId>nablarch-core-jdbc</artifactId>
   </dependency>
 
-  <!-- HTTPアクセスログを使用する場合のみ -->
+  <!-- 仅在使用HTTP访问日志时需要 -->
   <dependency>
     <groupId>com.nablarch.framework</groupId>
     <artifactId>nablarch-fw-web</artifactId>
   </dependency>
 
-  <!-- HTTPアクセスログ（RESTfulウェブサービス用）を使用する場合のみ -->
+  <!-- 仅在使用HTTP访问日志（RESTful Web服务用）时需要 -->
   <dependency>
     <groupId>com.nablarch.framework</groupId>
     <artifactId>nablarch-fw-jaxrs</artifactId>
   </dependency>
 
-  <!-- メッセージングログを使用する場合のみ -->
+  <!-- 仅在使用消息处理日志时需要 -->
   <dependency>
     <groupId>com.nablarch.framework</groupId>
     <artifactId>nablarch-fw-messaging</artifactId>
@@ -168,168 +168,168 @@ Nablarchの提供するアーキタイプから生成したブランクプロジ
 使用方法
 --------------------------------------------------
 
-ログを出力する
+输出日志
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-ログの出力には :java:extdoc:`Logger <nablarch.core.log.Logger>` を使用する。
-:java:extdoc:`Logger <nablarch.core.log.Logger>` は
-:java:extdoc:`LoggerManager <nablarch.core.log.LoggerManager>` から取得する。
+日志输出使用 :java:extdoc:`Logger <nablarch.core.log.Logger>`。
+:java:extdoc:`Logger <nablarch.core.log.Logger>` 从
+:java:extdoc:`LoggerManager <nablarch.core.log.LoggerManager>` 获取。
 
 .. code-block:: java
 
- // クラスを指定してLoggerを取得する。
- // Loggerはクラス変数に保持する。
+ // 指定类获取Logger。
+ // Logger保存在类变量中。
  private static final Logger LOGGER = LoggerManager.get(UserManager.class);
 
 .. code-block:: java
 
- // ログの出力有無を事前にチェックし、ログ出力を行う。
+ // 预先检查日志输出是否启用，然后输出日志。
  if (LOGGER.isDebugEnabled()) {
      String message = "userId[" + user.getId() + "],name[" + user.getName() + "]";
      LOGGER.logDebug(message);
  }
 
-:java:extdoc:`Logger <nablarch.core.log.Logger>` の取得ではロガー名を指定する。
-ロガー名には文字列またはクラスが指定できる。
-クラスが指定された場合は、指定されたクラスのFQCNがロガー名となる。
+在获取 :java:extdoc:`Logger <nablarch.core.log.Logger>` 时指定日志器名称。
+日志器名称可以指定字符串或类。
+如果指定了类，则指定类的FQCN成为日志器名称。
 
 .. important::
- 应用において、常にログを出力することになっているレベルは、
- ソースコードの可読性が落ちるため、事前チェックをしなくてよい。
- 例えば、本番運用時に出力するログレベルをINFOレベルにするのであれば、
- FATALレベルからINFOレベルまでは事前チェックしなくてよい。
+ 在应用程序中，对于始终要输出的日志级别，
+ 由于会降低源代码可读性，不需要预先检查。
+ 例如，如果生产环境运行时将日志级别设为INFO级别，
+ 则从FATAL级别到INFO级别不需要预先检查。
 
 .. tip::
- ロガー名には、SQLログや監視ログなど、特定の用途向けのログ出力を行う場合は、
- その用途を表す名前(SQLやMONITOR等)を指定し、それ以外はクラスのFQCNを指定する。
+ 对于日志器名称，如果是SQL日志或监控日志等特定用途的日志输出，
+ 请指定表示该用途的名称（SQL或MONITOR等），其他情况请指定类的FQCN。
 
 .. _log-basic_setting:
 
-ログ出力の設定
+日志输出设置
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-ログ出力の設定は、プロパティファイルに行う。
+日志输出设置在属性文件中进行。
 
-プロパティファイルの場所
- クラスパス直下の **log.properties** を使用する。
- 場所を変更したい場合は、システムプロパティで **nablarch.log.filePath** をキーにファイルパスを指定する。
- ファイルパスの指定方法は
- :java:extdoc:`FileUtil#getResource <nablarch.core.util.FileUtil.getResource(java.lang.String)>` を参照。
+属性文件位置
+ 使用类路径下的 **log.properties**。
+ 如果要更改位置，请在系统属性中以 **nablarch.log.filePath** 为键指定文件路径。
+ 文件路径的指定方法请参考
+ :java:extdoc:`FileUtil#getResource <nablarch.core.util.FileUtil.getResource(java.lang.String)>`。
 
  .. code-block:: bash
 
   >java -Dnablarch.log.filePath=classpath:nablarch/example/log.properties ...
 
-プロパティファイルの記述ルール
- プロパティファイルの記述ルールを以下に示す。
+属性文件记述规则
+ 属性文件记述规则如下。
 
  LoggerFactory
   \
 
-  記述ルール
+  记述规则
    \
 
    loggerFactory.className
-    LoggerFactoryを実装したクラスのFQCNを指定する。
-    本機能を使う場合は、 :java:extdoc:`BasicLoggerFactory <nablarch.core.log.basic.BasicLoggerFactory>` を指定する。
+    指定实现LoggerFactory的类的FQCN。
+    使用本功能时，请指定 :java:extdoc:`BasicLoggerFactory <nablarch.core.log.basic.BasicLoggerFactory>`。
 
-  記述例
+  记述例
    .. code-block:: properties
 
-    # LoggerFactoryにより、ログ出力に使用する実装(本機能やLog4Jなど)が決まる。
+    # 通过LoggerFactory决定日志输出使用的实现（本功能或Log4J等）。
     loggerFactory.className=nablarch.core.log.basic.BasicLoggerFactory
 
  LogWriter
   \
 
-  記述ルール
+  记述规则
    \
 
    writerNames
-    使用する全てのLogWriterの名前を指定する。複数指定する場合はカンマ区切り。
+    指定要使用的所有LogWriter的名称。多个时用逗号分隔。
 
-   writer.<名前>.className
-    LogWriterを実装したクラスのFQCNを指定する。
+   writer.<名称>.className
+    指定实现LogWriter的类的FQCN。
 
-   writer.<名前>.<プロパティ名>
-    LogWriter毎のプロパティに設定する値を指定する。
-    指定できるプロパティについては使用するLogWriterのJavadocを参照。
+   writer.<名称>.<属性名>
+    指定要设置的LogWriter各属性的值。
+    可指定的属性请参考使用的LogWriter的Javadoc。
 
-  記述例
+  记述例
    .. code-block:: properties
 
-    # 2つの名前を定義する。
+    # 定义两个名称。
     writerNames=appLog,stdout
 
-    # appLogの設定を行う。
+    # 设置appLog。
     writer.appLog.className=nablarch.core.log.basic.FileLogWriter
     writer.appLog.filePath=/var/log/app/app.log
 
-    # stdoutの設定を行う。
+    # 设置stdout。
     writer.stdout.className=nablarch.core.log.basic.StandardOutputLogWriter
 
- ロガー設定
+ 日志器设置
   \
 
-  記述ルール
+  记述规则
    \
 
    availableLoggersNamesOrder
-    使用する全てのロガー設定の名前を指定する。複数指定する場合はカンマ区切り。
+    指定要使用的所有日志器设置的名称。多个时用逗号分隔。
 
     .. important::
-     availableLoggersNamesOrderプロパティは、記述順に意味があるので注意すること。
+     请注意availableLoggersNamesOrder属性，记述顺序是有意义的。
 
-     :java:extdoc:`Logger <nablarch.core.log.Logger>` の取得では、ログ出力を行うクラスが指定したロガー名に対して、
-     ここに記述した順番で :java:extdoc:`Logger <nablarch.core.log.Logger>` のマッチングを行い、
-     最初にマッチした :java:extdoc:`Logger <nablarch.core.log.Logger>` を返す。
+     在获取 :java:extdoc:`Logger <nablarch.core.log.Logger>` 时，对于执行日志输出的类指定的日志器名称，
+     按照此处记述的顺序进行 :java:extdoc:`Logger <nablarch.core.log.Logger>` 的匹配，
+     返回第一个匹配的 :java:extdoc:`Logger <nablarch.core.log.Logger>`。
 
-     例えば、以下の記述例にあるavailableLoggersNamesOrderの記述順をavailableLoggersNamesOrder=root,sqlと記述した場合、
-     全てのロガー取得がロガー設定 ``root`` にマッチしてしまう。
-     その結果、ロガー名 ``SQL`` でログ出力しても ``sqlLog`` に出力されず、ロガー設定 ``root`` に指定された ``appLog`` に出力される。
+     例如，如果下面记述例中的availableLoggersNamesOrder记述顺序改为availableLoggersNamesOrder=root,sql，
+     则所有日志器获取都会匹配到日志器设置 ``root``。
+     结果，即使以日志器名称 ``SQL`` 输出日志，也不会输出到 ``sqlLog``，而是输出到日志器设置 ``root`` 指定的 ``appLog``。
 
-     したがって、availableLoggersNamesOrderプロパティは、より限定的な正規表現を指定したロガー設定から順に記述すること。
+     因此，availableLoggersNamesOrder属性应从指定了更限定性正则表达式的日志器设置开始依次记述。
 
     .. important::
-     availableLoggersNamesOrderとloggers.*で指定するロガー設定の名称は、必ず一致させる必要がある。
-     :java:extdoc:`BasicLoggerFactory <nablarch.core.log.basic.BasicLoggerFactory>` の初期処理で一致しているかチェックを行い、
-     一致しない場合は例外をスローする。
-     例えば、上記の設定にあるavailableLoggersNamesOrderから ``access`` を取り除くと、例外がスローされる。
+     availableLoggersNamesOrder和loggers.*中指定的日志器设置名称必须保持一致。
+     :java:extdoc:`BasicLoggerFactory <nablarch.core.log.basic.BasicLoggerFactory>` 在初始化处理时会检查是否一致，
+     不一致时将抛出异常。
+     例如，如果上述设置中的availableLoggersNamesOrder中删除了 ``access``，则会抛出异常。
 
-     このチェックは、設定漏れの発生を防ぐために行っている。
-     上記の設定にあるavailableLoggersNamesOrderから ``access`` を取り除いた場合は、明示的にloggers.access.*の設定も取り除く必要がある。
+     此检查是为了防止设置遗漏。
+     如果上述设置中的availableLoggersNamesOrder中删除了 ``access``，则必须同时删除loggers.access.*的设置。
 
-   loggers.<名前>.nameRegex
-    ロガー名とのマッチングに使用する正規表現を指定する。
-    正規表現は、ロガー設定の対象となるロガーを絞り込むために使用する。
-    ロガーの取得時に指定されたロガー名(つまり :java:extdoc:`LoggerManager#get <nablarch.core.log.LoggerManager.get(java.lang.String)>`
-    の引数に指定されたロガー名)に対してマッチングを行う。
+   loggers.<名称>.nameRegex
+    指定用于与日志器名称匹配的正则表达式。
+    正则表达式用于筛选日志器设置的目标日志器。
+    匹配时针对获取日志器时指定的日志器名称（即 :java:extdoc:`LoggerManager#get <nablarch.core.log.LoggerManager.get(java.lang.String)>`
+    的参数中指定的日志器名称）进行。
 
-   loggers.<名前>.level
-    :java:extdoc:`LogLevel <nablarch.core.log.basic.LogLevel>` の名前を指定する。
-    ここで指定したレベル以上のログを全て出力する。
+   loggers.<名称>.level
+    指定 :java:extdoc:`LogLevel <nablarch.core.log.basic.LogLevel>` 的名称。
+    输出此处指定级别以上的所有日志。
 
-   loggers.<名前>.writerNames
-    出力先とするLogWriterの名前を指定する。
-    複数指定する場合はカンマ区切り。
-    ここで指定した全てのLogWriterに対してログの書き込みを行う。
+   loggers.<名称>.writerNames
+    指定作为输出目标的LogWriter的名称。
+    多个时用逗号分隔。
+    向此处指定的所有LogWriter写入日志。
 
-  記述例
+  记述例
    .. code-block:: properties
 
-    # 2つのロガー設定の名前を定義する。
+    # 定义两个日志器设置的名称。
     availableLoggersNamesOrder=sql,root
 
-    # rootの設定を行う。
+    # 设置root。
     loggers.root.nameRegex=.*
     loggers.root.level=WARN
     loggers.root.writerNames=appLog
 
-    # sqlの設定を行う。
+    # 设置sql。
     loggers.sql.nameRegex=SQL
     loggers.sql.level=DEBUG
     loggers.sql.writerNames=sqlLog
 
-プロパティファイルの記述例
- プロパティファイル全体の記述例を以下に示す。
+属性文件记述例
+ 属性文件整体的记述例如下。
 
  .. code-block:: properties
 
@@ -337,69 +337,69 @@ Nablarchの提供するアーキタイプから生成したブランクプロジ
 
   writerNames=appLog,sqlLog,monitorLog,stdout
 
-  # 应用用のログファイルの設定例
+  # 应用程序用日志文件设置例
   writer.appLog.className=nablarch.core.log.basic.FileLogWriter
   writer.appLog.filePath=/var/log/app/app.log
 
-  # SQL出力用のログファイルの設定例
+  # SQL输出用日志文件设置例
   writer.sqlLog.className=nablarch.core.log.basic.FileLogWriter
   writer.sqlLog.filePath=/var/log/app/sql.log
 
-  # 監視用のログファイルの設定例
+  # 监控用日志文件设置例
   writer.monitorLog.className=nablarch.core.log.basic.FileLogWriter
   writer.monitorLog.filePath=/var/log/app/monitoring.log
 
-  # 標準出力の設定例
+  # 标准输出设置例
   writer.stdout.className=nablarch.core.log.basic.StandardOutputLogWriter
 
   availableLoggersNamesOrder=sql,monitoring,access,validation,root
 
-  # 全てのロガー名をログ出力の対象にする設定例
-  # 全てのロガー取得を対象に、WARNレベル以上をappLogに出力する。
+  # 将所有日志器名称作为日志输出目标的设置例
+  # 针对所有日志器获取，将WARN级别以上输出到appLog。
   loggers.root.nameRegex=.*
   loggers.root.level=WARN
   loggers.root.writerNames=appLog
 
-  # 特定のロガー名をログ出力の対象にする設定例。
-  # ロガー名に"MONITOR"を指定したロガー取得を対象に、
-  # ERRORレベル以上をappLog,monitorLogに出力する。
+  # 将特定日志器名称作为日志输出目标的设置例。
+  # 针对指定"MONITOR"作为日志器名称的日志器获取，
+  # 将ERROR级别以上输出到appLog,monitorLog。
   loggers.monitoring.nameRegex=MONITOR
   loggers.monitoring.level=ERROR
   loggers.monitoring.writerNames=appLog,monitorLog
 
-  # 特定のロガー名をログ出力の対象にする設定例。
-  # ロガー名に"SQL"を指定したロガー取得を対象に、
-  # DEBUGレベル以上をsqlLogに出力する。
+  # 将特定日志器名称作为日志输出目标的设置例。
+  # 针对指定"SQL"作为日志器名称的日志器获取，
+  # 将DEBUG级别以上输出到sqlLog。
   loggers.sql.nameRegex=SQL
   loggers.sql.level=DEBUG
   loggers.sql.writerNames=sqlLog
 
-  # 特定のクラスをログ出力の対象にする設定例。
-  # ロガー名に"app.user.UserManager"を指定したロガー取得を対象に、
-  # INFOレベル以上をappLogとstdoutに出力する。
+  # 将特定类作为日志输出目标的设置例。
+  # 针对指定"app.user.UserManager"作为日志器名称的日志器获取，
+  # 将INFO级别以上输出到appLog和stdout。
   loggers.access.nameRegex=app\\.user\\.UserManager
   loggers.access.level=INFO
   loggers.access.writerNames=appLog,stdout
 
-  # 特定のパッケージ以下をログ出力の対象にする設定例。
-  # ロガー名に"nablarch.core.validation"から始まる名前を指定したロガー取得を対象に、
-  # DEBUGレベル以上をstdoutに出力する。
+  # 将特定包以下作为日志输出目标的设置例。
+  # 针对指定以"nablarch.core.validation"开头的名称作为日志器名称的日志器获取，
+  # 将DEBUG级别以上输出到stdout。
   loggers.validation.nameRegex=nablarch\\.core\\.validation\\..*
   loggers.validation.level=DEBUG
   loggers.validation.writerNames=stdout
 
  .. tip::
-  ロガー設定では、全てのログ出力にマッチするロガー設定を1つ用意し、availableLoggersNamesOrderの最後に指定することを推奨する。
-  万が一設定が漏れた場合でも、重要なログの出力を逃してしまう事態を防ぐことができる。
-  設定例としては、上記の記述例にあるロガー設定 ``root`` を参照。
+  建议在日志器设置中准备一个匹配所有日志输出的日志器设置，并指定在availableLoggersNamesOrder的最后。
+  这样即使万一有设置遗漏，也能防止重要日志的输出被遗漏。
+  设置例请参考上述记述例中的日志器设置 ``root``。
 
-ログ出力の設定を上書く
+覆盖日志输出设置
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-ログ出力の設定は、システムプロパティを使用して、
-プロパティファイルと同じキー名で値を指定することにより上書きできる。
-これにより、共通のプロパティファイルを用意しておき、プロセス毎にログ出力設定を変更するといったことができる。
+日志输出设置可以使用系统属性，
+以与属性文件相同的键名指定值来覆盖。
+这样可以在准备好共用的属性文件后，按进程更改日志输出设置。
 
-ロガー設定 ``root`` のログレベルをINFOに変更したい場合の例を以下に示す。
+以下展示将日志器设置 ``root`` 的日志级别改为INFO时的示例。
 
 .. code-block:: bash
 
@@ -407,34 +407,34 @@ Nablarchの提供するアーキタイプから生成したブランクプロジ
 
 .. _log-log_format:
 
-ログのフォーマットを指定する
+指定日志格式
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-本機能では、汎用的に使用できる :java:extdoc:`LogFormatter <nablarch.core.log.basic.LogFormatter>` として、
-:java:extdoc:`BasicLogFormatter <nablarch.core.log.basic.BasicLogFormatter>` を提供している。
+本功能作为可通用使用的 :java:extdoc:`LogFormatter <nablarch.core.log.basic.LogFormatter>`，
+提供了 :java:extdoc:`BasicLogFormatter <nablarch.core.log.basic.BasicLogFormatter>`。
 
-:java:extdoc:`BasicLogFormatter <nablarch.core.log.basic.BasicLogFormatter>` では、
-プレースホルダを使用してフォーマットを指定する。
-使用できるプレースホルダについては、
+:java:extdoc:`BasicLogFormatter <nablarch.core.log.basic.BasicLogFormatter>` 中，
+使用占位符指定格式。
+可用的占位符请参考
 :java:extdoc:`BasicLogFormatter <nablarch.core.log.basic.BasicLogFormatter>`
-のJavadocを参照。
+的Javadoc。
 
-フォーマットの設定例を以下に示す。
-フォーマットはLogWriterのプロパティに指定する。
+格式设置例如下。
+格式在LogWriter的属性中指定。
 
 .. code-block:: properties
 
- # フォーマットを指定する場合はBasicLogFormatterを明示的に指定する。
+ # 指定格式时显式指定BasicLogFormatter。
  writer.appLog.formatter.className=nablarch.core.log.basic.BasicLogFormatter
 
- # プレースホルダを使ってフォーマットを指定する。
+ # 使用占位符指定格式。
  writer.appLog.formatter.format=$date$ -$logLevel$- $loggerName$ $message$
 
- # 日時のフォーマットに使用するパターンを指定する。
- # 指定しなければ"yyyy-MM-dd HH:mm:ss.SSS"となる。
+ # 指定日期时间格式使用的模式。
+ # 如果不指定则为"yyyy-MM-dd HH:mm:ss.SSS"。
  writer.appLog.formatter.datePattern=yyyy/MM/dd HH:mm:ss[SSS]
 
- # ログレベルの文言を指定する。
- # 指定しなければLogLevel列挙型の名前(FATAL、INFOなど)となる。
+ # 指定日志级别的文字。
+ # 如果不指定则为LogLevel枚举类型的名称（FATAL、INFO等）。
  writer.appLog.formatter.label.fatal=F
  writer.appLog.formatter.label.error=E
  writer.appLog.formatter.label.warn=W
@@ -443,98 +443,98 @@ Nablarchの提供するアーキタイプから生成したブランクプロジ
  writer.appLog.formatter.label.trace=T
 
 :java:extdoc:`BasicLogFormatter <nablarch.core.log.basic.BasicLogFormatter>`
-では、出力されたログの状況を特定するために、以下の項目を出力できる。
-これらの出力項目について説明しておく。
+中，为识别输出日志的状况，可以输出以下项目。
+对这些输出项目进行说明。
 
-* :ref:`起動プロセス <log-boot_process>`
-* :ref:`処理方式 <log-processing_system>`
-* :ref:`実行時ID <log-execution_id>`
+* :ref:`启动进程 <log-boot_process>`
+* :ref:`处理方式 <log-processing_system>`
+* :ref:`执行时ID <log-execution_id>`
 
 .. _log-boot_process:
 
-起動プロセス
- 起動プロセスとは、应用を起動した実行環境を特定するために使用する名前である。
- 起動プロセスにサーバ名とJOBIDなどの識別文字列を組み合わせた名前を使用することで、
- 同一サーバの複数プロセスから出力されたログの実行環境を特定できる。
- 起動プロセスは、プロジェクト毎にID体系などで体系を規定することを想定している。
+启动进程
+ 启动进程是指用于识别启动应用程序的执行环境的名称。
+ 在启动进程中组合使用服务器名和JOBID等识别字符串作为名称，
+ 可以识别来自同一服务器多个进程的日志的执行环境。
+ 启动进程设想按项目以ID体系等规定体系。
 
- 起動プロセスは、システムプロパティに ``nablarch.bootProcess`` というキーで指定する。
- システムプロパティの指定がない場合、起動プロセスはブランクとなる。
+ 启动进程在系统属性中以 ``nablarch.bootProcess`` 键指定。
+ 如果没有系统属性指定，启动进程为空。
 
 .. _log-processing_system:
 
-処理方式
- 処理方式とは、ウェブ、バッチなどを意味する。
- 应用の処理方式を識別したい場合に、プロジェクト毎に規定して使用する。
+处理方式
+ 处理方式是指Web、批处理等。
+ 在需要识别应用程序的处理方式时，按项目规定并使用。
 
- 処理方式は、 :ref:`log-basic_setting` で説明したプロパティファイルに
- ``nablarch.processingSystem`` というキーで指定する。
- プロパティの指定がない場合はブランクとなる。
+ 处理方式在 :ref:`log-basic_setting` 中说明的属性文件中
+ 以 ``nablarch.processingSystem`` 键指定。
+ 如果没有属性指定则为空。
 
 .. _log-execution_id:
 
-実行時ID
- 実行時IDとは、リクエストIDに対する应用の個々の実行を識別するためにつけるIDである。
- 1つのリクエストIDに対して実行された数だけ実行時IDが発行されるため、
- リクエストIDと実行時IDの関係は1対多となる。
+执行时ID
+ 执行时ID是指为识别请求ID对应的应用程序各个执行而附加的ID。
+ 由于对于1个请求ID会发出与执行次数相同的执行时ID，
+ 请求ID与执行时ID的关系为一对多。
 
- 実行時IDは、複数のログを出力している場合に、出力された複数のログを紐付けるために使用する。
+ 执行时ID用于在输出多个日志时，将输出的多个日志关联起来。
 
- 実行時IDは、各処理方式の :java:extdoc:`ThreadContext <nablarch.core.ThreadContext>`
- を初期化するタイミングで発行し、 :java:extdoc:`ThreadContext <nablarch.core.ThreadContext>` に設定される。
+ 执行时ID在各处理方式的 :java:extdoc:`ThreadContext <nablarch.core.ThreadContext>`
+ 初始化时发出，并设置到 :java:extdoc:`ThreadContext <nablarch.core.ThreadContext>` 中。
 
- 実行時IDのID体系
+ 执行时ID的ID体系
   .. code-block:: none
 
-    # 起動プロセスは指定された場合のみ付加する。
-    起動プロセス＋システム日時(yyyyMMddHHmmssSSS)＋連番(4桁)
+    # 启动进程仅在指定时附加。
+    启动进程＋系统日期时间(yyyyMMddHHmmssSSS)＋序列号(4位)
 
 .. important::
- リクエストID、実行時ID、ユーザIDを出力する場合は、
- これらの取得元が :java:extdoc:`ThreadContext <nablarch.core.ThreadContext>` なので、
- ハンドラ構成に :ref:`thread_context_handler` が含まれている必要がある。
- 特にユーザIDについては、 :ref:`thread_context_handler-user_id_attribute_setting` を参照して
- 应用でセッションに値を設定する必要がある。
+ 输出请求ID、执行时ID、用户ID时，
+ 由于这些获取来源是 :java:extdoc:`ThreadContext <nablarch.core.ThreadContext>`，
+ 因此处理程序构成中需要包含 :ref:`thread_context_handler`。
+ 特别是关于用户ID，请参考 :ref:`thread_context_handler-user_id_attribute_setting`，
+ 在应用程序中向会话设置值。
 
-改行コードとタブ文字を含めたい場合
- フォーマットに改行コードとタブ文字を含めたい場合は、以下に示すように、Javaと同様の記述を使用する。
+想要在格式中包含换行符和制表符时
+ 想要在格式中包含换行符和制表符时，请如下所示使用与Java相同的记述。
 
  .. code-block:: none
 
-  改行コード \n
-  タブ文字   \t
+  换行符 \n
+  制表符   \t
 
- 改行コードは、Java標準のシステムプロパティに含まれる ``line.separator`` から取得する。
- このため、システムプロパティの ``line.separator`` を変更しなければOSの改行コードが使用される。
+ 换行符从Java标准系统属性中包含的 ``line.separator`` 获取。
+ 因此，如果不更改系统属性的 ``line.separator``，则使用OS的换行符。
 
  .. tip::
-  :java:extdoc:`BasicLogFormatter <nablarch.core.log.basic.BasicLogFormatter>` では
-  ``\n`` と ``\t`` という文字列は出力できない。
+  :java:extdoc:`BasicLogFormatter <nablarch.core.log.basic.BasicLogFormatter>` 中
+  无法输出 ``\n`` 和 ``\t`` 这两个字符串。
 
 .. _log-app_log_setting:
 
-各種ログの設定
+各种日志的设置
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-各種ログの出力機能は、各種ログの用途に合わせたフォーマット処理のみを行っており、
-ログの出力処理自体は本機能を使用している。
-つまり、各種ログの出力機能では、 :java:extdoc:`Logger <nablarch.core.log.Logger>`
-に指定するメッセージを作成する。
+各种日志的输出功能仅进行与各种日志用途相符的格式处理，
+日志的输出处理本身使用的是本功能。
+也就是说，各种日志的输出功能创建的是指定给 :java:extdoc:`Logger <nablarch.core.log.Logger>`
+的消息。
 
-このため、各種ログの出力機能を使うには、 :ref:`log-basic_setting` に加えて、各種ログの設定が必要となる。
-各種ログの設定は、プロパティファイルに行う。
+因此，使用各种日志的输出功能时，除了 :ref:`log-basic_setting` 之外，还需要各种日志的设置。
+各种日志的设置在属性文件中进行。
 
-プロパティファイルの場所
- クラスパス直下の **app-log.properties** を使用する。
- 場所を変更したい場合は、システムプロパティで **nablarch.appLog.filePath** をキーにファイルパスを指定する。
- ファイルパスの指定方法は
- :java:extdoc:`FileUtil#getResource <nablarch.core.util.FileUtil.getResource(java.lang.String)>` を参照。
+属性文件位置
+ 使用类路径下的 **app-log.properties**。
+ 如果要更改位置，请在系统属性中以 **nablarch.appLog.filePath** 为键指定文件路径。
+ 文件路径的指定方法请参考
+ :java:extdoc:`FileUtil#getResource <nablarch.core.util.FileUtil.getResource(java.lang.String)>`。
 
  .. code-block:: bash
 
   >java -Dnablarch.appLog.filePath=file:/var/log/app/app-log.properties ...
 
-プロパティファイルの記述ルール
- 各種ログごとに異なるので、以下を参照。
+属性文件记述规则
+ 因各种日志而异，请参考以下内容。
 
  * :ref:`failure_log-setting`
  * :ref:`sql_log-setting`
@@ -545,141 +545,141 @@ Nablarchの提供するアーキタイプから生成したブランクプロジ
 
 .. _log-rotation:
 
-ログファイルのローテーションを行う
+进行日志文件轮转
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-本機能で提供するFileLogWiterは、設定したポリシーに従ってログファイルのローテーションを行う。
+本功能提供的FileLogWriter按照设置的策略进行日志文件轮转。
 
-ローテーションポリシーはデフォルトではファイルサイズによるローテーションを行う :java:extdoc:`FileSizeRotatePolicy <nablarch.core.log.basic.FileSizeRotatePolicy>`
-が使用される。 :java:extdoc:`RotatePolicy <nablarch.core.log.basic.RotatePolicy>` の実装クラスを作成することで、ローテーションポリシーを変更することができる。
+轮转策略默认使用按文件大小进行轮转的 :java:extdoc:`FileSizeRotatePolicy <nablarch.core.log.basic.FileSizeRotatePolicy>`。
+通过创建 :java:extdoc:`RotatePolicy <nablarch.core.log.basic.RotatePolicy>` 的实现类，可以更改轮转策略。
 
-本機能が提供している :java:extdoc:`RotatePolicy <nablarch.core.log.basic.RotatePolicy>` の実装クラスは以下。
-各 :java:extdoc:`RotatePolicy <nablarch.core.log.basic.RotatePolicy>` の設定はそれぞれのJavadocを参照。
+本功能提供的 :java:extdoc:`RotatePolicy <nablarch.core.log.basic.RotatePolicy>` 实现类如下。
+各 :java:extdoc:`RotatePolicy <nablarch.core.log.basic.RotatePolicy>` 的设置请参考各自的Javadoc。
 
 * :java:extdoc:`FileSizeRotatePolicy <nablarch.core.log.basic.FileSizeRotatePolicy>`
 * :java:extdoc:`DateRotatePolicy <nablarch.core.log.basic.DateRotatePolicy>`
 
-ローテーションポリシーの設定例を以下に示す。ローテーションポリシーはLogWriterのプロパティに指定する。
+轮转策略设置例如下。轮转策略在LogWriter的属性中指定。
 
   .. code-block:: properties
 
     writerNames=sample
     
-    # writerのrotatePolicyにRotatePolicyが実装されたクラスのFQCNを指定する
+    # 在writer的rotatePolicy中指定实现了RotatePolicy的类的FQCN
     writer.sample.rotatePolicy=nablarch.core.log.basic.DateRotatePolicy
-    # 更新時刻。オプション。
+    # 更新时间。可选。
     writer.sample.rotateTime=12:00
-
-拡張例
+扩展示例
 ---------------------------------------------------------------------
 
 .. _log-add_log_writer:
 
-LogWriterを追加する
+添加LogWriter
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-新しいLogWriterを追加する場合は、 :java:extdoc:`LogWriter <nablarch.core.log.basic.LogWriter>`
-インタフェースを実装したクラスを作成する。
-また、 :java:extdoc:`LogFormatter <nablarch.core.log.basic.LogFormatter>` を使用するLogWriterを作成する場合は、
-共通処理を提供する :java:extdoc:`LogWriterSupport <nablarch.core.log.basic.LogWriterSupport>` を継承して作成する。
+要添加新的LogWriter，需要创建实现 :java:extdoc:`LogWriter <nablarch.core.log.basic.LogWriter>`
+接口的类。
+此外，如果要创建使用 :java:extdoc:`LogFormatter <nablarch.core.log.basic.LogFormatter>` 的LogWriter，
+请继承提供通用处理的 :java:extdoc:`LogWriterSupport <nablarch.core.log.basic.LogWriterSupport>` 来创建。
 
-LogFormatterを追加する
+添加LogFormatter
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-新しいLogFormatterを追加する場合は、 :java:extdoc:`LogFormatter <nablarch.core.log.basic.LogFormatter>`
-インタフェースを実装したクラスを作成する。
-また、ログレベルを表す文言を設定で変更可能にしたい場合は、
-:java:extdoc:`LogLevelLabelProvider <nablarch.core.log.basic.LogLevelLabelProvider>` を使用する。
+要添加新的LogFormatter，需要创建实现 :java:extdoc:`LogFormatter <nablarch.core.log.basic.LogFormatter>`
+接口的类。
+此外，如果想要通过设置更改表示日志级别的文字，
+请使用 :java:extdoc:`LogLevelLabelProvider <nablarch.core.log.basic.LogLevelLabelProvider>`。
 
-新しいLogFormatterの追加に伴い、ログ出力時に指定するパラメータを増やし、
-LogFormatterで増やしたパラメータを受け取りたいことがある。
-本機能では、ログ出力時に指定するパラメータを増やす目的で、
-:java:extdoc:`Logger <nablarch.core.log.Logger>` インタフェースのログ出力メソッドに
-Object型の可変長引数optionsを設けている。
+随着添加新的LogFormatter，可能会想要增加日志输出时指定的参数，
+并让LogFormatter接收增加的参数。
+本功能中，为增加日志输出时指定的参数，
+在 :java:extdoc:`Logger <nablarch.core.log.Logger>` 接口的日志输出方法中
+设置了Object型可变长参数options。
 
 .. code-block:: java
 
- // Logger#logInfoメソッドのシグネチャ
+ // Logger#logInfo方法的签名
  public void logInfo(String message, Object... options)
  public void logInfo(String message, Throwable cause, Object... options)
 
-ログ出力時のパラメータを増やしたい場合は、options引数を規定して使用すること。
+想要增加日志输出时的参数时，请规定并使用options参数。
 
-ログの出力項目(プレースホルダ)を追加する
+添加日志输出项目（占位符）
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-:java:extdoc:`BasicLogFormatter <nablarch.core.log.basic.BasicLogFormatter>` は、
-:java:extdoc:`LogItem <nablarch.core.log.LogItem>` インタフェースを使用して、
-各プレースホルダに対応する出力項目を取得する。
-そのため、新規にプレースホルダを追加したい場合は、以下のとおり対応する。
+:java:extdoc:`BasicLogFormatter <nablarch.core.log.basic.BasicLogFormatter>` 使用
+:java:extdoc:`LogItem <nablarch.core.log.LogItem>` 接口，
+获取各占位符对应的输出项目。
+因此，如果想要新增占位符，请按以下方式处理。
 
-* :java:extdoc:`LogItem <nablarch.core.log.LogItem>` を実装したクラスを作る
-* :java:extdoc:`BasicLogFormatter <nablarch.core.log.basic.BasicLogFormatter>` を継承したクラスを作り、プレースホルダを追加する
+* 创建实现 :java:extdoc:`LogItem <nablarch.core.log.LogItem>` 的类
+* 创建继承 :java:extdoc:`BasicLogFormatter <nablarch.core.log.basic.BasicLogFormatter>` 的类，添加占位符
 
-LogFormatterの設定から起動プロセスを取得するように変更する場合の例を示す。
-LogFormatterの設定は、下記を想定する。
+以下展示从LogFormatter的设置获取启动进程的更改示例。
+LogFormatter的设置假设如下。
 
 .. code-block:: properties
 
- # カスタムのLogFormatterを指定する。
+ # 指定自定义的LogFormatter。
  writer.appLog.formatter.className=nablarch.core.log.basic.CustomLogFormatter
 
- # フォーマットを指定する。
+ # 指定格式。
  writer.appLog.formatter.format=$date$ -$logLevel$- $loggerName$ [$bootProcess$] $message$
 
- # LogFormatterの設定で起動プロセスを指定する。
- # ここで指定した起動プロセスを$bootProcess$に出力する。
+ # 在LogFormatter的设置中指定启动进程。
+ # 此处指定的启动进程输出到$bootProcess$。
  writer.appLog.formatter.bootProcess=CUSTOM_PROCESS
 
-:java:extdoc:`LogItem <nablarch.core.log.LogItem>` を実装したクラスを作る
+创建实现 :java:extdoc:`LogItem <nablarch.core.log.LogItem>` 的类
  .. code-block:: java
 
-  // カスタムの起動プロセスを取得するクラス。
+  // 获取自定义启动进程的类。
   public class CustomBootProcessItem implements LogItem<LogContext> {
 
       private String bootProcess;
 
       public CustomBootProcessItem(ObjectSettings settings) {
-          // LogFormatterの設定から起動プロセスを取得する。
+          // 从LogFormatter的设置获取启动进程。
           bootProcess = settings.getProp("bootProcess");
       }
 
       @Override
       public String get(LogContext context) {
-          // 設定から取得した起動プロセスを返す。
+          // 返回从设置获取的启动进程。
           return bootProcess;
       }
   }
 
-:java:extdoc:`BasicLogFormatter <nablarch.core.log.basic.BasicLogFormatter>` を継承したクラスを作り、プレースホルダを追加する
+创建继承 :java:extdoc:`BasicLogFormatter <nablarch.core.log.basic.BasicLogFormatter>` 的类，添加占位符
  .. code-block:: java
 
   public class CustomLogFormatter extends BasicLogFormatter {
 
-      // フォーマット対象のログ出力項目を取得するメソッドをオーバーライドする。
+      // 覆盖获取格式对象日志输出项目的方法。
       @Override
       protected Map<String, LogItem<LogContext>> getLogItems(ObjectSettings settings) {
 
-          // 起動プロセスのプレースホルダを上書きで設定する。
+          // 以覆盖方式设置启动进程的占位符。
           Map<String, LogItem<LogContext>> logItems = super.getLogItems(settings);
           logItems.put("$bootProcess$", new CustomBootProcessItem(settings));
           return logItems;
       }
   }
 
-ログの初期化メッセージを出力しないようにする
+不输出日志初始化消息
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-本機能では、各ロガーの初期化時に初期化メッセージをログに出力している。
-監視対象のログなどで、初期化メッセージが不要な場合には本機能が提供するWriterを元に、
-初期化メッセージを出力しないWriterを作成し対応する必要がある。
+本功能中，在各日志器初始化时会向日志输出初始化消息。
+在监控对象日志等不需要初始化消息的情况下，需要基于本功能提供的Writer，
+创建不输出初始化消息的Writer来对应。
 
-なお、Web应用サーバなどやOSS製品とロガーを統一する目的などで :ref:`log_adaptor` を使用した場合は初期化メッセージは出力されないため、本対応は必要無い。
+此外，在Web应用程序服务器等中与OSS产品统一日志器等目的使用 :ref:`log_adaptor` 时，
+不会输出初始化消息，因此不需要此对应。
 
-対応例を以下に示す。
+对应示例如下。
 
-1. ベースとなるWriterクラスのソースコードをプロジェクト側に取り込む(コピーする)。
-   例えば、ファイルに出力するログの場合には、 :java:extdoc:`FileLogWriter <nablarch.core.log.basic.FileLogWriter>` をコピーする。
+1. 将基础Writer类的源代码导入（复制）到项目侧。
+   例如，如果是输出到文件的日志，请复制 :java:extdoc:`FileLogWriter <nablarch.core.log.basic.FileLogWriter>`。
    
-2. 初期化ログを出力している箇所を削除する。
+2. 删除输出初始化日志的部分。
 
-   :java:extdoc:`FileLogWriter <nablarch.core.log.basic.FileLogWriter>` の場合は、
-   以下の修正例のように初期化メッセージを出力している箇所を削除する。
+   :java:extdoc:`FileLogWriter <nablarch.core.log.basic.FileLogWriter>` 的情况下，
+   请像以下修改示例一样删除输出初始化消息的部分。
    
    .. code-block:: java
   
@@ -688,7 +688,7 @@ LogFormatterの設定は、下記を想定する。
         out = new BufferedOutputStream(new FileOutputStream(filePath, true), outputBufferSize);
         currentFileSize = new File(filePath).length();
         
-        // ここで行っていた初期化メッセージの出力処理を削除する
+        // 删除此处进行的初始化消息输出处理
         
       } catch (IOException e) {
         throw new IllegalArgumentException(String.format("failed to create %s. file name = [%s], encoding = [%s], buffer size =[%s]",
@@ -696,22 +696,22 @@ LogFormatterの設定は、下記を想定する。
       }
     }
     
-3. ログ機能初期化後の初期化メッセージを出力しないよう変更する。
+3. 更改为在日志功能初始化后不输出初始化消息。
 
-  :java:extdoc:`needsToWrite <nablarch.core.log.basic.LogWriterSupport.needsToWrite(nablarch.core.log.basic.LogContext)>` をオーバライドし、
-  初回に呼び出される初期化メッセージの出力を行わないよう変更する。  
+  覆盖 :java:extdoc:`needsToWrite <nablarch.core.log.basic.LogWriterSupport.needsToWrite(nablarch.core.log.basic.LogContext)>`，
+  更改为不输出首次调用的初始化消息。
   
   .. code-block:: java
 
-      /** 初回判定を行う為のフラグを定義する */
+      /** 定义用于进行首次判定的标志 */
       private boolean suppressionWriting = true;
       
       @Override
       public boolean needsToWrite(final LogContext context) {
         final String message = context.getMessage();
         if (suppressionWriting) {
-          // 出力対象のログが「initialized.」から始まっていた場合は、
-          // 初期化メッセージであるため出力対象外であることを示す「false」を戻す。
+          // 如果输出目标的日志以"initialized."开头，
+          // 则为初始化消息，返回表示非输出目标的"false"。
           if (StringUtil.hasValue(message) && message.startsWith("initialized.")) {
             suppressionWriting = false;
             return false;
@@ -720,29 +720,29 @@ LogFormatterの設定は、下記を想定する。
         return super.needsToWrite(context);
       }
       
-4. 作成したクラスをlog.propertiesに設定する。
+4. 在log.properties中设置创建的类。
 
-  プロジェクト側で作成したWriterのクラス名を、log.propertiesに設定する。
+  将项目侧创建的Writer的类名设置在log.properties中。
   
-  設定例を以下に示す。
+  设置示例如下。
 
   .. code-block:: properties
 
     writerNames=sample
     
-    # writerのクラス名に作成したクラスを指定する
-    # クラスの完全修飾名が「sample.CustomFileLogWriter」の場合の設定例
+    # 在writer的类名中指定创建的类
+    # 类的完全限定名为"sample.CustomFileLogWriter"时的设置示例
     writer.sample.className = sample.CustomFileLogWriter
 
 
 .. _log-json_log_setting:
 
-JSON形式の構造化ログとして出力する
+以JSON形式的结构化日志输出
 --------------------------------------------------------------------------
 
-LogWriterや各種ログで使用するフォーマッタをJSON出力用のクラスに差し替えることで、ログの出力をJSON形式にできる。
+通过将LogWriter和各种日志使用的格式化器替换为JSON输出用类，可以将日志输出变为JSON形式。
 
-具体的には、以下のとおり修正することで、ログをJSON形式にできる。
+具体来说，通过进行以下修改，可以将日志变为JSON形式。
 
 * :ref:`log-json_set_jsonlogformatter_for_logwriter`
 * :ref:`log-json_app_logs`
@@ -751,112 +751,112 @@ LogWriterや各種ログで使用するフォーマッタをJSON出力用のク�
 
 .. _log-json_set_jsonlogformatter_for_logwriter:
 
-LogWriterで使用するフォーマッタをJsonLogFormatterに変更する
+将LogWriter使用的格式化器更改为JsonLogFormatter
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-LogWriterで使用するフォーマッタを :java:extdoc:`JsonLogFormatter <nablarch.core.log.basic.JsonLogFormatter>` に変更することで、
-ログの出力をJSON形式にできる。
+通过将LogWriter使用的格式化器更改为 :java:extdoc:`JsonLogFormatter <nablarch.core.log.basic.JsonLogFormatter>`，
+可以将日志输出变为JSON形式。
 
 使用方法
- :java:extdoc:`JsonLogFormatter <nablarch.core.log.basic.JsonLogFormatter>` の設定例を以下に示す。 
+ :java:extdoc:`JsonLogFormatter <nablarch.core.log.basic.JsonLogFormatter>` 的设置例如下。
  
  .. code-block:: properties
  
-  # JSON形式でログを出力する場合はJsonLogFormatterを指定する。
+  # 以JSON形式输出日志时指定JsonLogFormatter。
   writer.appLog.formatter.className=nablarch.core.log.basic.JsonLogFormatter
  
-  # 出力項目を指定する。
+  # 指定输出项目。
   writer.appLog.formatter.targets=date,logLevel,message,stackTrace
  
-  # 日時のフォーマットに使用するパターンを指定する。
-  # 指定しなければ"yyyy-MM-dd HH:mm:ss.SSS"となる。
+  # 指定日期时间格式使用的模式。
+  # 如果不指定则为"yyyy-MM-dd HH:mm:ss.SSS"。
   writer.appLog.formatter.datePattern=yyyy-MM-dd'T'HH:mm:ss.SSS'Z'
  
- :java:extdoc:`JsonLogFormatter <nablarch.core.log.basic.JsonLogFormatter>` では、
- ``targets`` プロパティにカンマ区切りで出力項目を指定する。 
- 使用できる出力項目については、下記の通り。
- なお、デフォルトでは全ての項目が出力される。
+ :java:extdoc:`JsonLogFormatter <nablarch.core.log.basic.JsonLogFormatter>` 中，
+在 ``targets`` 属性中以逗号分隔指定输出项目。
+可用的输出项目如下。
+此外，默认情况下输出所有项目。
  
- .. list-table:: targetsプロパティで指定できる出力項目
+ .. list-table:: targets属性可指定的输出项目
    :header-rows: 1
    :class: white-space-normal
    :widths: 20,80
  
-   * - 出力項目
-     - 説明
+   * - 输出项目
+     - 说明
  
    * - date
-     - このログ出力を要求した時点の日時。
+     - 请求此日志输出时的日期时间。
  
    * - logLevel
-     - このログ出力のログレベル。
+     - 此日志输出的日志级别。
  
    * - loggerName
-     - このログ出力が対応するロガー設定の名称。
+     - 此日志输出对应的日志器设置的名称。
  
    * - runtimeLoggerName
-     - 実行時に、 :java:extdoc:`LoggerManager <nablarch.core.log.LoggerManager>` からロガー取得に指定した名称。
+     - 执行时，从 :java:extdoc:`LoggerManager <nablarch.core.log.LoggerManager>` 获取日志器时指定的名称。
  
    * - bootProcess
-     - 起動プロセスを識別する名前。
+     - 识别启动进程的名称。
  
    * - processingSystem
-     - 処理方式を識別する名前。
+     - 识别处理方式的名称。
  
    * - requestId
-     - このログ出力を要求した時点のリクエストID。
+     - 请求此日志输出时的请求ID。
  
    * - executionId
-     - このログ出力を要求した時点の実行時ID。
+     - 请求此日志输出时的执行时ID。
  
    * - userId
-     - このログ出力を要求した時点のログインユーザのユーザID。
+     - 请求此日志输出时的登录用户的用户ID。
  
    * - message
-     - このログ出力のメッセージ。
+     - 此日志输出的消息。
  
    * - stackTrace
-     - エラー情報に指定された例外オブジェクトのスタックトレース。
+     - 错误信息中指定的异常对象的堆栈跟踪。
  
    * - payload
-     - オプション情報に指定されたオブジェクト。
+     - 选项信息中指定的对象。
  
  .. tip::
-  ``datePattern`` および ``label`` (ログレベルの文言指定)は、 :java:extdoc:`BasicLogFormatter <nablarch.core.log.basic.BasicLogFormatter>` と同様に機能する。
+  ``datePattern`` 和 ``label``（日志级别文字指定）与 :java:extdoc:`BasicLogFormatter <nablarch.core.log.basic.BasicLogFormatter>` 功能相同。
   
- 記述例
+ 记述例
   .. code-block:: java
   
-   // クラスを指定してLoggerを取得する。
-   // Loggerはクラス変数に保持する。
+   // 指定类获取Logger。
+   // Logger保存在类变量中。
    private static final Logger LOGGER = LoggerManager.get(UserManager.class);
   
   .. code-block:: java
   
    LOGGER.logInfo("hello");
  
-  (出力結果)
+  (输出结果)
 
   .. code-block:: none
 
    {"date":"2021-02-04 12:34:56.789","logLevel":"INFO","message":"hello"}
 
-項目を独自に追加する
- 出力対象に ``payload`` を含む場合、オプション情報に指定されたMap<String, Object>オブジェクトをJSONオブジェクトとして出力する。
- オブジェクトの変換ルールは下記の通り。
+独立添加项目
+ 如果输出目标包含 ``payload``，则选项信息中指定的Map<String, Object>对象将作为JSON对象输出。
+ 对象转换规则如下。
 
- .. list-table:: 出力可能なオブジェクト
+ .. list-table:: 可输出的对象
    :header-rows: 1
    :class: white-space-normal
    :widths: 40,60
  
-   * - 出力可能なJavaのクラス
-     - JSONによる出力
+   * - 可输出的Java类
+     - JSON输出
  
    * - :java:extdoc:`String <java.lang.String>`
-     - JSONの文字列として出力する。
+     - 作为JSON字符串输出。
 
-   * - :java:extdoc:`Number <java.lang.Number>` 及びそのサブクラス |br|
+   * - :java:extdoc:`Number <java.lang.Number>` 及其子类 |br|
        （ :java:extdoc:`Integer <java.lang.Integer>` , 
        :java:extdoc:`Long <java.lang.Long>` , 
        :java:extdoc:`Short <java.lang.Short>` , 
@@ -867,35 +867,35 @@ LogWriterで使用するフォーマッタを :java:extdoc:`JsonLogFormatter <na
        :java:extdoc:`BigInteger <java.math.BigInteger>` , 
        :java:extdoc:`AtomicInteger <java.util.concurrent.atomic.AtomicInteger>` , 
        :java:extdoc:`AtomicLong <java.util.concurrent.atomic.AtomicLong>` ）
-     - ``toString()`` メソッドの戻り値をJSONの数値として出力する。
-       NaN及び無限大はJSONの文字列として出力する。
+     - 将 ``toString()`` 方法的返回值作为JSON数值输出。
+       NaN及无穷大作为JSON字符串输出。
 
    * - :java:extdoc:`Boolean <java.lang.Boolean>`
-     - JSONの真理値（ ``true`` / ``false`` ）として出力する。
+     - 作为JSON布尔值（ ``true`` / ``false`` ）输出。
    
    * - :java:extdoc:`Date <java.util.Date>` |br|
-       :java:extdoc:`Calendar <java.util.Calendar>`  及びそのサブクラス |br|
+       :java:extdoc:`Calendar <java.util.Calendar>`  及其子类 |br|
        :java:extdoc:`LocalDateTime <java.time.LocalDateTime>`
-     - JSONの文字列として出力する。デフォルトの書式は、 ``"yyyy-MM-dd HH:mm:ss.SSS"`` 。
-       書式を変更する場合は、 ``datePattern`` プロパティにて指定する。
+     - 作为JSON字符串输出。默认格式为 ``"yyyy-MM-dd HH:mm:ss.SSS"`` 。
+       更改格式时，在 ``datePattern`` 属性中指定。
    
-   * - :java:extdoc:`Map <java.util.Map>`  の実装クラス
-     - JSONのオブジェクトとして出力する。
-       キーが :java:extdoc:`String <java.lang.String>` ではない場合や値が ``null``
-       となる場合は、キーも含め出力されない。
-       値として ``null`` を出力する場合は、プロパティ ``ignoreNullValueMember`` に ``false`` をセットする。
+   * - :java:extdoc:`Map <java.util.Map>`  的实现类
+     - 作为JSON对象输出。
+       如果键不是 :java:extdoc:`String <java.lang.String>` 或值为 ``null``，
+       则键及其本身都不会输出。
+       要输出值为 ``null`` 的情况，请在属性 ``ignoreNullValueMember`` 中设置 ``false`` 。
 
-   * - :java:extdoc:`List <java.util.List>` の実装クラス、及び配列
-     - JSONの配列として出力する。
+   * - :java:extdoc:`List <java.util.List>` 的实现类，以及数组
+     - 作为JSON数组输出。
   
    * - ``null``
-     - JSONの ``null`` として出力する。
-       :java:extdoc:`Map <java.util.Map>` の値が ``null`` のとき、デフォルトでは出力対象外となる。
+     - 作为JSON的 ``null`` 输出。
+       :java:extdoc:`Map <java.util.Map>` 的值为 ``null`` 时，默认情况下不作为输出目标。
 
-   * - その他のオブジェクト
-     - ``toString()`` メソッドの戻り値をJSONの文字列として出力する。
+   * - 其他对象
+     - 将 ``toString()`` 方法的返回值作为JSON字符串输出。
  
- 記述例
+ 记述例
   .. code-block:: java
  
    Map<String, Object> structuredArgs = new HashTable<String, Object>();
@@ -906,111 +906,111 @@ LogWriterで使用するフォーマッタを :java:extdoc:`JsonLogFormatter <na
    structuredArgs.put("key5", new Date());
    LOGGER.logInfo("addition fields", structuredArgs);
  
-  (出力結果)
+  (输出结果)
  
   .. code-block:: none
   
    {"date":"2021-02-04 12:34:56.789","logLevel":"INFO","message":"addition fields","key1":"value1","key2":123,"key3":true,"key5":"2021-02-04 12:34:56.789"}
  
  .. tip::
-  :java:extdoc:`JsonLogFormatter <nablarch.core.log.basic.JsonLogFormatter>` を使用する場合、
-  オプション情報に :java:extdoc:`Map <java.util.Map>` < :java:extdoc:`String <java.lang.String>`
-  , :java:extdoc:`Object <java.lang.Object>` >以外のオプション情報をセットしないこと。
-  :java:extdoc:`Map <java.util.Map>` オブジェクトは複数指定することが出来るが、
-  キーが重複した場合はいずれかの値は無視され、出力されない。
+  使用 :java:extdoc:`JsonLogFormatter <nablarch.core.log.basic.JsonLogFormatter>` 时，
+  请不要在选项信息中设置 :java:extdoc:`Map <java.util.Map>` < :java:extdoc:`String <java.lang.String>`
+  , :java:extdoc:`Object <java.lang.Object>` >以外的选项信息。
+  虽然可以指定多个 :java:extdoc:`Map <java.util.Map>` 对象，
+  但如果键重复，其中一个值将被忽略而不输出。
 
 .. _log-json_app_logs:
 
-各種ログで使用するフォーマッタをJSONログ用に差し替える
+将各种日志使用的格式化器替换为JSON日志用
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
- 各種ログは、メッセージ部分を個別の方法でフォーマットしている。
- それぞれのフォーマットで使用しているフォーマッタをJSON用のフォーマッタに差し替えることで、各種ログが出力する内容もJSONログとして出力できるようになる。
+ 各种日志以各自的方法格式化消息部分。
+ 将各格式使用的格式化器替换为JSON用格式化器，各种日志输出的内容也可以作为JSON日志输出。
 
- 各フォーマッタの具体的な設定方法については、下記表のそれぞれのリンク先を参照のこと。
+ 各格式化器的具体设置方法，请参考下表各自的链接。
 
- .. list-table:: 各種ログのJSON版フォーマッタ
+ .. list-table:: 各种日志的JSON版格式化器
   :header-rows: 1
   :class: white-space-normal
   :widths: 30,50
   
-  * - ログの種類
-    - 対応するフォーマッタ
+  * - 日志类型
+    - 对应的格式化器
  
-  * - :ref:`障害ログ <failure_log-json_setting>`
+  * - :ref:`故障日志 <failure_log-json_setting>`
     - :java:extdoc:`FailureJsonLogFormatter <nablarch.core.log.app.FailureJsonLogFormatter>`
  
-  * - :ref:`SQLログ <sql_log-json_setting>`
+  * - :ref:`SQL日志 <sql_log-json_setting>`
     - :java:extdoc:`SqlJsonLogFormatter <nablarch.core.db.statement.SqlJsonLogFormatter>`
  
-  * - :ref:`パフォーマンスログ <performance_log-json_setting>`
+  * - :ref:`性能日志 <performance_log-json_setting>`
     - :java:extdoc:`PerformanceJsonLogFormatter <nablarch.core.log.app.PerformanceJsonLogFormatter>`
   
-  * - :ref:`HTTPアクセスログ <http_access_log-json_setting>`
+  * - :ref:`HTTP访问日志 <http_access_log-json_setting>`
     - :java:extdoc:`HttpAccessJsonLogFormatter <nablarch.fw.web.handler.HttpAccessJsonLogFormatter>`
 
-  * - :ref:`HTTPアクセスログ（RESTfulウェブサービス用） <jaxrs_access_log-json_setting>`
+  * - :ref:`HTTP访问日志（RESTful Web服务用） <jaxrs_access_log-json_setting>`
     - :java:extdoc:`JaxRsAccessJsonLogFormatter <nablarch.fw.jaxrs.JaxRsAccessJsonLogFormatter>`
 
-  * - :ref:`メッセージングログ <messaging_log-json_setting>`
+  * - :ref:`消息处理日志 <messaging_log-json_setting>`
     - :java:extdoc:`MessagingJsonLogFormatter <nablarch.fw.messaging.logging.MessagingJsonLogFormatter>`
 
 .. _log-json_for_batch:
 
-NablarchバッチのログをJSON形式にする
+将Nablarch批处理的日志变为JSON形式
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Nablarchバッチで出力するログをJSON形式にするには、上述のフォーマッタの設定に加えて下記のとおり修正する必要がある。
+要将Nablarch批处理输出的日志变为JSON形式，除了上述格式化器设置外，还需要进行以下修改。
 
 * :ref:`log-json_set_applicationsettingsjsonlogformatter`
 * :ref:`log-json_set_launcherjsonlogformatter`
 * :ref:`log-json_set_jsoncommitlogger`
 
-以下で、それぞれの設定方法について説明する。
+以下说明各设置方法。
 
 .. _log-json_set_applicationsettingsjsonlogformatter:
 
-ApplicationSettingLogFormatterをJSON用に切り替える
+将ApplicationSettingLogFormatter切换为JSON用
 ******************************************************
 
-:java:extdoc:`ApplicationSettingLogFormatter <nablarch.core.log.app.ApplicationSettingLogFormatter>` は、システム設定値をログに出力するときに用いられる。
-これをJSON形式で出力するには、フォーマッタを :java:extdoc:`ApplicationSettingJsonLogFormatter <nablarch.core.log.app.ApplicationSettingJsonLogFormatter>` に切り替える。
-設定は、 :ref:`log-app_log_setting` で説明したプロパティファイルに行う。
+:java:extdoc:`ApplicationSettingLogFormatter <nablarch.core.log.app.ApplicationSettingLogFormatter>` 用于将系统设置值输出到日志。
+要将其以JSON形式输出，请将格式化器切换为 :java:extdoc:`ApplicationSettingJsonLogFormatter <nablarch.core.log.app.ApplicationSettingJsonLogFormatter>`。
+设置在 :ref:`log-app_log_setting` 中说明的属性文件中进行。
 
-記述ルール
- :java:extdoc:`ApplicationSettingJsonLogFormatter <nablarch.core.log.app.ApplicationSettingJsonLogFormatter>` を用いる際に
- 指定するプロパティは以下の通り。
+记述规则
+ :java:extdoc:`ApplicationSettingJsonLogFormatter <nablarch.core.log.app.ApplicationSettingJsonLogFormatter>` 使用时
+ 可指定的属性如下。
  
- applicationSettingLogFormatter.className ``必須``
-  JSON形式でログを出力する場合、
-  :java:extdoc:`ApplicationSettingJsonLogFormatter <nablarch.core.log.app.ApplicationSettingJsonLogFormatter>` を指定する。
+ applicationSettingLogFormatter.className ``必需``
+  以JSON形式输出日志时，
+  指定 :java:extdoc:`ApplicationSettingJsonLogFormatter <nablarch.core.log.app.ApplicationSettingJsonLogFormatter>` 。
 
  applicationSettingLogFormatter.appSettingTargets
-  应用設定ログで出力する項目（業務日付なし）。カンマ区切りで指定する。
+  应用程序设置日志中输出的项目（不含业务日期）。以逗号分隔指定。
 
-  指定可能な出力項目およびデフォルトの出力項目
-   :システム設定値: systemSettings ``デフォルト``
-   :業務日付: businessDate
+  可指定的输出项目及默认输出项目
+   :系统设置值: systemSettings ``默认``
+   :业务日期: businessDate
  
  applicationSettingLogFormatter.appSettingWithDateTargets
-  应用設定ログで出力する項目（業務日付あり）。カンマ区切りで指定する。
+  应用程序设置日志中输出的项目（含业务日期）。以逗号分隔指定。
 
-  指定可能な出力項目
-   :システム設定: systemSettings
-   :業務日付: businessDate
+  可指定的输出项目
+   :系统设置: systemSettings
+   :业务日期: businessDate
 
-  デフォルトは全ての出力項目が対象となる。
+  默认所有输出项目都是目标。
 
  applicationSettingLogFormatter.systemSettingItems
-  出力するシステム設定値の名前の一覧。カンマ区切りで指定する。
-  デフォルトは空なので、何も出力しない。
+  要输出的系统设置值的名称列表。以逗号分隔指定。
+  默认为空，不输出任何内容。
 
  applicationSettingLogFormatter.structuredMessagePrefix
-  フォーマット後のメッセージ文字列が JSON 形式に整形されていることを識別できるようにするために、メッセージの先頭に付与するマーカー文字列。
-  メッセージの先頭にこのマーカーがある場合、 :java:extdoc:`JsonLogFormatter <nablarch.core.log.basic.JsonLogFormatter>` はメッセージを JSON データとして処理する。
-  デフォルトは ``"$JSON$"`` となる。
+  为能够识别格式化后的消息字符串已格式化为JSON形式，在消息开头附加的标记字符串。
+  如果消息开头有此标记， :java:extdoc:`JsonLogFormatter <nablarch.core.log.basic.JsonLogFormatter>` 将消息作为JSON数据处理。
+  默认为 ``"$JSON$"`` 。
 
-記述例
+记述例
  .. code-block:: properties
 
   applicationSettingLogFormatter.className=nablarch.core.log.app.ApplicationSettingJsonLogFormatter
@@ -1021,53 +1021,53 @@ ApplicationSettingLogFormatterをJSON用に切り替える
 
 .. _log-json_set_launcherjsonlogformatter:
 
-LauncherLogFormatterをJSON用に切り替える
+将LauncherLogFormatter切换为JSON用
 ******************************************************
 
-:java:extdoc:`LauncherLogFormatter <nablarch.fw.launcher.logging.LauncherLogFormatter>` は、バッチの開始・終了ログを出力するときに用いられる。
-これをJSON形式で出力するには、フォーマッタを :java:extdoc:`LauncherJsonLogFormatter <nablarch.fw.launcher.logging.LauncherJsonLogFormatter>` に切り替える。
-設定は、 :ref:`log-app_log_setting` で説明したプロパティファイルに行う。
+:java:extdoc:`LauncherLogFormatter <nablarch.fw.launcher.logging.LauncherLogFormatter>` 用于输出批处理开始·结束日志。
+要将其以JSON形式输出，请将格式化器切换为 :java:extdoc:`LauncherJsonLogFormatter <nablarch.fw.launcher.logging.LauncherJsonLogFormatter>`。
+设置在 :ref:`log-app_log_setting` 中说明的属性文件中进行。
 
-記述ルール
- :java:extdoc:`LauncherJsonLogFormatter <nablarch.fw.launcher.logging.LauncherJsonLogFormatter>` を用いる際に
- 指定するプロパティは以下の通り。
+记述规则
+ :java:extdoc:`LauncherJsonLogFormatter <nablarch.fw.launcher.logging.LauncherJsonLogFormatter>` 使用时
+ 可指定的属性如下。
  
- launcherLogFormatter.className ``必須``
-  JSON形式でログを出力する場合、
-  :java:extdoc:`LauncherJsonLogFormatter <nablarch.fw.launcher.logging.LauncherJsonLogFormatter>` を指定する。
+ launcherLogFormatter.className ``必需``
+  以JSON形式输出日志时，
+  指定 :java:extdoc:`LauncherJsonLogFormatter <nablarch.fw.launcher.logging.LauncherJsonLogFormatter>` 。
 
  launcherLogFormatter.startTargets
-  バッチの開始ログに出力する項目。カンマ区切りで指定する。
+  批处理开始日志中输出的项目。以逗号分隔指定。
 
-  指定可能な出力項目
-   :開始または終了のラベル: label
-   :コマンドラインオプション: commandLineOptions
-   :コマンドライン引数: commandLineArguments
+  可指定的输出项目
+   :开始或结束的标签: label
+   :命令行选项: commandLineOptions
+   :命令行参数: commandLineArguments
 
-  デフォルトは全ての出力項目が対象となる。
+  默认所有输出项目都是目标。
  
  launcherLogFormatter.endTargets
-  バッチの終了ログに出力する項目。カンマ区切りで指定する。
+  批处理结束日志中输出的项目。以逗号分隔指定。
 
-  指定可能な出力項目
-   :開始または終了のラベル: label
-   :終了コード: exitCode
-   :処理時間: executeTime
+  可指定的输出项目
+   :开始或结束的标签: label
+   :退出代码: exitCode
+   :处理时间: executeTime
 
-  デフォルトは全ての出力項目が対象となる。
+  默认所有输出项目都是目标。
  
  launcherLogFormatter.startLogMsgLabel
-  開始ログのlabelで出力する値。デフォルトは ``"BATCH BEGIN"``。
+  开始日志的label中输出的值。默认为 ``"BATCH BEGIN"``。
  
  launcherLogFormatter.endLogMsgLabel
-  終了ログのlabelで出力する値。デフォルトは ``"BATCH END"``。
+  结束日志的label中输出的值。默认为 ``"BATCH END"``。
 
  launcherLogFormatter.structuredMessagePrefix
-  フォーマット後のメッセージ文字列が JSON 形式に整形されていることを識別できるようにするために、メッセージの先頭に付与するマーカー文字列。
-  メッセージの先頭にこのマーカーがある場合、 :java:extdoc:`JsonLogFormatter <nablarch.core.log.basic.JsonLogFormatter>` はメッセージを JSON データとして処理する。
-  デフォルトは ``"$JSON$"`` となる。
+  为能够识别格式化后的消息字符串已格式化为JSON形式，在消息开头附加的标记字符串。
+  如果消息开头有此标记， :java:extdoc:`JsonLogFormatter <nablarch.core.log.basic.JsonLogFormatter>` 将消息作为JSON数据处理。
+  默认为 ``"$JSON$"`` 。
 
-記述例
+记述例
  .. code-block:: properties
 
   launcherLogFormatter.className=nablarch.fw.launcher.logging.LauncherJsonLogFormatter
@@ -1080,153 +1080,153 @@ LauncherLogFormatterをJSON用に切り替える
 
 .. _log-json_set_jsoncommitlogger:
 
-CommitLoggerをJSON用に切り替える
+将CommitLogger切换为JSON用
 ******************************************************
 
-:java:extdoc:`CommitLogger <nablarch.core.log.app.CommitLogger>` は、コミット件数をログに出力するために用いられる。
-デフォルトでは、 :java:extdoc:`BasicCommitLogger <nablarch.core.log.app.BasicCommitLogger>` というクラスが使用される。
+:java:extdoc:`CommitLogger <nablarch.core.log.app.CommitLogger>` 用于将提交件数输出到日志。
+默认使用 :java:extdoc:`BasicCommitLogger <nablarch.core.log.app.BasicCommitLogger>` 类。
 
-これをJSON形式で出力するには、 :java:extdoc:`JsonCommitLogger <nablarch.core.log.app.JsonCommitLogger>` をコンポーネントとして定義する。
-以下に、コンポーネント定義の例を示す。
+要将其以JSON形式输出，请将 :java:extdoc:`JsonCommitLogger <nablarch.core.log.app.JsonCommitLogger>` 定义为组件。
+以下展示组件定义示例。
 
-コンポーネント定義の例
+组件定义示例
  .. code-block:: xml
  
    <component name="commitLogger" class="nablarch.core.log.app.JsonCommitLogger">
      <property name="interval" value="${nablarch.commitLogger.interval}" />
    </component>
 
-コンポーネント名は ``commitLogger`` で定義する必要がある。
+组件名称必须以 ``commitLogger`` 定义。
 
 .. _log-synchronous_file_log_writer_attention:
 
-SynchronousFileLogWriterを使用するにあたっての注意事項
+使用SynchronousFileLogWriter时的注意事项
 --------------------------------------------------------------------------
 
 .. important::
  :java:extdoc:`SynchronousFileLogWriter <nablarch.core.log.basic.SynchronousFileLogWriter>`
- は複数プロセスからの書き込み用に作成したものであるが、 :ref:`障害通知ログ <failure_log>` のように出力頻度が低いログ出力にのみ使用することを想定している。
- 頻繁にログの出力が行われる場面で :java:extdoc:`SynchronousFileLogWriter <nablarch.core.log.basic.SynchronousFileLogWriter>` を使用すると
- ロック取得待ちによる性能劣化や競合によるログの消失が発生する可能性があるので、应用ログやアクセスログのように出力頻度の高いログの出力に
- :java:extdoc:`SynchronousFileLogWriter <nablarch.core.log.basic.SynchronousFileLogWriter>` を使用してはいけない。
+ 虽然是专为多进程写入创建的，但仅设想用于 :ref:`故障通知日志 <failure_log>` 等输出频率低的日志输出。
+ 在日志输出频繁的场面使用 :java:extdoc:`SynchronousFileLogWriter <nablarch.core.log.basic.SynchronousFileLogWriter>` 时，
+ 可能会发生由于锁获取等待导致的性能劣化或竞争导致的日志丢失，因此请勿将
+ :java:extdoc:`SynchronousFileLogWriter <nablarch.core.log.basic.SynchronousFileLogWriter>` 用于应用程序日志或访问日志等输出频率高的日志输出。
 
- また、:java:extdoc:`SynchronousFileLogWriter <nablarch.core.log.basic.SynchronousFileLogWriter>`
- には以下の制約があるため、使用にあたっては十分検討すること。
+ 此外，:java:extdoc:`SynchronousFileLogWriter <nablarch.core.log.basic.SynchronousFileLogWriter>`
+ 有以下限制，使用时请充分考虑。
 
- * ログのローテーションができない。
- * 出力されるログの内容が正常でない場合がある。
+ * 无法进行日志轮转。
+ * 输出的日志内容可能不正确。
 
 
-:java:extdoc:`SynchronousFileLogWriter <nablarch.core.log.basic.SynchronousFileLogWriter>` は、
-ロックファイルを用いて排他制御を行いながらファイルにログを書き込む。
-そして、ロック取得の待機時間を超えてもロックを取得できない場合、強制的にロックファイルを削除し、
-自身のスレッド用のロックファイルを生成してからログを出力する。
+:java:extdoc:`SynchronousFileLogWriter <nablarch.core.log.basic.SynchronousFileLogWriter>` 使用
+锁文件进行排他控制的同时向文件写入日志。
+然后，如果超过锁获取等待时间仍无法获取锁，则强制删除锁文件，
+生成自身线程用的锁文件后再输出日志。
 
-もし強制的にロックファイルを削除できない場合は、ロックを取得していない状態で強制的にログを出力する。
-また、ロックファイルの生成に失敗した場合および、ロック取得待ちの際に割り込みが発生した場合も、
-ロックを取得していない状態で強制的にログを出力する。
+如果无法强制删除锁文件，则在未获取锁的状态下强制输出日志。
+此外，锁文件生成失败时以及锁获取等待时发生中断的情况下，
+也会在未获取锁的状态下强制输出日志。
 
-**ロックを取得しない状態で強制的にログを出力する場合に、複数プロセスからのログ出力が競合するとログが正常に出力されない場合がある点に注意すること。**
+**请注意，在未获取锁的状态下强制输出日志时，如果多进程日志输出竞争，日志可能无法正常输出。**
 
-このような障害が発生した場合には、強制出力したログに加えて、同一のログファイルに障害のログを出力する。
-デフォルトでは本フレームワークが用意したログが出力されるが、
-:java:extdoc:`SynchronousFileLogWriter <nablarch.core.log.basic.SynchronousFileLogWriter>`
-のプロパティに障害コードを設定することで、障害通知ログのフォーマット(障害コードを含む)でログを出力できる。
-障害通知ログのフォーマットで出力することで通常の障害通知ログと同様の方法でログの監視が可能となるので、
-障害コードを設定することを推奨する。
+发生此类故障时，除了强制输出的日志外，还会向同一日志文件输出故障日志。
+默认输出本框架准备的日志，但
+通过在 :java:extdoc:`SynchronousFileLogWriter <nablarch.core.log.basic.SynchronousFileLogWriter>`
+的属性中设置故障代码，可以以故障通知日志的格式（含故障代码）输出日志。
+以故障通知日志的格式输出后，可以用与通常故障通知日志相同的方法监控日志，
+因此建议设置故障代码。
 
-障害コードを設定するプロパティ名を以下に示す。
+故障代码设置的属性名称如下。
 
 failureCodeCreateLockFile
- :障害の内容: ロックファイルが生成できない
- :ログレベル: FATAL
- :メッセージの設定例({0}にはロックファイルのパスが設定される): ロックファイルの生成に失敗しました。おそらくロックファイルのパスが間違っています。ロックファイルパス=[{0}]。
- :デフォルトで出力するログ(障害コードなどは出力されない): failed to create lock file. perhaps lock file path was invalid. lock file path=[{0}].
+ :故障内容: 无法生成锁文件
+ :日志级别: FATAL
+ :消息设置示例（{0}中设置锁文件路径）: 锁文件生成失败。可能是锁文件路径错误。锁文件路径=[{0}]。
+ :默认输出的日志（不输出故障代码等）: failed to create lock file. perhaps lock file path was invalid. lock file path=[{0}].
 
 failureCodeReleaseLockFile
- :障害の内容: 生成したロックファイルを解放(削除)できない
- :ログレベル: FATAL
- :メッセージの設定例({0}にはロックファイルのパスが設定される): ロックファイルの削除に失敗しました。ロックファイルパス=[{0}]。
- :デフォルトで出力するログ(障害コードなどは出力されない): failed to delete lock file. lock file path=[{0}].
+ :故障内容: 无法释放（删除）生成的锁文件
+ :日志级别: FATAL
+ :消息设置示例（{0}中设置锁文件路径）: 锁文件删除失败。锁文件路径=[{0}]。
+ :默认输出的日志（不输出故障代码等）: failed to delete lock file. lock file path=[{0}].
 
 failureCodeForceDeleteLockFile
- :障害の内容: 解放されないロックファイルを強制削除できない
- :ログレベル: FATAL
- :メッセージの設定例({0}にはロックファイルのパスが設定される): ロックファイルの強制削除に失敗しました。ロックファイルが不正に開かれています。ロックファイルパス=[{0}]。
- :デフォルトで出力するログ(障害コードなどは出力されない): failed to delete lock file forcedly. lock file was opened illegally. lock file path=[{0}].
+ :故障内容: 无法强制删除未释放的锁文件
+ :日志级别: FATAL
+ :消息设置示例（{0}中设置锁文件路径）: 锁文件强制删除失败。锁文件被非法打开。锁文件路径=[{0}]。
+ :默认输出的日志（不输出故障代码等）: failed to delete lock file forcedly. lock file was opened illegally. lock file path=[{0}].
 
 failureCodeInterruptLockWait
- :障害の内容: ロック取得待ちでスレッドをスリープしている際に、割り込みが発生
- :ログレベル: FATAL
- :メッセージの設定例: ロック取得中に割り込みが発生しました。
- :デフォルトで出力するログ(障害コードなどは出力されない): interrupted while waiting for lock retry.
+ :故障内容: 锁获取等待中线程休眠时发生中断
+ :日志级别: FATAL
+ :消息设置示例: 锁获取中发生中断。
+ :默认输出的日志（不输出故障代码等）: interrupted while waiting for lock retry.
 
 .. important::
- 障害コードを設定した場合、障害通知ログのフォーマットで同一のログファイルにログが出力されるが、
- 障害解析ログは出力されない点に注意すること。
+ 设置故障代码后，虽然会以故障通知日志的格式向同一日志文件输出日志，
+ 但请注意不会输出故障分析日志。
 
 :java:extdoc:`SynchronousFileLogWriter <nablarch.core.log.basic.SynchronousFileLogWriter>`
-の設定例を以下に示す。
+设置例如下。
 
 .. code-block:: properties
 
  writerNames=monitorLog
 
- # SynchronousFileLogWriterクラスを指定する。
+ # 指定SynchronousFileLogWriter类。
  writer.monitorLog.className=nablarch.core.log.basic.SynchronousFileLogWriter
- # 書き込み先のファイルパスを指定する。
+ # 指定写入目标的文件路径。
  writer.monitorLog.filePath=/var/log/app/monitor.log
- # 書き込み時に使用する文字エンコーディングを指定する。
+ # 指定写入时使用的字符编码。
  writer.monitorLog.encoding=UTF-8
- # 出力バッファのサイズを指定する。(単位はキロバイト。1000バイトを1キロバイトと換算する。指定しなければ8KB)
+ # 指定输出缓冲区的大小。（单位为千字节。按1000字节换算为1千字节。如果不指定则为8KB）
  writer.monitorLog.outputBufferSize=8
- # ログフォーマッタのクラス名を指定する。
+ # 指定日志格式化器的类名。
  writer.monitorLog.formatter.className=nablarch.core.log.basic.BasicLogFormatter
- # LogLevel列挙型の名称を指定する。ここで指定したレベル以上のログを全て出力する。
+ # 指定LogLevel枚举类型的名称。输出此处指定级别以上的所有日志。
  writer.monitorLog.level=ERROR
- # ロックファイルのファイル名を指定する。
+ # 指定锁文件的文件名。
  writer.monitorLog.lockFilePath=/var/log/lock/monitor.lock
- # ロック取得の再試行間隔(ミリ秒)を指定する。
+ # 指定锁获取的重试间隔（毫秒）。
  writer.monitorLog.lockRetryInterval=10
- # ロック取得の待機時間(ミリ秒)を指定する。
+ # 指定锁获取的等待时间（毫秒）。
  writer.monitorLog.lockWaitTime=3000
- # ロックファイルが生成できない場合の障害通知コードを指定する。
+ # 指定无法生成锁文件时的故障通知代码。
  writer.monitorLog.failureCodeCreateLockFile=MSG00101
- # 生成したロックファイルを解放(削除)できない場合の障害通知コードを指定する。
+ # 指定无法释放（删除）生成的锁文件时的故障通知代码。
  writer.monitorLog.failureCodeReleaseLockFile=MSG00102
- # 解放されないロックファイルを強制削除できない場合の障害通知コードを指定する。
+ # 指定无法强制删除未释放的锁文件时的故障通知代码。
  writer.monitorLog.failureCodeForceDeleteLockFile=MSG00103
- # ロック待ちでスレッドをスリープしている際に、割り込みが発生した場合の障害通知コードを指定する。
+ # 指定锁等待中线程休眠时发生中断情况下的故障通知代码。
  writer.monitorLog.failureCodeInterruptLockWait=MSG00104
 
 .. important::
 
- maxFileSizeプロパティを指定するとログのローテーションが発生し、
- ログの出力が出来なくなることがあるので指定しないこと。
+ maxFileSize属性指定后会发生日志轮转，
+ 可能导致无法输出日志，因此请勿指定。
 
 .. _log-publisher_usage:
 
-LogPublisherの使い方
+LogPublisher的使用方法
 --------------------------------------------------
 
-:java:extdoc:`LogPublisher <nablarch.core.log.basic.LogPublisher>` は、出力されたログの情報(:java:extdoc:`LogContext <nablarch.core.log.basic.LogContext>`)を登録された :java:extdoc:`LogListener <nablarch.core.log.basic.LogListener>` に連携する機能を提供する。
-出力されたログ情報に対して何らかの処理をプログラム的に行いたい場合に、この機能が使用できる。
+:java:extdoc:`LogPublisher <nablarch.core.log.basic.LogPublisher>` 提供将输出的日志信息（:java:extdoc:`LogContext <nablarch.core.log.basic.LogContext>`）传递给已注册的 :java:extdoc:`LogListener <nablarch.core.log.basic.LogListener>` 的功能。
+想要在程序上对输出的日志信息进行处理时，可以使用此功能。
 
-``LogPublisher`` を使用するには、まず ``LogPublisher`` を ``LogWriter`` として設定する。
+使用 ``LogPublisher`` 时，首先将 ``LogPublisher`` 设置为 ``LogWriter``。
 
 .. code-block:: properties
 
   # ...省略
 
-  # writerNames に LogPublisher の writer を追加する
+  # 在 writerNames 中添加 LogPublisher 的 writer
   writerNames=monitorFile,appFile,stdout,logPublisher
 
-  # logPublisher を定義する
+  # 定义 logPublisher
   writer.logPublisher.className=nablarch.core.log.basic.LogPublisher
   writer.logPublisher.formatter.className=nablarch.core.log.basic.BasicLogFormatter
   # ...省略
 
-  # ログ情報を処理したい logger の writerNames に、 LogPublisher の writer を追加する
+  # 在想要处理日志信息的 logger 的 writerNames 中，添加 LogPublisher 的 writer
   # ROO
   loggers.ROO.nameRegex=.*
   loggers.ROO.level=INFO
@@ -1240,7 +1240,7 @@ LogPublisherの使い方
   # ...省略
 
 
-次に、 ``LogWriter`` に登録する ``LogListener`` の実装クラスを作成する。
+接下来，创建要注册到 ``LogWriter`` 的 ``LogListener`` 的实现类。
 
 .. code-block:: java
 
@@ -1253,233 +1253,233 @@ LogPublisherの使い方
 
       @Override
       public void onWritten(LogContext context) {
-          // LogContext を使った処理を実装する
+          // 使用 LogContext 实现处理
       }
   }
 
-最後に、作成した ``LogListener`` のインスタンスを ``LogPublisher`` に登録する。
-``LogListener`` の登録は、 ``LogPublisher`` の ``static`` メソッドを介して行う。
+最后，将创建的 ``LogListener`` 实例注册到 ``LogPublisher``。
+``LogListener`` 的注册通过 ``LogPublisher`` 的 ``static`` 方法进行。
 
 .. code-block:: java
 
   LogListener listener = new CustomLogListener();
   LogPublisher.addListener(listener);
 
-以上で、 ``LogPublisher`` に対して出力されたログ情報が ``CustomLogListener`` に連携されるようになる。
+通过以上设置，输出到 ``LogPublisher`` 的日志信息将传递给 ``CustomLogListener``。
 
-登録した ``LogListener`` は、 :java:extdoc:`removeListener(LogListener) <nablarch.core.log.basic.LogPublisher.removeListener(nablarch.core.log.basic.LogListener)>` または :java:extdoc:`removeAllListeners() <nablarch.core.log.basic.LogPublisher.removeAllListeners()>` で削除できる。
+已注册的 ``LogListener`` 可以通过 :java:extdoc:`removeListener(LogListener) <nablarch.core.log.basic.LogPublisher.removeListener(nablarch.core.log.basic.LogListener)>` 或 :java:extdoc:`removeAllListeners() <nablarch.core.log.basic.LogPublisher.removeAllListeners()>` 删除。
 
 .. _log-log_level:
 
-ログレベルの定義
+日志级别的定义
 --------------------------------------------------
-本機能では、以下のログレベルを使用する。
+本功能使用以下日志级别。
 
-.. list-table:: ログレベルの定義
+.. list-table:: 日志级别的定义
    :header-rows: 1
    :class: white-space-normal
    :widths: 15,85
 
-   * - ログレベル
-     - 説明
+   * - 日志级别
+     - 说明
 
    * - FATAL
-     - 应用の継続が不可能になる深刻な問題が発生したことを示す。
-       監視が必須で即通報および即対応が必要となる。
+     - 表示发生了使应用程序无法继续运行的严重问题。
+       必须监控，需要立即报告和立即处理。
 
    * - ERROR
-     - 应用の継続に支障をきたす問題が発生したことを示す。
-       監視が必須であるが、通報および対応にFATALレベルほどの緊急性がない。
+     - 表示发生了妨碍应用程序继续运行的问题。
+       必须监控，但报告和处理的紧急性不如FATAL级别。
 
    * - WARN
-     - すぐには影響を与えないが、放置しておくと应用の継続に支障をきたす問題になる恐れがある事象が発生したことを示す。
-       できれば監視した方がよいが、ERRORレベルほどの緊急性がない。
+     - 表示发生了暂时不会产生影响，但放置不管可能会妨碍应用程序继续运行的问题。
+       最好监控，但紧急性不如ERROR级别。
 
    * - INFO
-     - 本番運用時に应用の情報を出力するログレベル。アクセスログや統計ログが該当する。
+     - 生产环境运行时输出应用程序信息的日志级别。访问日志和统计日志属于此类。
 
    * - DEBUG
-     - 開発時にデバッグ情報を出力するログレベル。SQLログや性能ログが該当する。
+     - 开发时输出调试信息的日志级别。SQL日志和性能日志属于此类。
 
    * - TRACE
-     - 開発時にデバッグ情報より、さらに細かい情報を出力したい場合に使用するログレベル。
+     - 开发时想要输出比调试信息更详细信息时使用的日志级别。
 
-ログレベルは、6段階とし、FATALからTRACEに向かって順にレベルが低くなる。
-そして、ログ出力機能では、設定で指定されたレベル以上のログを全て出力する。
-例えば、WARNレベルが設定で指定された場合は、FATALレベル,ERRORレベル,WARNレベルが指定されたログのみ出力する。
-
-.. tip::
- 本番運用時は、INFOレベルでログを出力することを想定している。
- ログファイルのサイズが肥大化しないように、プロジェクト毎にログの出力内容を規定すること。
+日志级别分为6个阶段，从FATAL到TRACE级别依次降低。
+日志输出功能输出设置中指定级别以上的所有日志。
+例如，如果设置中指定了WARN级别，则仅输出指定了FATAL级别、ERROR级别、WARN级别的日志。
 
 .. tip::
- 本フレームワークでも、ログ出力機能を使ってログを出力している。
- フレームワークが出力するログについては、 :ref:`log-fw_log_policy` を参照すること。
+ 生产环境运行时设想以INFO级别输出日志。
+ 为防止日志文件大小膨胀，请按项目规定日志的输出内容。
+
+.. tip::
+ 本框架也使用日志输出功能输出日志。
+ 关于框架输出的日志，请参考 :ref:`log-fw_log_policy`。
 
 .. _log-fw_log_policy:
 
-フレームワークのログ出力方針
+框架的日志输出方针
 --------------------------------------------------
-本フレームワークでは、下記の出力方針に基づきログ出力を行う。
+本框架基于以下输出方针进行日志输出。
 
-.. list-table:: フレームワークのログ出力方針
+.. list-table:: 框架的日志输出方针
     :header-rows: 1
     :class: white-space-normal
     :widths: 15,85
 
-    * - ログレベル
-      - 出力方針
+    * - 日志级别
+      - 输出方针
 
     * - FATAL/ERROR
-      - 障害ログの出力時にFATAL/ERRORレベルで出力する。
+      - 输出故障日志时使用FATAL/ERROR级别。
 
-        障害ログは、障害監視の対象であり、障害発生時の1次切り分けの起点ともなる為、
-        原則として1件の障害に対して、1件の障害ログを出力する方針としている。
+        故障日志是故障监控的对象，也是故障发生时一级排查的起点，
+        因此原则上一项故障对应输出一条故障日志。
 
-        このため、実行制御基盤では単一のハンドラ(例外を処理するハンドラ)により、
-        障害通知ログを出力する方針としている。
+        因此，执行控制基础设施采用通过单一处理程序（处理异常的处理程序）
+        输出故障通知日志的方针。
 
     * - WARN
-      - 障害発生時に連鎖して例外が発生した場合など、
-        障害ログとして出力できない例外をWARNレベルで出力する。
+      - 故障发生时连锁发生异常等情况，
+        无法作为故障日志输出的异常使用WARN级别输出。
 
-        例えば、業務処理とトランザクションの終了処理の2つで例外が発生した場合は、
-        業務処理の例外を障害ログに出力し、トランザクションの終了処理の例外をWARNレベルで出力する。
+        例如，如果业务处理和事务结束处理两处都发生异常，
+        则将业务处理的异常输出到故障日志，将事务结束处理的异常以WARN级别输出。
 
     * - INFO
-      - 应用の実行状況に関連するエラーを検知した場合にINFOレベルで出力する。
+      - 检测到与应用程序执行状况相关的错误时使用INFO级别输出。
 
-        例えば、URLパラメータの改竄エラーや認可チェックエラーが発生した場合にINFOレベルで出力する。
+        例如，URL参数篡改错误或授权检查错误发生时，以INFO级别输出。
 
     * - DEBUG
-      - 应用開発時に使用するデバッグ情報を出力する。
+      - 输出应用程序开发时使用的调试信息。
 
-        应用開発時は、DEBUGレベルを設定することで開発に必要な情報が出力されるよう考慮している。
+        应用程序开发时，通过设置DEBUG级别来确保输出开发所需信息。
 
     * - TRACE
-      - フレームワーク開発時に使用するデバッグ情報を出力する。应用開発での使用は想定していない。
+      - 输出框架开发时使用的调试信息。不设想在应用程序开发中使用。
 
 .. _log-functional_comparison:
 
-log4jとの機能比較
+与log4j的功能比较
 --------------------------------------------------
-ここでは、本機能と `log4j(外部サイト、英語) <https://logging.apache.org/log4j/1.x/>`_ との機能比較を示す。
+此处展示本功能与 `log4j(外部站点、英语) <https://logging.apache.org/log4j/1.x/>`_ 的功能比较。
 
-.. list-table:: 機能比較（○：提供あり　△：一部提供あり　×：提供なし　－:対象外）
+.. list-table:: 功能比较（○：提供  △：部分提供  ×：不提供  －：非对象）
   :header-rows: 1
   :class: white-space-normal
   :widths: 50, 25, 25
 
-  * - 機能
+  * - 功能
     - Nablarch
     - log4j
 
-  * - ログの出力有無をログレベルで制御できる
+  * - 可以按日志级别控制日志输出与否
     - ○
       |br|
-      :ref:`解説書へ <log-basic_setting>`
+      :ref:`前往解说书 <log-basic_setting>`
     - ○
 
-  * - ログの出力有無をカテゴリ(パッケージ単位や名前など)で制御できる
+  * - 可以按类别（包单位或名称等）控制日志输出与否
     - ○
       |br|
-      :ref:`解説書へ <log-basic_setting>`
+      :ref:`前往解说书 <log-basic_setting>`
     - ○
 
-  * - 1つのログを複数の出力先に出力できる
+  * - 可以将1条日志输出到多个输出目标
     - ○
       |br|
-      :ref:`解説書へ <log-basic_setting>`
+      :ref:`前往解说书 <log-basic_setting>`
     - ○
 
-  * - ログを標準出力に出力できる
+  * - 可以将日志输出到标准输出
     - ○
       |br|
-      :ref:`解説書へ <log-log_writers>`
+      :ref:`前往解说书 <log-log_writers>`
     - ○
 
-  * - ログをファイルに出力できる
+  * - 可以将日志输出到文件
     - ○
       |br|
-      :ref:`解説書へ <log-log_writers>`
+      :ref:`前往解说书 <log-log_writers>`
     - ○
 
-  * - ファイルサイズによるログファイルのローテーションができる
+  * - 可以按文件大小进行日志文件轮转
     - △ [#logrolate]_
       |br|
-      :ref:`解説書へ <log-rotation>`
+      :ref:`前往解说书 <log-rotation>`
     - ○
 
-  * - 日時によるログファイルのローテーションができる
+  * - 可以按日期时间进行日志文件轮转
     - △ [#logrolate]_
       |br|
-      :ref:`解説書へ <log-rotation>`
+      :ref:`前往解说书 <log-rotation>`
     - ○
 
-  * - ログをメールで送信できる
+  * - 可以通过邮件发送日志
     - × [#extends_or_log4j]_
     - ○
 
-  * - ログをTelnetで送信できる
+  * - 可以通过Telnet发送日志
     - × [#extends_or_log4j]_
     - ○
 
-  * - ログをSyslogで送信できる
+  * - 可以通过Syslog发送日志
     - × [#extends_or_log4j]_
     - ○
 
-  * - ログをWindows NTのイベントログに追加できる
+  * - 可以添加到Windows NT的事件日志
     - × [#extends_or_log4j]_
     - ○
 
-  * - データベースにログを出力できる
+  * - 可以输出日志到数据库
     - × [#extends_or_log4j]_
     - ○
 
-  * - ログを非同期で出力できる
+  * - 可以异步输出日志
     - × [#extends_or_log4j]_
     - ○
 
-  * - ログのフォーマットをパターン文字列で指定できる
+  * - 可以通过模式字符串指定日志格式
     - ○
       |br|
-      :ref:`解説書へ <log-log_format>`
+      :ref:`前往解说书 <log-log_format>`
     - ○
 
-  * - 障害ログを出力できる
+  * - 可以输出故障日志
     - ○
       |br|
-      :ref:`解説書へ <failure_log>`
+      :ref:`前往解说书 <failure_log>`
     - －
 
-  * - HTTPアクセスログを出力できる
+  * - 可以输出HTTP访问日志
     - ○
       |br|
-      :ref:`解説書へ <http_access_log>`
+      :ref:`前往解说书 <http_access_log>`
     - －
 
-  * - SQLログを出力できる
+  * - 可以输出SQL日志
     - ○
       |br|
-      :ref:`解説書へ <sql_log>`
+      :ref:`前往解说书 <sql_log>`
     - －
 
-  * - パフォーマンスログを出力できる
+  * - 可以输出性能日志
     - ○
       |br|
-      :ref:`解説書へ <performance_log>`
+      :ref:`前往解说书 <performance_log>`
     - －
 
-  * - メッセージングログを出力できる
+  * - 可以输出消息处理日志
     - ○
       |br|
-      :ref:`解説書へ <messaging_log>`
+      :ref:`前往解说书 <messaging_log>`
     - －
 
-.. [#logrolate] Nablarchのログ出力は、ファイルの世代管理を提供していないので、一部提供ありとしている。
+.. [#logrolate] Nablarch的日志输出不提供文件的世代管理，因此为部分提供。
 
-.. [#extends_or_log4j] :ref:`log_adaptor` を使用する。
-                       または、プロジェクトで作成する。作成方法は、 :ref:`log-add_log_writer` を参照。
+.. [#extends_or_log4j] 使用 :ref:`log_adaptor` 。
+                       或者在项目中创建。创建方法请参考 :ref:`log-add_log_writer` 。
 
 .. |br| raw:: html
 

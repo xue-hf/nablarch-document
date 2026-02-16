@@ -1,84 +1,84 @@
 .. _`database-functional_comparison`:
 
-ユニバーサルDAOとJakarta Persistenceとの機能比較
+通用DAO与Jakarta Persistence的功能比较
 ----------------------------------------------------------------------------------------------------
-本章节、以下の機能の比較を示す。
+本章展示以下功能的比较。
 
-* :ref:`ユニバーサルDAO <universal_dao>`
+* :ref:`通用DAO <universal_dao>`
 * |JSR317|
 
 .. important::
 
-  ユニバーサルDAOでは、JPAで定義されているアノテーションのうち、 :ref:`universal_dao_jpa_annotations` に記載のあるものだけをサポートしている。
-  ここに記載のないアノテーションに関連する機能については、使用できない。
+  通用DAO仅支持JPA定义的注解中， :ref:`universal_dao_jpa_annotations` 中记述的部分。
+  此处未记述的注解相关功能无法使用。
 
-.. list-table:: 機能比較（○：提供あり　△：一部提供あり　×：提供なし　－:対象外）
+.. list-table:: 功能比较（○：提供　△：部分提供　×：不提供　－:对象外）
   :header-rows: 1
   :class: something-special-class
 
-  * - 機能
-    - ユニバーサルDAO
+  * - 功能
+    - 通用DAO
     - Jakarta Persistence
 
-  * - リレーションシップに対応できる |br|
+  * - 可以处理关联关系(Relationship) |br|
     - × [#relation]_
     - ○
 
-  * - Entityを元にCRUDが実行できる |br|
-      SQLを作成することなくCRUDのSQLを実行できる
-    - ○ |br| :ref:`解説書へ <universal_dao-execute_crud_sql>`
+  * - 可以基于Entity执行CRUD |br|
+      无需创建SQL即可执行CRUD的SQL
+    - ○ |br| :ref:`前往解说 <universal_dao-execute_crud_sql>`
     - ○
 
-  * - 検索結果をJava Beansオブジェクトとして取得できる
-    - ○ |br| :ref:`解説書へ <universal_dao-bean_mapping>`
+  * - 可以将搜索结果作为Java Beans对象获取
+    - ○ |br| :ref:`前往解说 <universal_dao-bean_mapping>`
     - ○
 
-  * - 任意のSQL文を実行できる
-    - ○ |br| :ref:`解説書へ <universal_dao-sql_file>`
+  * - 可以执行任意SQL语句
+    - ○ |br| :ref:`前往解说 <universal_dao-sql_file>`
     - ○
 
-  * - SQLの動的組み立てができる
-    - △ [#criteria]_ |br| :ref:`解説書へ <universal_dao-sql_file>`
+  * - 可以动态组装SQL
+    - △ [#criteria]_ |br| :ref:`前往解说 <universal_dao-sql_file>`
     - ○
 
-  * - バッチ実行ができる
-    - ○ |br| :ref:`解説書へ <universal_dao-batch_execute>`
+  * - 可以执行批处理
+    - ○ |br| :ref:`前往解说 <universal_dao-batch_execute>`
     - ×
 
-  * - 大量データを取得する際に遅延ロードができる |br|
-      (ヒープを圧迫せずに大量データを処理できる)
-    - ○ |br| :ref:`解説書へ <universal_dao-lazy_load>`
+  * - 获取大量数据时可以进行延迟加载 |br|
+      （不压迫堆而处理大量数据）
+    - ○ |br| :ref:`前往解说 <universal_dao-lazy_load>`
     - ×
 
-  * - ページング用の範囲指定の検索ができる
-    - ○ |br| :ref:`解説書へ <universal_dao-paging>`
+  * - 可以进行分页用的范围指定搜索
+    - ○ |br| :ref:`前往解说 <universal_dao-paging>`
     - ○
 
-  * - サロゲートキーの値を採番できる
-    - ○ |br| :ref:`解説書へ <universal_dao-generate_surrogate_key>`
+  * - 可以生成代理键的值
+    - ○ |br| :ref:`前往解说 <universal_dao-generate_surrogate_key>`
     - ○
 
-  * - Entityの状態をデータベースに反映時に |br| Jakarta Bean Validationが実行できる
+  * - Entity状态反映到数据库时可以 |br| 执行Jakarta Bean Validation
     - × [#validaiton]_
     - ○
 
-  * - データベースアクセス前後に |br| 任意の処理(コールバック呼び出し)を実行できる
+  * - 可以在数据库访问前后 |br| 执行任意处理（回调调用）
     - × [#callback]_
     - ○
 
-  * - 排他制御ができる
-    - △ [#lock]_ |br| :ref:`解説書へ(楽観ロック) <universal_dao_jpa_optimistic_lock>` |br| :ref:`解説書へ(悲観ロック) <universal_dao_jpa_pessimistic_lock>`
+  * - 可以进行并发控制
+    - △ [#lock]_ |br| :ref:`前往解说(乐观锁) <universal_dao_jpa_optimistic_lock>` |br| :ref:`前往解说(悲观锁) <universal_dao_jpa_pessimistic_lock>`
     - ○
 
-.. [#relation] リレーションシップがあるテーブルの検索はSQLを作成することで対応できる。登録、更新、削除については、テーブル毎に必要な処理を呼び出すことで対応する。
-.. [#criteria] ユニバーサルDAOでは、条件及びソート項目に限り動的な組み立てができる。詳細は、 :ref:`SQLの動的組み立て <database-variable_condition>` を参照
-.. [#validaiton] Nablarchでは、外部からのデータを受け付けたタイミングでバリデーションを実施し、バリデーションエラーがない場合のみEntityへ変換しデータベースへ保存する。
-.. [#callback] 任意の処理が必要となる場合は、ユニバーサルDAOを呼び出す側で処理を行うことで対応する。
-.. [#lock] ユニバーサルDAOでは、楽観的ロックのみサポートする。悲観的ロックやJakarta Persistenceで定義されている検索時のロックモードの指定などはサポートしない。(悲観的ロックは、 ``select for update`` などを使用することで実現できる。)
+.. [#relation] 有关联关系的表搜索可以通过创建SQL来对应。登记、更新、删除则通过每次调用各表所需的处理来对应。
+.. [#criteria] 通用DAO中，条件和排序项目可以动态组装。详细内容请参阅 :ref:`SQL的动态组装 <database-variable_condition>`
+.. [#validaiton] Nablarch在接受外部数据时实施校验，仅在没有校验错误时才转换为Entity并保存到数据库。
+.. [#callback] 需要任意处理时，可以通过在调用通用DAO的一侧进行处理来对应。
+.. [#lock] 通用DAO仅支持乐观锁。不支持悲观锁及Jakarta Persistence中定义的搜索时锁模式指定等。（悲观锁可以通过使用 ``select for update`` 等实现。）
 
 .. |jsr317| raw:: html
 
-   <a href="https://jakarta.ee/specifications/persistence/" target="_blank">Jakarta Persistence(外部サイト、英語)</a>
+   <a href="https://jakarta.ee/specifications/persistence/" target="_blank">Jakarta Persistence(外部站点，英语)</a>
 
 .. |br| raw:: html
 

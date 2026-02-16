@@ -1,46 +1,46 @@
 .. _jaxrs_access_log:
 
-HTTPアクセスログ（RESTfulウェブサービス用）の出力
+HTTP访问日志（RESTful Web服务用）的输出
 ==================================================
 
 .. contents:: 目录
   :depth: 3
   :local:
 
-HTTPアクセスログは、フレームワークが提供するハンドラを使用して出力する。
-应用では、ハンドラを設定することでHTTPアクセスログを出力する。
+HTTP访问日志使用框架提供的处理器来输出。
+应用程序通过配置处理器来输出HTTP访问日志。
 
-HTTPアクセスログの出力に必要となるハンドラは以下のとおり。
+HTTP访问日志输出所需的处理器如下。
 
  :ref:`jaxrs_access_log_handler`
-  リクエスト処理開始時と終了時のログ出力を行う。
+  进行请求处理开始和结束时的日志输出。
 
-リクエストパラメータを含めたリクエスト情報を出力することで、
-個別应用の証跡ログの要件を満たせる場合は、HTTPアクセスログと証跡ログを兼用することも想定している。
+通过输出包含请求参数的请求信息，
+当满足个别应用程序的审计日志要求时，也可以考虑将HTTP访问日志和审计日志兼用。
 
-HTTPアクセスログ（RESTfulウェブサービス用）の出力方針
+HTTP访问日志（RESTful Web服务用）的输出策略
 ------------------------------------------------------
-HTTPアクセスログは、应用全体のログ出力を行う应用ログに出力する。
+HTTP访问日志输出到应用程序整体日志输出的应用程序日志中。
 
-.. list-table:: HTTPアクセスログの出力方針
+.. list-table:: HTTP访问日志的输出策略
    :header-rows: 1
    :class: white-space-normal
    :widths: 15,15
 
-   * - ログレベル
-     - ロガー名
+   * - 日志级别
+     - 日志记录器名称
 
    * - INFO
      - HTTP_ACCESS
 
-上記出力方針に対するログ出力の設定例を下記に示す。
+上述输出策略的日志输出设置示例如下。
 
-log.propertiesの設定例
+log.properties的设置示例
  .. code-block:: properties
 
   writerNames=appLog
 
-  # 应用ログの出力先
+  # 应用程序日志的输出目标
   writer.appLog.className=nablarch.core.log.basic.FileLogWriter
   writer.appLog.filePath=/var/log/app/app.log
   writer.appLog.encoding=UTF-8
@@ -50,17 +50,17 @@ log.propertiesの設定例
 
   availableLoggersNamesOrder=ACC,ROO
 
-  # 应用ログの設定
+  # 应用程序日志的设置
   loggers.ROO.nameRegex=.*
   loggers.ROO.level=INFO
   loggers.ROO.writerNames=appLog
 
-  # HTTPアクセスログの設定
+  # HTTP访问日志的设置
   loggers.ACC.nameRegex=HTTP_ACCESS
   loggers.ACC.level=INFO
   loggers.ACC.writerNames=appLog
 
-app-log.propertiesの設定例
+app-log.properties的设置示例
  .. code-block:: properties
 
   # JaxRsAccessLogFormatter
@@ -93,39 +93,39 @@ app-log.propertiesの設定例
 
 .. _jaxrs_access_log-setting:
 
-HTTPアクセスログ（RESTfulウェブサービス用）の設定
+HTTP访问日志（RESTful Web服务用）的设置
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-HTTPアクセスログの設定は、 :ref:`log-app_log_setting` で説明したプロパティファイルに行う。
+HTTP访问日志的设置是在 :ref:`log-app_log_setting` 中说明的属性文件中进行的。
 
-記述ルール
+记述规则
  \
 
  jaxRsAccessLogFormatter.className
-  :java:extdoc:`JaxRsAccessLogFormatter <nablarch.fw.jaxrs.JaxRsAccessLogFormatter>` を実装したクラス。
-  差し替える場合に指定する。
+  实现 :java:extdoc:`JaxRsAccessLogFormatter <nablarch.fw.jaxrs.JaxRsAccessLogFormatter>` 的类。
+  在替换时指定。
 
  .. _jaxrs_access_log-prop_begin_format:
 
  jaxRsAccessLogFormatter.beginFormat
-  リクエスト処理開始時のログ出力に使用するフォーマット。
+  请求处理开始时日志输出使用的格式。
 
-  フォーマットに指定可能なプレースホルダ
-   :リクエストID: $requestId$
-   :ユーザID: $userId$
+  格式中可指定的占位符
+   :请求ID: $requestId$
+   :用户ID: $userId$
    :URL: $url$
-   :クエリ文字列: $query$
-   :ポート番号: $port$
-   :HTTPメソッド: $method$
-   :HTTPセッションID: $sessionId$
-   :セッションストアID: $sessionStoreId$
-   :リクエストパラメータ: $parameters$
-   :セッションスコープ情報: $sessionScope$
-   :クライアント端末IPアドレス: $clientIpAddress$
-   :クライアント端末ホスト: $clientHost$
-   :HTTPヘッダのUser-Agent: $clientUserAgent$
-   :リクエストボディ: $requestBody$
+   :查询字符串: $query$
+   :端口号: $port$
+   :HTTP方法: $method$
+   :HTTP会话ID: $sessionId$
+   :会话存储ID: $sessionStoreId$
+   :请求参数: $parameters$
+   :会话范围信息: $sessionScope$
+   :客户端终端IP地址: $clientIpAddress$
+   :客户端终端主机: $clientHost$
+   :HTTP头的User-Agent: $clientUserAgent$
+   :请求体: $requestBody$
 
-  デフォルトのフォーマット
+  默认格式
    .. code-block:: bash
 
     @@@@ BEGIN @@@@ rid = [$requestId$] uid = [$userId$] sid = [$sessionId$]
@@ -136,35 +136,35 @@ HTTPアクセスログの設定は、 :ref:`log-app_log_setting` で説明した
         \n\tclient_host = [$clientHost$]
 
   .. tip::
-    プレースホルダ ``$parameters$`` で出力されるリクエストパラメータには、リクエストボディは含まれていない。
-    リクエストボディを出力する場合は、 ``$requestBody$`` を使用する。
+    占位符 ``$parameters$`` 输出的请求参数不包含请求体。
+    要输出请求体时，请使用 ``$requestBody$`` 。
 
   .. important::
-   リクエストIDとユーザIDは、 :java:extdoc:`BasicLogFormatter <nablarch.core.log.basic.BasicLogFormatter>`
-   が出力する項目と重複するが、HTTPアクセスログのフォーマットの自由度を高めるために設けている。
+   请求ID和用户ID与 :java:extdoc:`BasicLogFormatter <nablarch.core.log.basic.BasicLogFormatter>`
+   输出的项目重复，但这是为了提高HTTP访问日志格式的自由度而设置的。
 
-   リクエストID、ユーザIDを出力する場合は、
-   これらの取得元が :java:extdoc:`ThreadContext <nablarch.core.ThreadContext>` なので、
-   ハンドラ構成に :ref:`thread_context_handler` が含まれている必要がある。
-   特にユーザIDについては、 :ref:`thread_context_handler-user_id_attribute_setting` を参照して
-   应用でセッションに値を設定する必要がある。
+   输出请求ID、用户ID时，
+   由于这些的获取源是 :java:extdoc:`ThreadContext <nablarch.core.ThreadContext>` ，
+   因此处理器构成中需要包含 :ref:`thread_context_handler` 。
+   特别是用户ID，请参考 :ref:`thread_context_handler-user_id_attribute_setting` 
+   在应用程序中设置会话值。
 
  .. _jaxrs_access_log-prop_end_format:
 
  jaxRsAccessLogFormatter.endFormat
-  リクエスト処理終了時のログ出力に使用するフォーマット。
+  请求处理结束时日志输出使用的格式。
 
-  フォーマットに指定可能なプレースホルダ
-   :ステータスコード: $statusCode$
-   :開始日時: $startTime$
-   :終了日時: $endTime$
-   :実行時間: $executionTime$
-   :最大メモリ量: $maxMemory$
-   :空きメモリ量(開始時): $freeMemory$
-   :セッションストアID: $sessionStoreId$
-   :レスポンスボディ: $responseBody$
+  格式中可指定的占位符
+   :状态码: $statusCode$
+   :开始日期时间: $startTime$
+   :结束日期时间: $endTime$
+   :执行时间: $executionTime$
+   :最大内存量: $maxMemory$
+   :空闲内存量(开始时): $freeMemory$
+   :会话存储ID: $sessionStoreId$
+   :响应体: $responseBody$
 
-  デフォルトのフォーマット
+  默认格式
    .. code-block:: bash
 
     @@@@ END @@@@ rid = [$requestId$] uid = [$userId$] sid = [$sessionId$] url = [$url$] status_code = [$statusCode$]
@@ -175,56 +175,56 @@ HTTPアクセスログの設定は、 :ref:`log-app_log_setting` で説明した
         \n\tfree_memory    = [$freeMemory$]
 
  jaxRsAccessLogFormatter.datePattern
-  開始日時と終了日時に使用する日時パターン。
-  パターンには、 :java:extdoc:`SimpleDateFormat <java.text.SimpleDateFormat>` が規程している構文を指定する。
-  デフォルトは ``yyyy-MM-dd HH:mm:ss.SSS`` 。
+  开始日期时间和结束日期时间使用的日期时间模式。
+  模式中指定 :java:extdoc:`SimpleDateFormat <java.text.SimpleDateFormat>` 规定的语法。
+  默认是 ``yyyy-MM-dd HH:mm:ss.SSS`` 。
 
  jaxRsAccessLogFormatter.maskingPatterns
-  マスク対象のパラメータ名又は変数名を正規表現で指定する。
-  複数指定する場合はカンマ区切り。
-  リクエストパラメータとセッションスコープ情報の両方のマスキングに使用する。
-  指定した正規表現は大文字小文字を区別しない。
-  例えば、\ ``password``\ と指定した場合、 ``password`` ``newPassword`` ``password2`` 等にマッチする。
+  用正则表达式指定掩码对象的参数名或变量名。
+  指定多个时用逗号分隔。
+  用于请求参数和会话范围信息两者的掩码。
+  指定的正则表达式不区分大小写。
+  例如，指定 ``password`` 时，会匹配 ``password`` ``newPassword`` ``password2`` 等。
 
  jaxRsAccessLogFormatter.maskingChar
-  マスクに使用する文字。デフォルトは ``*`` 。
+  掩码使用的字符。默认是 ``*`` 。
 
  jaxRsAccessLogFormatter.bodyLogTargetMatcher
-  リクエストボディ及びレスポンスボディを出力するか判定するためのクラス。
-  :java:extdoc:`MessageBodyLogTargetMatcher <nablarch.fw.jaxrs.MessageBodyLogTargetMatcher>` を実装するクラス名を指定する。
-  デフォルトは :java:extdoc:`JaxRsBodyLogTargetMatcher <nablarch.fw.jaxrs.JaxRsBodyLogTargetMatcher>` 。
+  判定是否输出请求体和响应体的类。
+  指定实现 :java:extdoc:`MessageBodyLogTargetMatcher <nablarch.fw.jaxrs.MessageBodyLogTargetMatcher>` 的类名。
+  默认是 :java:extdoc:`JaxRsBodyLogTargetMatcher <nablarch.fw.jaxrs.JaxRsBodyLogTargetMatcher>` 。
 
  jaxRsAccessLogFormatter.bodyMaskingFilter
-  リクエストボディ及びレスポンスボディをマスク処理するためのクラス。
-  :java:extdoc:`LogContentMaskingFilter <nablarch.fw.jaxrs.LogContentMaskingFilter>` を実装するクラス名を指定する。
-  デフォルトは :java:extdoc:`JaxRsBodyMaskingFilter <nablarch.fw.jaxrs.JaxRsBodyMaskingFilter>` 。
+  对请求体和响应体进行掩码处理的类。
+  指定实现 :java:extdoc:`LogContentMaskingFilter <nablarch.fw.jaxrs.LogContentMaskingFilter>` 的类名。
+  默认是 :java:extdoc:`JaxRsBodyMaskingFilter <nablarch.fw.jaxrs.JaxRsBodyMaskingFilter>` 。
 
   .. important::
-   RESTfulウェブサービスで送受信するボディの形式にはいくつかあるが、デフォルトの :java:extdoc:`JaxRsBodyMaskingFilter <nablarch.fw.jaxrs.JaxRsBodyMaskingFilter>` ではJSON形式のみサポートしている。
+   RESTful Web服务收发的体格式有多种，但默认的 :java:extdoc:`JaxRsBodyMaskingFilter <nablarch.fw.jaxrs.JaxRsBodyMaskingFilter>` 仅支持JSON格式。
 
  jaxRsAccessLogFormatter.bodyMaskingItemNames
-  リクエストボディ及びレスポンスボディをマスク処理する場合、マスク対象の項目名を指定する。
-  複数指定する場合はカンマ区切り。
+  对请求体和响应体进行掩码处理时，指定掩码对象的项目名。
+  指定多个时用逗号分隔。
 
  jaxRsAccessLogFormatter.parametersSeparator
-  リクエストパラメータのセパレータ。
-  デフォルトは ``\n\t\t`` 。
+  请求参数的分隔符。
+  默认是 ``\n\t\t`` 。
 
  jaxRsAccessLogFormatter.sessionScopeSeparator
-  セッションスコープ情報のセパレータ。
-  デフォルトは ``\n\t\t`` 。
+  会话范围信息的分隔符。
+  默认是 ``\n\t\t`` 。
 
  jaxRsAccessLogFormatter.beginOutputEnabled
-  リクエスト処理開始時の出力が有効か否か。
-  デフォルトはtrue。
-  falseを指定するとリクエスト処理開始時に出力しない。
+  请求处理开始时的输出是否有效。
+  默认是true。
+  指定false时不在请求处理开始时输出。
 
  jaxRsAccessLogFormatter.endOutputEnabled
-  リクエスト処理終了時の出力が有効か否か。
-  デフォルトはtrue。
-  falseを指定するとリクエスト処理終了時に出力しない。
+  请求处理结束时的输出是否有效。
+  默认是true。
+  指定false时不在请求处理结束时输出。
 
-記述例
+记述示例
  .. code-block:: properties
 
   jaxRsAccessLogFormatter.className=nablarch.fw.jaxrs.JaxRsAccessLogFormatter
@@ -243,111 +243,111 @@ HTTPアクセスログの設定は、 :ref:`log-app_log_setting` で説明した
 
 .. _jaxrs_access_log-json_setting:
 
-JSON形式の構造化ログとして出力する
+作为JSON格式的结构化日志输出
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-:ref:`log-json_log_setting` 設定によりログをJSON形式で出力できるが、
-:java:extdoc:`JaxRsAccessLogFormatter <nablarch.fw.jaxrs.JaxRsAccessLogFormatter>` では
-HTTPアクセスログの各項目はmessageの値に文字列として出力される。
-HTTPアクセスログの各項目もJSONの値として出力するには、
-:java:extdoc:`JaxRsAccessJsonLogFormatter <nablarch.fw.jaxrs.JaxRsAccessJsonLogFormatter>` を使用する。
-設定は、 :ref:`log-app_log_setting` で説明したプロパティファイルに行う。
+通过 :ref:`log-json_log_setting` 设置可以将日志输出为JSON格式，
+但 :java:extdoc:`JaxRsAccessLogFormatter <nablarch.fw.jaxrs.JaxRsAccessLogFormatter>` 中
+HTTP访问日志的各个项目作为字符串输出到message的值中。
+要将HTTP访问日志的各个项目也作为JSON的值输出，
+请使用 :java:extdoc:`JaxRsAccessJsonLogFormatter <nablarch.fw.jaxrs.JaxRsAccessJsonLogFormatter>` 。
+设置是在 :ref:`log-app_log_setting` 中说明的属性文件中进行的。
 
-記述ルール
- :java:extdoc:`JaxRsAccessJsonLogFormatter <nablarch.fw.jaxrs.JaxRsAccessJsonLogFormatter>` を用いる際に
- 指定するプロパティは以下の通り。
+记述规则
+ :java:extdoc:`JaxRsAccessJsonLogFormatter <nablarch.fw.jaxrs.JaxRsAccessJsonLogFormatter>` 使用时
+ 指定的属性如下。
  
- httpAccessLogFormatter.className ``必須``
-  JSON形式でログを出力する場合、
-  :java:extdoc:`JaxRsAccessJsonLogFormatter <nablarch.fw.jaxrs.JaxRsAccessJsonLogFormatter>` を指定する。
+ httpAccessLogFormatter.className ``必需``
+  JSON格式输出日志时，
+  指定 :java:extdoc:`JaxRsAccessJsonLogFormatter <nablarch.fw.jaxrs.JaxRsAccessJsonLogFormatter>` 。
 
  .. _jaxrs_access_log-prop_begin_targets:
 
  jaxRsAccessLogFormatter.beginTargets
-  リクエスト処理開始時のログ出力項目。カンマ区切りで指定する。
+  请求处理开始时的日志输出项目。用逗号分隔指定。
 
-  指定可能な出力項目およびデフォルトの出力項目
-   :ラベル: label ``デフォルト``
-   :リクエストID: requestId ``デフォルト``
-   :ユーザID: userId ``デフォルト``
-   :HTTPセッションID: sessionId ``デフォルト``
-   :セッションストアID: sessionStoreId
-   :URL: url ``デフォルト``
-   :ポート番号: port ``デフォルト``
-   :HTTPメソッド: method ``デフォルト``
-   :クエリ文字列: queryString
-   :リクエストパラメータ: parameters
-   :セッションスコープ情報: sessionScope
-   :クライアント端末IPアドレス: clientIpAddress ``デフォルト``
-   :クライアント端末ホスト: clientHost ``デフォルト``
-   :HTTPヘッダのUser-Agent: clientUserAgent
-   :リクエストボディ: requestBody
+  可指定的输出项目和默认输出项目
+   :标签: label ``默认``
+   :请求ID: requestId ``默认``
+   :用户ID: userId ``默认``
+   :HTTP会话ID: sessionId ``默认``
+   :会话存储ID: sessionStoreId
+   :URL: url ``默认``
+   :端口号: port ``默认``
+   :HTTP方法: method ``默认``
+   :查询字符串: queryString
+   :请求参数: parameters
+   :会话范围信息: sessionScope
+   :客户端终端IP地址: clientIpAddress ``默认``
+   :客户端终端主机: clientHost ``默认``
+   :HTTP头的User-Agent: clientUserAgent
+   :请求体: requestBody
 
-  出力項目の詳細は、
-  :ref:`リクエスト処理開始時のログ出力に使用するフォーマット <jaxrs_access_log-prop_begin_format>`
-  のプレースホルダーと同じため省略。
+  输出项目的详细说明与
+  :ref:`请求处理开始时日志输出使用的格式 <jaxrs_access_log-prop_begin_format>`
+  的占位符相同，因此省略。
 
  jaxRsAccessLogFormatter.endTargets
-  リクエスト処理終了時のログ出力項目。カンマ区切りで指定する。
+  请求处理结束时的日志输出项目。用逗号分隔指定。
 
-  指定可能な出力項目およびデフォルトの出力項目
-   :ラベル: label ``デフォルト``
-   :リクエストID: requestId ``デフォルト``
-   :ユーザID: userId ``デフォルト``
-   :HTTPセッションID: sessionId ``デフォルト``
-   :セッションストアID: sessionStoreId
-   :URL: url ``デフォルト``
-   :ステータスコード: statusCode ``デフォルト``
-   :開始日時: startTime ``デフォルト``
-   :終了日時: endTime ``デフォルト``
-   :実行時間: executionTime ``デフォルト``
-   :最大メモリ量: maxMemory ``デフォルト``
-   :空きメモリ量(開始時): freeMemory ``デフォルト``
-   :レスポンスボディ: responseBody
+  可指定的输出项目和默认输出项目
+   :标签: label ``默认``
+   :请求ID: requestId ``默认``
+   :用户ID: userId ``默认``
+   :HTTP会话ID: sessionId ``默认``
+   :会话存储ID: sessionStoreId
+   :URL: url ``默认``
+   :状态码: statusCode ``默认``
+   :开始日期时间: startTime ``默认``
+   :结束日期时间: endTime ``默认``
+   :执行时间: executionTime ``默认``
+   :最大内存量: maxMemory ``默认``
+   :空闲内存量(开始时): freeMemory ``默认``
+   :响应体: responseBody
 
-  出力項目の詳細は、
-  :ref:`リクエスト処理終了時のログ出力に使用するフォーマット <jaxrs_access_log-prop_end_format>`
-  のプレースホルダーと同じため省略。
+  输出项目的详细说明与
+  :ref:`请求处理结束时日志输出使用的格式 <jaxrs_access_log-prop_end_format>`
+  的占位符相同，因此省略。
 
  jaxRsAccessLogFormatter.datePattern
-  開始日時と終了日時に使用する日時パターン。
-  パターンには、 :java:extdoc:`SimpleDateFormat <java.text.SimpleDateFormat>` が規程している構文を指定する。
-  デフォルトは ``yyyy-MM-dd HH:mm:ss.SSS`` 。
+  开始日期时间和结束日期时间使用的日期时间模式。
+  模式中指定 :java:extdoc:`SimpleDateFormat <java.text.SimpleDateFormat>` 规定的语法。
+  默认是 ``yyyy-MM-dd HH:mm:ss.SSS`` 。
 
  jaxRsAccessLogFormatter.maskingPatterns
-  マスク対象のパラメータ名又は変数名を正規表現で指定する（部分一致）。
-  複数指定する場合はカンマ区切り。
-  リクエストパラメータとセッションスコープ情報の両方のマスキングに使用する。
-  指定した正規表現は大文字小文字を区別しない。
-  例えば、\ ``password``\ と指定した場合、 ``password`` ``newPassword`` ``password2`` 等にマッチする。
+  用正则表达式指定掩码对象的参数名或变量名（部分匹配）。
+  指定多个时用逗号分隔。
+  用于请求参数和会话范围信息两者的掩码。
+  指定的正则表达式不区分大小写。
+  例如，指定 ``password`` 时，会匹配 ``password`` ``newPassword`` ``password2`` 等。
 
  jaxRsAccessLogFormatter.maskingChar
-  マスクに使用する文字。デフォルトは ``*`` 。
+  掩码使用的字符。默认是 ``*`` 。
 
  jaxRsAccessLogFormatter.beginOutputEnabled
-  リクエスト処理開始時の出力が有効か否か。
-  デフォルトはtrue。
-  falseを指定するとリクエスト処理開始時に出力しない。
+  请求处理开始时的输出是否有效。
+  默认是true。
+  指定false时不在请求处理开始时输出。
 
  jaxRsAccessLogFormatter.endOutputEnabled
-  リクエスト処理終了時の出力が有効か否か。
-  デフォルトはtrue。
-  falseを指定するとリクエスト処理終了時に出力しない。
+  请求处理结束时的输出是否有效。
+  默认是true。
+  指定false时不在请求处理结束时输出。
 
  jaxRsAccessLogFormatter.beginLabel
-  リクエスト処理開始時ログのlabelに出力する値。
-  デフォルトは ``"HTTP ACCESS BEGIN"``。
+  请求处理开始时日志的label输出的值。
+  默认是 ``"HTTP ACCESS BEGIN"``。
 
  jaxRsAccessLogFormatter.endLabel
-  リクエスト処理終了時ログのlabelに出力する値。
-  デフォルトは ``"HTTP ACCESS END"``。
+  请求处理结束时日志的label输出的值。
+  默认是 ``"HTTP ACCESS END"``。
 
  jaxRsAccessLogFormatter.structuredMessagePrefix
-  フォーマット後のメッセージ文字列が JSON 形式に整形されていることを識別できるようにするために、メッセージの先頭に付与するマーカー文字列。
-  メッセージの先頭にあるマーカー文字列が :java:extdoc:`JsonLogFormatter <nablarch.core.log.basic.JsonLogFormatter>` に設定しているマーカー文字列と一致する場合、 :java:extdoc:`JsonLogFormatter <nablarch.core.log.basic.JsonLogFormatter>` はメッセージを JSON データとして処理する。
-  デフォルトは ``"$JSON$"`` となる。
-  変更する場合は、LogWriterの ``structuredMessagePrefix`` プロパティを使用して :java:extdoc:`JsonLogFormatter <nablarch.core.log.basic.JsonLogFormatter>` にも同じ値を設定すること（LogWriterのプロパティについては :ref:`log-basic_setting` を参照）。
+  为了能够识别格式化后的消息字符串已格式化为JSON格式，在消息开头附加的标记字符串。
+  当消息开头的标记字符串与 :java:extdoc:`JsonLogFormatter <nablarch.core.log.basic.JsonLogFormatter>` 中设置的标记字符串一致时， :java:extdoc:`JsonLogFormatter <nablarch.core.log.basic.JsonLogFormatter>` 会将消息作为JSON数据处理。
+  默认是 ``"$JSON$"`` 。
+  更改时，请使用LogWriter的 ``structuredMessagePrefix`` 属性将相同值也设置到 :java:extdoc:`JsonLogFormatter <nablarch.core.log.basic.JsonLogFormatter>` （关于LogWriter的属性请参考 :ref:`log-basic_setting` ）。
 
-記述例
+记述示例
  .. code-block:: properties
 
   httpAccessLogFormatter.className=nablarch.fw.jaxrs.JaxRsAccessJsonLogFormatter
@@ -359,15 +359,15 @@ HTTPアクセスログの各項目もJSONの値として出力するには、
 
 .. _jaxrs_access_log-session_store_id:
 
-セッションストアIDについて
+关于会话存储ID
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-セッションストアIDを出力に含めた場合、 :ref:`session_store` が発行するセッションを識別するIDが出力される。
+输出中包含会话存储ID时，会输出 :ref:`session_store` 发行的用于识别会话的ID。
 
-この値は :ref:`session_store_handler` の往路で記録されたものが使用される。
-したがってセッションストアIDをログに出力する場合、 :ref:`jaxrs_access_log_handler` は :ref:`session_store_handler` より後に配置しなければならない。
+此值使用 :ref:`session_store_handler` 去程中记录的值。
+因此要在日志中输出会话存储ID时， :ref:`jaxrs_access_log_handler` 必须配置在 :ref:`session_store_handler` 之后。
 
-セッションストアIDはリクエスト処理開始時の状態で固定されるため、以下のような仕様になる。
+会话存储ID在请求处理开始时的状态下固定，因此有以下规格：
 
-* セッションストアIDが発行されていないリクエストでは、途中でIDが発行されたとしても、同一リクエスト内で出力されるセッションストアIDは全て空になる
-* 途中で :java:extdoc:`セッションを破棄 <nablarch.common.web.session.SessionUtil.invalidate(nablarch.fw.ExecutionContext)>` したり :java:extdoc:`IDを変更 <nablarch.common.web.session.SessionUtil.changeId(nablarch.fw.ExecutionContext)>` しても、ログに出力される値はリクエスト処理開始時のものから変化しない
+* 在会话存储ID尚未发行的请求中，即使途中发行了ID，同一请求内输出的会话存储ID也都为空
+* 即使途中 :java:extdoc:`销毁会话 <nablarch.common.web.session.SessionUtil.invalidate(nablarch.fw.ExecutionContext)>` 或 :java:extdoc:`更改ID <nablarch.common.web.session.SessionUtil.changeId(nablarch.fw.ExecutionContext)>` ，日志中输出的值也不会从请求处理开始时的值发生变化

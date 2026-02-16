@@ -1,108 +1,108 @@
 .. _database:
 
-データベースアクセス(JDBCラッパー)
+数据库访问(JDBC包装器)
 =========================================
 
 .. contents:: 目录
   :depth: 3
   :local:
 
-JDBCを使用してデータベースに対してSQL文を実行する機能を提供する。
+提供使用JDBC执行SQL语句访问数据库的功能。
 
 .. tip::
 
-  :ref:`database_management` で説明したように、SQLの実行に関しては :ref:`universal_dao` を使用することを推奨する。
+  如 :ref:`database_management` 所述，建议使用 :ref:`universal_dao` 来执行SQL。
 
-  なお、:ref:`universal_dao` 内部では、この機能のAPIを使用してデータベースアクセスを行っているため、
-  この機能を使用するための設定は必ず必要になる。
+  此外，由于 :ref:`universal_dao` 内部使用此功能的API进行数据库访问，
+  因此使用此功能所需的配置是必需的。
 
 .. important::
 
-  この機能は、JDBC 3.0に依存しているため、使用するJDBCドライバがJDBC 3.0以上を実装している必要がある。
+  此功能依赖于JDBC 3.0，因此使用的JDBC驱动必须实现JDBC 3.0或更高版本。
 
 
-機能概要
+功能概述
 ----------------------
 
 .. _database-dialect:
 
-データベースの方言を意識することなく使用できる
+无需关注数据库方言即可使用
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-使用するデータベース製品に対応した :java:extdoc:`Dialect <nablarch.core.db.dialect.Dialect>` を設定することで、
-製品ごとの方言を意識せずに应用を実装できる。
+通过配置与使用数据库产品对应的 :java:extdoc:`Dialect <nablarch.core.db.dialect.Dialect>` ，
+可以在不考虑产品间方言差异的情况下实现应用程序。
 
-:java:extdoc:`Dialect <nablarch.core.db.dialect.Dialect>` は、以下の機能を提供する。
+:java:extdoc:`Dialect <nablarch.core.db.dialect.Dialect>` 提供以下功能。
 
-* identityカラムを使えるか否かを返すメソッド(:java:extdoc:`supportsIdentity <nablarch.core.db.dialect.Dialect.supportsIdentity()>` )
-* identity(自動採番)カラムを持つテーブル対してbatch insertが行えるか否かを返すメソッド(:java:extdoc:`supportsIdentityWithBatchInsert <nablarch.core.db.dialect.Dialect.supportsIdentityWithBatchInsert()>`)
-* シーケンスオブジェクトを使えるか否かを返すメソッド(:java:extdoc:`supportsSequence <nablarch.core.db.dialect.Dialect.supportsSequence()>` )
-* 検索クエリーの範囲指定でoffset（またはoffsetと同等の機能）を使えるか否かを返すメソッド(:java:extdoc:`supportsOffset <nablarch.core.db.dialect.Dialect.supportsOffset()>` )
-* 一意制約違反を表す :java:extdoc:`SQLException <java.sql.SQLException>` か否かを判定するメソッド(:java:extdoc:`isDuplicateException <nablarch.core.db.dialect.Dialect.isDuplicateException(java.sql.SQLException)>` )
-* トランザクションタイムアウト対象の  :java:extdoc:`SQLException <java.sql.SQLException>` か否かを判定するメソッド(:java:extdoc:`isTransactionTimeoutError <nablarch.core.db.dialect.Dialect.isTransactionTimeoutError(java.sql.SQLException)>` )
-* シーケンスオブジェクトから次の値を取得するSQL文生成するメソッド(:java:extdoc:`buildSequenceGeneratorSql <nablarch.core.db.dialect.Dialect.buildSequenceGeneratorSql(java.lang.String)>` )
-* :java:extdoc:`ResultSet <java.sql.ResultSet>` から値を取得する :java:extdoc:`ResultSetConvertor <nablarch.core.db.statement.ResultSetConvertor>` を返すメソッド(:java:extdoc:`getResultSetConvertor <nablarch.core.db.dialect.Dialect.getResultSetConvertor()>` )
-* 検索クエリーを範囲指定（ページング用）SQLに変換するメソッド(:java:extdoc:`convertPaginationSql <nablarch.core.db.dialect.Dialect.convertPaginationSql(java.lang.String,nablarch.core.db.statement.SelectOption)>` )
-* 検索クエリーを件数取得SQLに変換するメソッド(:java:extdoc:`convertCountSql(String) <nablarch.core.db.dialect.Dialect.convertCountSql(java.lang.String)>` )
-* SQLIDを件数取得SQLに変換するメソッド(:java:extdoc:`convertCountSql(String, Object, StatementFactory) <nablarch.core.db.dialect.Dialect.convertCountSql(java.lang.String,java.lang.Object,nablarch.core.db.statement.StatementFactory)>` )
-* :java:extdoc:`Connection <java.sql.Connection>` がデータベースに接続されているかチェックを行うSQLを返すメソッド(:java:extdoc:`getPingSql <nablarch.core.db.dialect.Dialect.getPingSql()>` )
+* 返回是否可以使用identity列的方法(:java:extdoc:`supportsIdentity <nablarch.core.db.dialect.Dialect.supportsIdentity()>` )
+* 返回对具有identity(自动编号)列的表是否可以进行batch insert的方法(:java:extdoc:`supportsIdentityWithBatchInsert <nablarch.core.db.dialect.Dialect.supportsIdentityWithBatchInsert()>`)
+* 返回是否可以使用序列对象的方法(:java:extdoc:`supportsSequence <nablarch.core.db.dialect.Dialect.supportsSequence()>` )
+* 返回在搜索查询的范围指定中是否可以使用offset（或等效功能）的方法(:java:extdoc:`supportsOffset <nablarch.core.db.dialect.Dialect.supportsOffset()>` )
+* 判断是否表示唯一约束违反的 :java:extdoc:`SQLException <java.sql.SQLException>` 的方法(:java:extdoc:`isDuplicateException <nablarch.core.db.dialect.Dialect.isDuplicateException(java.sql.SQLException)>` )
+* 判断是否属于事务超时目标的  :java:extdoc:`SQLException <java.sql.SQLException>` 的方法(:java:extdoc:`isTransactionTimeoutError <nablarch.core.db.dialect.Dialect.isTransactionTimeoutError(java.sql.SQLException)>` )
+* 生成从序列对象获取下一个值的SQL语句的方法(:java:extdoc:`buildSequenceGeneratorSql <nablarch.core.db.dialect.Dialect.buildSequenceGeneratorSql(java.lang.String)>` )
+* 返回从 :java:extdoc:`ResultSet <java.sql.ResultSet>` 获取值的 :java:extdoc:`ResultSetConvertor <nablarch.core.db.statement.ResultSetConvertor>` 的方法(:java:extdoc:`getResultSetConvertor <nablarch.core.db.dialect.Dialect.getResultSetConvertor()>` )
+* 将搜索查询转换为范围指定（分页用）SQL的方法(:java:extdoc:`convertPaginationSql <nablarch.core.db.dialect.Dialect.convertPaginationSql(java.lang.String,nablarch.core.db.statement.SelectOption)>` )
+* 将搜索查询转换为件数获取SQL的方法(:java:extdoc:`convertCountSql(String) <nablarch.core.db.dialect.Dialect.convertCountSql(java.lang.String)>` )
+* 将SQLID转换为件数获取SQL的方法(:java:extdoc:`convertCountSql(String, Object, StatementFactory) <nablarch.core.db.dialect.Dialect.convertCountSql(java.lang.String,java.lang.Object,nablarch.core.db.statement.StatementFactory)>` )
+* 返回检查 :java:extdoc:`Connection <java.sql.Connection>` 是否已连接到数据库的SQL的方法(:java:extdoc:`getPingSql <nablarch.core.db.dialect.Dialect.getPingSql()>` )
 
-:java:extdoc:`Dialect <nablarch.core.db.dialect.Dialect>` の設定方法は、 :ref:`database-use_dialect` を参照。
+:java:extdoc:`Dialect <nablarch.core.db.dialect.Dialect>` 的配置方法，请参阅 :ref:`database-use_dialect` 。
 
 .. _database-sql_file:
 
-SQLはロジックではなくSQLファイルに記述する
+SQL应写在SQL文件中而非逻辑中
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-SQLはSQLファイルに定義し、原則ロジック内には記述しない。
+SQL应定义在SQL文件中，原则上不应写在逻辑内。
 
-SQLファイルに記述することで、ロジックでSQLの組み立てを行う必要がなく、
-必ず `PreparedStatement` を使用するため、SQLインジェクションの脆弱性が排除できる。
+通过将SQL写在SQL文件中，无需在逻辑中组装SQL，
+因为一定会使用 `PreparedStatement` ，所以可以消除SQL注入漏洞。
 
 .. tip::
 
-  どうしてもSQLファイルに定義できない場合は、SQLを直接指定して実行するAPIも提供しているので、そちらを使用すること。
-  ただし、安易に使用するとSQLインジェクションの脆弱性が埋め込まれる可能性があるため注意すること。
-  また、SQLインジェクションの脆弱性がないことなど、テストやレビューで担保出来ることが前提となる。
+  如果确实无法定义在SQL文件中，也提供了直接指定SQL执行的API，请使用该API。
+  但是，随意使用可能会嵌入SQL注入漏洞，因此需要注意。
+  此外，前提是能够在测试或审查中保证不存在SQL注入漏洞。
 
 
-詳細は、 :ref:`database-use_sql_file` を参照。
+详细内容请参阅 :ref:`database-use_sql_file` 。
 
 .. _database-bean:
 
-Beanのプロパティ値をSQLのバインド変数に埋め込むことができる
+可以将Bean的属性值嵌入到SQL的绑定变量中
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Beanのプロパティに設定した値を :java:extdoc:`java.sql.PreparedStatement` のINパラメータに自動的にバインドする機能を提供する。
+提供将Bean属性中设置的值自动绑定到 :java:extdoc:`java.sql.PreparedStatement` 的IN参数的功能。
 
-この機能を使用することで、  :java:extdoc:`java.sql.PreparedStatement` の値設定用メソッドを複数回呼び出す必要がなくなり、
-INパラメータが増減した際のインデクス修正などが不要となる。
+使用此功能后，无需多次调用 :java:extdoc:`java.sql.PreparedStatement` 的值设置方法，
+且在IN参数增减时无需修正索引。
 
-詳細は :ref:`database-input_bean` を参照。
+详细内容请参阅 :ref:`database-input_bean` 。
 
-like検索を容易に実装できる
+可以轻松实现like搜索
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-like検索に対するescape句の挿入とワイルドカード文字のエスケープ処理を自動で行う機能を提供する。
+提供对like搜索自动插入escape子句和对通配符字符进行转义处理的功能。
 
-詳細は :ref:`database-like_condition` を参照。
+详细内容请参阅 :ref:`database-like_condition` 。
 
 .. _database-variable_condition:
 
-実行時のBeanオブジェクトの状態を元にSQL文を動的に構築できる
+可以根据运行时Bean对象的状态动态构建SQL语句
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Beanオブジェクトの状態を元に、実行するSQL文を動的に組み立てる機能を提供する。
+提供根据Bean对象的状态动态组装执行SQL语句的功能。
 
-例えば、条件やin句の動的な構築などが行える。
+例如，可以进行条件和in子句的动态构建等。
 
-詳細は以下を参照。
+详细内容请参阅以下内容。
 
 * :ref:`database-use_variable_condition`
 * :ref:`database-in_condition`
 * :ref:`database-make_order_by`
 
-SQLのクエリ結果をキャッシュできる
+可以缓存SQL的查询结果
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-実行したSQLと外部から取得した条件(バインド変数に設定した値)が等価である場合に、
-データベースにアクセスせずにキャッシュから検索結果を返却する機能を提供する。
+当执行的SQL和从外部获取的条件（绑定变量中设置的值）相等时，
+提供不访问数据库而是从缓存返回搜索结果的功能。
 
-詳細は、 :ref:`database-use_cache` を参照。
+详细内容请参阅 :ref:`database-use_cache` 。
 
 模块列表
 --------------------------------------------------
@@ -118,69 +118,69 @@ SQLのクエリ結果をキャッシュできる
 
 .. _database-connect:
 
-データベースに対する接続設定
+数据库连接配置
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-データベースに対する接続設定は、以下の2通りから選択できる。
+数据库连接配置可以从以下两种方式中选择。
 
-* :java:extdoc:`javax.sql.DataSource` を使ったデータベース接続の生成
-* 应用サーバなどに登録されたデータソースを使ったデータベース接続の生成
+* 使用 :java:extdoc:`javax.sql.DataSource` 生成数据库连接
+* 使用注册到应用服务器等的数据源生成数据库连接
 
-上記以外の接続方法を使用したい場合(例えばOSSのコネクションプーリングライブラリを使う場合など)は、
-:ref:`database-add_connection_factory` を参照し、データベースに接続する実装を追加すること。
+如果要使用上述以外的连接方法（例如使用OSS连接池库等），
+请参阅 :ref:`database-add_connection_factory` ，添加连接数据库的实现。
 
-接続設定例
-  :java:extdoc:`javax.sql.DataSource` からデータベース接続の生成
+连接配置示例
+  从 :java:extdoc:`javax.sql.DataSource` 生成数据库连接
     .. code-block:: xml
 
       <component class="nablarch.core.db.connection.BasicDbConnectionFactoryForDataSource">
-        <!-- 設定値の詳細はJavadocを参照すること -->
+        <!-- 配置值的详细内容请参阅Javadoc -->
       </component>
 
-  应用サーバのデータソースからデータベース接続の生成
+  从应用服务器的数据源生成数据库连接
     .. code-block:: xml
 
       <component class="nablarch.core.db.connection.BasicDbConnectionFactoryForJndi">
-        <!-- 設定値の詳細はJavadocを参照すること -->
+        <!-- 配置值的详细内容请参阅Javadoc -->
       </component>
 
-  :java:extdoc:`BasicDbConnectionFactoryForDataSource<nablarch.core.db.connection.BasicDbConnectionFactoryForDataSource>` や
-  :java:extdoc:`BasicDbConnectionFactoryForJndi <nablarch.core.db.connection.BasicDbConnectionFactoryForJndi>` への
-  設定値については、それぞれのクラスのJavadocを参照すること。
+  :java:extdoc:`BasicDbConnectionFactoryForDataSource<nablarch.core.db.connection.BasicDbConnectionFactoryForDataSource>` 和
+  :java:extdoc:`BasicDbConnectionFactoryForJndi <nablarch.core.db.connection.BasicDbConnectionFactoryForJndi>` 的
+  配置值，请参阅各自类的Javadoc。
 
 .. tip::
 
-  上記に設定したクラスを直接使用することは基本的にない。
-  データベースアクセスを必要とする場合には、 :ref:`database_connection_management_handler` を使用すること。
+  基本上不会直接使用上述配置的类。
+  需要数据库访问时，请使用 :ref:`database_connection_management_handler` 。
 
-  なお、データベースを使用する場合はトランザクション管理も必要となる。
-  トランザクション管理については、 :ref:`transaction` を参照。
+  此外，使用数据库时还需要事务管理。
+  关于事务管理，请参阅 :ref:`transaction` 。
 
 .. _database-use_dialect:
 
-データベース製品に対応したダイアレクトを使用する
+使用与数据库产品对应的方言(Dialect)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-データベース製品に対応したダイアレクトをコンポーネント設定ファイルに設定することで、ダイアレクト機能が有効になる。
+通过在组件配置文件中配置与数据库产品对应的方言(Dialect)，方言(Dialect)功能将生效。
 
 .. tip::
-  設定しなかった場合は :java:extdoc:`DefaultDialect <nablarch.core.db.dialect.DefaultDialect>` が使用される。
-  :java:extdoc:`DefaultDialect <nablarch.core.db.dialect.DefaultDialect>` は原則全ての機能が無効化されるので、必ずデータベース製品に対応したダイアレクトを設定すること。
+  如果未配置，将使用 :java:extdoc:`DefaultDialect <nablarch.core.db.dialect.DefaultDialect>` 。
+  :java:extdoc:`DefaultDialect <nablarch.core.db.dialect.DefaultDialect>` 原则上所有功能都将被禁用，因此请务必配置与数据库产品对应的方言(Dialect)。
 
-  なお、使用するデータベース製品に対応するダイアレクトが存在しない場合や、
-  新しいバージョンの新機能を使いたい場合には、 :ref:`database-add_dialect` を参照し新しいダイアレクトを作成すること。
+  此外，如果没有与使用数据库产品对应的方言(Dialect)，
+  或想使用新版本的新功能时，请参阅 :ref:`database-add_dialect` 创建新的方言(Dialect)。
 
-コンポーネント設定例
-  この例では、 :java:extdoc:`javax.sql.DataSource` からデータベース接続を取得するコンポーネントへの設定例となる。
-  :java:extdoc:`BasicDbConnectionFactoryForJndi <nablarch.core.db.connection.BasicDbConnectionFactoryForJndi>` の場合も以下の例と同じように
-  :java:extdoc:`dialect <nablarch.core.db.connection.ConnectionFactorySupport.setDialect(nablarch.core.db.dialect.Dialect)>` プロパティにダイアレクトを設定すれば良い。
+组件配置示例
+  此示例是配置从 :java:extdoc:`javax.sql.DataSource` 获取数据库连接的组件的示例。
+  :java:extdoc:`BasicDbConnectionFactoryForJndi <nablarch.core.db.connection.BasicDbConnectionFactoryForJndi>` 的情况下，也与以下示例相同，
+  在 :java:extdoc:`dialect <nablarch.core.db.connection.ConnectionFactorySupport.setDialect(nablarch.core.db.dialect.Dialect)>` 属性中配置方言(Dialect)即可。
 
   .. code-block:: xml
 
     <component class="nablarch.core.db.connection.BasicDbConnectionFactoryForDataSource">
-      <!-- ダイアレクトと関係のないプロパティについては省略 -->
+      <!-- 省略与方言(Dialect)无关的属性 -->
 
       <!--
-      ダイアレクトは、dialectプロパティに設定する。
-      この例では、Oracleデータベース用のダイアレクトを設定している。
+      方言(Dialect)配置在dialect属性中。
+      此示例中配置的是Oracle数据库用的方言(Dialect)。
       -->
       <property name="dialect">
         <component class="nablarch.core.db.dialect.OracleDialect" />
@@ -190,34 +190,34 @@ SQLのクエリ結果をキャッシュできる
 
 .. _database-use_sql_file:
 
-SQLをファイルで管理する
+使用文件管理SQL
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-この機能では、 :ref:`database-sql_file` で説明したように、SQLはSQLファイルで管理する。
-SQLファイルを扱うためには、コンポーネント設定ファイルへの設定が必要となる。
-詳細は、 :ref:`SQLファイルからSQLをロードするための設定 <database-load_sql>` を参照。
+如 :ref:`database-sql_file` 所述，此功能中SQL由SQL文件管理。
+要处理SQL文件，需要在组件配置文件中进行配置。
+详细内容请参阅 :ref:`从SQL文件加载SQL的配置 <database-load_sql>` 。
 
-SQLファイルは以下のルールで作成する。
+SQL文件按照以下规则创建。
 
-* クラスパス配下に作成する。
-* 1つのSQLファイルに複数のSQLを記述できるが、SQLIDはファイル内で一意とする。
-* SQLIDとSQLIDとの間には空行を挿入する。(スペースが存在する行は空行とはみなさない)
-* SQLIDとSQLとの間には ``=`` を入れる。
-* コメントは ``--`` で記述する。(ブロックコメントはサポートしない)
-* SQLは改行やスペース(tab)などで整形してもよい。
+* 创建在类路径下。
+* 一个SQL文件中可以记述多个SQL，但SQLID在文件内必须唯一。
+* SQLID与SQLID之间插入空行。（包含空格的行不视为空行）
+* SQLID与SQL之间插入 ``=`` 。
+* 注释使用 ``--`` 记述。（不支持块注释）
+* SQL可以使用换行或空格(tab)等进行格式化。
 
 .. important::
 
-  SQLを複数機能で流用せずに、かならず機能毎に作成すること。
+  SQL不要在多个功能间共用，务必为每个功能单独创建。
 
-  複数機能で流用した場合、意図しない使われ方やSQLが変更されることにより思わぬ不具合が発生する原因となる。
-  例えば、複数機能で使用していたSQL文に排他ロック用の ``for update`` が追加された場合、
-  排他ロックが不要な機能でロックが取得され処理遅延の原因となる。
+  如果在多个功能间共用，由于意外的使用方式或SQL变更可能导致意想不到的故障。
+  例如，如果在多个功能中使用的SQL语句中添加了排他锁用的 ``for update`` ，
+  则在不需要排他锁的功能中获取了锁，导致处理延迟。
 
-以下にSQLファイルの例を示す。
+以下展示SQL文件示例。
 
 .. code-block:: sql
 
-  -- ＸＸＸＸＸ取得SQL
+  -- XXXXX获取SQL
   -- SQL_ID:GET_XXXX_INFO
   GET_XXXX_INFO =
   select
@@ -229,7 +229,7 @@ SQLファイルは以下のルールで作成する。
      col1 = :col1
 
 
-  -- ＸＸＸＸＸ更新SQL
+  -- XXXXX更新SQL
   -- SQL_ID:UPDATE_XXXX
   update_xxxx =
   update
@@ -241,21 +241,21 @@ SQLファイルは以下のルールで作成する。
 
 .. _database-load_sql:
 
-SQLファイルからSQLをロードするための設定
-  SQLファイルからSQLをロードするために必要な設定内容を説明する。
+从SQL文件加载SQL的配置
+  说明从SQL文件加载SQL所需的配置内容。
 
-  SQLをロードするためには、以下の例のように :java:extdoc:`BasicStatementFactory#sqlLoader <nablarch.core.db.statement.BasicStatementFactory.setSqlLoader(nablarch.core.cache.StaticDataLoader)>`
-  に :java:extdoc:`BasicSqlLoader <nablarch.core.db.statement.BasicSqlLoader>` を設定する。
+  要加载SQL，需要像以下示例一样，在 :java:extdoc:`BasicStatementFactory#sqlLoader <nablarch.core.db.statement.BasicStatementFactory.setSqlLoader(nablarch.core.cache.StaticDataLoader)>`
+  中配置 :java:extdoc:`BasicSqlLoader <nablarch.core.db.statement.BasicSqlLoader>` 。
 
-  この例では、ファイルエンコーディングと拡張子を設定している。設定を省略した場合は以下の設定値となる。
+  此示例中配置了文件编码和扩展名。如果省略配置，则使用以下配置值。
 
-  :ファイルエンコーディング: utf-8
-  :拡張子: sql
+  :文件编码: utf-8
+  :扩展名: sql
 
-  ここで定義した :java:extdoc:`BasicStatementFactory <nablarch.core.db.statement.BasicStatementFactory>` コンポーネントは、 :ref:`database-connect`
-  で定義したデータベース接続を取得するコンポーネントに設定する必要がある。
+  此处定义的 :java:extdoc:`BasicStatementFactory <nablarch.core.db.statement.BasicStatementFactory>` 组件，需要在 :ref:`database-connect`
+  中定义的数据库连接获取组件中进行配置。
 
-  設定例
+  配置示例
     .. code-block:: xml
 
       <component name="statementFactory" class="nablarch.core.db.statement.BasicStatementFactory">
@@ -269,118 +269,118 @@ SQLファイルからSQLをロードするための設定
 
 .. _database-execute_sqlid:
 
-SQLIDを指定してSQLを実行する
+指定SQLID执行SQL
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-SQLIDを元にSQLを実行するには、 :java:extdoc:`DbConnectionContext <nablarch.core.db.connection.DbConnectionContext>` から取得したデータベース接続を使用する。
-なお、  :java:extdoc:`DbConnectionContext <nablarch.core.db.connection.DbConnectionContext>` には、 :ref:`database_connection_management_handler` でデータベース接続を登録する必要がある。
+要根据SQLID执行SQL，需要使用从 :java:extdoc:`DbConnectionContext <nablarch.core.db.connection.DbConnectionContext>` 获取的数据库连接。
+此外，需要在 :ref:`database_connection_management_handler` 中将数据库连接注册到 :java:extdoc:`DbConnectionContext <nablarch.core.db.connection.DbConnectionContext>` 。
 
-SQLIDと実際に実行されるSQLとのマッピングルールは以下のとおり。
+SQLID与实际执行的SQL之间的映射规则如下。
 
-* SQLIDの ``#`` までがSQLファイル名となる。
-* SQLIDの ``#`` 以降がSQLファイル内のSQLIDとなる。
+* SQLID中 ``#`` 之前的部分是SQL文件名。
+* SQLID中 ``#`` 之后的部分是SQL文件内的SQLID。
 
-実装例
-  この例では、 SQLIDに、 ``jp.co.tis.sample.action.SampleAction#findUser`` と指定しているため、
-  SQLファイルはクラスパス配下の ``jp.co.tis.sample.action.SampleAction.sql`` となる。
-  SQLファイル内のSQLIDは、 ``findUser`` となる。
+实现示例
+  此示例中，SQLID指定为 ``jp.co.tis.sample.action.SampleAction#findUser`` ，因此
+  SQL文件为类路径下的 ``jp.co.tis.sample.action.SampleAction.sql`` 。
+  SQL文件内的SQLID为 ``findUser`` 。
 
-  * :java:extdoc:`AppDbConnection <nablarch.core.db.connection.AppDbConnection>` や
-    :java:extdoc:`SqlPStatement <nablarch.core.db.statement.SqlPStatement>` の使用方法は、Javadocを参照。
+  * :java:extdoc:`AppDbConnection <nablarch.core.db.connection.AppDbConnection>` 和
+    :java:extdoc:`SqlPStatement <nablarch.core.db.statement.SqlPStatement>` 的使用方法，请参阅Javadoc。
 
   .. code-block:: java
 
-    // DbConnectionContextからデータベース接続を取得する。
+    // 从DbConnectionContext获取数据库连接。
     AppDbConnection connection = DbConnectionContext.getConnection();
 
-    // SQLIDを元にステートメントを生成する。
+    // 根据SQLID生成语句。
     SqlPStatement statement = connection.prepareStatementBySqlId(
         "jp.co.tis.sample.action.SampleAction#findUser");
 
-    // 条件を設定する。
+    // 设置条件。
     statement.setLong(1, userId);
 
-    // 検索処理を実行する。
+    // 执行搜索处理。
     SqlResultSet result = statement.retrieve();
 
-ストアードプロシージャを実行する
+执行存储过程
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-ストアードプロシージャを実行する場合も、基本的にはSQLを実行する場合と同じように実装する。
+执行存储过程时，基本上与执行SQL时的实现方式相同。
 
 .. important::
 
-  ストアードプロシージャの実行では、 :ref:`database-bean` はサポートしない。
-  これは、ストアードプロシージャを使用した場合、ロジックがJavaとストアードプロシージャに分散してしまい、
-  保守性を著しく低下させるため原則使用すべきではないとしているためである。
+  在执行存储过程时，不支持 :ref:`database-bean` 。
+  这是因为如果使用存储过程，逻辑会分散在Java和存储过程之间，
+  显著降低可维护性，因此原则上不应使用。
 
-  ただし、既存の資産などでどうしてもストアードプロシージャを使用しなければならないケースが想定されるため、
-  本機能では非常に簡易的ではあるがストアードプロシージャを実行するためのAPIを提供している。
+  但是，考虑到在现有资产等中可能必须使用存储过程的情况，
+  本功能提供了非常简单的用于执行存储过程的API。
 
-以下に例を示す。
+以下展示示例。
 
-* :java:extdoc:`SqlCStatement <nablarch.core.db.statement.SqlCStatement>` の詳細な使用方法は、Javadocを参照すること。
+* :java:extdoc:`SqlCStatement <nablarch.core.db.statement.SqlCStatement>` 的详细使用方法，请参阅Javadoc。
 
 .. code-block:: java
 
-  // SQLIDを元にストアードプロシージャ実行用のステートメントを生成する。
+  // 根据SQLID生成执行存储过程用的语句。
   SqlCStatement statement = connection.prepareCallBySqlId(
       "jp.co.tis.sample.action.SampleAction#execute_sp");
 
-  // IN及びOUTパラメータを設定する。
+  // 设置IN及OUT参数。
   statement.registerOutParameter(1, Types.CHAR);
 
-  // 実行する。
+  // 执行。
   statement.execute();
 
-  // OUTパラメータを取得する。
+  // 获取OUT参数。
   String result = statement.getString(1);
 
 .. _database-paging:
 
-検索範囲を指定してSQLを実行する
+指定搜索范围执行SQL
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-ウェブシステムの一覧検索画面などでは、ページング機能を用いて特定の範囲の結果のみを表示することがある。
-このような用途向けに本機能では、検索結果の範囲を指定できる機能を提供している。
+在Web系统的列表搜索画面等中，有时会使用分页功能仅显示特定范围的结果。
+针对此类用途，本功能提供了可以指定搜索结果范围的功能。
 
-実装例
-  データベース接続( `connection` )からステートメントを生成する際に、検索対象の範囲を指定する。
-  この例では、以下の値を指定しているので、11件目から最大10件のレコードが取得される。
+实现示例
+  从数据库连接( `connection` )生成语句时，指定搜索对象的范围。
+  此示例中指定了以下值，因此将获取从第11条开始的最多10条记录。
 
-  :開始位置: 11
-  :取得件数: 10
+  :开始位置: 11
+  :获取件数: 10
 
   .. code-block:: java
 
-    // DbConnectionContextからデータベース接続を取得する
+    // 从DbConnectionContext获取数据库连接
     AppDbConnection connection = DbConnectionContext.getConnection();
 
-    // SQLIDと検索範囲を指定してステートメントオブジェクトを生成する。
+    // 指定SQLID和搜索范围生成语句对象。
     SqlPStatement statement = connection.prepareStatementBySqlId(
         "jp.co.tis.sample.action.SampleAction#findUser", new SelectOption(11, 10));
 
-    // 検索処理を実行する
+    // 执行搜索处理
     SqlResultSet result = statement.retrieve();
 
 .. tip::
-  検索範囲が指定された場合、検索用のSQLを取得範囲指定のSQLに書き換えてから実行する。
-  なお、取得範囲指定のSQLは :ref:`ダイアレクト <database-dialect>` により行われる。
+  指定搜索范围时，会将搜索用SQL重写为获取范围指定的SQL后执行。
+  此外，获取范围指定的SQL由 :ref:`方言(Dialect) <database-dialect>` 进行。
 
 .. _database-input_bean:
 
-Beanオブジェクトを入力としてSQLを実行する
+以Bean对象为输入执行SQL
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-:ref:`database-bean` で説明したように、Beanオブジェクトを入力としてSQLを実行できる。
+如 :ref:`database-bean` 所述，可以以Bean对象为输入执行SQL。
 
-Beanオブジェクトを入力としてSQLを実行する場合は、SQLのINパラメータには名前付きバインド変数を用いる。
-名前付きパラメータには、 ``:`` に続けて入力として受け取るBeanのプロパティ名を記述する。
+以Bean对象为输入执行SQL时，SQL的IN参数使用命名绑定变量。
+命名参数记述为 ``:`` 后接作为输入接收的Bean属性名。
 
 .. important::
 
-  INパラメータをJDBC標準の ``?`` で記述した場合、 Beanオブジェクトを入力としたSQLの実行は動作しないので注意すること。
+  如果IN参数使用JDBC标准的 ``?`` 记述，则无法以Bean对象为输入执行SQL，请注意。
 
-以下に実装例を示す。
+以下展示实现示例。
 
-SQL例
-  INパラメータには名前付きパラメータを使用する。
+SQL示例
+  IN参数使用命名参数。
 
   .. code-block:: sql
 
@@ -393,90 +393,90 @@ SQL例
       :userName
       )
 
-実装例
-  Beanオブジェクトに必要な値を設定し、Beanオブジェクトを入力としてSQLを実行する機能を呼び出す。
+实现示例
+  在Bean对象中设置必要的值，然后调用以Bean对象为输入执行SQL的功能。
 
-  * :java:extdoc:`AppDbConnection <nablarch.core.db.connection.AppDbConnection>` や :java:extdoc:`ParameterizedSqlPStatement <nablarch.core.db.statement.ParameterizedSqlPStatement>` の使用方法は、Javadocを参照。
-  * SQLIDと実行されるSQLの関係については、 :ref:`database-execute_sqlid` を参照
+  * :java:extdoc:`AppDbConnection <nablarch.core.db.connection.AppDbConnection>` 和 :java:extdoc:`ParameterizedSqlPStatement <nablarch.core.db.statement.ParameterizedSqlPStatement>` 的使用方法，请参阅Javadoc。
+  * 关于SQLID与执行的SQL的关系，请参阅 :ref:`database-execute_sqlid`
 
   .. code-block:: java
 
-    // beanを生成しプロパティに値を設定
+    // 生成bean并在属性中设置值
     UserEntity entity = new UserEntity();
-    entity.setId(1);              // idプロパティへの値設定
-    entity.setUserName("なまえ"); // userNameプロパティへの値設定
+    entity.setId(1);              // 设置id属性的值
+    entity.setUserName("名字"); // 设置userName属性的值
 
-    // DbConnectionContextからデータベース接続を取得する
+    // 从DbConnectionContext获取数据库连接
     AppDbConnection connection = DbConnectionContext.getConnection();
 
-    // SQLIDを元にステートメントを生成する
+    // 根据SQLID生成语句
     ParameterizedSqlPStatement statement = connection.prepareParameterizedSqlStatementBySqlId(
         "jp.co.tis.sample.action.SampleAction#insertUser");
 
-    // beanのプロパティの値をバインド変数に設定しSQLが実行される
-    // SQLの:idにbeanのidプロパティの値が設定される。
-    // SQLの:userNameには、beanのuserNameプロパティの値が設定される。
+    // 将bean属性的值设置到绑定变量中并执行SQL
+    // SQL的:id中设置bean的id属性的值。
+    // SQL的:userName中设置bean的userName属性的值。
     int result = statement.executeUpdateByObject(entity);
 
 .. tip::
 
-  Beanの代わりに :java:extdoc:`java.util.Map` の実装クラスも指定できる。
-  Mapを指定した場合は、Mapのキー値と一致するINパラメータに対して、Mapの値が設定される。
+  除了Bean，还可以指定 :java:extdoc:`java.util.Map` 的实现类。
+  指定Map时，Map的值会设置到与Map键值匹配的IN参数中。
 
-  なお、Beanを指定した場合は :java:extdoc:`BeanUtil <nablarch.core.beans.BeanUtil>` を使用して、Mapに変換後に処理を行う。
-  :java:extdoc:`BeanUtil <nablarch.core.beans.BeanUtil>` で対応していない型がBeanのプロパティに存在した場合、そのプロパティについてはこの機能で使用できない。
+  此外，指定Bean时，使用 :java:extdoc:`BeanUtil <nablarch.core.beans.BeanUtil>` 转换为Map后进行处理。
+  如果Bean的属性中存在 :java:extdoc:`BeanUtil <nablarch.core.beans.BeanUtil>` 不支持的类型，则该属性无法使用此功能。
   
-  :java:extdoc:`BeanUtil <nablarch.core.beans.BeanUtil>` でMapにコピーできる型を増やしたい場合には、 :ref:`utility-conversion` を参照し対応すること。
+  如果想增加 :java:extdoc:`BeanUtil <nablarch.core.beans.BeanUtil>` 可以复制到Map的类型，请参阅 :ref:`utility-conversion` 进行对应。
 
 .. tip::
 
-  Beanへのアクセス方法をプロパティからフィールドに変更できる。
-  フィールドアクセスに変更する場合には、propertiesファイルに以下の設定を追加する。
+  可以将Bean的访问方式从属性更改为字段。
+  要更改为字段访问时，需要在properties文件中添加以下配置。
 
   .. code-block:: properties
 
      nablarch.dbAccess.isFieldAccess=true
 
-  なお、フィールドアクセスは以下の理由により推奨しない。
+  此外，由于以下原因，不推荐字段访问。
 
-  本フレームワークのその他の機能(例えば :java:extdoc:`BeanUtil <nablarch.core.beans.BeanUtil>`)では、Beanから値を取得する方法はプロパティアクセスで統一されている。
-  データベース機能のみフィールドアクセスに変更した場合、プログラマはフィールドアクセスとプロパティアクセスの両方を意識する必要があり、生産性の低下や不具合の原因ともなる。
+  本框架的其他功能（例如 :java:extdoc:`BeanUtil <nablarch.core.beans.BeanUtil>` ）中，从Bean获取值的方法统一使用属性访问。
+  如果仅数据库功能更改为字段访问，程序员需要同时意识到字段访问和属性访问，这会导致生产力下降和故障原因。
 
 
-型を変換する
+类型转换
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-データベースアクセス(JDBCラッパー)は、データベースとの入出力に使用する変数の型変換をJDBCドライバに委譲する。
-よって、入出力に使用する変数の型は、データベースの型及び使用するJDBCドライバの仕様に応じて定義する必要がある。
+数据库访问(JDBC包装器)将与数据库输入输出使用变量的类型转换委托给JDBC驱动。
+因此，输入输出使用的变量类型需要根据数据库类型及使用的JDBC驱动规范来定义。
 
-任意の型変換が必要な場合は、データベースとの入出力に使用する変数に対して、应用側で型変換することとなる。
+如果需要任意类型转换，则需要对用于与数据库输入输出的变量在应用程序侧进行类型转换。
 
-- 入力にBeanを使用する場合はBeanのプロパティに値を設定する際、出力にBeanを使用する場合はプロパティから値を取り出した後に型変換する。
-- 入力にMapを使用する場合はMapに値を設定する際、出力にMapを使用する場合は値を取り出した後に型変換する。
-- インデックスを指定してバインド変数を設定する際に、バインド変数に設定するオブジェクトを適切な型に変換する。 :java:extdoc:`SqlRow <nablarch.core.db.statement.SqlRow>` から値を取得する際は、取得後に型変換する。
+- 输入使用Bean时，在向Bean属性设置值时进行类型转换；输出使用Bean时，在从属性取出值后进行类型转换。
+- 输入使用Map时，在向Map设置值时进行类型转换；输出使用Map时，在取出值后进行类型转换。
+- 指定索引设置绑定变量时，将绑定变量要设置的对象转换为适当的类型。从 :java:extdoc:`SqlRow <nablarch.core.db.statement.SqlRow>` 获取值时，在获取后进行类型转换。
 
 
 .. _database-common_bean:
 
-SQL実行時に共通的な値を自動的に設定したい
+SQL执行时自动设置通用值
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-データ登録時や更新時に毎回設定する値をSQLの実行直前に自動的に設定する機能を提供する。
-例えば、登録日時や更新日時といった項目に対して、この機能が使用できる。
+提供在数据登记或更新时，对每次都要设置的值在SQL执行前自动设置的功能。
+例如，可以使用此功能处理登记日期时间和更新日期时间等项目。
 
-この機能は、プロパティに設定されたアノテーションを元に、値を自動設定するため、
-:ref:`database-input_bean` を使用した場合のみ有効となる。
+此功能根据属性中设置的注解自动设置值，
+因此仅在 :ref:`database-input_bean` 使用时有效。
 
-以下に使用例を示す。
+以下展示使用示例。
 
-コンポーネント設定ファイル
-  この機能を使用するには、コンポーネント設定ファイルに値を自動設定するクラスを設定する。
+组件配置文件
+  要使用此功能，需要在组件配置文件中配置自动设置值的类。
 
-  以下の例のように、 :java:extdoc:`BasicStatementFactory#updatePreHookObjectHandlerList <nablarch.core.db.statement.BasicStatementFactory.setUpdatePreHookObjectHandlerList(java.util.List)>` に対して、
-  :java:extdoc:`AutoPropertyHandler <nablarch.core.db.statement.AutoPropertyHandler>` 実装クラスをlistで設定する。
-  なお、標準で提供される実装クラスは :java:extdoc:`nablarch.core.db.statement.autoproperty` パッケージ配下に配置されている。
+  像以下示例一样，对 :java:extdoc:`BasicStatementFactory#updatePreHookObjectHandlerList <nablarch.core.db.statement.BasicStatementFactory.setUpdatePreHookObjectHandlerList(java.util.List)>` ，
+  以list形式设置 :java:extdoc:`AutoPropertyHandler <nablarch.core.db.statement.AutoPropertyHandler>` 实现类。
+  此外，标准提供的实现类配置在 :java:extdoc:`nablarch.core.db.statement.autoproperty` 包下。
 
-  ここで定義した :java:extdoc:`BasicStatementFactory <nablarch.core.db.statement.BasicStatementFactory>` コンポーネントは、 :ref:`database-connect`
-  で定義したデータベース接続を取得するコンポーネントに設定すること。
+  此处定义的 :java:extdoc:`BasicStatementFactory <nablarch.core.db.statement.BasicStatementFactory>` 组件，需要在 :ref:`database-connect`
+  中定义的数据库连接获取组件中进行配置。
 
   .. code-block:: xml
 
@@ -485,36 +485,36 @@ SQL実行時に共通的な値を自動的に設定したい
 
       <property name="updatePreHookObjectHandlerList">
         <list>
-          <!-- nablarch.core.db.statement.AutoPropertyHandler実装クラスをlistで設定する-->
+          <!-- 以list形式设置nablarch.core.db.statement.AutoPropertyHandler实现类-->
         </list>
       </property>
     </component>
 
-Beanオブジェクト(Entity)
-  自動で値を設定したいプロパティにアノテーションを設定する。
-  なお、標準で提供されるアノテーションは :java:extdoc:`nablarch.core.db.statement.autoproperty` パッケージ配下に配置されている。
+Bean对象(Entity)
+  在要自动设置值的属性中配置注解。
+  此外，标准提供的注解配置在 :java:extdoc:`nablarch.core.db.statement.autoproperty` 包下。
 
   .. code-block:: java
 
     public class UserEntity {
-      // ユーザID
+      // 用户ID
       private String id;
 
-      // 登録日時
-      // 登録時に自動設定される
+      // 登记日期时间
+      // 登记时自动设置
       @CurrentDateTime
       private Timestamp createdAt;
 
-      // 更新日時
-      // 登録・更新時に自動設定される
+      // 更新日期时间
+      // 登记·更新时自动设置
       @CurrentDateTime
       private String updatedAt;
 
-      // アクセスメソッドなどは省略
+      // 访问方法等省略
     }
 
 SQL
-  SQLは、 :ref:`database-input_bean` と同じように作成する。
+  SQL的创建方式与 :ref:`database-input_bean` 相同。
 
   .. code-block:: sql
 
@@ -528,56 +528,56 @@ SQL
       :updatedAt
     )
 
-実装例
-  基本的には、 :ref:`database-input_bean` と同じように実装する。
-  値が自動設定される項目については、ロジックでBeanに対して値を設定する必要が無い。
-  なお、値を明示的に設定したとしても、SQL実行直前に値の自動設定機能により上書きされる。
+实现示例
+  基本上与 :ref:`database-input_bean` 的实现方式相同。
+  对于自动设置值的字段，无需在逻辑中向Bean设置值。
+  此外，即使明确设置了值，也会在SQL执行前被自动设置值功能覆盖。
 
   .. code-block:: java
 
-    // beanを生成しプロパティに値を設定
-    // 自動設定項目であるcreatedAtとupdatedAtには値を設定する必要はない
+    // 生成bean并在属性中设置值
+    // 对于自动设置字段createdAt和updatedAt无需设置值
     UserEntity entity = new UserEntity();
     entity.setId(1);
 
-    // DbConnectionContextからデータベース接続を取得する
+    // 从DbConnectionContext获取数据库连接
     AppDbConnection connection = DbConnectionContext.getConnection();
 
-    // SQLIDを元にステートメントを生成する
+    // 根据SQLID生成语句
     ParameterizedSqlPStatement statement = connection.prepareParameterizedSqlStatementBySqlId(
         "jp.co.tis.sample.action.SampleAction#insertUser");
 
-    // 自動設定項目に値を設定せずに呼び出す。
-    // データベース機能が自動的に値を設定する。
+    // 在不设置自动设置字段值的情况下调用。
+    // 数据库功能自动设置值。
     int result = statement.executeUpdateByObject(entity);
 
 .. _database-like_condition:
 
-like検索を行う
+执行like搜索
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-like検索は、 :ref:`database-input_bean` を使用し、SQLにはlike検索用の条件を以下のルールで記述する。
+like搜索使用 :ref:`database-input_bean` ，在SQL中按照以下规则记述like搜索用的条件。
 
-前方一致の場合
-  名前付きパラメータの末尾に ``%`` を記述する。
+前方一致的情况
+  在命名参数的末尾记述 ``%`` 。
 
   例: ``name like :userName%``
 
-後方一致の場合
-  名前付きパラメータの先頭に ``%`` を記述する。
+后方一致的情况
+  在命名参数的开头记述 ``%`` 。
 
   例: ``name like :%userName``
 
-途中一致の場合
-  名前付きパラメータの前後に ``%`` を記述する。
+中间一致的情况
+  在命名参数的前后记述 ``%`` 。
 
   例: ``name like :%userName%``
 
-like検索時のエスケープ文字及びエスケープ対象文字の定義は、 :ref:`database-def_escape_char` を参照。
+like搜索时的转义字符及转义目标字符的定义，请参阅 :ref:`database-def_escape_char` 。
 
-以下に実装例を示す。
+以下展示实现示例。
 
 SQL
-  上記のルールに従いSQLを定義する。
+  按照上述规则定义SQL。
 
   .. code-block:: sql
 
@@ -585,89 +585,89 @@ SQL
       from user
      where name like :userName%
 
-実装例
-  :ref:`database-input_bean` と同じようにSQLを実行するだけで、like条件用に値の書き換えやエスケープ処理が行われる。
-  この例の場合、実際の条件は ``name like 'な%' escape '\'`` となる。
+实现示例
+  与 :ref:`database-input_bean` 一样执行SQL即可，like条件用的值重写和转义处理会自动进行。
+  此示例的情况下，实际条件变为 ``name like '名%' escape '\'`` 。
 
-  * :java:extdoc:`AppDbConnection <nablarch.core.db.connection.AppDbConnection>` や :java:extdoc:`ParameterizedSqlPStatement <nablarch.core.db.statement.ParameterizedSqlPStatement>` の使用方法は、Javadocを参照。
-  * SQLIDと実行されるSQLの関係については、 :ref:`database-execute_sqlid` を参照
+  * :java:extdoc:`AppDbConnection <nablarch.core.db.connection.AppDbConnection>` 和 :java:extdoc:`ParameterizedSqlPStatement <nablarch.core.db.statement.ParameterizedSqlPStatement>` 的使用方法，请参阅Javadoc。
+  * 关于SQLID与执行的SQL的关系，请参阅 :ref:`database-execute_sqlid`
 
   .. code-block:: java
 
-    // beanを生成しプロパティに値を設定
+    // 生成bean并在属性中设置值
     UserEntity entity = new UserEntity();
-    entity.setUserName("な"); // userNameプロパティへの値設定
+    entity.setUserName("名"); // 设置userName属性的值
 
-    // DbConnectionContextからデータベース接続を取得する
+    // 从DbConnectionContext获取数据库连接
     AppDbConnection connection = DbConnectionContext.getConnection();
 
-    // SQLIDを元にステートメントを生成する
+    // 根据SQLID生成语句
     ParameterizedSqlPStatement statement = connection.prepareParameterizedSqlStatementBySqlId(
         "jp.co.tis.sample.action.SampleAction#findUserByName");
 
-    // beanのプロパティ値をバインド変数に設定しSQLが実行される
-    // この例の場合、name like 'な%' が実行される
+    // 将bean属性值设置到绑定变量中并执行SQL
+    // 此示例的情况下，执行 name like '名%'
     int result = statement.retrieve(bean);
 
 
 .. _database-def_escape_char:
 
-like検索時のエスケープ文字及びエスケープ対象文字を定義する
+定义like搜索时的转义字符及转义目标字符
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-エスケープ文字及びエスケープ対象文字の定義は、コンポーネント設定ファイルに行う。
-なお、エスケープ文字は自動的対象にエスケープとなるため、明示的にエスケープ対象文字に設定する必要はない。
+转义字符及转义目标字符的定义在组件配置文件中进行。
+此外，转义字符自动成为转义目标，无需明确设置为转义目标字符。
 
-設定を省略した場合は、以下の値を使用する。
+如果省略配置，则使用以下值。
 
-:エスケープ文字: ``\``
-:エスケープ対象文字: ``%`` 、 ``_``
+:转义字符: ``\``
+:转义目标字符: ``%`` 、 ``_``
 
-コンポーネント設定例
-  この例ではエスケープ文字に ``\`` を設定し、エスケープ文字には ``%`` 、 ``％`` 、 ``_`` 、 ``＿`` の4文字を設定している。
+组件配置示例
+  此示例中将 ``\`` 设置为转义字符，将 ``%`` 、 ``％`` 、 ``_`` 、 ``＿`` 这4个字符设置为转义目标字符。
 
-  ここで定義した :java:extdoc:`BasicStatementFactory <nablarch.core.db.statement.BasicStatementFactory>` コンポーネントは、 :ref:`database-connect`
-  で定義したデータベース接続を取得するコンポーネントに設定すること。
+  此处定义的 :java:extdoc:`BasicStatementFactory <nablarch.core.db.statement.BasicStatementFactory>` 组件，需要在 :ref:`database-connect`
+  中定义的数据库连接获取组件中进行配置。
 
   .. code-block:: xml
 
     <component name="statementFactory" class="nablarch.core.db.statement.BasicStatementFactory">
-      <!-- エスケープ文字の定義 -->
+      <!-- 转义字符的定义 -->
       <property name="likeEscapeChar" value="\" />
 
-      <!-- エスケープ対象文字の定義(カンマ区切りで設定する) -->
+      <!-- 转义目标字符的定义(以逗号分隔设置) -->
       <property name="likeEscapeTargetCharList" value="%,％,_,＿" />
     </component>
 
 .. _database-use_variable_condition:
 
-可変条件を持つSQLを実行する
+执行带有可变条件的SQL
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-可変条件を持つSQLの実行は、 :ref:`database-input_bean` を使用し、以下の記法を用いて条件を記述する。
+执行带有可变条件的SQL时，使用 :ref:`database-input_bean` ，并用以下记法记述条件。
 
-可変条件の記述ルール
-  可変条件は、 ``$if(プロパティ名) {SQL文の条件}`` で記述する。
-  ``$if`` の後のプロパティ名に対応したBeanオブジェクトの値により、その条件が除外される。
-  除外される条件は以下のとおり。
+可变条件的记述规则
+  可变条件记述为 ``$if(属性名) {SQL语句的条件}`` 。
+  根据 ``$if`` 后属性名对应的Bean对象的值，该条件将被排除。
+  被排除的条件如下。
 
-  * 配列や :java:extdoc:`java.util.Collection` の場合は、プロパティ値がnullやサイズ0の場合
-  * 上記以外の型の場合は、プロパティ値がnullや空文字列(Stringオブジェクトの場合)
+  * 数组或 :java:extdoc:`java.util.Collection` 的情况下，属性值为null或大小为0时
+  * 上述以外的类型的情况下，属性值为null或空字符串(String对象的情况)时
 
-  なお、 ``$if`` 特殊構文には以下の制約がある。
+  此外， ``$if`` 特殊语法有以下限制。
 
-  * 使用できる箇所はwhere句のみ
-  * ``$if`` 内に ``$if`` を使用できない
+  * 只能用于where子句
+  * ``$if`` 内不能使用 ``$if``
 
   .. important::
 
-    この機能は、ウェブ应用の検索画面のようにユーザの入力内容によって検索条件が変わるような場合に使うものである。
-    条件だけが異なる複数のSQLを共通化するために使用するものではない。
-    安易に共通化した場合、SQLを変更した場合に思わぬ不具合を埋め込む原因にもなるため、必ずSQLを複数定義すること。
+    此功能用于如Web应用程序的搜索画面那样，根据用户输入内容搜索条件会变化的情况。
+    并非用于将条件仅不同的多个SQL共用的目的。
+    随意共用的情况下，变更SQL时可能埋下意想不到的故障原因，因此务必定义多个SQL。
 
 
-以下に例を示す。
+以下展示示例。
 
 SQL
-  このSQLの場合、 ``user_name`` と ``user_kbn`` の条件が可変となる。
+  此SQL中， ``user_name`` 和 ``user_kbn`` 的条件为可变。
 
   .. code-block:: none
 
@@ -682,52 +682,53 @@ SQL
       and $if (userKbn) {user_kbn in ('1', '2')}
       and birthday = :birthday
 
-実装例
-  `userName` プロパティのみに値が設定されているので、
-  可変条件で定義されている ``user_kbn`` は実行時の条件から除外される。
+实现示例
+  由于仅在 `userName` 属性中设置了值，
+  因此在可变条件中定义的 ``user_kbn`` 将在运行时从条件中排除。
 
   .. code-block:: java
 
-    // beanを生成しプロパティに値を設定
+    // 生成bean并在属性中设置值
     UserEntity entity = new UserEntity();
-    entity.setUserName("なまえ");
+    entity.setUserName("名字");
 
-    // DbConnectionContextからデータベース接続を取得する
+    // 从DbConnectionContext获取数据库连接
     AppDbConnection connection = DbConnectionContext.getConnection();
 
-    // SQLIDを元にステートメントを生成する
-    // 2番めの引数には、条件を持つBeanオブジェクトを指定する。
-    // このBeanオブジェクトの状態を元にSQLの可変条件の組み立てが行われる。
+    // 根据SQLID生成语句
+    // 第2个参数中指定带有条件的Bean对象。
+    // 根据此Bean对象的状态进行SQL可变条件的组装。
     ParameterizedSqlPStatement statement = connection.prepareParameterizedSqlStatementBySqlId(
         "jp.co.tis.sample.action.SampleAction#insertUser", entity);
 
-    // entityのプロパティの値をバインド変数に設定しSQLが実行される
+    // 将entity属性的值设置到绑定变量中并执行SQL
     SqlResultSet result = statement.retrieve(entity);
 
 .. _database-in_condition:
 
-in句の条件数が可変となるSQLを実行する
+执行in子句条件数可变的SQL
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-in句の条件数が可変となるSQLの実行は、 :ref:`database-input_bean` を使用し、以下の記法を用いて条件を記述する。
+执行in子句条件数可变的SQL时，使用 :ref:`database-input_bean` ，并用以下记法记述条件。
 
-in句の記述ルール
-  条件の名前付きパラメータの末尾に ``[]`` を付加する。
-  また名前付きパラメータに対応するBeanオブジェクトのプロパティの型は、
-  配列か :java:extdoc:`java.util.Collection` (サブタイプ含む) [#collection]_ とする必要がある。
+in子句的记述规则
+  在条件的命名参数末尾附加 ``[]`` 。
+  此外，与命名参数对应的Bean对象属性的类型，
+  必须是数组或 :java:extdoc:`java.util.Collection` (包含子类型) [#collection]_ 。
 
   .. tip::
 
-    in句の条件となるプロパティ値がnullやサイズ0となる場合には、該当条件は必ず可変条件として定義すること。
-    もし、可変条件としなかった場合でプロパティ値がnullの場合、条件が ``xxxx in (null)`` となるため、
-    検索結果が正しく取得できない可能性がある。
+    如果作为in子句条件的属性值为null或大小为0，则务必将该条件定义为可变条件。
+    如果没有定义为可变条件而属性值为null，则条件变为 ``xxxx in (null)`` ，
+    可能无法正确获取搜索结果。
 
-    ※in句は、条件式(カッコの中)を空にできないため、サイズ0の配列やnullが指定された場合には、条件式を ``in (null)`` とする仕様としている。
+    ※由于in子句不能使条件表达式（括号内）为空，因此当指定大小为0的数组或null时，
+    规格上将条件表达式设为 ``in (null)`` 。
 
-以下に例を示す。
+以下展示示例。
 
 SQL
-  このSQLでは、 ``user_kbn`` のin条件が動的に構築される。
-  なお、 ``$if`` と併用しているため、 `userKbn` プロパティがnullやサイズが0の場合には条件から除外される。
+  此SQL中， ``user_kbn`` 的in条件动态构建。
+  此外，由于与 ``$if`` 并用，当 `userKbn` 属性为null或大小为0时，将从条件中排除。
 
   .. code-block:: none
 
@@ -740,65 +741,65 @@ SQL
     where
       $if (userKbn) {user_kbn in (:userKbn[])}
 
-実行例
-  この例では、 `userKbn` プロパティに2つの要素が設定されているので、
-  実行されるSQLの条件は ``userKbn in (?, ?)`` となる。
+执行示例
+  此示例中，由于 `userKbn` 属性中设置了2个元素，
+  因此执行的SQL条件变为 ``userKbn in (?, ?)`` 。
 
-  データベースから取得されるのは、 `userKbn` が ``1`` と ``3`` のレコードとなる。
+  从数据库获取的是 `userKbn` 为 ``1`` 和 ``3`` 的记录。
 
   .. code-block:: java
 
-    // beanを生成しプロパティに値を設定
+    // 生成bean并在属性中设置值
     UserSearchCondition condition = new UserSearchCondition();
     condition.setUserKbn(Arrays.asList("1", "3"));
 
-    // DbConnectionContextからデータベース接続を取得する
+    // 从DbConnectionContext获取数据库连接
     AppDbConnection connection = DbConnectionContext.getConnection();
 
-    // SQLIDを元にステートメントを生成する
-    // 2番めの引数には、条件を持つBeanオブジェクトを指定する。
-    // このBeanオブジェクトの状態を元にSQLのin句の組み立てが行われる。
+    // 根据SQLID生成语句
+    // 第2个参数中指定带有条件的Bean对象。
+    // 根据此Bean对象的状态进行SQL的in子句组装。
     ParameterizedSqlPStatement statement = connection.prepareParameterizedSqlStatementBySqlId(
         "jp.co.tis.sample.action.SampleAction#searchUser", condition);
 
-    // conditionのプロパティの値をバインド変数に設定しSQLが実行される
+    // 将condition属性的值设置到绑定变量中并执行SQL
     SqlResultSet result = statement.retrieve(condition);
     
 .. [#collection] 
-    :ref:`database-input_bean` に記載がある通り、プロパティの値は :java:extdoc:`BeanUtil <nablarch.core.beans.BeanUtil>` を使用してMapに変換してから使用する。
-    このため、 :java:extdoc:`BeanUtil <nablarch.core.beans.BeanUtil>` でサポートされていない型でプロパティが宣言されていた場合、
-    in句に条件を設定できないため注意すること。
+    如 :ref:`database-input_bean` 所述，属性值使用 :java:extdoc:`BeanUtil <nablarch.core.beans.BeanUtil>` 转换为Map后使用。
+    因此，如果属性声明为 :java:extdoc:`BeanUtil <nablarch.core.beans.BeanUtil>` 不支持的类型，
+    则无法向in子句设置条件，请注意。
     
-    なお、 :java:extdoc:`BeanUtil <nablarch.core.beans.BeanUtil>` で変換対象の型を追加する方法は、
-    :ref:`utility-conversion-add-rule` を参照。
+    此外，关于在 :java:extdoc:`BeanUtil <nablarch.core.beans.BeanUtil>` 中添加转换目标类型的方法，
+    请参阅 :ref:`utility-conversion-add-rule` 。
 
 .. _database-make_order_by:
 
-order byのソート項目を実行時に動的に切り替えてSQLを実行する
+执行时动态切换order by的排序项目执行SQL
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-order byのソート項目が可変となるSQLの実行は、 :ref:`database-input_bean` を使用し、以下の記法を用いて条件を記述する。
+执行order by的排序项目可变的SQL时，使用 :ref:`database-input_bean` ，并用以下记法记述条件。
 
-order by句の記述ルール
-  ソート項目を可変にする場合は、order by句の代わりに ``$sort`` を使用し、以下のように記述する。
+order by子句的记述规则
+  要使排序项目可变，使用 ``$sort`` 代替order by子句，并如下记述。
 
   .. code-block:: text
 
-     $sort(プロパティ名) {(ケース1)(ケース2)・・・(ケースn)}
+     $sort(属性名) {(情况1)(情况2)···(情况n)}
 
-     プロパティ名: BeanオブジェクトのソートIDを保持するプロパティ名
-     ケース: order by句の切り替え候補を表す。
-             候補を一意に識別するソートIDとorder by句に指定する文字列(以降はケース本体と称す)を記述する。
-             どの候補にも一致しない場合に使用するデフォルトのケースには、ソートIDに"default"を指定する。
+     属性名: Bean对象保持排序ID的属性名
+     情况: 表示order by子句的切换候选项。
+             记述用于唯一识别候选项的排序ID和要在order by子句中指定的字符串（以下称为情况主体）。
+             对于与任何候选项都不匹配时使用的默认情况，排序ID指定为"default"。
 
-  * 各ケースは、ソートIDとケース本体を半角丸括弧で囲んで表現する。
-  * ソートIDとケース本体は、半角スペースで区切る。
-  * ソートIDには半角スペースを使用不可とする。
-  * ケース本体には半角スペースを使用できる。
-  * 括弧開き以降で最初に登場する文字列をソートIDとする。
-  * ソートID以降で括弧閉じまでの間をケース本体とする。
-  * ソートIDおよびケース本体はトリミングする。
+  * 各种情况通过将排序ID和情况主体用半角圆括号括起来表示。
+  * 排序ID和情况主体用半角空格分隔。
+  * 排序ID中不能使用半角空格。
+  * 情况主体中可以使用半角空格。
+  * 将括号开始后首次出现的字符串作为排序ID。
+  * 将排序ID之后到括号结束之间的部分作为情况主体。
+  * 排序ID及情况主体进行修剪处理。
 
-以下に使用例を示す。
+以下展示使用示例。
 
 SQL
   .. code-block:: none
@@ -818,39 +819,39 @@ SQL
       (default      user_id)
     }
 
-実装例
-  この例では、ソートIDに ``name_asc`` を設定しているので、
-  order by句は ``order by user_name asc`` となる。
+实现示例
+  此示例中，由于排序ID设置为 ``name_asc`` ，
+  因此order by子句变为 ``order by user_name asc`` 。
 
   .. code-block:: java
 
-    // beanを生成しプロパティに値を設定
+    // 生成bean并在属性中设置值
     UserSearchCondition condition = new UserSearchCondition();
-    condition.setUserName("なまえ");
-    condition.setSortId("name_asc");      // ソートIDを設定する
+    condition.setUserName("名字");
+    condition.setSortId("name_asc");      // 设置排序ID
 
-    // DbConnectionContextからデータベース接続を取得する
+    // 从DbConnectionContext获取数据库连接
     AppDbConnection connection = DbConnectionContext.getConnection();
 
-    // SQLIDを元にステートメントを生成する
-    // 2番めの引数には、条件を持つBeanオブジェクトを指定する。
-    // このBeanオブジェクトの状態を元にSQLのorder by句の組み立てが行われる。
+    // 根据SQLID生成语句
+    // 第2个参数中指定带有条件的Bean对象。
+    // 根据此Bean对象的状态进行SQL的order by子句组装。
     ParameterizedSqlPStatement statement = connection.prepareParameterizedSqlStatementBySqlId(
         "jp.co.tis.sample.action.SampleAction#searchUser", condition);
 
-    // conditionのプロパティの値をバインド変数に設定しSQLが実行される
+    // 将condition属性的值设置到绑定变量中并执行SQL
     SqlResultSet result = statement.retrieve(condition);
 
 .. _database-binary_column:
 
-バイナリ型のカラムにアクセスする
+访问二进制类型的列
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-blob(データベース製品によりバイナリ型の型は異なる)などのバイナリ型のカラムへのアクセス方法について説明する。
+说明如何访问blob（根据数据库产品不同，二进制类型的类型也不同）等二进制类型的列。
 
-バイナリ型の値を取得する
-  バイナリ型の値を取得する場合には、検索結果オブジェクトの :java:extdoc:`SqlRow <nablarch.core.db.statement.SqlRow>` から `byte[]` として値を取得する。
+获取二进制类型的值
+  获取二进制类型的值时，从搜索结果对象 :java:extdoc:`SqlRow <nablarch.core.db.statement.SqlRow>` 中以 `byte[]` 形式获取值。
 
-  以下に例を示す。
+  以下展示示例。
 
   .. code-block:: java
 
@@ -858,30 +859,30 @@ blob(データベース製品によりバイナリ型の型は異なる)など�
 
     SqlRow row = rows.get(0);
 
-    // 暗号化されたカラムの値をgetBytesを使ってバイナリで取得する
+    // 使用getBytes以二进制形式获取加密列的值
     byte[] encryptedPassword = row.getBytes("password");
 
   .. important::
 
-    上記実装例の場合、カラムの内容が全てJavaのヒープ上に展開される。
-    このため、非常に大きいサイズのデータを読み込んだ場合、ヒープ領域を圧迫し、システムダウンなどの障害の原因となる。
+    在上述实现示例中，列的内容全部展开到Java的堆上。
+    因此，如果读取非常大尺寸的数据，会压迫堆区域，可能导致系统宕机等故障。
 
-    このため、大量データを読み込む場合には、以下のように :java:extdoc:`Blob <java.sql.Blob>` オブジェクトを使用して、ヒープを大量に消費しないようにすること。
+    因此，读取大量数据时，请像以下这样使用 :java:extdoc:`Blob <java.sql.Blob>` 对象，避免大量消耗堆。
 
     .. code-block:: java
 
       SqlResultSet rows = select.retrieve();
 
-      // Blogとしてデータを取得する
+      // 作为Blob获取数据
       Blob pdf = (Blob) rows.get(0).get("PDF");
 
       try (InputStream input = pdf.getBinaryStream()) {
-        // InputStreamからデータを順次読み込み処理を行う。
-        // 一括で読み込んだ場合、全てヒープに展開されるので注意すること
+        // 从InputStream顺序读取数据进行处理。
+        // 注意如果一次性读取，全部会展开到堆上
       }
 
-バイナリ型の値を登録・更新する
-  サイズの小さいバイナリ値を登録・更新する場合は、 :java:extdoc:`SqlPStatement#setByte <nablarch.core.db.statement.SqlPStatement.setBytes(int,byte[])>` を使用する。
+登记·更新二进制类型的值
+  登记·更新尺寸较小的二进制值时，使用 :java:extdoc:`SqlPStatement#setByte <nablarch.core.db.statement.SqlPStatement.setBytes(int,byte[])>` 。
 
   .. code-block:: java
 
@@ -890,8 +891,8 @@ blob(データベース製品によりバイナリ型の型は異なる)など�
     statement.setBytes(1, new byte[] {0x30, 0x31, 0x32});
     int updateCount = statement.executeUpdate();
 
- サイズが大きいバイナリ値を登録更新する場合は、 :java:extdoc:`SqlPStatement#setBinaryStream <nablarch.core.db.statement.SqlPStatement.setBinaryStream(int,java.io.InputStream,int)>`
- を使用して、ファイルなどを表す :java:extdoc:`InputStream <java.io.InputStream>` から直接データベースに値を送信する。
+ 登记·更新尺寸较大的二进制值时，使用 :java:extdoc:`SqlPStatement#setBinaryStream <nablarch.core.db.statement.SqlPStatement.setBinaryStream(int,java.io.InputStream,int)>`
+ ，从表示文件等的 :java:extdoc:`InputStream <java.io.InputStream>` 直接向数据库发送值。
 
  .. code-block:: java
 
@@ -903,171 +904,172 @@ blob(データベース製品によりバイナリ型の型は異なる)など�
 
 .. _database-clob_column:
 
-桁数の大きい文字列型のカラム(例えばCLOB)にアクセスする
+访问位数较大的字符串类型列（例如CLOB）
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-CLOBのような大きいサイズの文字列型カラムへのアクセス方法について解説する。
+说明如何访问像CLOB这样大尺寸的字符串类型列。
 
-CLOB型の値を取得する
-  CLOB型の値を取得する場合は、 :java:extdoc:`検索結果オブジェクト <nablarch.core.db.statement.SqlRow>` から文字列型として値を取得する。
+获取CLOB类型的值
+  获取CLOB类型的值时，从 :java:extdoc:`搜索结果对象 <nablarch.core.db.statement.SqlRow>` 中以字符串类型获取值。
 
-  以下に例を示す。
+  以下展示示例。
 
   .. code-block:: java
 
     SqlResultSet rows = statement.retrieve();
     SqlRow row = rows.get(0);
 
-    // StringとしてCLOBの値を取得する。
+    // 以String形式获取CLOB的值。
     String mailBody = row.getString("mailBody");
 
   .. important::
 
-    上記実装例の場合、カラムの内容が全てJavaのヒープ上に展開される。
-    このため、非常に大きいサイズのデータを読み込んだ場合、ヒープ領域を圧迫し、システムダウンなどの障害の原因となる。
+    在上述实现示例中，列的内容全部展开到Java的堆上。
+    因此，如果读取非常大尺寸的数据，会压迫堆区域，可能导致系统宕机等故障。
 
-    このため、大量データを読み込む場合には、以下のように :java:extdoc:`Clob <java.sql.Clob>` オブジェクトを使用して、
-    ヒープを大量に消費しないようにすること。
+    因此，读取大量数据时，请像以下这样使用 :java:extdoc:`Clob <java.sql.Clob>` 对象，避免大量消耗堆。
 
     .. code-block:: java
 
       SqlResultSet rows = select.retrieve();
 
-      // Clogとしてデータを取得する
+      // 作为Clog获取数据
       Clob mailBody = (Clob) rows.get(0).get("mailBody");
 
       try (Reader reader = mailBody.getCharacterStream()) {
-        // Readerからデータを順次読み込み処理を行う。
-        // 読み込んだデータをヒープ上に全て保持した場合は、ヒープを圧迫するので注意すること。
+        // 从Reader顺序读取数据进行处理。
+        // 注意如果将读取的数据全部保持在堆上，会压迫堆。
       }
     
-CLOB型に値を登録(更新)する
-  サイズが小さい値を登録更新する場合は、String型の値を :java:extdoc:`SqlPStatement#setString <nablarch.core.db.statement.SqlPStatement.setString(int,java.lang.String)>` を使用して設定する。
+向CLOB类型登记（更新）值
+  登记·更新尺寸较小的值时，使用String类型的值通过 :java:extdoc:`SqlPStatement#setString <nablarch.core.db.statement.SqlPStatement.setString(int,java.lang.String)>` 进行设置。
 
-  以下に例を示す。
+  以下展示示例。
 
   .. code-block:: java
 
-    statement.setString(1, "値");
+    statement.setString(1, "值");
     statement.executeUpdate();
 
-  サイズが大きい値を登録、更新する場合は :java:extdoc:`SqlPStatement#setCharacterStream <nablarch.core.db.statement.SqlPStatement.setCharacterStream(int,java.io.Reader,int)>`
-  を使用して、テキストファイルなどを表す :java:extdoc:`Reader <java.io.Reader>` 経由でデータベースに値を送信する。
+  登记·更新尺寸较大的值时，使用 :java:extdoc:`SqlPStatement#setCharacterStream <nablarch.core.db.statement.SqlPStatement.setCharacterStream(int,java.io.Reader,int)>`
+  ，经由表示文本文件等的 :java:extdoc:`Reader <java.io.Reader>` 向数据库发送值。
 
-  以下に例を示す。
+  以下展示示例。
 
   .. code-block:: java
 
     Path path = Paths.get(filePath);
     try (Reader reader = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
-      // setCharacterStreamを使用してReaderの値を登録する。
+      // 使用setCharacterStream登记Reader的值。
       statement.setCharacterStream(1, reader, (int) Files.size(path));
     }
 
 
-データベースアクセス時に発生する例外の種類
+数据库访问时发生的异常种类
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-データベースアクセス時の例外は、大きく分けて以下の4種類が送出される。
+数据库访问时的异常，大致分为以下4种。
 
-これらの例外は全て非チェック例外のため、 :java:extdoc:`SQLException <java.sql.SQLException>` のように ``try-catch`` で補足する必要はない。
+这些异常都是非检查异常，因此无需像 :java:extdoc:`SQLException <java.sql.SQLException>` 那样用 ``try-catch`` 捕获。
 
-データベースアクセスエラー時の例外
-  データベースアクセス時に発生する例外で、 :java:extdoc:`DbAccessException <nablarch.core.db.DbAccessException>` が送出される。
+数据库访问错误时的异常
+  数据库访问时发生的异常，抛出 :java:extdoc:`DbAccessException <nablarch.core.db.DbAccessException>` 。
 
-データベース接続エラー時の例外
-  データベースアクセスエラー時の例外がデータベース接続エラーを示す場合には、 :java:extdoc:`DbConnectionException <nablarch.core.db.connection.exception.DbConnectionException>` が送出される。
-  この例外は、 :ref:`retry_handler` により処理される。(:ref:`retry_handler` 未適用の場合には、実行時例外として扱われる。)
+数据库连接错误时的异常
+  如果数据库访问错误时的异常表示数据库连接错误，则抛出 :java:extdoc:`DbConnectionException <nablarch.core.db.connection.exception.DbConnectionException>` 。
+  此异常由 :ref:`retry_handler` 处理。(未应用 :ref:`retry_handler` 时，作为运行时异常处理。)
 
-  なお、データベース接続エラーの判定には、 :ref:`ダイアレクト <database-dialect>` が使用される。
+  此外，数据库连接错误的判定使用 :ref:`方言(Dialect) <database-dialect>` 。
 
-SQL実行時の例外
-  SQLの実行に失敗した時に発生する例外で、 :java:extdoc:`SqlStatementException <nablarch.core.db.statement.exception.SqlStatementException>` が送出される。
+SQL执行时的异常
+  SQL执行失败时发生的异常，抛出 :java:extdoc:`SqlStatementException <nablarch.core.db.statement.exception.SqlStatementException>` 。
 
-SQL実行時の例外が一意制約違反の場合の例外
-  SQL実行時の例外が一意制約違反を示す例外の場合は、 :java:extdoc:`DuplicateStatementException <nablarch.core.db.statement.exception.DuplicateStatementException>` が送出される。
+SQL执行时异常为唯一约束违反时的异常
+  如果SQL执行时的异常表示唯一约束违反，则抛出 :java:extdoc:`DuplicateStatementException <nablarch.core.db.statement.exception.DuplicateStatementException>` 。
 
-  一意制約違反をハンドリングしたい場合には、 :ref:`database-duplicated_error` を参照。
+  如果要处理唯一约束违反，请参阅 :ref:`database-duplicated_error` 。
 
-  なお、一意制約違反の判定には、 :ref:`ダイアレクト <database-dialect>` が使用される。
+  此外，唯一约束违反的判定使用 :ref:`方言(Dialect) <database-dialect>` 。
 
 .. tip::
 
-  データベースアクセスエラー発生時の例外を変更したい場合（より細かく分けたい場合）などは、
-  :ref:`database-change_exception` を参照すること。
+  如果想更改数据库访问错误发生时的异常（例如想更细致地划分）等，
+  请参阅 :ref:`database-change_exception` 。
 
 .. _database-duplicated_error:
 
-一意制約違反をハンドリングして処理を行う
+处理唯一约束违反并执行处理
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-一意制約違反時に何か処理を行う必要がある場合には、 :java:extdoc:`DuplicateStatementException <nablarch.core.db.statement.exception.DuplicateStatementException>` を ``try-catch`` で補足し処理をする。
+需要在唯一约束违反时执行某些处理的情况下，请用 ``try-catch`` 捕获 :java:extdoc:`DuplicateStatementException <nablarch.core.db.statement.exception.DuplicateStatementException>` 并处理。
 
-なお、一意制約違反の判定には、 :ref:`ダイアレクト <database-dialect>` が使用される。
+此外，唯一约束违反的判定使用 :ref:`方言(Dialect) <database-dialect>` 。
 
 .. important::
 
-  データベース製品によってはSQL実行時に例外が発生した場合に、ロールバックを行うまで一切のSQLを受け付けないものがあるので注意すること。
-  このような製品の場合には、他の手段で代用できないか検討すること。
+  根据数据库产品不同，SQL执行时发生异常的情况下，在回滚完成前可能不接受任何SQL，请注意。
+  对于此类产品，请考虑是否可以用其他方法替代。
 
-  例えば、登録処理で一意制約違反が発生した場合に更新処理をしたい場合は、
-  例外ハンドリングを行うのではなく `merge` 文を使用することでこの問題を回避できる。
+  例如，如果在登记处理中发生唯一约束违反时想执行更新处理，
+  不是进行异常处理，而是使用 `merge` 语句来规避此问题。
 
-処理が長いトランザクションはエラーとして処理を中断させる
+将处理时间较长的事务作为错误中断处理
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-トランザクション管理にて実現する。
-詳細は、 :ref:`transaction-timeout` を参照。
+通过事务管理实现。
+详细内容请参阅 :ref:`transaction-timeout` 。
 
 .. _database-new_transaction:
 
-現在のトランザクションとは異なるトランザクションでSQLを実行する
+在与当前事务不同的事务中执行SQL
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-データベース接続管理ハンドラ及びトランザクション制御ハンドラで開始したトランザクションではなく、
-個別のトランザクションを使用してデータベースアクセスを行いたい場合がある。
+有时不想使用数据库连接管理处理器和事务控制处理器启动的事务，
+而是想使用单独的事务进行数据库访问。
 
-例えば、業務処理が失敗した場合でも必ずデータベースへの変更を確定したい場合には、
-現在のトランザクションとは異なるトランザクションを定義してデータベースにアクセスする。
+例如，即使业务处理失败也想确保对数据库的更改时，
+定义与当前事务不同的事务来访问数据库。
 
-個別トランザクションを使用するには、以下の手順が必要となる。
+使用单独事务需要以下步骤。
 
-#. コンポーネント設定ファイルに :java:extdoc:`SimpleDbTransactionManager <nablarch.core.db.transaction.SimpleDbTransactionManager>` を定義する。
-#. :java:extdoc:`SimpleDbTransactionManager <nablarch.core.db.transaction.SimpleDbTransactionManager>` をSystem Repositoryから取得し、新たなトランザクションでSQLを実行する。
-   （System Repositoryから取得するのではなく、 :java:extdoc:`SimpleDbTransactionManager <nablarch.core.db.transaction.SimpleDbTransactionManager>` を設定して使用してもよい)
+#. 在组件配置文件中定义 :java:extdoc:`SimpleDbTransactionManager <nablarch.core.db.transaction.SimpleDbTransactionManager>` 。
+#. 从系统仓库获取 :java:extdoc:`SimpleDbTransactionManager <nablarch.core.db.transaction.SimpleDbTransactionManager>` ，在新事务中执行SQL。
+   （也可以不通过系统仓库获取，而是配置 :java:extdoc:`SimpleDbTransactionManager <nablarch.core.db.transaction.SimpleDbTransactionManager>` 后使用）
 
-以下に使用例を示す。
+以下展示使用示例。
 
-コンポーネント設定ファイル
-  コンポーネント設定ファイルに  :java:extdoc:`SimpleDbTransactionManager <nablarch.core.db.transaction.SimpleDbTransactionManager>` を定義する。
+组件配置文件
+  在组件配置文件中定义 :java:extdoc:`SimpleDbTransactionManager <nablarch.core.db.transaction.SimpleDbTransactionManager>` 。
 
-  * :java:extdoc:`connectionFactory <nablarch.core.db.transaction.SimpleDbTransactionManager.setConnectionFactory(nablarch.core.db.connection.ConnectionFactory)>` プロパティに :java:extdoc:`ConnectionFactory <nablarch.core.db.connection.ConnectionFactory>` 実装クラスを設定する。
-    :java:extdoc:`ConnectionFactory <nablarch.core.db.connection.ConnectionFactory>` 実装クラスの詳細は、 :ref:`database-connect` を参照。
+  * :java:extdoc:`connectionFactory <nablarch.core.db.transaction.SimpleDbTransactionManager.setConnectionFactory(nablarch.core.db.connection.ConnectionFactory)>`
+    属性中设置 :java:extdoc:`ConnectionFactory <nablarch.core.db.connection.ConnectionFactory>` 实现类。
+    :java:extdoc:`ConnectionFactory <nablarch.core.db.connection.ConnectionFactory>` 实现类的详细内容，请参阅 :ref:`database-connect` 。
 
-  * :java:extdoc:`transactionFactory <nablarch.core.db.transaction.SimpleDbTransactionManager.setTransactionFactory(nablarch.core.transaction.TransactionFactory)>` プロパティに :java:extdoc:`TransactionFactory <nablarch.core.transaction.TransactionFactory>` 実装クラスを設定する。
-     :java:extdoc:`TransactionFactory <nablarch.core.transaction.TransactionFactory>` 実装クラスの詳細は、 :ref:`transaction-database` を参照。
+  * :java:extdoc:`transactionFactory <nablarch.core.db.transaction.SimpleDbTransactionManager.setTransactionFactory(nablarch.core.transaction.TransactionFactory)>`
+    属性中设置 :java:extdoc:`TransactionFactory <nablarch.core.transaction.TransactionFactory>` 实现类。
+    :java:extdoc:`TransactionFactory <nablarch.core.transaction.TransactionFactory>` 实现类的详细内容，请参阅 :ref:`transaction-database` 。
 
   .. code-block:: xml
 
     <component name="update-login-failed-count-transaction" class="nablarch.core.db.transaction.SimpleDbTransactionManager">
-      <!-- connectionFactoryプロパティにConnectionFactory実装クラスを設定する -->
+      <!-- connectionFactory属性中设置ConnectionFactory实现类 -->
       <property name="connectionFactory" ref="connectionFactory" />
 
-      <!-- transactionFactoryプロパティにTransactionFactory実装クラスを設定する -->
+      <!-- transactionFactory属性中设置TransactionFactory实现类 -->
       <property name="transactionFactory" ref="transactionFactory" />
 
-      <!-- トランザクションを識別するための名前を設定する -->
+      <!-- 设置用于识别事务的名称 -->
       <property name="dbTransactionName" value="update-login-failed-count-transaction" />
 
     </component>
 
-実装例
-  コンポーネント設定ファイルに設定した :java:extdoc:`SimpleDbTransactionManager <nablarch.core.db.transaction.SimpleDbTransactionManager>` を使って、SQLを実行する。
-  なお、 :java:extdoc:`SimpleDbTransactionManager <nablarch.core.db.transaction.SimpleDbTransactionManager>` を直接使うのではなくトランザクションを制御する、
-  :java:extdoc:`SimpleDbTransactionExecutor<nablarch.core.db.transaction.SimpleDbTransactionExecutor>` を使用すること。
+实现示例
+  使用组件配置文件中配置的 :java:extdoc:`SimpleDbTransactionManager <nablarch.core.db.transaction.SimpleDbTransactionManager>` 执行SQL。
+  此外，不要直接使用 :java:extdoc:`SimpleDbTransactionManager <nablarch.core.db.transaction.SimpleDbTransactionManager>` ，而是使用控制事务的
+  :java:extdoc:`SimpleDbTransactionExecutor<nablarch.core.db.transaction.SimpleDbTransactionExecutor>` 。
 
   .. code-block:: java
 
-    // System RepositoryからSimpleDbTransactionManagerを取得する
+    // 从系统仓库获取SimpleDbTransactionManager
     SimpleDbTransactionManager dbTransactionManager =
         SystemRepository.get("update-login-failed-count-transaction");
 
-    // SimpleDbTransactionManagerをコンストラクタに指定して実行する
+    // 在构造函数中指定SimpleDbTransactionManager后执行
     SqlResultSet resultSet = new SimpleDbTransactionExecutor<SqlResultSet>(dbTransactionManager) {
       @Override
       public SqlResultSet execute(AppDbConnection connection) {
@@ -1080,57 +1082,57 @@ SQL実行時の例外が一意制約違反の場合の例外
 
 .. _database-use_cache:
 
-検索結果をキャッシュする（同じSQLで同じ条件の場合にキャッシュしたデータを扱いたい)
+缓存搜索结果（想在相同SQL相同条件时使用缓存的数据）
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-更新時間が決まっているデータや、頻繁にアクセスされるが必ず最新のデータを返す必要がない場合には、
-データベースの負荷を軽減させるために検索結果をキャッシュできる。
+对于更新时间已确定的数据，或频繁访问但不必返回最新数据的情况，
+可以通过缓存搜索结果来减轻数据库负载。
 
-この機能は、以下のような機能で有効に活用できる。
+此功能可以在以下功能中有效利用。
 
-* 売り上げランキングのように結果が厳密に最新である必要が無く大量に参照されるデータ
-* データ更新タイミングが夜間のみで日中は更新されないデータ
+* 如销售额排行榜那样，结果不必严格最新但被大量引用的数据
+* 数据更新时机仅在夜间，白天不更新的数据
 
-制約
-  LOB型について
-    LOB(BLOB型やCLOB型)のカラムを取得した場合、実際にDBに格納されたデータが取得されるのではなく、LOBロケータが取得される。
-    実際の値を取得する場合は、このLOBロケータ経由で値を取得する。
+约束
+  关于LOB类型
+    获取LOB(BLOB类型或CLOB类型)的列时，获取的不是实际存储在DB中的数据，而是LOB定位器。
+    获取实际值时，需要通过此LOB定位器获取。
 
-    このLOBロケータの有効期間は、RDBMS毎の実装に依存している。
-    通常、 :java:extdoc:`java.sql.ResultSet` や :java:extdoc:`java.sql.Connection` がクローズされた時点でアクセスできなくなる。
-    このため、 `ResultSet` や `Connection` よりも生存期間が長いキャッシュにはBLOB、CLOB型を含めることができない。
+    此LOB定位器的有效期限依赖于各RDBMS的实现。
+    通常，在 :java:extdoc:`java.sql.ResultSet` 或 :java:extdoc:`java.sql.Connection` 关闭时将无法访问。
+    因此，生存期限比 `ResultSet` 或 `Connection` 更长的缓存不能包含BLOB、CLOB类型。
 
-  应用の冗長化について
-    デフォルトで提供するキャッシュを保持するコンポーネントはJVMのヒープ上にキャッシュを保持する。
-    このため、应用を冗長化構成とした場合、应用ごとに検索結果がキャッシュされることになる。
+  关于应用的冗余化
+    默认提供的缓存保持组件在JVM的堆上保持缓存。
+    因此，如果应用采用冗余化配置，搜索结果将在每个应用中缓存。
 
-    このため、キャッシュタイミングが異なるため、それぞれの应用で異なるキャッシュを保持する可能性がある。
+    因此，由于缓存时机不同，每个应用可能保持不同的缓存。
 
-    应用サーバを冗長化している場合で、ラウンドロビンでロードバランサを行う場合は、
-    毎回異なるサーバにアクセスする可能性がある。
-    もし、サーバごとに異なるキャッシュを保持していた場合、リクエストの都度異なる結果が画面表示される可能性があるので注意すること。
-
-.. important::
-
-  この機能は、参照系のデータベースアクセスを省略可能な場合に省略し、システム負荷を軽減することを目的としており、
-  データベースアクセス（SQL）の高速化を目的としているものではない。
-  このため、SQLの高速化を目的として使用してはならない。そのような場合には、SQLのチューニングを実施すること。
+    如果应用服务器采用冗余化配置，并以轮询方式进行负载均衡，
+    则可能每次访问不同的服务器。
+    如果各服务器保持不同的缓存，则每次请求可能显示不同的结果，请注意。
 
 .. important::
 
-  この機能は、データベースの値の更新を監視してキャッシュの最新化を行うことはない。
-  このため、常に最新のデータを表示する必要がある機能では使用しないこと。
+  此功能旨在当可以省略引用系数据库访问时进行省略，减轻系统负载，
+  并非以数据库访问（SQL）高速化为目的。
+  因此，不得以SQL高速化为目的使用。此类情况下，请进行SQL调优。
 
-以下に使用例を示す。
+.. important::
 
-コンポーネント設定ファイル
-  以下の手順に従い、検索結果のキャッシュを有効化する。
+  此功能不会监视数据库值的更新来更新缓存。
+  因此，在必须始终显示最新数据的功能中不要使用。
 
-  #. クエリ結果をキャッシュするコンポーネントの定義
-  #. SQLID毎の検索結果のキャッシュ設定
-  #. 検索結果をキャッシュするSQL実行コンポーネントの定義
+以下展示使用示例。
 
-  クエリ結果のキャッシュクラスのコンポーネントの定義
-    デフォルトで提供されるクエリ結果をキャッシュするクラスの :java:extdoc:`InMemoryResultSetCache <nablarch.core.db.cache.InMemoryResultSetCache>` を設定する。
+组件配置文件
+  按照以下步骤启用搜索结果缓存。
+
+  #. 定义缓存查询结果的组件
+  #. 每个SQLID的搜索结果缓存配置
+  #. 定义缓存搜索结果的SQL执行组件
+
+  查询结果缓存类的组件定义
+    配置默认提供的缓存查询结果的类 :java:extdoc:`InMemoryResultSetCache <nablarch.core.db.cache.InMemoryResultSetCache>` 。
 
     .. code-block:: xml
 
@@ -1139,26 +1141,26 @@ SQL実行時の例外が一意制約違反の場合の例外
         <property name="systemTimeProvider" ref="systemTimeProvider"/>
       </component>
 
-  SQLID毎のキャッシュ設定
-    SQLID毎のキャッシュを設定する。
-    デフォルトで提供される :java:extdoc:`BasicExpirationSetting <nablarch.core.cache.expirable.BasicExpirationSetting>` では、SQLID毎にキャッシュの有効期限が設定できる。
+  每个SQLID的缓存配置
+    配置每个SQLID的缓存。
+    默认提供的 :java:extdoc:`BasicExpirationSetting <nablarch.core.cache.expirable.BasicExpirationSetting>` 可以设置每个SQLID的缓存有效期限。
 
-    有効期限には、以下の単位が使用できる。
+    有效期限可以使用以下单位。
 
-    :ms: ミリ秒
+    :ms: 毫秒
     :sec: 秒
     :min: 分
-    :h: 時
+    :h: 时
 
     .. code-block:: xml
 
-      <!-- キャッシュ有効期限設定 -->
+      <!-- 缓存有效期限配置 -->
         <component name="expirationSetting"
             class="nablarch.core.cache.expirable.BasicExpirationSetting">
 
           <property name="expiration">
             <map>
-              <!-- keyにSQLIDを設定し、valueに有効期限を設定する -->
+              <!-- key中设置SQLID，value中设置有效期限 -->
               <entry key="please.change.me.tutorial.ss11AA.W11AA01Action#SELECT" value="100ms"/>
               <entry key="please.change.me.tutorial.ss11AA.W11AA02Action#SELECT" value="30sec"/>
             </map>
@@ -1166,54 +1168,54 @@ SQL実行時の例外が一意制約違反の場合の例外
 
         </component>
 
-  検索結果をキャッシュするSQL実行コンポーネントの定義
-    検索結果をキャッシュさせるためには、SQL実行コンポーネントの生成クラスに :java:extdoc:`CacheableStatementFactory <nablarch.core.db.cache.statement.CacheableStatementFactory>` を設定する。
-    :java:extdoc:`CacheableStatementFactory <nablarch.core.db.cache.statement.CacheableStatementFactory>` は、 デフォルトで提供される
-    :java:extdoc:`BasicStatementFactory <nablarch.core.db.statement.BasicStatementFactory>` を継承しているため、
-    基本的な設定値は、 :java:extdoc:`BasicStatementFactory <nablarch.core.db.statement.BasicStatementFactory>` と同じである。
+  缓存搜索结果的SQL执行组件的定义
+    要使搜索结果缓存，需要在SQL执行组件的生成类中配置 :java:extdoc:`CacheableStatementFactory <nablarch.core.db.cache.statement.CacheableStatementFactory>` 。
+    :java:extdoc:`CacheableStatementFactory <nablarch.core.db.cache.statement.CacheableStatementFactory>` 继承自默认提供的
+    :java:extdoc:`BasicStatementFactory <nablarch.core.db.statement.BasicStatementFactory>` ，
+    因此基本配置值与 :java:extdoc:`BasicStatementFactory <nablarch.core.db.statement.BasicStatementFactory>` 相同。
 
-    :java:extdoc:`expirationSetting <nablarch.core.db.cache.statement.CacheableStatementFactory.setExpirationSetting(nablarch.core.cache.expirable.ExpirationSetting)>` 及び
-    :java:extdoc:`resultSetCache <nablarch.core.db.cache.statement.CacheableStatementFactory.setResultSetCache(nablarch.core.db.cache.ResultSetCache)>` プロパティに対しては、上で設定したクエリー結果のキャッシュコンポーネントと
-    SQLID毎のキャッシュ設定のコンポーネントを設定すること。
+    :java:extdoc:`expirationSetting <nablarch.core.db.cache.statement.CacheableStatementFactory.setExpirationSetting(nablarch.core.cache.expirable.ExpirationSetting)>` 及
+    :java:extdoc:`resultSetCache <nablarch.core.db.cache.statement.CacheableStatementFactory.setResultSetCache(nablarch.core.db.cache.ResultSetCache)>` 属性中，
+    需要设置上述配置的查询结果缓存组件和每个SQLID的缓存配置组件。
 
-    ここで定義した :java:extdoc:`CacheableStatementFactory <nablarch.core.db.cache.statement.CacheableStatementFactory>` コンポーネントは、
-    :ref:`database-connect` で定義したデータベース接続を取得するコンポーネントに設定すること。
+    此处定义的 :java:extdoc:`CacheableStatementFactory <nablarch.core.db.cache.statement.CacheableStatementFactory>` 组件，需要在
+    :ref:`database-connect` 中定义的数据库连接获取组件中进行配置。
 
     .. code-block:: xml
 
-      <!-- キャッシュ可能なステートメントを生成するCacheableStatementFactoryを設定する -->
+      <!-- 配置生成可缓存语句的CacheableStatementFactory -->
       <component name="cacheableStatementFactory"
                  class="nablarch.core.db.cache.CacheableStatementFactory">
 
-        <!-- 有効期限設定 -->
+        <!-- 有效期限配置 -->
         <property name="expirationSetting" ref="expirationSetting"/>
-        <!-- キャッシュ実装 -->
+        <!-- 缓存实现 -->
         <property name="resultSetCache" ref="resultSetCache"/>
 
       </component>
 
-  実装例
-    SQLを使ったデータベースアクセスは、キャッシュ有無によって変わることはない。
-    以下と同じように実装すれば良い。
+  实现示例
+    使用SQL的数据库访问，无论是否有缓存都不会改变。
+    按照以下方式实现即可。
 
     * :ref:`database-execute_sqlid`
     * :ref:`database-input_bean`
 
-`java.sql.Connection` を使って処理を行う
+使用`java.sql.Connection`进行处理
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-JDBCのネイティブなデータベース接続( :java:extdoc:`java.sql.Connection` )を扱いたい場合がある。
-例えば、 :java:extdoc:`java.sql.DatabaseMetaData` を使用したい場合がこれに該当する。
+有时想处理JDBC的原生数据库连接( :java:extdoc:`java.sql.Connection` )。
+例如，想使用 :java:extdoc:`java.sql.DatabaseMetaData` 就属于这种情况。
 
-この場合は、 :java:extdoc:`DbConnectionContext <nablarch.core.db.connection.DbConnectionContext>` から取得した
-:java:extdoc:`TransactionManagerConnection <nablarch.core.db.connection.TransactionManagerConnection>` から :java:extdoc:`java.sql.Connection` を取得することで対応できる。
+这种情况下，可以从 :java:extdoc:`DbConnectionContext <nablarch.core.db.connection.DbConnectionContext>` 获取的
+:java:extdoc:`TransactionManagerConnection <nablarch.core.db.connection.TransactionManagerConnection>` 中获取 :java:extdoc:`java.sql.Connection` 来应对。
 
 .. important::
 
-  :java:extdoc:`java.sql.Connection` を使用した場合、チェック例外である :java:extdoc:`java.sql.SQLException` をハンドリングして例外を制御する必要がある。
-  この例外制御は実装を誤ると、障害が検知されなかったり障害時の調査ができないなどの問題が発生することがある。
-  このため、どうしても :java:extdoc:`java.sql.Connection` を使わないと満たせない要件がない限り、この機能は使用しないこと。
+  使用 :java:extdoc:`java.sql.Connection` 时，需要处理作为检查异常的 :java:extdoc:`java.sql.SQLException` 来控制异常。
+  如果此异常控制实现错误，可能会发生故障未被发现或故障时无法调查等问题。
+  因此，除非没有必须使用 :java:extdoc:`java.sql.Connection` 无法满足的需求，否则不要使用此功能。
 
-以下に例を示す。
+以下展示示例。
 
 .. code-block:: java
 
@@ -1224,45 +1226,45 @@ JDBCのネイティブなデータベース接続( :java:extdoc:`java.sql.Connec
 
 .. _database-replace_schema:
   
-SQL文中のスキーマを環境毎に切り替える
+按环境切换SQL文中的模式(schema)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-特定のSQL（テーブル）のみ別のスキーマを参照したい場合、通常はSQL文に明示的にスキーマを記述するが
-(例: ``SELECT * FROM A_SCHEMA.TABLE1``)、環境によって参照したいスキーマ名が異なるケースがある（下記の例を参照）。
+当仅想引用特定SQL（表）的其他模式时，通常会在SQL文中明确记述模式
+(例: ``SELECT * FROM A_SCHEMA.TABLE1``)，但根据环境不同，想引用的模式名可能不同（请参阅以下示例）。
 
-**TABLE1の参照先スキーマ**
+**TABLE1的引用目标模式**
 
 =================== ==========
-環境                スキーマ
+环境                模式
 =================== ==========
-本番環境            A_SCHEMA
-テスト環境          B_SCHEMA
+生产环境            A_SCHEMA
+测试环境            B_SCHEMA
 =================== ==========
 
-このケースでは、SQL文中にスキーマ名を明示的に記述する方法を使うことができない。
+在这种情况下，无法在SQL文中明确记述模式名的方法。
 
 .. code-block:: sql
 
-  -- スキーマ名を指定してSELECT
-  SELECT * FROM A_SCHEMA.TABLE1  -- 本番では動作するがテスト環境では動作しない
+  -- 指定模式名进行SELECT
+  SELECT * FROM A_SCHEMA.TABLE1  -- 在生产环境中运行但在测试环境中不运行
 
   
-このような場合のために、SQL文中のスキーマを環境毎に切り替える機能を提供する。
+为此类情况提供按环境切换SQL文中模式的功能。
 
-まず、SQL文にスキーマを置き換えるためのプレースホルダー ``#SCHEMA#`` \ [#schema]_\ を記載する。
+首先，在SQL文中记述用于替换模式的占位符 ``#SCHEMA#`` \ [#schema]_\ 。
 
 
 .. code-block:: sql
                 
-  -- スキーマ名を指定してSELECT
+  -- 指定模式名进行SELECT
   SELECT * FROM #SCHEMA#.TABLE1
 
 
-.. [#schema] このプレースホルダーの文字列は固定である。
+.. [#schema] 此占位符的字符串是固定的。
 
 
-プレースホルダーを置き換えるために、以下の例のように\
-:java:extdoc:`BasicSqlLoader <nablarch.core.db.statement.BasicSqlLoader>` を設定する。
+为了替换占位符，像以下示例一样配置\
+:java:extdoc:`BasicSqlLoader <nablarch.core.db.statement.BasicSqlLoader>` 。
 
 .. code-block:: xml
                 
@@ -1271,7 +1273,7 @@ SQL文中のスキーマを環境毎に切り替える
       <component name="sqlLoader" class="nablarch.core.db.statement.BasicSqlLoader">
         <property name="sqlLoaderCallback">
           <list>
-            <!-- SQL文中の#SCHEMA#を指定した値で置き換え -->
+            <!-- 将SQL文中的#SCHEMA#替换为指定值 -->
             <component class="nablarch.core.db.statement.sqlloader.SchemaReplacer">
               <property name="schemaName" value="${nablarch.schemaReplacer.schemaName}"/>
             </component>
@@ -1281,74 +1283,74 @@ SQL文中のスキーマを環境毎に切り替える
     </property>
   </component>
 
-プレースホルダーをどのような値に置き換えるかは、
-:java:extdoc:`SchemaReplacer <nablarch.core.db.statement.sqlloader.SchemaReplacer>`
-のプロパティ\ ``schemaName``\ に設定する。
-上記の例では、置き換え後の値を ``nablarch.schemaReplacer.schemaName`` という環境依存値に設定している。\
-この値を環境毎に切り替えることにより、\
-SQL文中のスキーマをその環境に応じたものに置き換えることができる\
-（切替方法の詳細については :ref:`how_to_switch_env_values` を参照）。
+将占位符替换为何种值，
+在 :java:extdoc:`SchemaReplacer <nablarch.core.db.statement.sqlloader.SchemaReplacer>`
+的属性\ ``schemaName``\ 中进行配置。
+上述示例中，将替换后的值设置为环境依赖值 ``nablarch.schemaReplacer.schemaName`` 。\
+通过按环境切换此值，\
+可以将SQL文中的模式替换为适应该环境的值\
+（切换方法的详细内容请参阅 :ref:`how_to_switch_env_values` ）。
 
 .. tip::
-   本機能によるSQL文中のスキーマ置き換えは単純な文字列置換処理であり、\
-   スキーマが存在するか、スキーマ置き換え後のSQLが妥当であるかといったチェックは行われない\
-   （SQL文実行時にエラーとなる）。
+   此功能对SQL文中的模式替换是简单的字符串替换处理，\
+   不会检查模式是否存在或模式替换后的SQL是否妥当等\
+   （在SQL文执行时会报错）。
 
-拡張例
+扩展示例
 --------------------------------------------------
 
 .. _database-add_connection_factory:
 
-データベースへの接続法を追加する
+添加数据库连接方法
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-データベースの接続方法を追加する手順を説明する。
-例えば、OSSのコネクションプールライブラリを使用する場合などは、この手順に従い作業すると良い。
+说明添加数据库连接方法的步骤。
+例如，使用OSS连接池库等情况时，按照此步骤操作即可。
 
-#. :java:extdoc:`ConnectionFactorySupport <nablarch.core.db.connection.ConnectionFactorySupport>` を継承し、データベース接続を生成するクラスを作成する。
-#. 作成したクラスをコンポーネント設定ファイルに設定する。( :ref:`database-connect` を参照)
+#. 继承 :java:extdoc:`ConnectionFactorySupport <nablarch.core.db.connection.ConnectionFactorySupport>` ，创建生成数据库连接的类。
+#. 将创建的类配置在组件配置文件中。( 请参阅 :ref:`database-connect` )
 
 .. _database-add_dialect:
 
-ダイアレクトを追加する
+添加方言(Dialect)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-ダイアレクトを追加する手順を説明する。
+说明添加方言(Dialect)的步骤。
 
-例えば、使用するデータベース製品に対応したダイアレクトがない場合や、特定機能の使用可否を切り替えたい場合にはダイアレクトを追加する必要がある。
+例如，如果没有与使用数据库产品对应的方言(Dialect)，或想切换特定功能的使用与否时，需要添加方言(Dialect)。
 
-#. :java:extdoc:`DefaultDialect <nablarch.core.db.dialect.DefaultDialect>` を継承し、 データベース製品に対応したダイアレクトを作成する。
-#. 作成したダイアレクトをコンポーネント設定ファイルに設定する ( :ref:`database-use_dialect` を参照)
+#. 继承 :java:extdoc:`DefaultDialect <nablarch.core.db.dialect.DefaultDialect>` ，创建与数据库产品对应的方言(Dialect)。
+#. 将创建的方言(Dialect)配置在组件配置文件中 ( 请参阅 :ref:`database-use_dialect` )
 
 .. _database-change_exception:
 
-データベースアクセス時の例外クラスを切り替える
+切换数据库访问时的异常类
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-データベースアクセス時の例外クラスを切り替える手順を説明する。
+说明切换数据库访问时异常类的步骤。
 
-例えば、デッドロックエラーの例外クラスを変更したい場合には、この手順に従い作業すると良い。
+例如，想更改死锁错误的异常类时，按照此步骤操作即可。
 
-#. データベースアクセスエラーを生成する :java:extdoc:`DbAccessExceptionFactory <nablarch.core.db.connection.DbAccessExceptionFactory>` の実装クラスを作成する。
-#. SQL実行時エラーを生成する :java:extdoc:`SqlStatementExceptionFactory <nablarch.core.db.statement.SqlStatementExceptionFactory>` の実装クラスを作成する。
-#. 作成したクラスをコンポーネント設定ファイルに定義する。
+#. 创建生成数据库访问错误的 :java:extdoc:`DbAccessExceptionFactory <nablarch.core.db.connection.DbAccessExceptionFactory>` 的实现类。
+#. 创建生成SQL执行时错误的 :java:extdoc:`SqlStatementExceptionFactory <nablarch.core.db.statement.SqlStatementExceptionFactory>` 的实现类。
+#. 在组件配置文件中定义创建的类。
 
-以下に詳細な手順を示す。
+以下展示详细步骤。
 
-:java:extdoc:`DbAccessExceptionFactory <nablarch.core.db.connection.DbAccessExceptionFactory>` の実装クラスを作成する
-  データベース接続取得時及びトランザクション制御時(commitやrollback)に発生させる :java:extdoc:`DbAccessException <nablarch.core.db.DbAccessException>` を変更したい場合は、
-  このインタフェースの実装クラスを作成する。
+创建 :java:extdoc:`DbAccessExceptionFactory <nablarch.core.db.connection.DbAccessExceptionFactory>` 的实现类
+  如果想更改获取数据库连接时及事务控制时(commit或rollback)发生的 :java:extdoc:`DbAccessException <nablarch.core.db.DbAccessException>` ，
+  请创建此接口的实现类。
 
-:java:extdoc:`SqlStatementExceptionFactory <nablarch.core.db.statement.SqlStatementExceptionFactory>` の実装クラスを作成する
-  SQL実行時に発生させる :java:extdoc:`SqlStatementException <nablarch.core.db.statement.exception.SqlStatementException>` を変更したい場合は、 このインタフェースの実装クラスを作成する。
+创建 :java:extdoc:`SqlStatementExceptionFactory <nablarch.core.db.statement.SqlStatementExceptionFactory>` 的实现类
+  如果想更改SQL执行时发生的 :java:extdoc:`SqlStatementException <nablarch.core.db.statement.exception.SqlStatementException>` ，请创建此接口的实现类。
 
-コンポーネント設定ファイルに定義する
-  :java:extdoc:`DbAccessExceptionFactory <nablarch.core.db.connection.DbAccessExceptionFactory>` の実装クラスは、 :ref:`database-connect`
-  で定義したデータベース接続を取得するコンポーネントに設定する必要がある。
+在组件配置文件中定义
+  :java:extdoc:`DbAccessExceptionFactory <nablarch.core.db.connection.DbAccessExceptionFactory>` 的实现类，需要在 :ref:`database-connect`
+  中定义的数据库连接获取组件中进行配置。
 
   .. code-block:: xml
 
     <component class="sample.SampleDbAccessExceptionFactory" />
 
-  :java:extdoc:`SqlStatementExceptionFactory <nablarch.core.db.statement.SqlStatementExceptionFactory>` の実装クラスは、 :java:extdoc:`BasicStatementFactory <nablarch.core.db.statement.BasicStatementFactory>` に対して設定する。
-  なお、 :java:extdoc:`BasicStatementFactory <nablarch.core.db.statement.BasicStatementFactory>` は、 :ref:`database-connect` で定義したデータベース接続を取得するコンポーネントに設定する必要がある。
+  :java:extdoc:`SqlStatementExceptionFactory <nablarch.core.db.statement.SqlStatementExceptionFactory>` 的实现类，需要对 :java:extdoc:`BasicStatementFactory <nablarch.core.db.statement.BasicStatementFactory>` 进行配置。
+  此外，:java:extdoc:`BasicStatementFactory <nablarch.core.db.statement.BasicStatementFactory>` 需要在 :ref:`database-connect` 中定义的数据库连接获取组件中进行配置。
 
   .. code-block:: xml
 

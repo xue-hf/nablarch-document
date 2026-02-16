@@ -74,6 +74,10 @@
 | フィールドコンバータ | 字段转换器 | Field Converter | 数据转换 |
 | データバインド | 数据绑定 | Data Bind | 数据与Bean映射 |
 | データリーダ | DataReader | DataReader | 数据读取接口 |
+| バインド変数 | 绑定变量 | Bind Variable | SQL参数绑定 |
+| キャッシュ | 缓存 | Cache | 数据缓存 |
+| LOB | LOB | Large Object | 大对象数据类型 |
+| ダイアレクト | 方言/Dialect | Dialect | 数据库方言 |
 | データの読み込み | 数据的读取 | Data Reading | 输入处理 |
 | データの終端 | 数据末端 | End of Data | 数据结束标记 |
 | 処理対象データ | 处理对象数据 | Target Data | 待处理的数据 |
@@ -227,6 +231,9 @@
 |------|------|------|------|
 | ログ | 日志 | Log | |
 | アクセスログ | 访问日志 | Access Log | |
+| 構造化ログ | 结构化日志 | Structured Log | JSON格式日志 |
+| マスキング | 掩码/掩蔽 | Masking | 敏感信息隐藏 |
+| プレースホルダ | 占位符 | Placeholder | 模板变量 |
 | エラーログ | 错误日志 | Error Log | |
 | パフォーマンスログ | 性能日志 | Performance Log | |
 | メトリクス | 指标/度量 | Metrics | |
@@ -249,6 +256,8 @@
 | HTTPメッセージング | HTTP消息处理 | HTTP Messaging | |
 | MOMメッセージング | MOM消息处理 | MOM Messaging | |
 | 電文 | 电文 | Message | 消息报文 |
+| メッセージボディ | 消息体 | Message Body | 消息内容 |
+| ヘキサダンプ | 十六进制转储 | Hex Dump | 二进制数据转储 |
 | 要求電文 | 请求电文 | Request Message | |
 | 応答電文 | 响应电文 | Response Message | |
 | メッセージ管理 | 消息管理 | Message Management | 错误消息等管理 |
@@ -346,6 +355,7 @@
 | 日文 | 中文 | 英文 | 备注 |
 |------|------|------|------|
 | 日付管理 | 日期管理 | Date Management | 系统日期和业务日期管理 |
+| フォーマッタ | 格式化器 | Formatter | 日期数值格式化 |
 | システム日時 | 系统日期时间 | System Date Time | OS日期时间 |
 | 業務日付 | 业务日期 | Business Date | 业务处理日期 |
 | 業務日付プロバイダ | 业务日期提供provider | Business Date Provider | 日期处理 |
@@ -406,6 +416,8 @@
 | 実装クラス | 实现类 | Implementation Class | 接口实现 |
 | インタフェース | 接口 | Interface | Java接口 |
 | 上書き/オーバーライド | 覆盖/重写 | Override | 方法重写 |
+| 動的属性 | 动态属性 | Dynamic Attribute | 标签动态属性 |
+| 論理属性 | 逻辑属性 | Boolean Attribute | HTML布尔属性 |
 | サブクラス | 子类 | Subclass | 继承类 |
 | FQCN/完全修飾名 | 完全限定类名 | Fully Qualified Class Name | 完整类名 |
 | シグネチャ | 签名 | Signature | 方法标识 |
@@ -436,6 +448,7 @@
 | スタブ | 桩对象/Stub | Stub | 或 stub |
 | テスト容易性 | 可测试性 | Testability | |
 | リクエスト単体テスト | 请求单元测试 | Request Unit Test | |
+| ポイント | 点/测量点 | Point | 性能日志测量标识 |
 
 ## 异常处理
 
@@ -557,6 +570,7 @@
 | 2026-02-14 | 初始版本，整理核心术语 | AI |
 | 2026-02-15 | 添加 Batch 相关术语（ItemReader/ItemProcessor/ItemWriter/Listener/进度日志/运维日志/悲观锁等） | AI |
 | 2026-02-15 | 整理术语表，统一格式，删除 JSON 版本 | AI |
+| 2026-02-15 | 从 Batch架构、数据库、日志、标签等16个已翻译文件中提取新术语：绑定变量/LOB/方言/结构化日志/掩码/消息体/十六进制转储/动态属性/逻辑属性/测量点等（约20个新术语） | AI |
 | 2026-02-15 | 添加 Web/RESTful Web服务/HTTP消息处理/文件操作相关术语（弹出窗口/对话框/路径参数/查询参数/批量更新/批量注册/下载/上传等） | AI |
 | 2026-02-15 | 添加 RESTful Web服务相关术语（转换器/预检请求/CORS/资源类/Bean Validation等） | AI |
 | 2026-02-15 | 从 handlers 和 libraries 已翻译文件中提取新术语：线程上下文/事务管理/权限控制/进程线程/批处理/Web处理/数据绑定/代码管理/日期管理/邮件/授权等（约200个新术语） | AI |

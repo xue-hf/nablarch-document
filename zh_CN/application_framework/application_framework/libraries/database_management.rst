@@ -1,10 +1,10 @@
 .. _database_management:
 
-データベースアクセス
+数据库访问
 ==================================================
-データベースへの接続や、SQLを実行する機能を提供する。
+提供连接数据库和执行SQL的功能。
 
-Nablarchでは、以下の2種類のデータベースアクセス機能を提供している。
+Nablarch提供了以下两种数据库访问功能。
 
 .. toctree::
   :maxdepth: 1
@@ -12,20 +12,18 @@ Nablarchでは、以下の2種類のデータベースアクセス機能を提�
   database/database
   database/universal_dao
 
-上記のどちらの機能を使用した場合でも、SQLを実行できるが、
-以下の理由により :ref:`ユニバーサルDAO <universal_dao>` を使用することを推奨する。
+无论使用上述哪种功能，都可以执行SQL，但出于以下原因，建议使用 :ref:`通用DAO <universal_dao>` 。
 
-* CRUDのSQL文をEntityから自動的に生成しSQLが実行できる
-* 検索結果がBeanオブジェクトとして取得できるため、IDEの補完機能が有効活用でき開発効率が良い
+* 能够从Entity自动生成CRUD的SQL语句并执行
+* 搜索结果可以作为Bean对象获取，因此可以有效利用IDE的补全功能，提高开发效率
 
 .. important::
 
-  :ref:`ユニバーサルDAO <universal_dao>` を使用した場合でも、
-  データベースへの接続やSQL実行は :ref:`JDBCのラッパー機能 <database>` を使用している。
-  このため、 :ref:`JDBCのラッパー機能 <database>` を使うための設定などは必要になる。
+  :ref:`通用DAO <universal_dao>` 也是使用 :ref:`JDBC包装器功能 <database>` 来连接数据库和执行SQL的。
+  因此，需要使用 :ref:`JDBC包装器功能 <database>` 所需的配置等。
 
 .. tip::
- :ref:`universal_dao` とJakarta Persistenceとの機能比較は、 :ref:`database-functional_comparison` を参照。
+ :ref:`universal_dao` 与Jakarta Persistence的功能对比，请参阅 :ref:`database-functional_comparison` 。
 
 .. toctree::
   :hidden:
