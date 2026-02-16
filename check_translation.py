@@ -21,10 +21,46 @@ if sys.platform == 'win32':
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 
 
-def contains_japanese_kana(text):
+# 测试框架特定的保留日文术语（列名标识符）
+# 这些术语在 entityUnitTest 相关文件中是测试框架必需的列名
+TEST_FRAMEWORK_RESERVED_TERMS = [
+    '半角カナ',
+    '全角ひらがな', 
+    '全角カタカナ',
+    '全角記号その他',
+    '半角英字',
+    '半角数字',
+    '半角記号',
+    '全角英字',
+    '全角数字',
+    '全角漢字',
+    '外字',
+]
+
+# 需要特殊处理的文件（允许包含上述保留术语）
+SPECIAL_FILES = [
+    '01_entityUnitTestWithBeanValidation.rst',
+    '02_entityUnitTestWithNablarchValidation.rst',
+]
+
+
+def is_special_file(file_path):
+    """检查文件是否需要特殊处理（entityUnitTest相关文件）"""
+    file_name = os.path.basename(file_path)
+    return file_name in SPECIAL_FILES
+
+
+def contains_japanese_kana(text, file_path=None):
     """检查文本是否包含日文假名（平假名或片假名）
     排除日文符号：・(U+30FB)、ー(U+30FC)、～(U+FF5E)等
+    
+    对于 entityUnitTest 相关文件，允许包含测试框架特定的列名
     """
+    # 如果是特殊文件，先移除保留的测试术语
+    if file_path and is_special_file(file_path):
+        for term in TEST_FRAMEWORK_RESERVED_TERMS:
+            text = text.replace(term, '')
+    
     # 平假名: \u3040-\u309f（排除 \u309B-\u309C 浊音符号）
     # 片假名: \u30a0-\u30ff（排除 \u30FB-\u30FE 符号）
     hiragana = re.search(r'[\u3040-\u309a\u309d-\u309f]', text)  # 排除 309B-309C
@@ -49,8 +85,8 @@ def check_file_status(ja_path, zh_path):
     with open(zh_path, 'r', encoding='utf-8') as f:
         content = f.read()
     
-    # 检查是否包含日文假名
-    if contains_japanese_kana(content):
+    # 检查是否包含日文假名（传递文件路径以支持特殊文件处理）
+    if contains_japanese_kana(content, zh_path):
         return 'untranslated'
     else:
         return 'translated'
@@ -291,8 +327,13 @@ def check_single_file(file_path):
     
     status = check_file_status(ja_path, zh_path)
     
+    # 对于特殊文件，显示额外说明
+    special_note = ''
+    if is_special_file(zh_path):
+        special_note = '\nℹ️  注：该文件为entityUnitTest测试文档，允许包含测试框架特定的日文列名'
+    
     status_map = {
-        'translated': ('已翻译', '✅ 该文件已翻译完成，不含日文假名'),
+        'translated': ('已翻译', '✅ 该文件已翻译完成，不含日文假名' + special_note),
         'untranslated': ('未翻译', '🟡 该文件包含日文假名，需要翻译'),
         'identical': ('与原文相同', '🔴 该文件与原文完全相同'),
         'missing': ('文件缺失', '🔴 中文译文文件不存在')

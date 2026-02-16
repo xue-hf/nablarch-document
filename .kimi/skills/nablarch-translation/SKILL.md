@@ -12,6 +12,7 @@ description: 我的项目中用于 Nablarch 框架文档翻译的 Skill，提供
 1. **术语对照** - 提供日文-中文术语对照表，支持动态扩展
 2. **翻译指南** - 翻译规范和最佳实践
 3. **质量保证** - 确保翻译质量（无日文假名、术语一致）
+4. **行数检查** - 检查翻译文件与原文的行数偏差，发现翻译严重不足的文件
 
 > **注意**：翻译进度统一在 `@TRANSLATION_STATUS.md` 中维护。
 
@@ -102,11 +103,16 @@ python check_translation.py
 .kimi/skills/nablarch-translation/
 ├── SKILL.md                    # 本文件
 ├── guides/
-│   └── TRANSLATION_GUIDE.md    # 翻译指南
+│   ├── TRANSLATION_GUIDE.md    # 翻译指南
+│   └── LINE_COUNT_CHECK.md     # 行数偏差检查工具说明
 ├── terms/
 │   └── TERMINOLOGY.md          # 术语对照表（AI维护）
 └── scripts/
     └── check_translation.py    # 检查脚本（可选）
+
+项目根目录/
+├── check_translation.py        # 翻译状态检查脚本
+└── check_line_count_diff.py    # 行数偏差检查脚本
 ```
 
 ## AI 工作流程
@@ -176,6 +182,8 @@ python check_translation.py
 
 本 Skill 主要由 AI 驱动，但提供了可选的检查脚本：
 
+### 1. 翻译状态检查脚本
+
 ```bash
 # 检查所有文件的翻译状态
 python check_translation.py
@@ -190,25 +198,54 @@ python check_translation.py -f application_framework/handlers/web/index.rst
 python check_translation.py -d development_tools --missing
 ```
 
-> **注意**：脚本位于项目根目录下，使用前先切换到项目根目录。
-
-### 脚本功能说明
-
 | 选项              | 说明                               | 示例                                              |
 | ----------------- | ---------------------------------- | ------------------------------------------------- |
 | `-d, --directory` | 检查指定目录（相对于ja目录的路径） | `-d application_framework/handlers`               |
 | `-f, --file`      | 检查单个文件（相对路径）           | `-f application_framework/handlers/web/index.rst` |
 | `--missing`       | 只显示缺失的文件（与-d配合使用）   | `-d development_tools --missing`                  |
 
-### 判断标准
-
-脚本通过以下标准判断文件是否已翻译：
+**判断标准**：
 
 - ✅ **已翻译**：文件不含日文假名（平假名/片假名）
 - 🟡 **含日文**：文件包含日文假名，需要翻译
 - 🔴 **与原文相同**：文件内容与原文完全一致
 - 🔴 **文件缺失**：中文译文文件不存在
 
-**排除的符号**：日文标点符号（・、～等）不算作未翻译
+### 2. 行数偏差检查脚本
+
+用于检测翻译内容是否严重不足（行数差异过大）：
+
+```bash
+# 检查所有文件的行数偏差
+python check_line_count_diff.py
+
+# 检查指定目录
+python check_line_count_diff.py application_framework/handlers
+
+# 使用阈值 5（更严格）
+python check_line_count_diff.py --threshold 5
+
+# 显示详细信息
+python check_line_count_diff.py --verbose
+```
+
+**输出格式**：
+```
+文件路径: +偏差值 (日文行数 -> 中文行数)
+web/index.rst: +5 (120 -> 125)
+web/architecture.rst: -15 (200 -> 185)  [严重不足]
+```
+
+**偏差值说明**：
+
+| 偏差值 | 含义 | 建议 |
+|--------|------|------|
+| +N | 中文比日文多 N 行 | 可能添加了说明，正常 |
+| 0 | 行数相同 | 理想状态 |
+| -1 ~ -9 | 轻微不足 | 可接受 |
+| -10 ~ -20 | 中度不足 | 建议检查 |
+| < -20 | 严重不足 | 必须检查 |
+
+> **注意**：脚本位于项目根目录下，使用前先切换到项目根目录。
 
 AI 可以直接完成所有任务，脚本仅作为辅助工具。
