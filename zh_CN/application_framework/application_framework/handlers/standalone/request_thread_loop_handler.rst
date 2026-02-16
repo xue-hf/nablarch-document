@@ -123,7 +123,7 @@ handler类名
   重新抛出发生的异常
 
 上述以外的错误
-  输出 ``FATAL`` 级别日志，并发出 :java:extdoc:`可重试异常(Retryable) <nablarch.fw.handler.retry.Retryable)` 。
+  输出 ``FATAL`` 级别日志，并发出 :java:extdoc:`可重试异常(Retryable) <nablarch.fw.handler.retry.Retryable>` 。
 
 .. |br| raw:: html
 

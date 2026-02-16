@@ -1,7 +1,7 @@
 # Nablarch 文档（中文版）
 
-[![翻译进度](https://img.shields.io/badge/翻译进度-52.7%25-green)](TRANSLATION_STATUS.md)
 [![使用 Skill](https://img.shields.io/badge/使用-Skill-blue)](.kimi/skills/nablarch-translation/SKILL.md)
+[![翻译进度](https://img.shields.io/badge/翻译进度-查看详情-blue)](TRANSLATION_STATUS.md)
 
 本项目是 [Nablarch](https://nablarch.github.io/) 框架文档的中文翻译项目。
 
@@ -25,10 +25,6 @@ Nablarch 是一个为企业信息系统开发的 Java 应用框架，由日本 T
 └── locales/      # 本地化文件
 ```
 
-## 翻译进度
-
-目前翻译进度：**52.7%**（176/334 文件）
-
 ## 文档索引
 
 | 文档 | 说明 |
@@ -39,27 +35,7 @@ Nablarch 是一个为企业信息系统开发的 Java 应用框架，由日本 T
 
 ## 翻译进度
 
-目前翻译进度：**52.7%**（176/334 文件）
-
-详细进度请参考：[TRANSLATION_STATUS.md](TRANSLATION_STATUS.md)
-
-### 已完成的模块
-
-| 模块 | 进度 | 说明 |
-|------|------|------|
-| ✅ 处理器 (handlers) | 65/65 (100%) | 全部完成 |
-| ✅ Web 应用 (web) | 23/23 (100%) | 全部完成 |
-| ✅ Web 服务 (web_service) | 17/17 (100%) | 全部完成 |
-| ✅ Nablarch 核心 | 5/5 (100%) | 全部完成 |
-| 批处理 (batch) | 24/29 (82.8%) | Nablarch Batch 和 JSR352 基本完成 |
-| 类库 (libraries) | 33/49 (67.3%) | 核心类库已完成 |
-| 关于 Nablarch | 4/5 (80%) | concept, index, license, mvn_module 已完成 |
-| 空白项目 (blank_project) | 1/20 (5%) | 仅 index 完成 |
-| 适配器 (adaptors) | 1/16 (6.3%) | 仅 index 完成 |
-| 消息处理 (messaging) | 0/12 (0%) | 未开始 |
-| 云原生 (cloud_native) | 0/4 (0%) | 未开始 |
-| 开发工具 (development_tools) | 0/52 (0%) | 未开始 |
-| 业务示例 (biz_samples) | 0/15 (0%) | 未开始 |
+详细翻译进度请参考：[TRANSLATION_STATUS.md](TRANSLATION_STATUS.md)
 
 ## 环境准备
 
@@ -200,18 +176,11 @@ AI 会自动：
 2. 保持 RST 格式不变
 3. 确保无日文假名残留
 4. 更新术语表（如有新术语）
-5. 更新翻译进度
 
 ### 批量翻译
 
 ```
 请批量翻译 application_framework/application_framework/handlers/web/ 下的所有未翻译文件
-```
-
-### 更新进度
-
-```
-请更新翻译进度文档
 ```
 
 ### 术语表
@@ -238,7 +207,7 @@ python .kimi/skills/nablarch-translation/scripts/check_translation.py
 2. 从 [TRANSLATION_STATUS.md](TRANSLATION_STATUS.md) 中选择一个未翻译的文件
 3. 参考 `ja/` 目录下的原文进行翻译
 4. 将翻译后的文件保存到 `zh_CN/` 目录的对应位置
-5. 更新翻译进度文档
+5. 运行 `python check_translation.py` 更新翻译进度
 6. 提交 Pull Request
 
 ### 翻译规范
