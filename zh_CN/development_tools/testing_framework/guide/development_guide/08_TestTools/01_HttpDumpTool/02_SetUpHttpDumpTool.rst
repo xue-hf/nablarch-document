@@ -1,34 +1,34 @@
 =================================================
-リクエスト単体データ作成ツール インストールガイド
+请求单元数据创建工具 安装指南
 =================================================
 
-:doc:`index`\ のインストール方法について説明する。
+说明 :doc:`index` 的安装方法。
 
 .. _http_dump_tool_prerequisite:
 
-前提事項
+前提事项
 ========
 
-本ツールを使用する際、以下の前提事項を満たす必要がある。
+使用本工具时，需要满足以下前提事项。
 
-* 以下のツールがインストール済みであること
+* 已安装以下工具
 
   * Java
   * Maven
 
-* プロジェクトがMavenで管理されていること
-* htmlファイルがブラウザに関連付けされていること
-* ブラウザのプロキシ設定で、localhostが除外されていること
+* 项目由Maven管理
+* html文件已关联浏览器
+* 浏览器代理设置中已排除localhost
 
-提供方法
+提供方式
 ==================
 
-本ツールは以下のjarにて提供する。
+本工具通过以下jar提供。
 
 * nablarch-testing-XXX.jar
 * nablarch-testing-jetty12-XXX.jar
 
-そのため、pom.xmlのdependencies要素以下の記述があることを確認する。
+因此，请确认pom.xml的dependencies元素中有以下描述。
 
 .. code-block:: xml
 
@@ -47,49 +47,49 @@
     <!-- 中略 -->
   </dependencies>
 
-プロジェクトのディレクトリで以下のコマンドを実行し、jar ファイルをダウンロードする。
+在项目目录执行以下命令，下载jar文件。
 
 .. code-block:: text
 
   mvn dependency:copy-dependencies -DoutputDirectory=lib
 
 
-以下のファイルをプロジェクトのpom.xmlと同じディレクトリに配置する。
+将以下文件放置在与项目pom.xml相同的目录中。
 
 * :download:`httpDump.bat <download/httpDump.bat>`
 
 
-Eclipseとの連携
+与Eclipse联动
 ===============
 
-以下の設定をすることでEclipseから本ツールを起動できる。
+通过以下设置可以从Eclipse启动本工具。
 
 
-設定画面起動
+设置画面启动
 ------------
 
-ツールバーから、ウィンドウ(Window)→設定(Prefernce)を選択する。
-左側のペインから一般(General)→エディタ(Editors)→ファイルの関連付け(File Associations)
-を選択、右側のペインから*.htmlを選択し、追加(Add)ボタンを押下する。
+从工具栏选择窗口(Window)→设置(Prefernce)。
+从左侧面板选择一般(General)→编辑器(Editors)→文件关联(File Associations)
+，从右侧面板选择*.html，点击添加(Add)按钮。
 
 .. image:: ./_image/01_Eclipse_Preference.png
    :scale: 100
 
  
-外部プログラム選択
+外部程序选择
 ------------------
 
-ラジオボタンから外部プログラム(External program)を選択し、参照(Browse)ボタンを押下する。
+从单选按钮选择外部程序(External program)，点击浏览(Browse)按钮。
 
 .. image:: ./_image/02_Eclipse_EditorSelection.png
    :scale: 100
 
 
-起動用バッチファイル（シェルスクリプト）選択
+启动用批处理文件（shell脚本）选择
 --------------------------------------------
 
-Windowsの場合はバッチファイル(httpDump.bat)を、
-Linuxの場合はシェルスクリプト(httpDump.sh)を選択する。
+Windows时选择批处理文件(httpDump.bat)，
+Linux时选择shell脚本(httpDump.sh)。
 
 .. image:: ./_image/03_Eclipse_OpenFile.png
    :width: 100%
@@ -97,11 +97,11 @@ Linuxの場合はシェルスクリプト(httpDump.sh)を選択する。
 
 .. _howToExecuteFromEclipse:
 
-HTMLファイルからの起動方法
+从HTML文件启动方法
 --------------------------
 
-Eclipseのパッケージエクスプローラ等からHTMLファイルを右クリックし、
-httpDumpで開くことでツールを起動できる。
+在Eclipse的包资源管理器等中右键单击HTML文件，
+以httpDump打开即可启动工具。
 
 .. image:: ./_image/04_Eclipse_OpenWith.png
    :scale: 100

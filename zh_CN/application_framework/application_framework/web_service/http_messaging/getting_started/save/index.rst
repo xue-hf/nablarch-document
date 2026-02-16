@@ -2,7 +2,7 @@
 
 创建注册功能
 ==========================================================
-讲解将请求的信息(JSON格式)注册到DB的功能。
+讲解将请求的信息(JSON格式)注册到数据库的功能。
 
 功能概要说明
   .. image:: ../images/overview.png
@@ -135,7 +135,7 @@
 .. _`getting_started_http_messaging-action`:
 
 创建业务Action
-  创建将项目注册到DB的业务Action。
+  创建将项目注册到数据库的业务Action。
 
   ProjectSaveAction.java
     .. code-block:: java
@@ -145,7 +145,7 @@
           /**
            * 接收电文时执行的业务处理。
            * <p>
-           * 验证项目信息并注册到DB。
+           * 验证项目信息并注册到数据库。
            * 此方法是注册单个项目的处理。
            * (通过通用格式的格式检查保证是单个项目)
            * </p>
@@ -192,7 +192,7 @@
     * 请求主体的值在通过 :ref:`data_format` 解析后，由参数 :java:extdoc:`RequestMessage <nablarch.fw.messaging.RequestMessage>` 对象
       保持。使用 `getParamMap` 方法获取请求主体的值。
     * 使用 :ref:`bean_validation` 进行请求值的验证。
-    * 使用 :java:extdoc:`UniversalDao <nablarch.common.dao.UniversalDao>` 将项目注册到DB。
+    * 使用 :java:extdoc:`UniversalDao <nablarch.common.dao.UniversalDao>` 将项目注册到数据库。
     * 返回设置表示处理结果的响应代码的 :java:extdoc:`ResponseMessage <nablarch.fw.messaging.ResponseMessage>` 。
 
   .. tip::

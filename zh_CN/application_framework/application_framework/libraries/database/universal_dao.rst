@@ -186,7 +186,7 @@ SQL ID为FIND_BY_NAME。
 通用DAO可以使用 :ref:`@Temporal <universal_dao_jpa_temporal>` 指定 ``java.util.Date`` 及 ``java.util.Calendar`` 类型的值如何映射到数据库。
 其他类型无法进行任意映射，因此Entity的属性请根据数据库类型及使用的JDBC驱动规范定义。
 
-此外，通用DAO在将自动生成的SQL发送到DB时使用Jakarta Persistence注解的信息，但在将任意SQL发送到DB时不使用Jakarta Persistence注解的信息。
+此外，通用DAO在将自动生成的SQL发送到数据库时使用Jakarta Persistence注解的信息，但在将任意SQL发送到数据库时不使用Jakarta Persistence注解的信息。
 因此，类型转换如下所示。
 
 :ref:`执行Entity自动生成的SQL时 <universal_dao-execute_crud_sql>`

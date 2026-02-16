@@ -49,7 +49,7 @@
 
 标准提供以下3种存储。
 
-* :ref:`DB存储 <session_store-db_store>`
+* :ref:`数据库存储 <session_store-db_store>`
 * :ref:`HIDDEN存储 <session_store-hidden_store>`
 * :ref:`HTTP会话存储 <session_store-http_session_store>`
 
@@ -78,7 +78,7 @@
     <artifactId>nablarch-fw-web</artifactId>
   </dependency>
 
-  <!-- 仅使用DB存储时 -->
+  <!-- 仅使用数据库存储时 -->
   <dependency>
     <groupId>com.nablarch.framework</groupId>
     <artifactId>nablarch-fw-web-dbstore</artifactId>
@@ -125,7 +125,7 @@
           <!-- 设置值详情参见Javadoc -->
         </component>
 
-        <!-- DB存储 -->
+        <!-- 数据库存储 -->
         <component-ref name="dbStore" />
 
         <!-- HTTP会话存储 -->
@@ -140,7 +140,7 @@
     <!-- 设置值详情参见Javadoc -->
   </component>
 
-  <!-- DB存储的初始化设置 -->
+  <!-- 数据库存储的初始化设置 -->
   <component name="initializer"
       class="nablarch.core.repository.initialization.BasicApplicationInitializer">
     <property name="initializeList">
@@ -151,7 +151,7 @@
     </property>
   </component>
 
-另外，使用DB存储时，需要在数据库上创建用于保存会话变量的表。
+另外，使用数据库存储时，需要在数据库上创建用于保存会话变量的表。
 
 创建的表定义如下。
 
@@ -179,7 +179,7 @@
   </property>
 
 .. tip::
-  使用DB存储时，浏览器关闭等情况可能导致表上残留会话信息。
+  使用数据库存储时，浏览器关闭等情况可能导致表上残留会话信息。
   因此，需要定期删除过期的会话信息。
 
 .. _`session_store-input_data`:
@@ -190,7 +190,7 @@
 根据是否允许多标签页的画面操作来区分使用会话存储。
 
 不允许多标签页的画面操作时
-  使用DB存储在数据库的表上保持会话变量。
+  使用数据库存储在数据库的表上保持会话变量。
 
 允许多标签页的画面操作时
   使用HIDDEN存储在客户端保持会话变量。
@@ -239,7 +239,7 @@
 保持认证信息
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-保持认证信息时使用DB存储。
+保持认证信息时使用数据库存储。
 
 登录、注销时会话存储的实现示例如下。
 
@@ -385,7 +385,7 @@
 
 .. _`session_store-db_store`:
 
-DB存储
+数据库存储
   :保存目标: | 数据库上的表
 
   :特征: * 滚动维护等应用服务器停止时也可以恢复会话变量。
@@ -421,9 +421,9 @@ HTTP会话存储
 ======================================================================== ===============================================================
 用途                                                                     会话存储
 ======================================================================== ===============================================================
-输入～确认～完成画面间输入信息的保持（不允许多标签页的画面操作）         :ref:`DB存储 <session_store-db_store>`
+输入～确认～完成画面间输入信息的保持（不允许多标签页的画面操作）         :ref:`数据库存储 <session_store-db_store>`
 输入～确认～完成画面间输入信息的保持（允许多标签页的画面操作）           :ref:`HIDDEN存储 <session_store-hidden_store>`
-认证信息的保持                                                           :ref:`DB存储 <session_store-db_store>` 或 :ref:`HTTP会话存储 <session_store-http_session_store>`
+认证信息的保持                                                           :ref:`数据库存储 <session_store-db_store>` 或 :ref:`HTTP会话存储 <session_store-http_session_store>`
 搜索条件的保持                                                           不使用 [1]_
 搜索结果列表的保持                                                       不使用 [2]_
 选择框等画面显示项目的保持                                               不使用 [3]_
@@ -436,7 +436,7 @@ HTTP会话存储
 .. [3] 画面显示使用的值使用请求作用域传递即可。
 
 .. tip::
-  关于 :ref:`redisstore_lettuce_adaptor` ，保存目标不同但特征与DB存储相同。
+  关于 :ref:`redisstore_lettuce_adaptor` ，保存目标不同但特征与数据库存储相同。
 
 .. _`session_store_expiration`:
        

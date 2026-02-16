@@ -1,6 +1,6 @@
 
 ==================================
-プログラミング工程で使用するツール
+编程工程中使用的工具
 ==================================
 
 .. toctree::
@@ -9,4 +9,3 @@
    01_HttpDumpTool/index
    02_MasterDataSetup/index
    03_HtmlCheckTool/index
-

@@ -1,11 +1,11 @@
 .. _unitTestGuide:
 
 ==================
-単体テスト実施方法
+单元测试实施方法
 ==================
 
    
-*共通*
+*通用*
 
 
 .. toctree::
@@ -13,7 +13,7 @@
 
    01_ClassUnitTest/index
 
-*ウェブ应用*
+*Web应用程序*
 
 
 .. toctree::
@@ -27,7 +27,7 @@
    02_RequestUnitTest/double_transmission
 
 
-*RESTfulウェブサービス*
+*RESTful Web服务*
 
 
 .. toctree::
@@ -37,7 +37,7 @@
   03_DealUnitTest/rest
 
 
-*バッチ処理*
+*批处理*
 
 
 .. toctree::
@@ -46,9 +46,9 @@
    02_RequestUnitTest/batch
    03_DealUnitTest/batch
 
-*メッセージング処理*
+*消息处理*
 
-  *同期応答メッセージ受信処理*
+  *同步响应消息接收处理*
 
   .. toctree::
    :maxdepth: 1
@@ -56,7 +56,7 @@
    02_RequestUnitTest/real
    03_DealUnitTest/real
 
-  *応答不要メッセージ受信処理*
+  *无需响应消息接收处理*
 
   .. toctree::
     :maxdepth: 1
@@ -65,21 +65,21 @@
     03_DealUnitTest/delayed_receive
 
 
-  *HTTP同期応答メッセージ受信処理*
+  *HTTP同步响应消息接收处理*
 
   .. toctree::
    :maxdepth: 1
 
    02_RequestUnitTest/http_real
 
-  *同期応答メッセージ送信処理*
+  *同步响应消息发送处理*
 
   .. toctree::
    :maxdepth: 1
  
    02_RequestUnitTest/send_sync
 
-  *応答不要メッセージ送信処理*
+  *无需响应消息发送处理*
 
   .. toctree::
     :maxdepth: 1
@@ -87,7 +87,7 @@
     02_RequestUnitTest/delayed_send
     03_DealUnitTest/delayed_send
 
-  *HTTP同期応答メッセージ送信処理*
+  *HTTP同步响应消息发送处理*
 
   .. toctree::
    :maxdepth: 1
@@ -95,12 +95,11 @@
    02_RequestUnitTest/http_send_sync
 
 
-*その他の処理*
+*其他处理*
 
-  *メール送信処理*
+  *邮件发送处理*
 
   .. toctree::
     :maxdepth: 1
  
     02_RequestUnitTest/mail
-

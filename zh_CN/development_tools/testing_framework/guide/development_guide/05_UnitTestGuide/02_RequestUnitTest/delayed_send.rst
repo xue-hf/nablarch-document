@@ -1,36 +1,36 @@
 ====================================================================
-リクエスト単体テストの実施方法（応答不要メッセージ送信処理）
+请求单元测试的实施方法（无响应消息发送处理）
 ====================================================================
 
 --------------------
-概要
+概述
 --------------------
-応答不要メッセージ送信処理用のAction类は、Nablarchの一部として提供される。
-このため、リクエスト単体テストではこのAction类を使用して、以下の\ `テスト対象の成果物`_\ の確認を行う。
+无响应消息发送处理用的Action类作为Nablarch的一部分提供。
+因此，在请求单元测试中使用此Action类，确认以下\ `测试目标交付物`\_的内容。
 
-**※他の処理のようなAction类に対する条件網羅や、限界値テストなどは実施不要である。**
+**※不需要像其他处理那样进行Action类的条件覆盖、边界值测试等。**
 
-テスト対象の成果物
+测试目标交付物
 ===================
-* 電文のレイアウトを定義したフォーマット定義ファイル
-* 下記3種類のSQL文
+* 定义报文布局的格式定义文件
+* 以下3种SQL语句
 
-  * 電文送信テーブルからステータスが未送信のデータを取得するためのSELECT文
-  * 電文送信後に、該当データのステータスを処理済みに更新するためのUPDATE文
-  * 電文送信に失敗した場合に、該当データのステータスを送信失敗(エラー)に更新するためのUPDATE文
+  * 从报文发送表中获取状态为未发送的数据的SELECT语句
+  * 报文发送后，将对应数据状态更新为已处理的UPDATE语句
+  * 报文发送失败时，将对应数据状态更新为发送失败(错误)的UPDATE语句
 
 
 --------------------
-テストクラスの書き方
+测试类的编写方法
 --------------------
 
-テストクラスは以下の条件を満たすように作成する。
+测试类需要满足以下条件进行创建。
 
-* テストクラスのパッケージは、テスト対象機能のパッケージとする。
-* <電文のリクエストID>RequestTestというクラス名でテストクラスを作成する。
-* \ ``nablarch.test.core.batch.BatchRequestTestSupport``\ を継承する。
+* 测试类的包名为测试目标功能的包名。
+* 以<报文的请求ID>RequestTest作为测试类的类名进行创建。
+* 继承\ ``nablarch.test.core.batch.BatchRequestTestSupport``\ 。
 
-例えば、テスト対象機能のパッケージがnablarch.sample.ss21AA、電文のリクエストIDがRM11AC0301だとすると、テストクラスは以下のようになる。
+例如，测试目标功能的包名为nablarch.sample.ss21AA、报文的请求ID为RM11AC0301时，测试类如下所示。
 
 .. code-block:: java
 
@@ -42,77 +42,76 @@
 
 
 ------------------------------
-テストデータの書き方
+测试数据的编写方法
 ------------------------------
-`テスト対象の成果物`_ のテストを行うために必要なテストデータの記述方法を説明する。
+说明测试\ `测试目标交付物`\_所需的测试数据的描述方法。
 
-テストデータの記述方法は、\ :ref:`message_sendSyncMessage_test`\ を参照すること。
-本項では、\ :ref:`message_sendSyncMessage_test`\ と記述方法が異なる箇所を解説する。
+测试数据的描述方法请参考\ :ref:`message_sendSyncMessage_test`\ 。
+本项说明与\ :ref:`message_sendSyncMessage_test`\ 描述不同的地方。
 
-要求電文の期待値および、返却する応答電文（レスポンスメッセージ）の準備
+请求报文的期望值以及返回的响应报文（响应消息）的准备
 ======================================================================
 
-応答不要メッセージ送信処理では、応答電文は存在しないため応答電文が期待値通りであることを確認する必要はない。
+无响应消息发送处理中，由于不存在响应报文，因此不需要确认响应报文是否符合期望值。
 
-このため、下記設定が不要となる。
+因此，以下设置变为不需要。
 
-* testShotsの定義
+* testShots的定义
 
   * responseMessage
 
-* 期待値及び準備データの定義
+* 期望值及准备数据的定义
 
   * RESPONSE_HEADER_MESSAGES
   * RESPONSE_BODY_MESSAGES
 
 
-正常系のテスト
+正常系测试
 ------------------
 
- | 電文が正しく送信されるケースの確認を実施する。
- | このケースでは、送信された電文の確認及び該当データのステータス更新の確認を行う。
+ | 确认报文正确发送的情况。
+ | 在这种情况下，确认发送的报文以及对应数据的状态更新。
  |
- | 応答不要メッセージ送信処理用のAction类は、起動パラメータとしてメッセージのリクエストIDを要求する。
- | このため、「testShots」の定義に下記画像のように「KEY=messageRequestId」、「VALUE=メッセージのリクエストID」を追加する必要がある。
+ | 无响应消息发送处理用的Action类要求启动参数中报文的请求ID。
+ | 因此，需要在「testShots」的定义中添加「KEY=messageRequestId」、「VALUE=报文的请求ID」，如下图所示。
 
  .. image:: _image/delayed_send.png
     :scale: 50
 
 
-異常系のテスト(障害系のテスト)
+异常系测试(故障系测试)
 ------------------------------
   
- | 異常系のテストは、メッセージの送信に失敗した場合に該当データのステータスをエラーに更新するUPDATE文を確認するために必要である。
- | 異常系テストケースを実施するには、「testShots」の定義に下記画像のように「KEY=errorCase」、「VALUE=true」と設定すれば良い。
- | なお、異常系ケースでは電文が送信されないため送信電文の期待値を設定する必要はない。
+ | 异常系测试是为了确认报文发送失败时将对应数据状态更新为错误的UPDATE语句所必需的。
+ | 要实施异常系测试用例，在「testShots」的定义中如下所示设置「KEY=errorCase」、「VALUE=true」即可。
+ | 另外，在异常系情况下由于不发送报文，因此不需要设置发送报文的期望值。
 
  .. image:: _image/delayed_send_error.png
     :scale: 70
 
  .. tip:: 
-   異常系テストケースを実施する場合には、応答不要メッセージ送信処理用共通アクションをテスト用アクションに切り替える必要がある。
-   以下にその設定例を示す。
+   要实施异常系测试用例，需要将无响应消息发送处理用共同Action切换为测试用Action。
+   以下显示其设置示例。
 
-   * 本番用設定例
+   * 生产环境设置示例
 
      .. code-block:: xml
 
-      <!--ディスパッチ用ハンドラ-->
+      <!--分派用handler-->
       <component name="requestPathJavaPackageMapping" class="nablarch.fw.handler.RequestPathJavaPackageMapping">
-        <!-- 応答不要メッセージ送信処理用共通アクションを設定する。 -->
+        <!-- 设置无响应消息发送处理用共同Action。 -->
         <property name="basePackage" value="nablarch.fw.messaging.action.AsyncMessageSendAction" />
         <property name="immediate" value="false" />
       </component>
 
-   * テスト用設定
+   * 测试用设置
 
-     上記本番環境用設定をテスト用のAction类で上書きを行う。
+     用测试用Action类覆盖上述生产环境用设置。
 
      .. code-block:: xml
 
-      <!--ディスパッチ用ハンドラ-->
+      <!--分派用handler-->
       <component name="requestPathJavaPackageMapping" class="nablarch.fw.handler.RequestPathJavaPackageMapping">
         <property name="basePackage" value="nablarch.test.core.messaging.AsyncMessageSendActionForUt" />
         <property name="immediate" value="false" />
       </component>
-

@@ -40,7 +40,7 @@ handler类名
     <artifactId>nablarch-fw-web</artifactId>
   </dependency>
 
-  <!-- 仅在DB存储、使用有效期DB保存时需要 -->
+  <!-- 仅在数据库存储、使用有效期DB保存时需要 -->
   <dependency>
     <groupId>com.nablarch.framework</groupId>
     <artifactId>nablarch-fw-web-dbstore</artifactId>

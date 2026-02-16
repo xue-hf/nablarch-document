@@ -1,69 +1,69 @@
 ==================================
-取引単体テストの実施方法
+取引单元测试的实施方法
 ==================================
 
-ウェブサービスにおいては、取引は1リクエストで完結することがほとんどである。このように、１リクエスト＝１取引である場合は、取引単体テストを実施する必要はない。
+在Web服务中，交易大多在1个请求中完成。这种情况下，1请求=1交易，不需要进行取引单元测试。
 
-ただし、複数のリクエストにより取引が成立する場合は、リクエスト毎のテストを連続実行することにより取引単体テストが実施可能である。
+但是，如果多个请求构成交易，则可以通过连续执行每个请求的测试来实施取引单元测试。
 
-取引単体テストのテストクラス例
+取引单元测试的测试类示例
 ---------------------------------
 
-以下の例では更新対象を取得し、取得した情報から更新用のフォームを作成して更新実行、想定通りに更新されていることを検証している。
+以下示例中获取更新目标，从获取的信息创建更新用的表单并执行更新，验证是否按预期更新。
 
 .. code-block:: java
 
     @Test
-    public void プロジェクト更新取引() {
-        String message1 = "変更対象取得";
-        RestMockHttpRequest request001 = get("/projects?projectName=プロジェクト００１");
+    public void 项目更新交易() {
+        String message1 = "获取变更目标";
+        RestMockHttpRequest request001 = get("/projects?projectName=项目００１");
         HttpResponse response001 = sendRequest(request001);
         assertStatusCode(message1, HttpResponse.Status.OK, response001);
-        // 取得した変更対象を使って更新用フォームを作成
-        Project project = parseProject(response001).setProjectName("プロジェクト８８８");
+        // 使用获取的变更目标创建更新用表单
+        Project project = parseProject(response001).setProjectName("项目８８８");
         ProjectUpdateForm updateForm = new ProjectUpdateForm(project);
 
-        String message2 = "プロジェクト更新";
+        String message2 = "项目更新";
         RestMockHttpRequest updateRequest = put("/projects").setBody(updateForm);
         HttpResponse updateResponse = sendRequest(updateRequest);
         assertStatusCode(message2, HttpResponse.Status.OK, updateResponse);
 
-        String message3 = "取得したプロジェクトが変更した内容と一致すること";
-        RestMockHttpRequest request888 = get("/projects?projectName=プロジェクト８８８");
+        String message3 = "获取的项目与变更内容一致";
+        RestMockHttpRequest request888 = get("/projects?projectName=项目８８８");
         HttpResponse response888 = sendRequest(request888);
         assertStatusCode(message3, HttpResponse.Status.OK, response888);
         assertProjectEquals(project, parseProject(response888));
     }
 
-Cookieなど前のレスポンスの情報を引き継ぐ方法
+继承前响应信息如Cookie的方法
 ----------------------------------------------------
-取引単体テストの場合、セッションIDやCSRFトークンなど、先行するリクエストのレスポンスとしてサーバから受け取った値を
-次のリクエストに含めたい場合がある。
-そのような場合は以下の方法で実現できる。
+取引单元测试时，可能希望将前次请求的响应中从服务器接收的会话ID和CSRF令牌等值
+包含到下一个请求中。
+这种情况下可以通过以下方法实现。
 
-``RequestResponseProcessor`` の実装クラスを作成する
+创建 ``RequestResponseProcessor`` 的实现类
 ****************************************************************
-RESTfulウェブサービス実行基盤向けテスティングフレームワークでは :java:extdoc:`RequestResponseProcessor<nablarch.test.core.http.RequestResponseProcessor>` という
-リクエスト・レスポンスを操作するためのインターフェースを用意している。
+RESTful Web服务执行基础测试框架准备了 :java:extdoc:`RequestResponseProcessor<nablarch.test.core.http.RequestResponseProcessor>` 
+用于操作请求和响应的接口。
 
-各应用の要件に合わせてこのインタフェースの実装クラスを作成する。
+请根据各应用程序的需求创建此接口的实现类。
 
-フレームワークではよく使われる実装として :java:extdoc:`RequestResponseCookieManager<nablarch.test.core.http.RequestResponseCookieManager>` を提供している。
-この実装ではレスポンスの ``Set-Cookie`` ヘッダからプロパティで指定した名前のクッキーを抽出し、リクエストの ``Cookie`` ヘッダに値を引き継ぐことができる。
+框架提供了常用实现 :java:extdoc:`RequestResponseCookieManager<nablarch.test.core.http.RequestResponseCookieManager>` 。
+此实现可以从响应的 ``Set-Cookie`` 头部提取属性中指定名称的Cookie，并继承到请求的 ``Cookie`` 头部。
 
-クッキーのうち、 :ref:`session_store` のセッションIDに特化した実装として :java:extdoc:`NablarchSIDManager<nablarch.test.core.http.NablarchSIDManager>` も提供している。
-この実装では、 :ref:`session_store_handler` がセッションIDを保持する際のデフォルトのクッキー名 ``NABLARCH_SID`` で、 ``Set-Cookie`` ヘッダからクッキーを抽出する。
-セッションIDのクッキー名をデフォルトから変更した場合は、 :java:extdoc:`RequestResponseCookieManager<nablarch.test.core.http.RequestResponseCookieManager>` を使用し、クッキー名を明示する。
+还提供了专门针对 :ref:`session_store` 会话ID的实现 :java:extdoc:`NablarchSIDManager<nablarch.test.core.http.NablarchSIDManager>` 。
+此实现以 :ref:`session_store_handler` 保持会话ID时的默认Cookie名称 ``NABLARCH_SID`` 从 ``Set-Cookie`` 头部提取Cookie。
+如果更改了会话ID的Cookie名称，请使用 :java:extdoc:`RequestResponseCookieManager<nablarch.test.core.http.RequestResponseCookieManager>` 并显式指定Cookie名称。
 
-``RequestResponseProcessor`` は1つの取引単体テストケース内で先に受信したレスポンスの値を次のリクエストに受け渡すために使用する。
-この時、レスポンスから抽出した値をリクエストに受け渡すために内部に状態として持つことになる。
-以下の方法でコンポーネント設定した場合、NablarchのDIコンテナではインスタンスはシングルトンとなってしまうため
-明示的に状態を初期化しないと、複数のテストケース間で状態が引き継がれてしまう。
-これを防ぐためにフレームワークではテストケースごとに :java:extdoc:`RequestResponseProcessor#reset<nablarch.test.core.http.RequestResponseProcessor.reset()>` を呼び出している。
-複数テストケース間で状態を引き継ぎたくない場合は、 ``reset()`` に初期化する処理を実装する必要がある。
-内部状態を持たない場合や、複数のテストケース間で状態を共有したい場合は、 ``reset()`` メソッドを何もしないメソッドとしてもよい。
+``RequestResponseProcessor`` 用于在1个取引单元测试用例内将先接收的响应值传递到下一个请求。
+此时，为将响应中提取的值传递到请求，会在内部作为状态持有。
+如果通过以下方法配置组件，在Nablarch的DI容器中实例会成为单例，
+如果不显式初始化状态，则状态会在多个测试用例间继承。
+为防止这种情况，框架在每个测试用例调用 :java:extdoc:`RequestResponseProcessor#reset<nablarch.test.core.http.RequestResponseProcessor.reset()>` 。
+如果不希望在多个测试用例间继承状态，需要在 ``reset()`` 中实现初始化处理。
+如果没有内部状态，或希望在多个测试用例间共享状态，可以将 ``reset()`` 方法设为空方法。
 
-コンポーネント設定ファイルに ``defaultProcessor`` という名前で実装クラスを設定する
+在组件配置文件中以 ``defaultProcessor`` 名称设置实现类
 ***********************************************************************************
 .. code-block:: xml
 
@@ -72,8 +72,7 @@ RESTfulウェブサービス実行基盤向けテスティングフレームワ�
   </component>
 
 
-また、複数の ``RequestResponseProcessor`` を設定したい場合は、 :java:extdoc:`ComplexRequestResponseProcessor<nablarch.test.core.http.ComplexRequestResponseProcessor>` を
-使用することで実現できる。
+另外，如果希望设置多个 ``RequestResponseProcessor`` ，可以使用 :java:extdoc:`ComplexRequestResponseProcessor<nablarch.test.core.http.ComplexRequestResponseProcessor>` 来实现。
 
 .. code-block:: xml
 
@@ -89,7 +88,6 @@ RESTfulウェブサービス実行基盤向けテスティングフレームワ�
     </property>
   </component>
 
-``defaultProcessor`` という名前で設定された ``RequestResponseProcessor`` は、内蔵サーバへのリクエスト送信前に
-:java:extdoc:`RequestResponseProcessor#processRequest<nablarch.test.core.http.RequestResponseProcessor.processRequest(nablarch.fw.web.HttpRequest)>` が、
-レスポンス受信後に :java:extdoc:`RequestResponseProcessor#processResponse<nablarch.test.core.http.RequestResponseProcessor.processResponse(nablarch.fw.web.HttpRequest,nablarch.fw.web.HttpResponse)>` が
-それぞれ実行される。 
+以 ``defaultProcessor`` 名称设置的 ``RequestResponseProcessor`` ，在向内置服务器发送请求前
+执行 :java:extdoc:`RequestResponseProcessor#processRequest<nablarch.test.core.http.RequestResponseProcessor.processRequest(nablarch.fw.web.HttpRequest)>` ，
+接收响应后执行 :java:extdoc:`RequestResponseProcessor#processResponse<nablarch.test.core.http.RequestResponseProcessor.processResponse(nablarch.fw.web.HttpRequest,nablarch.fw.web.HttpResponse)>` 。

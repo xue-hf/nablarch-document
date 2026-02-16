@@ -21,7 +21,7 @@
 .. important::
 
   使用HTTP会话的 :ref:`重复提交防止 <tag-double_submission>` 可以用于CSRF防护，
-  但本功能由于不识别用户就将令牌存储在DB中，因此不能用于CSRF防护。
+  但本功能由于不识别用户就将令牌存储在数据库中，因此不能用于CSRF防护。
   使用本功能时，CSRF防护请使用 :ref:`csrf_token_verification_handler` 。
 
 功能概述

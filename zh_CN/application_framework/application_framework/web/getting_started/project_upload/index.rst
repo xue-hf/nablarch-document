@@ -61,7 +61,7 @@
             // 读取上传文件并验证
             List<Project> projects = readFileAndValidate(partInfo, userContext);
 
-            // 批量注册到DB
+            // 批量注册到数据库
             insertProjects(projects);
 
             // 添加完成消息
@@ -77,7 +77,7 @@
   
   #. :ref:`获取文件<project_upload-file_upload_action>`
   #. :ref:`将CSV文件内容绑定到Bean并进行验证<project_upload-validation>`
-  #. :ref:`批量注册到DB<project_upload-bulk_insert>`
+  #. :ref:`批量注册到数据库<project_upload-bulk_insert>`
   #. :ref:`保存文件<project_upload-file_upload_action>`
   
   各处理的详细说明将在以下章节
@@ -370,7 +370,7 @@
 
   .. _`project_upload-bulk_insert`:
 
-  2.批量注册到DB
+  2.批量注册到数据库
     ProjectUploadAction.java
       .. code-block:: java
 
@@ -379,7 +379,7 @@
 
             // 验证的执行前述
 
-            // 批量注册到DB
+            // 批量注册到数据库
             insertProjects(projects);
 
             // 文件保存前述

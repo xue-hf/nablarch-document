@@ -1,16 +1,16 @@
 ==================================
-取引単体テストの実施方法（バッチ）
+取引单元测试的实施方法（批处理）
 ==================================
 
-バッチ処理の取引単体テストは、自動テストフレームワークを使用してテストを行う。
-リクエスト単体テストを連続実行することにより、取引単位でのテストを行う。
+批处理的取引单元测试使用自动测试框架进行测试。
+通过连续执行请求单元测试，以交易单位进行测试。
 
-テストクラスは以下の条件を満たすように作成する。
+测试类需要满足以下条件进行创建。
 
-* テストクラスのパッケージはテスト対象取引のパッケージとする。
-* <取引ID>Testというクラス名でテストクラスを作成する。
+* 测试类的包名为测试目标交易的包名。
+* 以<交易ID>Test作为测试类的类名进行创建。
 
-例えば、テスト対象取引の取引IDがB21AC01だとすると、テストクラスは以下のようになる。
+例如，测试目标交易的交易ID为B21AC01时，测试类如下所示。
 
 .. code-block:: java
 
@@ -23,65 +23,65 @@
  public class B21AC01Test extends BatchRequestTestSupport {
  
 
-テストケース分割方針
+测试用例分割方针
 ====================
 
-基本的には、\ **1シートにつき1テストケース**\ とする。
-以下、例外事項を示す。
+原则上，\ **1个工作表对应1个测试用例**\ 。
+以下显示例外事项。
 
 
-複雑なテストケースの場合
+复杂测试用例的情况
 ------------------------
 
-テストデータが大量であったり、1取引に含まれる処理が多い場合に、\
-１つのシートに全てのテストデータを詰め込むと、シート内にデータが多くなり過ぎて、\
-テストデータの可読性が落ちる場合がある。\
-このような場合は、1ケースを複数シートに分割して記述しても良い。
+如果测试数据量大，或1个交易中包含的处理多，
+将所有的测试数据塞进1个工作表中会导致工作表内数据过多，
+测试数据的可读性下降。\
+这种情况下，可以将1个用例分割到多个工作表中描述。
 
 
-非常に簡単なテストケースの場合
+非常简单的测试用例的情况
 ------------------------------
 
-非常に簡単なテストケースで、テストデータ量が少ない場合、
-1シートに全テストケースを含めてもよい。
+非常简单的测试用例，且测试数据量少时，
+可以在1个工作表中包含所有测试用例。
 
 
-基本的な記述方法
+基本的描述方法
 ================
 
-基本的には、1テストケースを1シートにまとめて記述する。\
-1シート内に複数のバッチ実行を記述することにより、取引単位のテストとなる。
+原则上，将1个测试用例汇总到1个工作表中描述。\
+通过在1个工作表内记载多个批处理执行，实现以交易单位的测试。
 
-以下の例では、３つのバッチ(ファイル入力バッチ、ユーザ削除バッチ、ファイル出力バッチ)\
-で構成される取引を処理している。
+以下示例中，处理由3个批处理(文件输入批处理、用户删除批处理、文件输出批处理)\
+构成的交易。
 
 .. code-block:: java
 
- /** 正常終了するケース */
+ /** 正常结束的情况 */
  @Test
  public void testSuccess() {
      execute();
  }
 
 
-**【testSuccessシート】**
+**【testSuccess工作表】**
 
 LIST_MAP=testShots
 
 === ============= ==================  ========== ========= ============== ============ ===============
 no  description   expectedStatusCode  setUpTable setUpFile expectedTable  expectedFile   requestPath    
 === ============= ==================  ========== ========= ============== ============ ===============
- 1  ファイル入力                 100  default    default   default                     fileInputBatch 
- 2  ユーザ削除                   100  default              default                     userDeleteBatch
- 3  ファイル出力                 100  default              fileInputBatch default      fileOutputBatch          
+ 1  文件输入                 100  default    default   default                     fileInputBatch 
+ 2  用户删除                   100  default              default                     userDeleteBatch
+ 3  文件输出                 100  default              fileInputBatch default      fileOutputBatch          
 === ============= ==================  ========== ========= ============== ============ ===============
 
 
-1テストケースを複数シートを分割する場合
+将1个测试用例分割到多个工作表的情况
 =======================================
 
                                            
-例えば、前項(\ `基本的な記述方法`_\ )で例示したテストケースは、以下のように分割して記述可能である。
+例如，前项(\ `基本的描述方法`\ )中示例的测试用例，可以如下分割描述。
 
 
 .. code-block:: java
@@ -98,86 +98,85 @@ no  description   expectedStatusCode  setUpTable setUpFile expectedTable  expect
      @Test
      public void testSuccess() {
       
-         // 入力ファイルをテンポラリテーブルに登録
+         // 将输入文件注册到临时表
          execute("testSuccess_fileInput");
       
-         // テンポラリテーブルの情報をユーザ関連テーブルを削除
+         // 从临时表信息删除用户相关表
          execute("testSuccess_userDelete");
       
-         // 結果をファイル出力
+         // 将结果输出到文件
          execute("testSuccess_fileOutput");
      }
 
 \
 
-**【testSuccess_fileInputシート】**
+**【testSuccess_fileInput工作表】**
 
 LIST_MAP=testShots
 
 ==== ============= ==================  ========== ========= ===============
  no  case          expectedStatusCode  setUpTable setUpFile    requestPath    
 ==== ============= ==================  ========== ========= ===============
-  1  ファイル入力                 100  default    default   fileInputBatch 
+  1  文件输入                 100  default    default   fileInputBatch 
 ==== ============= ==================  ========== ========= ===============
 
 \
 
-**【testSuccess_userDeleteシート】**
+**【testSuccess_userDelete工作表】**
 
 LIST_MAP=testShots
 
 ==== ============= ==================  ========== ============= ===============
  no  case          expectedStatusCode  setUpTable expectedTable requestPath    
 ==== ============= ==================  ========== ============= ===============
-  1  ユーザ削除                   100  default    default       userDeleteBatch
+  1  用户删除                   100  default    default       userDeleteBatch
 ==== ============= ==================  ========== ============= ===============
 
 
-**【testSuccess_fileOutputシート】**
+**【testSuccess_fileOutput工作表】**
 
 LIST_MAP=testShots
 
 ==== ============= ==================  ========== ========= ===============
  no  case          expectedStatusCode  setUpTable outFile    requestPath    
 ==== ============= ==================  ========== ========= ===============
-  1  ファイル出力                 100  default    default   fileOutputBatch 
+  1  文件输出                 100  default    default   fileOutputBatch 
 ==== ============= ==================  ========== ========= ===============
 
 
-1シートに複数ケースを含める場合
+在1个工作表中包含多个用例的情况
 ===============================
 
-非常に簡単なテストケースの場合は、複数にまとめてもよい。
+非常简单的测试用例时，可以汇总到多个。
 
-以下の例では、２つのテストケース（通常のケースと入力データが0件のケース）を\
-１つのシートで記述している
+以下示例中，在1个工作表中记述了2个测试用例（通常的情况和输入数据为0件的情况）
 
 .. code-block:: java
 
- /** 正常終了するケース */
+ /** 正常结束的情况 */
  @Test
  public void testSuccess() {
      execute();
  }
 
 
-**【testSuccessシート】**
+**【testSuccess工作表】**
 
 LIST_MAP=testShots
 
 === ==================== ==================  ========== ========= ============== ============ ===============
  no  description         expectedStatusCode  setUpTable setUpFile expectedTable  expectedFile   requestPath    
 === ==================== ==================  ========== ========= ============== ============ ===============
-1-1  ファイル入力                    100      shot1      shot1                                fileInputBatch 
-1-2  ユーザ削除                      100                           shot1                      userDeleteBatch
-2-1  ファイル入力（0件）             100      shot2      shot2                                fileInputBatch 
-2-2  ユーザ削除（0件）               100                           shot2                      userDeleteBatch
+1-1  文件输入                    100      shot1      shot1                                fileInputBatch 
+1-2  用户删除                      100                           shot1                      userDeleteBatch
+2-1  文件输入（0件）             100      shot2      shot2                                fileInputBatch 
+2-2  用户删除（0件）               100                           shot2                      userDeleteBatch
 === ==================== ==================  ========== ========= ============== ============ ===============
 
 \
 
 .. tip::
- グループIDを使用することで1シートに複数ケースのテストデータを記述できる。
- 詳細は、『\ :ref:`tips_groupId`\ 』の項を参照。
+ 通过使用组ID可以在1个工作表中描述多个用例的测试数据。
+ 详情请参考『\ :ref:`tips_groupId`\ 』项。
 
 

@@ -1,7 +1,7 @@
 .. _ntf_junit5_extension:
 
 ========================================
- JUnit 5用拡張機能
+ JUnit 5用扩展功能
 ========================================
 
 .. contents:: 目录
@@ -12,27 +12,27 @@
 概要
 -----
 
-ここでは、JUnit 5で書かれたテストの中で自動テストフレームワークを使用するための拡張機能について説明する。
-本拡張機能を使用することで、パラメータ化テストなどのJUnit 5が提供する便利な機能と自動テストフレームワークを組み合わせて使用できるようになる。
+这里说明在JUnit 5编写的测试中使用自动化测试框架的扩展功能。
+使用本扩展功能，可以将参数化测试等JUnit 5提供的便利功能与自动化测试框架组合使用。
 
 .. tip::
-  本拡張機能を導入しても、JUnit 4で書かれた既存の自動テストフレームワークのテストを修正する必要はない。
-  JUnit 4で書かれたテストは、JUnit Vintageを使うことで引き続きJUnit 5上で実行できる（JUnit Vintageを使って自動テストフレームワークを動作させる方法については :ref:`run_ntf_on_junit5_with_vintage_engine` を参照）。
-  したがって、既存のテストはJUnit 4のコードのままにしておき、新規テストだけJUnit 5を使ったコードにできる。
+  即使引入本扩展功能，也不需要修改JUnit 4编写的现有自动化测试框架的测试。
+  JUnit 4编写的测试可以通过使用JUnit Vintage继续在JUnit 5上执行（关于使用JUnit Vintage使自动化测试框架运行的方法，请参考 :ref:`run_ntf_on_junit5_with_vintage_engine` ）。
+  因此，可以保持现有测试为JUnit 4代码，仅将新测试改为使用JUnit 5的代码。
 
 ----------
 前提条件
 ----------
 
-JUnit 5を使用するには、以下の条件を満たしている必要がある。
+使用JUnit 5需要满足以下条件。
 
-* maven-surefire-plugin の 2.22.0 以上
+* maven-surefire-plugin 的 2.22.0 以上
 
-また本ページは、JUnit 5の導入方法やテストケースの作成方法などの基本的な知識を有していることを前提としているため、それらの手順については記載していない。
-JUnit 5 自体についての情報は、 `公式のユーザガイド（外部サイト、英語） <https://junit.org/junit5/docs/5.11.0/user-guide/>`_ を参照のこと。
+此外，本页面假设您已具备JUnit 5的引入方法和测试用例创建方法等基础知识，因此不记载这些步骤。
+关于JUnit 5本身的信息，请参考 `官方用户指南（外部网站、英语） <https://junit.org/junit5/docs/5.11.0/user-guide/>`_ 。
 
 ---------------
-模块列表
+模块一览
 ---------------
 
 .. code-block:: xml
@@ -46,68 +46,68 @@ JUnit 5 自体についての情報は、 `公式のユーザガイド（外部�
 .. _ntf_junit5_extension_standard_usages:
 
 ---------------
-基本的な使い方
+基本使用方法
 ---------------
 
-自動テストフレームワークは、 :java:extdoc:`TestSupport <nablarch.test.TestSupport>` などのテストに必要な機能を実装したクラスを提供している。
-従来のJUnit 4では、これらの自動テストフレームワークが提供するクラスをテストクラスが継承することで、提供するクラスが持つ機能をテストクラスから使用できるようにしていた。
+自动化测试框架提供实现了 :java:extdoc:`TestSupport <nablarch.test.TestSupport>` 等测试所需功能的类。
+传统的JUnit 4中，测试类继承这些自动化测试框架提供的类，从而可以从测试类使用提供类具有的功能。
 
-本拡張機能は、自動テストフレームワークが提供するクラスのインスタンスを拡張機能側で生成し、テストクラスにインジェクションする仕組みを提供する。
-この仕組みには、JUnit 5の `Extension (外部サイト、英語) <https://junit.org/junit5/docs/5.11.0/user-guide/#extensions>`_ を利用している。
+本扩展功能在扩展功能侧生成自动化测试框架提供类的实例，并提供注入到测试类的机制。
+此机制使用JUnit 5的 `Extension (外部网站、英语) <https://junit.org/junit5/docs/5.11.0/user-guide/#extensions>`_ 。
 
-本拡張機能では、自動テストフレームワークが提供するクラスごとに **Extension クラス** と **合成アノテーション** を用意している。
-例えば、 :java:extdoc:`TestSupport <nablarch.test.TestSupport>` には :java:extdoc:`TestSupportExtension <nablarch.test.junit5.extension.TestSupportExtension>` と :java:extdoc:`NablarchTest <nablarch.test.junit5.extension.NablarchTest>` が用意されている。
+本扩展功能为自动化测试框架提供的每个类准备了 **Extension 类** 和 **组合注解** 。
+例如， :java:extdoc:`TestSupport <nablarch.test.TestSupport>` 有 :java:extdoc:`TestSupportExtension <nablarch.test.junit5.extension.TestSupportExtension>` 和 :java:extdoc:`NablarchTest <nablarch.test.junit5.extension.NablarchTest>` 。
 
 .. tip::
-  合成アノテーションはJUnit 5が提供する機能で、複数のアノテーションの設定を別の１つのアノテーションにまとめることができる。
-  詳しくは `公式ガイドの「2.1.1. Meta-Annotations and Composed Annotations」(外部サイト、英語) <https://junit.org/junit5/docs/5.11.0/user-guide/#writing-tests-meta-annotations>`_ を参照のこと。
+  组合注解是JUnit 5提供的功能，可以将多个注解的设置汇总到另一个1个注解中。
+  详情请参考 `官方指南的「2.1.1. Meta-Annotations and Composed Annotations」(外部网站、英语) <https://junit.org/junit5/docs/5.11.0/user-guide/#writing-tests-meta-annotations>`_ 。
 
 
-これらのクラスを使って以下のように実装することで、 :java:extdoc:`TestSupport <nablarch.test.TestSupport>` をテストで使用できるようになる。
+通过使用这些类按以下方式实现，可以在测试中使用 :java:extdoc:`TestSupport <nablarch.test.TestSupport>` 。
 
 .. code-block:: java
 
-  // 1. 対応する合成アノテーションをテストクラスに設定する
+  // 1. 在测试类上设置对应的组合注解
   @NablarchTest
   class YourTest {
-      // 2. 使用するクラスをテストクラスのフィールドとして宣言する
+      // 2. 将要使用的类声明为测试类的字段
       TestSupport support;
 
       @Test
       void test() {
           ...
-          // 3. テスト内で使用する
+          // 3. 在测试内使用
           Map<String, String> map = support.getMap(sheetName, id);
           ...
       }
   }
 
-:java:extdoc:`TestSupport <nablarch.test.TestSupport>` をテストクラスで使用する場合は、まず対応する合成アノテーション(:java:extdoc:`NablarchTest <nablarch.test.junit5.extension.NablarchTest>`)をテストクラスに設定する。
-これにより、 :java:extdoc:`TestSupportExtension <nablarch.test.junit5.extension.TestSupportExtension>` がテストクラスに対して適用される。
+在测试类中使用 :java:extdoc:`TestSupport <nablarch.test.TestSupport>` 时，首先在测试类上设置对应的组合注解(:java:extdoc:`NablarchTest <nablarch.test.junit5.extension.NablarchTest>`)。
+这样， :java:extdoc:`TestSupportExtension <nablarch.test.junit5.extension.TestSupportExtension>` 将应用于测试类。
 
-次に、 :java:extdoc:`TestSupport <nablarch.test.TestSupport>` 型のインスタンスフィールドをテストクラスに宣言する。
-このとき、インスタンスフィールドの可視性は何でも構わない。
+接下来，在测试类中声明 :java:extdoc:`TestSupport <nablarch.test.TestSupport>` 类型的实例字段。
+此时，实例字段的可见性不限。
 
-拡張機能は、テスト実行前に対応するクラス（ここでは :java:extdoc:`TestSupport <nablarch.test.TestSupport>`）のインスタンスを生成する。
-そして、テストクラスに代入可能なフィールドを見つけると、自動的にインスタンスをインジェクションする。
+扩展功能在测试执行前生成对应的类（这里是 :java:extdoc:`TestSupport <nablarch.test.TestSupport>` ）的实例。
+然后，找到可赋值给测试类的字段时，自动注入实例。
 
 .. warning::
 
-  インジェクション対象となるフィールドがnullでない場合、拡張機能はエラー終了するので値は設定しないこと。
+  如果作为注入目标的字段不为null，扩展功能将错误终止，因此请勿设置值。
 
 ---------------------------------------------
-Extension クラスと合成アノテーションの一覧
+Extension 类和组合注解一览
 ---------------------------------------------
 
-本拡張機能では、以下のExtensionクラスと合成アノテーションを提供している。
+本扩展功能提供以下Extension类和组合注解。
 
 
-.. list-table:: 拡張機能が提供するExtensionクラスと合成アノテーションの一覧
+.. list-table:: 扩展功能提供的Extension类和组合注解一览
    :header-rows: 1
 
-   * - 自動テストフレームワークが提供するクラス
-     - Extension クラス
-     - 合成アノテーション
+   * - 自动化测试框架提供的类
+     - Extension 类
+     - 组合注解
    * - :java:extdoc:`TestSupport <nablarch.test.TestSupport>`
      - :java:extdoc:`TestSupportExtension <nablarch.test.junit5.extension.TestSupportExtension>`
      - :java:extdoc:`NablarchTest <nablarch.test.junit5.extension.NablarchTest>`
@@ -142,19 +142,19 @@ Extension クラスと合成アノテーションの一覧
      - :java:extdoc:`MessagingRequestTestExtension <nablarch.test.junit5.extension.messaging.MessagingRequestTestExtension>`
      - :java:extdoc:`MessagingRequestTest <nablarch.test.junit5.extension.messaging.MessagingRequestTest>`
 
-BasicHttpRequestTest の使い方の補足
+BasicHttpRequestTest 使用方法的补充
 ====================================
 
-:java:extdoc:`BasicHttpRequestTestTemplate <nablarch.test.core.http.BasicHttpRequestTestTemplate>` 以外は、 :ref:`ntf_junit5_extension_standard_usages` で説明した方法で使用できる。
+除 :java:extdoc:`BasicHttpRequestTestTemplate <nablarch.test.core.http.BasicHttpRequestTestTemplate>` 外，其他都可以在 :ref:`ntf_junit5_extension_standard_usages` 中说明的方法使用。
 
-:java:extdoc:`BasicHttpRequestTestTemplate <nablarch.test.core.http.BasicHttpRequestTestTemplate>` のみ、合成アノテーションである :java:extdoc:`BasicHttpRequestTest <nablarch.test.junit5.extension.http.BasicHttpRequestTest>` を使用するときにパラメータを指定する必要があるので、その点について補足する。
+只有 :java:extdoc:`BasicHttpRequestTestTemplate <nablarch.test.core.http.BasicHttpRequestTestTemplate>` 在使用组合注解 :java:extdoc:`BasicHttpRequestTest <nablarch.test.junit5.extension.http.BasicHttpRequestTest>` 时需要指定参数，因此对此进行补充。
 
 .. code-block:: java
 
-  // 1. BasicHttpRequestTest の baseUri を指定する
+  // 1. 指定 BasicHttpRequestTest 的 baseUri
   @BasicHttpRequestTest(baseUri = "/test/")
   class YourTestClass {
-      // 2. BasicHttpRequestTestTemplate のインジェクション方法は、他と変わらない
+      // 2. BasicHttpRequestTestTemplate 的注入方法与其他相同
       BasicHttpRequestTestTemplate support;
 
       @Test
@@ -163,113 +163,113 @@ BasicHttpRequestTest の使い方の補足
       }
   }
 
-:java:extdoc:`BasicHttpRequestTest <nablarch.test.junit5.extension.http.BasicHttpRequestTest>` アノテーションには ``baseUri`` を指定する必要がある。
-この値は、 :java:extdoc:`AbstractHttpRequestTestTemplate <nablarch.test.core.http.AbstractHttpRequestTestTemplate>` の ``getBaseUri()`` メソッドが返却する値に対応する。
+:java:extdoc:`BasicHttpRequestTest <nablarch.test.junit5.extension.http.BasicHttpRequestTest>` 注解需要指定 ``baseUri`` 。
+此值对应于 :java:extdoc:`AbstractHttpRequestTestTemplate <nablarch.test.core.http.AbstractHttpRequestTestTemplate>` 的 ``getBaseUri()`` 方法返回的值。
 
 -------------------
-独自の拡張を加える
+添加自定义扩展
 -------------------
 
-自動テストフレームワークが提供するクラスを継承し、独自の拡張を加える場合の対応方法について説明する。
+说明继承自动化测试框架提供的类并添加自定义扩展时的对应方法。
 
 .. tip::
-  ここで説明する手順は、JUnit 4で書かれた既存の独自拡張クラスを本拡張機能用に使用する場合にも適用できる。
+  这里说明的步骤也适用于将JUnit 4编写的现有自定义扩展类用于本扩展功能时。
 
-独自拡張クラスを作成する場合は、大きく次のようにして対応する。
+创建自定义扩展类时，大致按以下步骤对应。
 
-#. 自動テストフレームワークが提供するクラスを継承し、独自拡張クラスを作成する
-#. 継承元のクラスに対応するExtensionクラスを継承した独自拡張用のExtensionを作成し、独自拡張クラスのインスタンスを生成するように実装する
-#. ``ExtendWith`` アノテーションを使って独自Extensionクラスをテストクラスに適用する
+#. 继承自动化测试框架提供的类，创建自定义扩展类
+#. 继承继承源类对应的Extension类，创建用于自定义扩展的Extension，实现生成自定义扩展类实例
+#. 使用 ``ExtendWith`` 注解将自定义Extension类应用于测试类
 
-独自拡張クラスを作成する
+创建自定义扩展类
 ========================
 
-ここでは、 :java:extdoc:`TestSupport <nablarch.test.TestSupport>` を拡張したクラスを作成する場合を例にして説明する。
+这里以继承 :java:extdoc:`TestSupport <nablarch.test.TestSupport>` 创建类为例说明。
 
-まず、 :java:extdoc:`TestSupport <nablarch.test.TestSupport>` を継承した独自拡張クラスを作成する。
+首先，创建继承 :java:extdoc:`TestSupport <nablarch.test.TestSupport>` 的自定义扩展类。
 
 .. code-block:: java
 
   public class CustomTestSupport extends TestSupport {
-      // テストクラスの Class インスタンスを TestSupport のコンストラクタに渡せるように実装する
+      // 实现使测试类的 Class 实例可以传递给 TestSupport 的构造函数
       public CustomTestSupport(Class<?> testClass) {
           super(testClass);
       }
 
-      // 独自の拡張メソッドを実装する
+      // 实现自定义的扩展方法
   }
 
-基本的に、自動テストフレームワークが提供するクラスは、インスタンス生成時にテストクラスの ``Class`` オブジェクトを渡す必要がある。
-したがって、独自拡張クラスにはテストクラスの ``Class`` オブジェクトを受け取れるようにコンストラクタを定義する必要がある。
+基本上，自动化测试框架提供的类在生成实例时需要传递测试类的 ``Class`` 对象。
+因此，自定义扩展类需要在构造函数中定义可以接收测试类 ``Class`` 对象的构造函数。
 
 .. tip::
-  :java:extdoc:`SimpleRestTestSupport <nablarch.test.core.http.SimpleRestTestSupport>` は、テストクラスの ``Class`` オブジェクトをコンストラクタで渡さなくても使用できる。
+  :java:extdoc:`SimpleRestTestSupport <nablarch.test.core.http.SimpleRestTestSupport>` 无需在构造函数中传递测试类的 ``Class`` 对象也可以使用。
 
-独自拡張用のExtensionを作成する
+创建用于自定义扩展的Extension
 ====================================
 
-次に、拡張元のクラスに対応するExtensionクラスを継承し、独自拡張用のExtensionを作成する。
-例では :java:extdoc:`TestSupport <nablarch.test.TestSupport>` を継承しているので、対応するExtensionクラスは :java:extdoc:`TestSupportExtension <nablarch.test.junit5.extension.TestSupportExtension>` になる。
+接下来，继承扩展源类对应的Extension类，创建用于自定义扩展的Extension。
+示例中继承的是 :java:extdoc:`TestSupport <nablarch.test.TestSupport>` ，因此对应的Extension类是 :java:extdoc:`TestSupportExtension <nablarch.test.junit5.extension.TestSupportExtension>` 。
 
 .. tip::
-  :java:extdoc:`AbstractHttpRequestTestTemplate <nablarch.test.core.http.AbstractHttpRequestTestTemplate>` を直接継承した独自拡張クラスを使用する場合、対応するExtensionとしては :java:extdoc:`BasicHttpRequestTestExtension <nablarch.test.junit5.extension.http.BasicHttpRequestTestExtension>` が使用できる。
+  直接使用继承 :java:extdoc:`AbstractHttpRequestTestTemplate <nablarch.test.core.http.AbstractHttpRequestTestTemplate>` 的自定义扩展类时，作为对应的Extension可以使用 :java:extdoc:`BasicHttpRequestTestExtension <nablarch.test.junit5.extension.http.BasicHttpRequestTestExtension>` 。
 
 .. code-block:: java
 
   public class CustomTestSupportExtension extends TestSupportExtension {
   
-      // createSupport() をオーバーライドし、独自拡張クラスのインスタンスを返すように実装する
+      // 覆盖 createSupport() ，实现返回自定义扩展类实例
       @Override
       protected TestEventDispatcher createSupport(Object testInstance, ExtensionContext context) {
           return new CustomTestSupport(testInstance.getClass());
       }
   }
 
-独自拡張用のExtensionでは、 ``createSupport()`` メソッドをオーバーライドする。
-そして、先ほど作成した独自拡張クラスのインスタンスを返却するように実装する。
+在用于自定义扩展的Extension中，覆盖 ``createSupport()`` 方法。
+然后，实现返回先前创建的自定义扩展类实例。
 
-なお、 ``createSupport()`` メソッドで生成した独自拡張クラスのインスタンスは、親クラスの :java:extdoc:`TestEventDispatcherExtension <nablarch.test.junit5.extension.event.TestEventDispatcherExtension>` に定義された ``support`` という :java:extdoc:`TestEventDispatcher <nablarch.test.event.TestEventDispatcher>` 型のインスタンスフィールドに保存される。
-このフィールドは ``protected`` なので、サブクラスから参照できる。
+此外， ``createSupport()`` 方法生成的自定义扩展类实例保存在父类 :java:extdoc:`TestEventDispatcherExtension <nablarch.test.junit5.extension.event.TestEventDispatcherExtension>` 中定义的 ``support`` 这个 :java:extdoc:`TestEventDispatcher <nablarch.test.event.TestEventDispatcher>` 型实例字段中。
+此字段为 ``protected`` ，因此可以从子类引用。
 
 
-ExtendWithでテストクラスに適用する
+使用ExtendWith应用于测试类
 ====================================
 
-作成した独自拡張用のExtensionは、 ``ExtendWith`` アノテーションを使ってテストクラスに適用できる。
-以下に実装例を示す。
+创建的用于自定义扩展的Extension，可以使用 ``ExtendWith`` 注解应用于测试类。
+以下显示实现示例。
 
 .. code-block:: java
 
   ..
   import org.junit.jupiter.api.extension.ExtendWith;
   
-  // 1. ExtendWith で独自拡張用のExtensionをテストクラスに適用する
+  // 1. 使用 ExtendWith 将用于自定义扩展的Extension应用于测试类
   @ExtendWith(CustomTestSupportExtension.class)
   class YourTest {
-      // 2. 独自拡張クラスをインスタンス変数で宣言する
+      // 2. 将自定义扩展类声明为实例变量
       CustomTestSupport support;
 
       @Test
       void test() {
-          // 3. テスト内で独自拡張クラスを使用する
+          // 3. 在测试内使用自定义扩展类
           support.customMethod();
       }
   }
 
-BasicHttpRequestTestTemplateを拡張する場合はアノテーションも作成する
+扩展BasicHttpRequestTestTemplate时也需要创建注解
 ====================================================================
 
-:java:extdoc:`BasicHttpRequestTestTemplate <nablarch.test.core.http.BasicHttpRequestTestTemplate>` または :java:extdoc:`AbstractHttpRequestTestTemplate <nablarch.test.core.http.AbstractHttpRequestTestTemplate>` を拡張する場合は、 ``baseUri`` を独自拡張クラスのインスタンスに連携する必要がある。
-``ExtendWith`` ではパラメータの連携ができないので、アノテーションも独自に作成する必要がある。
+扩展 :java:extdoc:`BasicHttpRequestTestTemplate <nablarch.test.core.http.BasicHttpRequestTestTemplate>` 或 :java:extdoc:`AbstractHttpRequestTestTemplate <nablarch.test.core.http.AbstractHttpRequestTestTemplate>` 时，需要将 ``baseUri`` 传递给自定义扩展类的实例。
+``ExtendWith`` 无法传递参数，因此也需要单独创建注解。
 
-以下に、 :java:extdoc:`BasicHttpRequestTestTemplate <nablarch.test.core.http.BasicHttpRequestTestTemplate>` での実装例を示す。
+以下显示在 :java:extdoc:`BasicHttpRequestTestTemplate <nablarch.test.core.http.BasicHttpRequestTestTemplate>` 中的实现示例。
 
 .. code-block:: java
 
   public class CustomHttpRequestTestSupport extends BasicHttpRequestTestTemplate {
       private final String baseUri;
      
-      // baseUri を外部から連携できるように実装しておく
+      // 实现使 baseUri 可以从外部传递
       public CustomHttpRequestTestSupport(Class<?> testClass, String baseUri) {
           super(testClass);
           this.baseUri = baseUri;
@@ -281,10 +281,10 @@ BasicHttpRequestTestTemplateを拡張する場合はアノテーションも作�
       }
   }
 
-まず、 :java:extdoc:`BasicHttpRequestTestTemplate <nablarch.test.core.http.BasicHttpRequestTestTemplate>` を継承して独自拡張クラスを作成する。
-このとき、コンストラクタではテストクラスと ``baseUri`` を渡せるようにしておく。
+首先，继承 :java:extdoc:`BasicHttpRequestTestTemplate <nablarch.test.core.http.BasicHttpRequestTestTemplate>` 创建自定义扩展类。
+此时，在构造函数中实现可以传递测试类和 ``baseUri`` 。
 
-次に、独自拡張クラス用の合成アノテーションを作成する。
+接下来，创建用于自定义扩展类的组合注解。
 
 .. code-block:: java
 
@@ -297,15 +297,15 @@ BasicHttpRequestTestTemplateを拡張する場合はアノテーションも作�
   
   @Retention(RetentionPolicy.RUNTIME)
   @Target(ElementType.TYPE)
-  // この後作成する独自拡張用のExtensionを指定する
+  // 指定此后创建的用于自定义扩展的Extension
   @ExtendWith(CustomHttpRequestTestExtension.class)
   public @interface CustomHttpRequestTest {
-      // baseUri を渡せるように宣言する
+      // 声明可以传递 baseUri
       String baseUri();
   }
 
-合成アノテーションでは、 ``baseUri`` を渡せるように宣言する。
-``ExtendWith`` で指定する独自拡張用のExtensionは、以下のようにして実装する。
+在组合注解中，声明可以传递 ``baseUri`` 。
+``ExtendWith`` 中指定的用于自定义扩展的Extension，按以下方式实现。
 
 .. code-block:: java
 
@@ -313,66 +313,66 @@ BasicHttpRequestTestTemplateを拡張する場合はアノテーションも作�
   
       @Override
       protected TestEventDispatcher createSupport(Object testInstance, ExtensionContext context) {
-          // テストクラスからアノテーションの情報を取得する
+          // 从测试类获取注解信息
           CustomHttpRequestTest annotation = findAnnotation(testInstance, CustomHttpRequestTest.class);
-          // 独自拡張クラスのコンストラクタに baseUri の情報を連携する
+          // 将 baseUri 信息传递给自定义扩展类的构造函数
           return new CustomHttpRequestTestSupport(testInstance.getClass(), annotation.baseUri());
       }
   }
 
-``findAnnotation(Object, Class)`` を使用すると、テストクラスに設定されたアノテーションの情報を取得できる。
-これを利用することで、独自拡張クラスに ``baseUri`` の値を連携できる。
+使用 ``findAnnotation(Object, Class)`` 可以获取测试类上设置的注解信息。
+利用此功能可以将 ``baseUri`` 的值传递给自定义扩展类。
 
-最後に、独自の合成アノテーションを使って次のように実装することで、 :java:extdoc:`BasicHttpRequestTestTemplate <nablarch.test.core.http.BasicHttpRequestTestTemplate>` を継承した独自拡張クラスを使用できるようになる。
+最后，使用自定义的组合注解按以下方式实现，可以使用继承 :java:extdoc:`BasicHttpRequestTestTemplate <nablarch.test.core.http.BasicHttpRequestTestTemplate>` 的自定义扩展类。
 
 .. code-block:: java
 
-  // 独自の合成アノテーションをテストクラスに設定する(baseUri も設定する)
+  // 在测试类上设置自定义的组合注解（也设置 baseUri ）
   @CustomHttpRequestTest(baseUri = "/custom/")
   class YourTest {
-      // 独自拡張クラスをフィールドで宣言する
+      // 将自定义扩展类声明为字段
       CustomHttpRequestTestSupport support;
   
       @Test
       void test() {
-          // 独自拡張クラスをテストで使用する
+          // 在测试中使用自定义扩展类
           support.customMethod();
       }
   }
 
-事前処理・事後処理を実装する
+实现事前处理・事后处理
 =============================
 
-独自拡張用のExtensionでは、以下のメソッドをオーバーライドすることによってテストの事前処理・事後処理を実装できる。
+在用于自定义扩展的Extension中，通过覆盖以下方法可以实现测试的事前处理・事后处理。
 
 * beforeAll
 * beforeEach
 * afterAll
 * afterEach
 
-``beforeAll`` と ``afterAll`` では、テストクラス全体での事前・事後処理を実装できる。
-そして、 ``beforeEach`` と ``afterEach`` では、テストメソッドごとの事前・事後処理を実装できる。
+``beforeAll`` 和 ``afterAll`` 可以实现测试类整体的事前・事后处理。
+而 ``beforeEach`` 和 ``afterEach`` 可以实现每个测试方法的事前・事后处理。
 
-それぞれのメソッドをオーバーライドするときは、必ず以下のようにして親クラスの同メソッドを実行する必要がある。
-そうしない場合、親クラスで定義された事前・事後処理が呼ばれなくなる。
+覆盖各方法时，必须按以下方式执行父类的同名方法。
+否则，父类中定义的事前・事后处理将不会被调用。
 
 .. code-block:: java
 
   @Override
   public void beforeAll(ExtensionContext context) {
-      // 必ず最初に親のメソッドを実行する
+      // 务必首先执行父类方法
       super.beforeAll(context);
 
-      // 独自の事前処理を実装する
+      // 实现自定义的事前处理
       ...
   }
 
-JUnit 4のTestRuleを再現する
+重现JUnit 4的TestRule
 =============================
 
-既存プロジェクトなどで作成した独自拡張クラスがあり、その中でJUnit 4の ``TestRule`` を使用している場合に、本拡張機能に移植する方法を説明する。
+说明现有项目等中创建的自定义扩展类中使用JUnit 4的 ``TestRule`` 时，移植到本扩展功能的方法。
 
-例えば、以下のような独自拡張クラスが存在したとする。
+例如，假设存在以下自定义扩展类。
 
 .. code-block:: java
 
@@ -381,7 +381,7 @@ JUnit 4のTestRuleを再現する
   import java.util.concurrent.TimeUnit;
   
   public class CustomTestSupport extends TestSupport {
-      // JUnit 4のTestRuleを使用している
+      // 使用JUnit 4的TestRule
       @Rule
       public Timeout timeout = new Timeout(1000, TimeUnit.MILLISECONDS);
   
@@ -390,7 +390,7 @@ JUnit 4のTestRuleを再現する
       }
   }
 
-これを本拡張機能に移植する場合は、独自拡張用のExtensionクラスを次のようにして実装する。
+将此移植到本扩展功能时，按以下方式实现用于自定义扩展的Extension类。
 
 .. code-block:: java
 
@@ -401,54 +401,54 @@ JUnit 4のTestRuleを再現する
           return new CustomTestSupport(testInstance.getClass());
       }
   
-      // 1. resolveTestRules メソッドをオーバーライドする
+      // 1. 覆盖 resolveTestRules 方法
       @Override
       protected List<TestRule> resolveTestRules() {
-          // 2. 親クラスの resolveTestRules() の結果をベースにしてリストを生成する
+          // 2. 基于父类 resolveTestRules() 的结果生成列表
           List<TestRule> rules = new ArrayList<>(super.resolveTestRules());
-          // 3. 独自拡張クラスで定義しているTestRuleをリストに追加する
+          // 3. 将自定义扩展类中定义的TestRule添加到列表
           rules.add(((CustomTestSupport) support).timeout);
-          // 4. 生成したリストを返却する
+          // 4. 返回生成的列表
           return rules;
       }
   }
 
-独自拡張用のExtensionでは、 ``resolveTestRules()`` というメソッドをオーバーライドできる。
-このメソッドで、再現させたいJUnit 4の ``TestRule`` をリストにして返却するように実装する。
-これにより、JUnit 5のテスト上でもJUnit 4の ``TestRule`` を再現できるようになる。
+在用于自定义扩展的Extension中，可以覆盖 ``resolveTestRules()`` 方法。
+在此方法中，实现将要重现的JUnit 4 ``TestRule`` 以列表形式返回。
+这样，即使在JUnit 5的测试上也能重现JUnit 4的 ``TestRule`` 。
 
-なお、 ``resolveTestRules()`` をオーバーライドするときは、必ず親クラスの ``resolveTestRules()`` が返すリストをベースにすること。
-そうしない場合、親クラスで登録している ``TestRule`` が再現されなくなる。
+此外，覆盖 ``resolveTestRules()`` 时，务必以父类 ``resolveTestRules()`` 返回的列表为基础。
+否则，父类中注册的 ``TestRule`` 将不会被重现。
 
 
 -------------------------------
-RegisterExtensionで使用する
+使用RegisterExtension
 -------------------------------
 
-JUnit 5では、Extensionのインスタンスを手続き的に生成してテストクラスに適用するためにRegisterExtensionという仕組みが用意されている。
+在JUnit 5中，提供了RegisterExtension机制用于程序性地生成Extension实例并应用于测试类。
 
 .. tip::
-  RegisterExtensionの説明については、 `公式ガイドの「5.2.2. Programmatic Extension Registration」(外部サイト、英語) <https://junit.org/junit5/docs/5.11.0/user-guide/#extensions-registration-programmatic>`_ を参照のこと。
+  关于RegisterExtension的说明，请参考 `官方指南的「5.2.2. Programmatic Extension Registration」(外部网站、英语) <https://junit.org/junit5/docs/5.11.0/user-guide/#extensions-registration-programmatic>`_ 。
 
-本拡張機能が提供するExtensionは、RegisterExtensionを使っても利用できる。
-ただし、その場合は必ずstaticフィールドで使用すること。
-インスタンスフィールドで使用した場合、 ``beforeAll`` や ``afterAll`` などの処理が実行されないため、Extensionが正常に動作しなくなる。
+本扩展功能提供的Extension也可以使用RegisterExtension。
+但是，此时务必使用static字段。
+如果使用实例字段， ``beforeAll`` 和 ``afterAll`` 等处理将不会执行，导致Extension无法正常工作。
 
-以下に、実装例を示す。
+以下显示实现示例。
 
 .. code-block:: java
 
   class YourTest {
-      // 1. static フィールドで RegisterExtension を使用する
+      // 1. 在 static 字段中使用 RegisterExtension
       @RegisterExtension
       static TestSupportExtension extension = new TestSupportExtension();
   
-      // 2. 自動テストフレームワークが提供するクラスのインスタンスフィールドを宣言する
+      // 2. 声明自动化测试框架提供类的实例字段
       TestSupport support;
   
       @Test
       void test() {
-          // 3. support をテストで使用する
+          // 3. 在测试中使用 support
           ...
       }
   }

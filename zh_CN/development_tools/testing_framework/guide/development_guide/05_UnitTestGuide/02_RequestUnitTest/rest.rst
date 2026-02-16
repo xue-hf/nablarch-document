@@ -1,22 +1,22 @@
 =================================
-リクエスト単体テストの実施方法
+请求单元测试的实施方法
 =================================
 
 前提条件
 -----------
 
-RESTfulウェブサービス実行基盤向けのテストでは、他の実行基盤向けテスティングフレームワークに加え
-依存するモジュールを追加する必要がある。
-詳細は :ref:`自動テストフレームワークの使用方法 <rest_testing_fw>` 参照。
+RESTful Web服务执行基础测试时，除了其他执行基础测试框架外
+还需要添加依赖的模块。
+详情请参考 :ref:`自动测试框架的使用方法 <rest_testing_fw>` 。
 
-テストクラスの書き方
+测试类的编写方法
 -------------------------------
 
-* :ref:`フレームワークで用意されたテストクラスのスーパークラスを継承する。 <rest_test_extends_superclass>`
-* JUnit4のアノテーションを使用する (テストメソッドに @Test アノテーションを付与する)
-* :ref:`事前準備補助機能 <rest_test_helper>` を使ってリクエストを生成する
-* :ref:`リクエストを送信 <rest_test_execute>` する
-* :ref:`結果を確認 <rest_test_assert>` する
+* :ref:`继承框架准备的测试类的父类。 <rest_test_extends_superclass>`
+* 使用JUnit4的注解 (给测试方法添加 @Test 注解)
+* :ref:`使用事前准备辅助功能 <rest_test_helper>` 生成请求
+* :ref:`发送请求 <rest_test_execute>`
+* :ref:`确认结果 <rest_test_assert>`
 
 .. code-block:: java
 
@@ -32,71 +32,71 @@ RESTfulウェブサービス実行基盤向けのテストでは、他の実行�
     import static org.hamcrest.Matchers.hasSize;
     import static org.junit.Assert.assertThat;
 
-    public class SampleTest extends RestTestSupport { //RestTestSupportを継承する
-        @Test  //アノテーションを付与する
-        public void プロジェクト一覧が取得できること() throws JSONException {
-            String message = "プロジェクト一覧取得";
+    public class SampleTest extends RestTestSupport { //继承RestTestSupport
+        @Test  //添加注解
+        public void 可以获取项目列表() throws JSONException {
+            String message = "项目列表获取";
 
-            RestMockHttpRequest request = get("/projects");               //リクエストを生成する
-            HttpResponse response = sendRequest(request);                 //リクエストを送信する
-            assertStatusCode(message, HttpResponse.Status.OK, response);  //結果を確認する
+            RestMockHttpRequest request = get("/projects");               //生成请求
+            HttpResponse response = sendRequest(request);                 //发送请求
+            assertStatusCode(message, HttpResponse.Status.OK, response);  //确认结果
 
-            assertThat(response.getBodyString(), hasJsonPath("$", hasSize(10)));    //json-path-assertを使ったレスポンスボディの検証
+            assertThat(response.getBodyString(), hasJsonPath("$", hasSize(10)));    //使用json-path-assert验证响应主体
 
-            JSONAssert.assertEquals(message, readTextResource("プロジェクト一覧が取得できること.json")
-                    , response.getBodyString(), JSONCompareMode.LENIENT);                  //JSONAssertを使ったレスポンスボディの検証
+            JSONAssert.assertEquals(message, readTextResource("可以获取项目列表.json")
+                    , response.getBodyString(), JSONCompareMode.LENIENT);                  //使用JSONAssert验证响应主体
         }
     }
 
 .. _rest_test_extends_superclass:
 
-フレームワークで用意されたテストクラスのスーパークラスを継承する
+继承框架准备的测试类的父类
 =================================================================
 
-テストクラスのスーパークラスとして ``nablarch.test.core.http.RestTestSupport`` クラスを継承する。
-テストデータの投入とデータベースのアサートが不要な場合は ``nablarch.test.core.http.SimpleRestTestSupport`` クラスを継承する。
-その場合は以下の :ref:`テストデータの書き方 <rest_test_data>` は読み飛ばして良い。
+测试类的父类继承 ``nablarch.test.core.http.RestTestSupport`` 类。
+如果不需要数据投入和数据库断言，则继承 ``nablarch.test.core.http.SimpleRestTestSupport`` 类。
+这种情况下可以跳过以下 :ref:`测试数据的编写方法 <rest_test_data>` 。
 
-それぞれのスーパークラスの詳細は :ref:`自動テストフレームワークの使用方法 <rest_test_superclasses>` 参照。
+各父类的详情请参考 :ref:`自动测试框架的使用方法 <rest_test_superclasses>` 。
 
-JUnit4のアノテーションを使用する
+使用JUnit4的注解
 =================================
-テスティングフレームワークはJUnit4をベースとしているため、テスト対象メソッドに ``@Test`` アノテーションを付与する。
+测试框架基于JUnit4，因此给测试目标方法添加 ``@Test`` 注解。
 
-事前準備補助機能を使ってリクエストを生成する
+使用事前准备辅助功能生成请求
 ===================================================
-スーパークラスに用意された :ref:`事前準備補助機能 <rest_test_helper>` を使ってリクエストを生成する。
+使用父类中准备的 :ref:`事前准备辅助功能 <rest_test_helper>` 生成请求。
 
-リクエストを送信する
+发送请求
 =======================
-スーパークラスに用意された :ref:`リクエスト送信メソッド <rest_test_execute>` を呼び出すことでリクエストを送信する。
+通过调用父类中准备的 :ref:`请求发送方法 <rest_test_execute>` 来发送请求。
 
-結果を確認する
+确认结果
 =================
-ステータスコードは、スーパークラスに用意された :ref:`メソッド <rest_test_assert>` を呼び出すことで検証する。
-レスポンスボディについては任意のライブラリを使用して应用に合わせて検証する。
+状态码通过调用父类中准备的 :ref:`方法 <rest_test_assert>` 来验证。
+响应主体请使用任意库根据应用程序进行验证。
 
 .. _rest_test_data:
 
-テストデータの書き方
+测试数据的编写方法
 --------------------
 
-:ref:`how_to_write_excel` に記載された方法で、テストデータを記述できる。
-ただし、RESTfulウェブサービス実行基盤向けのテストで自動的に読み込まれるデータは以下のみとなる。
+可以按照 :ref:`how_to_write_excel` 中记载的方法描述测试数据。
+但是，RESTful Web服务执行基础测试时自动读取的数据仅限于以下。
 
-* テストクラスで共通のデータベース初期値
-* テストメソッド毎のデータベース初期値
-
-.. important::
-    RESTfulウェブサービス実行基盤以外のテストの場合テストクラス一つにつきExcelファイルが必ず一つ必要であったが、
-    RESTfulウェブサービス実行基盤向けのテストではExcelファイルが存在しない場合でも、エラーとはならず単にデータベースへの
-    データ投入がスキップされるだけとなっている。
+* 测试类中通用的数据库初始值
+* 每个测试方法的数据库初始值
 
 .. important::
-    上記以外のテストデータをExcelファイルに記載可能だが、記載した場合は
-    :ref:`how_to_get_data_from_excel` に記載の方法で、テストクラスに値を取得する処理を記述する必要がある。
-    テストクラスの記述量を減らすためにスーパークラス ``RestTestSupport`` では以下のメソッドを
-    提供する。
+    RESTful Web服务执行基础以外的测试时，每个测试类必须有一个Excel文件，
+    但RESTful Web服务执行基础测试时，即使没有Excel文件也不会报错，只是跳过
+    向数据库的数据投入。
+
+.. important::
+    可以在Excel文件中记载上述以外的测试数据，但记载时需要
+    按照 :ref:`how_to_get_data_from_excel` 中记载的方法，在测试类中记述获取值的处理。
+    为了减少测试类的记述量，父类 ``RestTestSupport`` 提供了以下
+    方法。
 
     .. code-block:: java
 
@@ -104,15 +104,14 @@ JUnit4のアノテーションを使用する
         List<Map<String, String[]>> getListParamMap(String sheetName, String id)
         Map<String, String[]> getParamMap(String sheetName, String id)
 
-テストクラスで共通のデータベース初期値
+测试类中通用的数据库初始值
 ========================================
 
-:ref:`request_test_setup_db` 参照。
+请参考 :ref:`request_test_setup_db` 。
 
-テストメソッド毎のデータベース初期値
+每个测试方法的数据库初始值
 ====================================
 
-テストデータを記載したExcelファイルに\ **テストメソッドの名前**\ でシートを用意し、
-\ **SETUP_TABLES**\のデータタイプでデータベース初期値を記載する。
-ここに記載されたデータは、フレームワークによりテストメソッド実行時に投入される。
-
+在记载测试数据的Excel文件中，用\ **测试方法的名称**\ 准备工作表，
+用\ **SETUP_TABLES**\数据类型记载数据库初始值。
+这里记载的数据将由框架在测试方法执行时投入。

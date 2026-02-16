@@ -1,7 +1,7 @@
 .. _classUnitTestGuide:
 
 ==========================
-クラス単体テストの実施方法
+类单元测试的实施方法
 ==========================
 
 .. toctree::
@@ -10,4 +10,3 @@
    01_entityUnitTest/index
    02_componentUnitTest
    
-

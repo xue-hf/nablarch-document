@@ -443,12 +443,51 @@
 |------|------|------|------|
 | テスト | 测试 | Test | |
 | 単体テスト | 单元测试 | Unit Test | |
+| クラス単体テスト | 类单元测试 | Class Unit Test | |
+| リクエスト単体テスト | 请求单元测试 | Request Unit Test | |
+| 取引単体テスト | 取引单元测试 | Deal Unit Test | 保留日文汉字「取引」|
 | 結合テスト | 集成测试 | Integration Test | |
 | モック | 模拟对象/Mock | Mock | 或 mock |
+| モッククラス | 模拟类 | Mock Class | |
 | スタブ | 桩对象/Stub | Stub | 或 stub |
 | テスト容易性 | 可测试性 | Testability | |
-| リクエスト単体テスト | 请求单元测试 | Request Unit Test | |
+| テストフレームワーク | 测试框架 | Test Framework | |
+| 自動テスト | 自动化测试 | Automated Test | |
+| 自動テストフレームワーク | 自动化测试框架 | Automated Test Framework | |
 | ポイント | 点/测量点 | Point | 性能日志测量标识 |
+| テストショット | 测试镜头 | Test Shot | 测试用例 |
+| テストケース | 测试用例 | Test Case | |
+| テストクラス | 测试类 | Test Class | |
+| テストメソッド | 测试方法 | Test Method | |
+| テストデータ | 测试数据 | Test Data | |
+| 準備データ | 准备数据 | Setup Data | 测试前置数据 |
+| 入力値 | 输入值 | Input Value | |
+| 期待値 | 期待值 | Expected Value | 预期值 |
+| 想定結果 | 预期结果 | Expected Result | |
+| 正常系 | 正常系 | Normal Case | 正常场景 |
+| 異常系 | 异常系 | Abnormal Case | 异常场景 |
+| 故障系 | 故障系 | Failure Case | 故障场景/错误场景 |
+| 精査 | 校验/审查 | Validation | 输入值校验 |
+| 単項目精査 | 单项目校验 | Single Item Validation | |
+| 項目間精査 | 项目间校验 | Inter-Item Validation | |
+| 組み込みサーバ | 内置服务器 | Embedded Server | 测试用内置服务器 |
+| HTMLダンプ | HTML转储 | HTML Dump | 测试输出 |
+| マスタデータ | 主数据 | Master Data | 基础数据 |
+| バックアップ | 备份 | Backup | |
+| バックアップ用スキーマ | 备份用模式 | Backup Schema | 主数据恢复用 |
+| 監視対象テーブル | 监视目标表 | Watched Table | 主数据监控 |
+| グループID | 组ID | Group ID | 测试数据分组 |
+| マーカー列 | 标记列 | Marker Column | 标记用列 |
+| 識別子 | 标识符 | Identifier | ID标识 |
+| 指令行 | 指令行 | Command Row | 电文指令 |
+| データタイプ | 数据类型 | Data Type | |
+| フィールド名称 | 字段名称 | Field Name | |
+| 事前準備 | 事前准备 | Preliminary Preparation | 测试准备 |
+| 採番処理 | 编号处理 | Numbering Process | ID生成 |
+| テーブル採番 | 表编号 | Table Numbering | 基于表的编号 |
+| シーケンスオブジェクト | 序列对象 | Sequence Object | 数据库序列 |
+| 親クラス | 父类 | Parent Class | 超类/Super Class |
+| スーパークラス | 超类 | Super Class | |
 
 ## 异常处理
 
@@ -575,6 +614,8 @@
 | 2026-02-15 | 添加 RESTful Web服务相关术语（转换器/预检请求/CORS/资源类/Bean Validation等） | AI |
 | 2026-02-15 | 从 handlers 和 libraries 已翻译文件中提取新术语：线程上下文/事务管理/权限控制/进程线程/批处理/Web处理/数据绑定/代码管理/日期管理/邮件/授权等（约200个新术语） | AI |
 | 2026-02-15 | 整理术语表，删减重复内容，合并相似术语（コンバート/型変換、データバインド、実行ID、複合キー、上書き/オーバーライド等） | AI |
+| 2026-02-16 | 从 testing_framework 已翻译文档中提取并添加测试相关新术语（类单元测试/取引单元测试/测试镜头/测试框架/自动化测试/精査/主数据/备份/内置服务器/标记列/组ID/故障系等约35个新术语） | AI |
+| 2026-02-16 | 修改「取引単体テスト」翻译为「取引单元测试」（保留日文汉字），将多处正文中的「DB」改为「数据库」 | AI |
 
 ---
 

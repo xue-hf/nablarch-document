@@ -1,64 +1,64 @@
 =========================================
-マスタデータ投入ツール インストールガイド
+主数据投入工具 安装指南
 =========================================
 
-:doc:`index`\ のインストール方法について説明する。
+说明 :doc:`index` 的安装方法。
 
 .. _master_data_setup_prerequisite:
 
-前提事項
+前提事项
 ========
 
 
-* 以下のツールがインストール済みであること
+* 已安装以下工具
 
   * Eclipse
   * Maven
 
-* :ref:`Nablarchのアーキタイプ <blank_project>` から生成されたプロジェクトであること
-* テーブルが作成済みであること
-* バックアップ用スキーマにテーブルが作成済みであること\ [#]_
+* 是 :ref:`Nablarch的Archetype <blank_project>` 生成的项目
+* 已创建表
+* 备份用模式中已创建表 [#]_
 
 .. [#] 
- バックアップ用スキーマおよびそのテーブルの作成については、\
- 『\ :doc:`../../06_TestFWGuide/04_MasterDataRestore`\ 』の\ :ref:`master_data_backup_settings`\ を参照。
+ 关于备份用模式及其表的创建，
+ 请参考『 :doc:`../../06_TestFWGuide/04_MasterDataRestore` 』的 :ref:`master_data_backup_settings` 。
 
 
 
-提供方法
+提供方式
 ========
 
-本ツールはnablarch-testing-XXX.jar にて提供する。
+本工具通过nablarch-testing-XXX.jar提供。
 
-ツール使用前に、プロジェクトのユニットテストと同じDB設定を使用できるようにするためにプロジェクトのコンパイルと、ツールの実行に必要なjarファイルのダウンロードを行なう。
-以下のコマンドを実行する。
+使用工具前，为使用与项目单元测试相同的DB设置，执行项目编译和工具执行所需jar文件下载。
+执行以下命令。
 
 .. code-block:: text
 
   mvn compile
   mvn dependency:copy-dependencies -DoutputDirectory=lib
 
-以下のファイルをダウンロードし、プロジェクトのディレクトリ(pom.xmlが存在するディレクトリ）にディレクトリ付きで展開する。
+下载以下文件，在项目目录(pom.xml存在的目录）中带目录展开。
 
 * :download:`master-data-setup-tool.zip <download/master-data-setup-tool.zip>`
 
-上記ファイルに含まれる設定ファイルを下記に示す。
+上述文件包含的设置文件如下。
 
 +--------------------------------------------+----------------------------------------+
-|ファイル名                                  |説明                                    |
+|文件名                                      |说明                                    |
 +============================================+========================================+
-|tool/db/data/master_data-build.properties   |環境設定用プロパティファイル            |
+|tool/db/data/master_data-build.properties   |环境设置用属性文件                      |
 +--------------------------------------------+----------------------------------------+
-|tool/db/data/master_data-build.xml          |Antビルドファイル                       |
+|tool/db/data/master_data-build.xml          |Ant构建文件                             |
 +--------------------------------------------+----------------------------------------+
-|tool/db/data/master_data-log.properties     |ログ出力プロパティファイル              |
+|tool/db/data/master_data-log.properties     |日志输出属性文件                        |
 +--------------------------------------------+----------------------------------------+
-|tool/db/data/master_data-app-log.properties |ログ出力プロパティファイル              |
+|tool/db/data/master_data-app-log.properties |日志输出属性文件                        |
 +--------------------------------------------+----------------------------------------+
-|tool/db/data/MASTER_DATA.xlsx               |マスタデータファイル                    |
+|tool/db/data/MASTER_DATA.xlsx               |主数据文件                              |
 +--------------------------------------------+----------------------------------------+
 
-本ツールを実行する前に以下のコマンドを実行する。
+执行本工具前执行以下命令。
 
 .. code-block:: text
 
@@ -66,32 +66,32 @@
   mvn dependency:copy-dependencies -DoutputDirectory=lib
 
 
-プロパティファイルの書き換え
+属性文件改写
 ----------------------------
 
-マスタデータ自動復旧機能が使用する、バックアップスキーマ名を設定する。
+设置主数据自动恢复功能使用的备份用模式名。
 
 
 .. code-block:: bash
  
- # テスト用マスタデータバックアップスキーマ名
+ # 测试用主数据备份模式名
  masterdata.test.backup-schema=nablarch_test_master
 
 
-その他の設定値については、ディレクトリ構造が変わらない限り修正の必要はない。
+其他设置值，只要目录结构不变就不需要修改。
 
 .. _how_to_setup_ant_view_in_eclipse:
 
-Eclipseとの連携設定
+与Eclipse联动设置
 ===================
 
-以下の設定をすることでEclipseから本ツールを起動できる。
+通过以下设置可以从Eclipse启动本工具。
 
 
-Antビュー起動
+启动Ant视图
 -------------
 
-ツールバーから、ウィンドウ(Window)→設定(Show View)を選択し、Antビューを開く。
+从工具栏选择窗口(Window)→显示视图(Show View)，打开Ant视图。
 
 
 
@@ -99,24 +99,23 @@ Antビュー起動
    :width: 100%
 
  
-ビルドファイル登録
+注册构建文件
 ------------------
 
-＋印のアイコンを押下し、ビルドスクリプトを選択する。
+点击+号图标，选择构建脚本。
 
 .. image:: ./_image/register_build_file.png
    :scale: 100
 
 
 
-Antビルドファイル(master_data-build.xml)を選択する。
+选择Ant构建文件(master_data-build.xml)。
 
 .. image:: ./_image/select_build_file.png
    :scale: 100
 
 
-Antビューに登録したビルドファイルが表示されることを確認する。
+确认Ant视图中已显示注册的构建文件。
 
 .. image:: ./_image/build_file_in_view.png
    :scale: 100
- 
