@@ -13,11 +13,11 @@
 ヘルスチェックのデフォルト実装として :java:extdoc:`DB <nablarch.fw.web.handler.health.DbHealthChecker>` と
 :ref:`Redis<lettuce_adaptor>` のヘルスチェックを提供している。
 
-本handler执行以下处理。
+本ハンドラでは、以下の処理を行う。
 
 * ヘルスチェックを行い、チェック結果をレスポンスとして返す。
 
-处理流程如下。
+処理の流れは以下のとおり。
 
 .. image:: ../images/HealthCheckEndpointHandler/flow.png
   :scale: 80

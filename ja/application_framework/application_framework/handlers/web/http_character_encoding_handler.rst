@@ -9,11 +9,11 @@ HTTP文字エンコード制御ハンドラ
 本ハンドラではリクエスト( :java:extdoc:`HttpServletRequest <jakarta.servlet.http.HttpServletRequest>` )
 及びレスポンス( :java:extdoc:`HttpServletResponse <jakarta.servlet.http.HttpServletResponse>` )に対して規定の文字エンコーディングを設定する。
 
-本handler执行以下处理。
+本ハンドラでは、以下の処理を行う。
 
 * リクエスト及びレスポンスへの規定の文字エンコーディングの設定
 
-处理流程如下。
+処理の流れは以下のとおり。
 
 .. image:: ../images/HttpCharacterEncodingHandler/flow.png
 

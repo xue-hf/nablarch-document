@@ -18,7 +18,7 @@ Jakarta RESTful Web Servicesレスポンスハンドラ
 から戻されたレスポンス情報を、クライアントに返却する。
 後続のハンドラで例外及びエラーが送出された場合には、エラー及び例外に対応したレスポンス情報を構築しクライアントに返却する。
 
-本handler执行以下处理。
+本ハンドラでは、以下の処理を行う。
 
 * 例外及びエラー発生時のレスポンス情報を生成する。
   詳細は、 :ref:`jaxrs_response_handler-error_response` を参照。
@@ -26,7 +26,7 @@ Jakarta RESTful Web Servicesレスポンスハンドラ
   詳細は、 :ref:`jaxrs_response_handler-error_log` を参照
 * クライアントへのレスポンスを返却する。
 
-处理流程如下。
+処理の流れは以下のとおり。
 
 .. image:: ../images/JaxRsResponseHandler/flow.png
   :scale: 75

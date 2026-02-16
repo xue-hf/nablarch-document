@@ -16,12 +16,12 @@
   このハンドラを使用する場合は、 :ref:`transaction_management_handler` をセットで設定すること。
   トランザクション制御ハンドラが設定されていない場合、トランザクション制御が実施されないため後続で行ったデータベースへの変更は全て破棄される。
 
-本handler执行以下处理。
+本ハンドラでは、以下の処理を行う。
 
 * データベース接続の取得
 * データベース接続の解放
 
-处理流程如下。
+処理の流れは以下のとおり。
 
 .. image:: ../images/DbConnectionManagementHandler/DbConnectionManagementHandler_flow.png
 

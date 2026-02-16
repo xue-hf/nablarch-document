@@ -9,11 +9,11 @@
 本ハンドラでは、後続ハンドラの処理結果である :java:extdoc:`ResponseMessage <nablarch.fw.messaging.ResponseMessage>` オブジェクトの内容をもとに、
 応答電文を作成し接続先システムに返却(送信)する。
 
-本handler执行以下处理。
+本ハンドラでは、以下の処理を行う。
 
 * 応答電文の送信処理を行う
 
-处理流程如下。
+処理の流れは以下のとおり。
 
 .. image:: ../images/MessageReplyHandler/flow.png
   :scale: 75

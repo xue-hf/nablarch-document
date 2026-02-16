@@ -12,7 +12,7 @@
 
   DBに接続するバッチアプリケーションではトランザクション管理が必要になるため、本ハンドラではなく :ref:`loop_handler` を使用すること。
 
-处理流程如下。
+処理の流れは以下のとおり。
 
 .. image:: ../images/DbLessLoopHandler/flow.png
   :scale: 80

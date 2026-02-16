@@ -17,12 +17,12 @@
 * Cache-Control: no-store
 
 
-本handler执行以下处理。
+本ハンドラでは、以下の処理を行う。
 
 * Content-Security-Policyのnonceの生成
 * セキュリティ関連のレスポンスヘッダの設定処理
 
-处理流程如下。
+処理の流れは以下のとおり。
 
 .. image:: ../images/SecureHandler/flow.png
   :scale: 85

@@ -14,12 +14,12 @@
 * :java:extdoc:`リトライ回数による上限設定 <nablarch.fw.handler.retry.CountingRetryContext>`
 * :java:extdoc:`経過時間による上限設定 <nablarch.fw.handler.retry.TimeRetryContext>`
 
-本handler执行以下处理。
+本ハンドラでは、以下の処理を行う。
 
 * リトライ対象例外発生時のリトライ処理
 * リトライ上限到達時の例外送出処理
 
-处理流程如下。
+処理の流れは以下のとおり。
 
 .. image:: ../images/RetryHandler/flow.png
   :scale: 80

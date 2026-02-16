@@ -15,12 +15,12 @@
 その他にも、 :ref:`database_connection_management_handler` や :ref:`transaction_management_handler` と同時に使用することで
 「特定のURLのみ使用するデータベース接続を変える」といった用途にも使用できる。
 
-本handler执行以下处理。
+本ハンドラでは、以下の処理を行う。
 
 * リクエストパスがマッチするか判定し、対象であれば委譲先のハンドラを呼び出す。
 
 
-处理流程如下。
+処理の流れは以下のとおり。
 
 .. image:: ../images/RequestHandlerEntry/flow.png
 

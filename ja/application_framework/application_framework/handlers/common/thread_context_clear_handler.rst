@@ -9,11 +9,11 @@
   
 :ref:`thread_context_handler` で設定したスレッドローカル上の変数を削除するハンドラ。
 
-本handler执行以下处理。
+本ハンドラでは、以下の処理を行う。
 
 * :ref:`thread_context_clear_handler-clear`
 
-处理流程如下。
+処理の流れは以下のとおり。
 
 .. image:: ../images/ThreadContextClearHandler/flow.png
 

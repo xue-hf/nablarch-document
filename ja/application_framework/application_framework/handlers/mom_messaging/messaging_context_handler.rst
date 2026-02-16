@@ -11,12 +11,12 @@
 
 MOMメッセージングの詳細は、 :ref:`system_messaging` を参照。
 
-本handler执行以下处理。
+本ハンドラでは、以下の処理を行う。
 
 * MQ接続の取得
 * MQ接続の解放
 
-处理流程如下。
+処理の流れは以下のとおり。
 
 .. image:: ../images/MessagingContextHandler/MessagingContextHandler_flow.png
 

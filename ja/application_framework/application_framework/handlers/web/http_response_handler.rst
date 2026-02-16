@@ -24,7 +24,7 @@ HTTPレスポンスハンドラ
    :java:extdoc:`ServletResponse <jakarta.servlet.ServletResponse>` の `getOutputStream` メソッドを使用して直接
    レスポンスを行う。
 
-处理流程如下。
+処理の流れは以下のとおり。
 
 .. image:: ../images/HttpResponseHandler/flow.png
 

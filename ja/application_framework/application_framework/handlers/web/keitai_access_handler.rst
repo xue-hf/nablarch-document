@@ -15,7 +15,7 @@
 * JSP上にJavaScriptを出力しないよう変数を設定する
 
 
-处理流程如下。
+処理の流れは以下のとおり。
 
 .. image:: ../images/KeitaiAccessHandler/flow.png
 

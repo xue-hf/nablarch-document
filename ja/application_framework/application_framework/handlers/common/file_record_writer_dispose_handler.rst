@@ -14,7 +14,7 @@
   このハンドラで解放対象となるのは、 :java:extdoc:`FileRecordWriterHolder <nablarch.common.io.FileRecordWriterHolder>` を使用して開いた出力ファイルとなる。
   それ以外のAPI(例えば、 `java.io` パッケージ)を使って開いたリソースについては、個別にクローズ処理を行うこと。
 
-处理流程如下。
+処理の流れは以下のとおり。
 
 .. image:: ../images/FileRecordWriterDisposeHandler/flow.png
 

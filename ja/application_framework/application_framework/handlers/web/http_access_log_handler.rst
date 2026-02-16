@@ -8,12 +8,12 @@ HTTPアクセスログハンドラ
 
 :ref:`HTTPアクセスログ <http_access_log>` を出力するハンドラ。
 
-本handler执行以下处理。
+本ハンドラでは、以下の処理を行う。
 
 * リクエスト処理開始時のアクセスログを出力する
 * リクエスト処理完了時のアクセスログを出力する
 
-处理流程如下。
+処理の流れは以下のとおり。
 
 .. image:: ../images/HttpAccessLogHandler/flow.png
 
