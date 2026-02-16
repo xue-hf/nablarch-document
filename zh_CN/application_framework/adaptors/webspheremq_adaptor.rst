@@ -1,15 +1,15 @@
 .. _webspheremq_adaptor:
 
-IBM MQアダプタ
+IBM MQ适配器
 ==================================================
 
 .. contents:: 目录
   :depth: 3
   :local:
 
-:ref:`NablarchのMOMメッセージング機能 <mom_messaging>` で `IBM MQ(外部サイト、英語) <https://www.ibm.com/docs/en/ibm-mq/9.3?topic=mq-about>`_ を使用するためのアダプタを提供する。
+提供用于在 :ref:`Nablarch的MOM消息功能 <mom_messaging>` 中使用 `IBM MQ(外部网站，英语) <https://www.ibm.com/docs/en/ibm-mq/9.3?topic=mq-about>`_ 的适配器。
 
-IBM MQの仕様及び構築手順などは、IBM社のオフィシャルサイト及びマニュアルを参照すること。
+IBM MQ的规格及构建步骤等请参阅IBM公司的官方网站及手册。
 
 模块列表
 --------------------------------------------------
@@ -22,32 +22,32 @@ IBM MQの仕様及び構築手順などは、IBM社のオフィシャルサイ�
 
 .. important::
 
-  テストでは、IBM MQ 9.3のライブラリを使用している。
-  バージョンを変更する際には、プロジェクト側でテストを行い問題ないことを確認すること。
+  测试中使用的是IBM MQ 9.3的库。
+  要更改版本时，请在项目侧进行测试确认无问题。
 
-本アダプタを使用するための設定
+使用本适配器的设置
 --------------------------------------------------
-本アダプタは、以下の手順にてコンポーネントを定義することで有効になる。
+本适配器通过以下步骤定义组件即可启用。
 
-1.  ``nablarch.integration.messaging.wmq.provider.WmqMessagingProvider`` をコンポーネント設定ファイルに定義を追加する。
-2. ``1`` で設定した、 ``WmqMessagingProvider`` を :ref:`messaging_context_handler` に設定する。
-3. ``1`` で設定した、 ``WmqMessagingProvider`` は初期化が必要なので初期化対象のリストに設定する。
+1. 在组件配置文件中添加 ``nablarch.integration.messaging.wmq.provider.WmqMessagingProvider`` 的定义。
+2. 将 ``1`` 中设置的 ``WmqMessagingProvider`` 设置到 :ref:`messaging_context_handler` 。
+3. ``1`` 中设置的 ``WmqMessagingProvider`` 需要初始化，因此需要设置到初始化对象的列表中。
 
 
-以下に設定例を示す。
+以下显示设置示例。
 
 .. code-block:: xml
 
-  <!-- IBM MQアダプタ用のプロバイダ実装 -->
+  <!-- IBM MQ适配器用的提供程序实现 -->
   <component name="wmqMessagingProvider"
       class="nablarch.integration.messaging.wmq.provider.WmqMessagingProvider">
-    <!-- 設定値はJavadocを参照 -->
+    <!-- 设置值请参阅Javadoc -->
   </component>
 
   <!--
-  メッセージコンテキスト管理ハンドラ
+  消息上下文管理处理程序
 
-  上で定義したWmqMessagingProviderを、messagingProviderプロパティに設定する。
+  将上述定义的WmqMessagingProvider设置到messagingProvider属性。
   -->
   <component class="nablarch.fw.messaging.handler.MessagingContextHandler">
     <property name="messagingProvider" ref="wmqMessagingProvider" />
@@ -57,82 +57,82 @@ IBM MQの仕様及び構築手順などは、IBM社のオフィシャルサイ�
       class="nablarch.core.repository.initialization.BasicApplicationInitializer">
     <property name="initializeList">
       <list>
-        <!-- WmqMessagingProviderは初期化が必要 -->
+        <!-- WmqMessagingProvider需要初始化 -->
         <component-ref name="wmqMessagingProvider" />
       </list>
     </property>
   </component>
 
-分散トランザクションを使用する
+使用分布式事务
 --------------------------------------------------
-本アダプタには、IBM MQをトランザクションマネージャとして、分散トランザクションを実現する機能が含まれている。
+本适配器包含将IBM MQ作为事务管理器实现分布式事务的功能。
 
-この機能は、外部システムとメッセージの送受信を行う際に、取り込み漏れや2重取り込みを防止する目的で使用する。
+此功能用于在与外部系统进行消息收发时防止遗漏接收或重复接收。
 
-分散トランザクションを使用するための手順を以下に示す。
+使用分布式事务的步骤如下。
 
-1. 分散トランザクションに対応したデータソース( :java:extdoc:`javax.sql.XADataSource` を実装したクラス)を定義する。
+1. 定义支持分布式事务的数据源(实现 :java:extdoc:`javax.sql.XADataSource` 的类)。
 
-2. 分散トランザクションに対応したデータベース接続を生成するファクトリクラスを定義する。 |br|
-   (``nablarch.integration.messaging.wmq.xa.WmqXADbConnectionFactoryForXADataSource`` を定義する。)
+2. 定义生成分布式事务对应数据库连接的工厂类。 |br|
+   (定义 ``nablarch.integration.messaging.wmq.xa.WmqXADbConnectionFactoryForXADataSource`` 。)
 
-3. ``2`` で定義したファクトリクラスを、 :ref:`database_connection_management_handler` に設定する。
+3. 将 ``2`` 中定义的工厂类设置到 :ref:`database_connection_management_handler` 。
 
-4. 分散トランザクション用のトランザクションのオブジェクトを生成するファクトリクラスを定義する。 |br|
-   (``nablarch.integration.messaging.wmq.xa.WmqXATransactionFactory`` を定義する。)
+4. 定义生成分布式事务用事务对象的工厂类。 |br|
+   (定义 ``nablarch.integration.messaging.wmq.xa.WmqXATransactionFactory`` 。)
 
-5. ``4`` で定義したファクトリクラスを :ref:`transaction_management_handler` に設定する。
+5. 将 ``4`` 中定义的工厂类设置到 :ref:`transaction_management_handler` 。
 
-以下に設定例を示す。
+以下显示设置示例。
 
 .. code-block:: xml
 
   <!--
-  XA用のデータソースの設定
-  使用するデータベース製品のJDBC実装内のXA用のデータソースを設定する。
+  XA用数据源的设置
+  设置使用的数据库产品的JDBC实现中的XA用数据源。
 
-  この例では、Oracleデータベース用の設定となる。
+  此示例为Oracle数据库的设置。
   -->
   <component name="xaDataSource" class="oracle.jdbc.xa.client.OracleXADataSource">
-    <!-- プロパティへの設定は省略 -->
+    <!-- 对属性的设置省略 -->
   </component>
 
-  <!-- XA用のデータベース接続を生成するクラスの設定-->
+  <!-- XA用数据库连接生成类的设置-->
   <component name="xaConnectionFactory"
       class="nablarch.integration.messaging.wmq.xa.WmqXADbConnectionFactoryForXADataSource">
 
-    <!-- xaDataSourceプロパティにXA用のデータソースを設定する。-->
+    <!-- 向xaDataSource属性设置XA用数据源。-->
     <property name="xaDataSource" ref="xaDataSource" />
 
-    <!-- 上記以外のプロパティは省略 -->
+    <!-- 上述以外的属性省略 -->
   </component>
 
-  <!-- 分散トランザクション用のDB接続ハンドラの設定 -->
+  <!-- 分布式事务用DB连接处理程序的设置 -->
   <component class="nablarch.common.handler.DbConnectionManagementHandler">
-    <!-- DB接続ファクトリには、上記で設定したXA用のデータベース接続を生成するクラスを設定する。 -->
+    <!-- DB连接工厂中，设置上述定义的XA用数据库连接生成类。 -->
     <property name="connectionFactory" ref="xaConnectionFactory" />
 
-    <!-- 上記以外のプロパティは省略 -->
+    <!-- 上述以外的属性省略 -->
   </component>
 
-  <!-- XA用のトランザクション制御オブジェクトを生成するクラスの設定 -->
+  <!-- XA用事务控制对象生成类的设置 -->
   <component name="xaTransactionFactory"
       class="nablarch.integration.messaging.wmq.xa.WmqXATransactionFactory" />
 
-  <!-- 分散トランザクション用のトランザクションハンドラの設定 -->
+  <!-- 分布式事务用事务处理程序的设置 -->
   <component class="nablarch.common.handler.TransactionManagementHandler">
-    <!-- トランザクションファクトリには、上記で設定した
-    XA用のトランザクション制御オブジェクトを生成するクラスを設定する。
+    <!-- 事务工厂中，设置上述定义的
+    XA用事务控制对象生成类。
     -->
     <property name="transactionFactory" ref="xaTransactionFactory" />
 
-    <!-- 上記以外のプロパティは省略 -->
+    <!-- 上述以外的属性省略 -->
   </component>
 
 .. important::
 
-  分散トランザクションを使用するためには、IBM MQに対するXA リソース・マネージャーの設定や、データベースに対する権限付与が必要となる。
-  詳細な設定方法や必要な権限などは、使用する製品のマニュアルを参照すること。
+  使用分布式事务需要对IBM MQ进行XA资源管理器设置以及对数据库授予权限等。
+  详细的设置方法和所需权限等请参阅使用产品的手册。
 
 .. |br| raw:: html
 

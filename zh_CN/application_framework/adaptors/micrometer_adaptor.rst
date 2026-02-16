@@ -1,947 +1,126 @@
-.. _micrometer_adaptor:
-
-Micrometerアダプタ
-==================================================
-
-.. contents:: 目录
-  :depth: 3
-  :local:
-
-`Micrometer(外部サイト、英語) <https://micrometer.io/>`_ を使用したメトリクス収集を行うためのアダプタを提供する。
-
-本アダプタを使うことで、次のようなことができるようになり、应用の運用監視がしやすくなるというメリットが得られる。
-
-* JVM のメモリ使用量や CPU 使用率など、应用のメトリクスを収集できる
-* 収集したメトリクスを `Datadog(外部サイト) <https://www.datadoghq.com/ja/>`_ や `CloudWatch(外部サイト) <https://aws.amazon.com/jp/cloudwatch/>`_ などの監視サービスに連携できる
-
-
-模块列表
---------------------------------------------------
-.. code-block:: xml
-
-  <!-- Micrometerアダプタ -->
-  <dependency>
-    <groupId>com.nablarch.integration</groupId>
-    <artifactId>nablarch-micrometer-adaptor</artifactId>
-  </dependency>
-  
-.. tip::
-
-  Micrometerのバージョン1.13.0を使用してテストを行っている。
-  バージョンを変更する場合は、プロジェクト側でテストを行い問題ないことを確認すること。
-
-Micrometerアダプタを使用するための設定を行う
---------------------------------------------------
-Micrometerでメトリクスを収集するためには、 `レジストリ(外部サイト、英語) <https://docs.micrometer.io/micrometer/reference/concepts/registry.html>`_ と呼ばれるクラスを作成する必要がある。
-本アダプタでは、このレジストリを :ref:`repository` に登録するための :java:extdoc:`ComponentFactory<nablarch.core.repository.di.ComponentFactory>` を提供している。
-
-ここでは、 `LoggingMeterRegistry(外部サイト、英語)`_ をコンポーネントとして登録する :java:extdoc:`LoggingMeterRegistryFactory<nablarch.integration.micrometer.logging.LoggingMeterRegistryFactory>` を例にして設定方法について説明する。
-
-.. tip::
-
-  `LoggingMeterRegistry(外部サイト、英語)`_ は、 SLF4J または Java Util Logging を使ってメトリクスをログに出力する機能を提供する。
-  特に設定をしていない場合は、 Java Util Logging を使って標準出力にメトリクスが出力されるため、簡単な動作確認をするのに適している。
-
-  他のレジストリは連携先のサービスの準備や、収集したメトリクスを出力する実装を作りこむなどの手間がかかる。
-  このため、この説明では最も簡単に動作を確認できる `LoggingMeterRegistry(外部サイト、英語)`_ を使用している。
-
-なお、ベースとなる应用には `ウェブ应用のExample(外部サイト) <https://github.com/nablarch/nablarch-example-web>`_ を使用する。
-
-.. _micrometer_adaptor_declare_default_meter_binder_list_provider_as_component:
-
-DefaultMeterBinderListProviderをコンポーネントとして宣言する
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Micrometerには、 `MeterBinder(外部サイト、英語)`_ というインタフェースが存在する。
-
-JVMのメモリ使用量やCPU使用率など、よく使用するメトリクスの収集は、このインタフェースを実装したクラスとしてあらかじめ用意されている。
-（例：JVMのメモリ使用量は `JvmMemoryMetrics(外部サイト、英語)`_ 、CPU使用率は `ProcessorMetrics(外部サイト、英語)`_ ）
-
-:java:extdoc:`DefaultMeterBinderListProvider <nablarch.integration.micrometer.DefaultMeterBinderListProvider>` は、この `MeterBinder(外部サイト、英語)`_ のリストを提供するクラスで、本クラスを使用することでJVMのメモリ使用量やCPU使用率などのメトリクスを収集できるようになる。
-
-まず ``src/main/resources/web-component-configuration.xml`` に、この :java:extdoc:`DefaultMeterBinderListProvider <nablarch.integration.micrometer.DefaultMeterBinderListProvider>` の宣言を追加する。
-
-.. code-block:: xml
-
-  <component name="meterBinderListProvider"
-             class="nablarch.integration.micrometer.DefaultMeterBinderListProvider" />
-
-
-収集されるメトリクスの具体的な説明については、 :ref:`micrometer_default_metrics` を参照。
-
-DefaultMeterBinderListProviderを廃棄処理対象にする
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-:java:extdoc:`DefaultMeterBinderListProvider <nablarch.integration.micrometer.DefaultMeterBinderListProvider>` は廃棄処理が必要なコンポーネントなので、下記のように廃棄処理対象として宣言する。
-
-.. code-block:: xml
-  
-  <component name="disposer"
-      class="nablarch.core.repository.disposal.BasicApplicationDisposer">
-
-    <property name="disposableList">
-      <list>
-        <component-ref name="meterBinderListProvider"/>
-      </list>
-    </property>
-
-  </component>
-
-オブジェクトの廃棄処理については、 :ref:`repository-dispose_object` を参照
-
-レジストリのファクトリクラスをコンポーネントとして宣言する
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. code-block:: xml
-
-  <component class="nablarch.integration.micrometer.logging.LoggingMeterRegistryFactory">
-    <property name="meterBinderListProvider" ref="meterBinderListProvider" />
-    <property name="applicationDisposer" ref="disposer" />
-  </component>
-
-次に、使用するレジストリごとに用意されているファクトリクラスをコンポーネントとして宣言する。
-
-このとき、 ``meterBinderListProvider`` と ``applicationDisposer`` の２つのプロパティを設定する。
-それぞれのプロパティには、上で宣言した :java:extdoc:`DefaultMeterBinderListProvider <nablarch.integration.micrometer.DefaultMeterBinderListProvider>` と :java:extdoc:`BasicApplicationDisposer <nablarch.core.repository.disposal.BasicApplicationDisposer>` を設定する。
-
-なお、本アダプタが提供しているファクトリクラスについては :ref:`micrometer_registry_factory` に一覧を記載している。
-
-
-設定ファイルを作成する
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-最後に、 ``src/main/resources`` の下に ``micrometer.properties`` という名前のテキストファイルを作成する。
-
-ここでは、中身を次のように記述する。
-
-.. code-block:: properties
-
-  # 確認を楽にするため、5秒ごとにメトリクスを出力する（デフォルトは1分）
-  nablarch.micrometer.logging.step=5s
-  # step で指定した時間よりも早く应用が終了した場合でも廃棄処理でログが出力されるよう設定
-  nablarch.micrometer.logging.logInactive=true
-
-.. important::
-
-  ``micrometer.properties`` は内容が空であっても必ず配置しなければならない。
-
-
-.. _micrometer_metrics_output_example:
-
-実行結果
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-以上で、 ``LoggingMeterRegistry`` を用いたメトリクスの収集ができるようになる。
-
-应用を起動すると、以下のように収集されたメトリクスが標準出力に出力されていることを確認できる。
-
-.. code-block:: text
-
-  2020-09-04 15:33:40.689 [INFO ]      i.m.c.i.l.LoggingMeterRegistry: jvm.gc.count{memory.manager.name=PS Scavenge} throughput=2.6/s
-  2020-09-04 15:33:40.690 [INFO ]      i.m.c.i.l.LoggingMeterRegistry: jvm.gc.count{memory.manager.name=PS MarkSweep} throughput=0.4/s
-  2020-09-04 15:33:40.691 [INFO ]      i.m.c.i.l.LoggingMeterRegistry: jvm.buffer.count{id=mapped} value=0 buffers
-  2020-09-04 15:33:40.691 [INFO ]      i.m.c.i.l.LoggingMeterRegistry: jvm.buffer.count{id=direct} value=2 buffers
-  2020-09-04 15:33:40.692 [INFO ]      i.m.c.i.l.LoggingMeterRegistry: jvm.buffer.memory.used{id=direct} value=124 KiB
-  2020-09-04 15:33:40.692 [INFO ]      i.m.c.i.l.LoggingMeterRegistry: jvm.buffer.memory.used{id=mapped} value=0 B
-  2020-09-04 15:33:40.692 [INFO ]      i.m.c.i.l.LoggingMeterRegistry: jvm.buffer.total.capacity{id=mapped} value=0 B
-  2020-09-04 15:33:40.692 [INFO ]      i.m.c.i.l.LoggingMeterRegistry: jvm.buffer.total.capacity{id=direct} value=124 KiB
-  2020-09-04 15:33:40.693 [INFO ]      i.m.c.i.l.LoggingMeterRegistry: jvm.classes.loaded{} value=9932 classes
-  2020-09-04 15:33:40.693 [INFO ]      i.m.c.i.l.LoggingMeterRegistry: jvm.gc.live.data.size{} value=0 B
-  2020-09-04 15:33:40.693 [INFO ]      i.m.c.i.l.LoggingMeterRegistry: jvm.gc.max.data.size{} value=2.65918 GiB
-  2020-09-04 15:33:40.694 [INFO ]      i.m.c.i.l.LoggingMeterRegistry: jvm.memory.committed{area=heap,id=PS Old Gen} value=182.5 MiB
-  2020-09-04 15:33:40.694 [INFO ]      i.m.c.i.l.LoggingMeterRegistry: jvm.memory.committed{area=heap,id=PS Survivor Space} value=44 MiB
-  2020-09-04 15:33:40.694 [INFO ]      i.m.c.i.l.LoggingMeterRegistry: jvm.memory.committed{area=heap,id=PS Eden Space} value=197 MiB
-  2020-09-04 15:33:40.694 [INFO ]      i.m.c.i.l.LoggingMeterRegistry: jvm.memory.committed{area=nonheap,id=Code Cache} value=29.125 MiB
-  2020-09-04 15:33:40.694 [INFO ]      i.m.c.i.l.LoggingMeterRegistry: jvm.memory.committed{area=nonheap,id=Compressed Class Space} value=6.796875 MiB
-  2020-09-04 15:33:40.695 [INFO ]      i.m.c.i.l.LoggingMeterRegistry: jvm.memory.committed{area=nonheap,id=Metaspace} value=55.789062 MiB
-  2020-09-04 15:33:40.695 [INFO ]      i.m.c.i.l.LoggingMeterRegistry: jvm.memory.max{area=heap,id=PS Old Gen} value=2.65918 GiB
-  2020-09-04 15:33:40.695 [INFO ]      i.m.c.i.l.LoggingMeterRegistry: jvm.memory.max{area=heap,id=PS Survivor Space} value=44 MiB
-  2020-09-04 15:33:40.696 [INFO ]      i.m.c.i.l.LoggingMeterRegistry: jvm.memory.max{area=nonheap,id=Code Cache} value=240 MiB
-  2020-09-04 15:33:40.696 [INFO ]      i.m.c.i.l.LoggingMeterRegistry: jvm.memory.max{area=nonheap,id=Metaspace} value=-1 B
-  2020-09-04 15:33:40.696 [INFO ]      i.m.c.i.l.LoggingMeterRegistry: jvm.memory.max{area=heap,id=PS Eden Space} value=1.243652 GiB
-  2020-09-04 15:33:40.696 [INFO ]      i.m.c.i.l.LoggingMeterRegistry: jvm.memory.max{area=nonheap,id=Compressed Class Space} value=1 GiB
-  2020-09-04 15:33:40.697 [INFO ]      i.m.c.i.l.LoggingMeterRegistry: jvm.memory.used{area=nonheap,id=Code Cache} value=28.618713 MiB
-  2020-09-04 15:33:40.697 [INFO ]      i.m.c.i.l.LoggingMeterRegistry: jvm.memory.used{area=nonheap,id=Compressed Class Space} value=6.270714 MiB
-  2020-09-04 15:33:40.697 [INFO ]      i.m.c.i.l.LoggingMeterRegistry: jvm.memory.used{area=nonheap,id=Metaspace} value=54.118324 MiB
-  2020-09-04 15:33:40.698 [INFO ]      i.m.c.i.l.LoggingMeterRegistry: jvm.memory.used{area=heap,id=PS Old Gen} value=69.320663 MiB
-  2020-09-04 15:33:40.698 [INFO ]      i.m.c.i.l.LoggingMeterRegistry: jvm.memory.used{area=heap,id=PS Survivor Space} value=7.926674 MiB
-  2020-09-04 15:33:40.698 [INFO ]      i.m.c.i.l.LoggingMeterRegistry: jvm.memory.used{area=heap,id=PS Eden Space} value=171.750542 MiB
-  2020-09-04 15:33:40.698 [INFO ]      i.m.c.i.l.LoggingMeterRegistry: jvm.threads.daemon{} value=28 threads
-  2020-09-04 15:33:40.698 [INFO ]      i.m.c.i.l.LoggingMeterRegistry: jvm.threads.live{} value=29 threads
-  2020-09-04 15:33:40.699 [INFO ]      i.m.c.i.l.LoggingMeterRegistry: jvm.threads.peak{} value=31 threads
-  2020-09-04 15:33:40.702 [INFO ]      i.m.c.i.l.LoggingMeterRegistry: jvm.threads.states{state=blocked} value=0 threads
-  2020-09-04 15:33:40.703 [INFO ]      i.m.c.i.l.LoggingMeterRegistry: jvm.threads.states{state=runnable} value=9 threads
-  2020-09-04 15:33:40.703 [INFO ]      i.m.c.i.l.LoggingMeterRegistry: jvm.threads.states{state=new} value=0 threads
-  2020-09-04 15:33:40.703 [INFO ]      i.m.c.i.l.LoggingMeterRegistry: jvm.threads.states{state=timed-waiting} value=3 threads
-  2020-09-04 15:33:40.703 [INFO ]      i.m.c.i.l.LoggingMeterRegistry: jvm.threads.states{state=terminated} value=0 threads
-  2020-09-04 15:33:40.704 [INFO ]      i.m.c.i.l.LoggingMeterRegistry: jvm.threads.states{state=waiting} value=17 threads
-  2020-09-04 15:33:41.199 [INFO ]      i.m.c.i.l.LoggingMeterRegistry: process.cpu.usage{} value=0.111672
-  2020-09-04 15:33:41.199 [INFO ]      i.m.c.i.l.LoggingMeterRegistry: process.start.time{} value=444222h 33m 14.544s
-  2020-09-04 15:33:41.199 [INFO ]      i.m.c.i.l.LoggingMeterRegistry: process.uptime{} value=26.729s
-  2020-09-04 15:33:41.200 [INFO ]      i.m.c.i.l.LoggingMeterRegistry: system.cpu.count{} value=8
-  2020-09-04 15:33:41.200 [INFO ]      i.m.c.i.l.LoggingMeterRegistry: system.cpu.usage{} value=0.394545
-
-
-
-.. _micrometer_registry_factory:
-
-レジストリファクトリ
---------------------------------------------------
-本アダプタでは、以下のレジストリのファクトリクラスを提供している。
-
-.. list-table::
-
-  * - レジストリ
-    - ファクトリクラス
-    - 提供しているアダプタのバージョン
-  * - `SimpleMeterRegistry(外部サイト、英語)`_
-    - :java:extdoc:`SimpleMeterRegistryFactory <nablarch.integration.micrometer.simple.SimpleMeterRegistryFactory>`
-    - ``1.0.0`` 以上
-  * - `LoggingMeterRegistry(外部サイト、英語)`_
-    - :java:extdoc:`LoggingMeterRegistryFactory <nablarch.integration.micrometer.logging.LoggingMeterRegistryFactory>`
-    - ``1.0.0`` 以上
-  * - `CloudWatchMeterRegistry(外部サイト、英語)`_
-    - :java:extdoc:`CloudWatchMeterRegistryFactory <nablarch.integration.micrometer.cloudwatch.CloudWatchMeterRegistryFactory>`
-    - ``1.0.0`` 以上
-  * - `DatadogMeterRegistry(外部サイト、英語)`_
-    - :java:extdoc:`DatadogMeterRegistryFactory <nablarch.integration.micrometer.datadog.DatadogMeterRegistryFactory>`
-    - ``1.0.0`` 以上
-  * - `StatsdMeterRegistry(外部サイト、英語)`_
-    - :java:extdoc:`StatsdMeterRegistryFactory <nablarch.integration.micrometer.statsd.StatsdMeterRegistryFactory>`
-    - ``1.0.0`` 以上
-  * - `OtlpMeterRegistry(外部サイト、英語)`_
-    - :java:extdoc:`OtlpMeterRegistryFactory <nablarch.integration.micrometer.otlp.OtlpMeterRegistryFactory>`
-    - ``1.3.0`` 以上
-
-
-.. _micrometer_configuration:
-
-設定ファイル
---------------------------------------------------
-
-配置場所
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-本アダプタの設定ファイルは、クラスパス直下に ``micrometer.properties`` という名前で配置されるように作成する。
-
-フォーマット
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-このファイルに記載する設定は、以下のフォーマットで記述する。
-
-.. code-block:: text
-
-  nablarch.micrometer.<subPrefix>.<key>=設定する値
-
-ここで、 ``<subPrefix>`` に設定する値は、使用するレジストリファクトリごとに異なる値を指定する。
-
-レジストリファクトリごとに、 ``<subPrefix>`` で指定する値を下記表に記載する。
-
-=================================== ================
-レジストリファクトリ                  subPrefix
-=================================== ================
-``SimpleMeterRegistryFactory``      ``simple``
-``LoggingMeterRegistryFactory``     ``logging``
-``CloudWatchMeterRegistryFactory``  ``cloudwatch``
-``DatadogMeterRegistryFactory``     ``datadog``
-``StatsdMeterRegistryFactory``      ``statsd``
-``OtlpMeterRegistryFactory``        ``otlp``
-=================================== ================
-
-また、 ``<key>`` には Micrometer がレジストリごとに提供している `設定クラス(外部サイト、英語) <https://javadoc.io/doc/io.micrometer/micrometer-core/1.13.0/io/micrometer/core/instrument/config/MeterRegistryConfig.html>`_ で定義されたメソッドと同じ名前を指定する。
-
-例えば、 `DatadogMeterRegistry(外部サイト、英語)`_ に対しては `DatadogConfig(外部サイト、英語)`_ という設定クラスが用意されている。
-そして、この設定クラスには `apiKey(外部サイト、英語) <https://javadoc.io/doc/io.micrometer/micrometer-registry-datadog/1.13.0/io/micrometer/datadog/DatadogConfig.html#apiKey()>`_ というメソッドが定義されている。
-
-
-
-
-したがって、 ``micrometer.properties`` に次のように記述することで、 ``apiKey`` を設定できる。
-
-.. code-block:: text
-
-  nablarch.micrometer.datadog.apiKey=XXXXXXXXXXXXXXXXXXXX
-
-OS環境変数・システムプロパティで上書きする
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-``micrometer.properties`` に記述した設定の値は、OS環境変数およびシステムプロパティで上書きできる。
-
-設定値は、優先度の高い順に次の順番で採用される。
-
-#. システムプロパティで指定した値
-#. OS環境変数で指定した値
-#. ``micrometer.properties`` の設定値
-
-例えば、次のような条件で設定したとする。
-
-micrometer.properties
-
-  .. code-block:: text
-
-    nablarch.micrometer.example.one=PROPERTIES
-    nablarch.micrometer.example.two=PROPERTIES
-    nablarch.micrometer.example.three=PROPERTIES
-
-OS環境変数
-
-  .. code-block:: text
-
-    $ export NABLARCH_MICROMETER_EXAMPLE_TWO=OS_ENV
-
-    $ export NABLARCH_MICROMETER_EXAMPLE_THREE=OS_ENV
-
-システムプロパティ
-
-  .. code-block:: text
-
-    -Dnablarch.micrometer.example.three=SYSTEM_PROP
-
-この場合、それぞれの設定値は最終的に次の値が採用される。
-
-========== ================
-key        採用される値
-========== ================
-``one``    ``PROPERTIES``
-``two``    ``OS_ENV``
-``three``  ``SYSTEM_PROP``
-========== ================
-
-OS環境変数で上書きするときの名前のルールについては、 :ref:`OS環境変数の名前について <repository-overwrite_environment_configuration_by_os_env_var_naming_rule>` を参照。
-
-設定のプレフィックスを変更する
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-設定のプレフィックス (``nablarch.micrometer.<subPrefix>``) は、各レジストリファクトリごとに :java:extdoc:`prefix <nablarch.integration.micrometer.MeterRegistryFactory.setPrefix(java.lang.String)>` プロパティを指定することで変更できる。
-
-以下に、プレフィックスを変更する例を記載する。
-
-.. code-block:: xml
-
-  <component name="meterRegistry" class="nablarch.integration.micrometer.logging.LoggingMeterRegistryFactory">
-    <property name="meterBinderListProvider" ref="meterBinderListProvider" />
-    <property name="applicationDisposer" ref="disposer" />
-
-    <!-- prefix プロパティに任意のプレフィックスを設定する -->
-    <property name="prefix" value="sample.prefix" />
-  </component>
-
-この場合、 ``micrometer.properties`` は次のように設定できるようになる。
-
-.. code-block:: text
-
-  sample.prefix.step=10s
-
-設定ファイルの場所を変更する
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-設定ファイル（``micrometer.properties``）の場所は、以下の方法で変更できる。
-
-まず、レジストリファクトリの :java:extdoc:`xmlConfigPath <nablarch.integration.micrometer.MeterRegistryFactory.setXmlConfigPath(java.lang.String)>` プロパティに、設定ファイルを読み込むXMLファイルのパスを指定する。
-
-.. code-block:: xml
-
-  <component name="meterRegistry" class="nablarch.integration.micrometer.logging.LoggingMeterRegistryFactory">
-    <property name="meterBinderListProvider" ref="meterBinderListProvider" />
-    <property name="applicationDisposer" ref="disposer" />
-
-    <!-- 設定ファイルを読み込むXMLファイルのパスを指定 -->
-    <property name="xmlConfigPath" value="config/metrics.xml" />
-  </component>
-
-そして、 ``xmlConfigPath`` プロパティで指定した場所に、設定ファイルを読み込むXMLファイルを配置する。
-下記設定では、クラスパス内の ``config/metrics.properties`` が設定ファイルとして読み込まれるようになる。
-
-.. code-block:: xml
-
-  <?xml version="1.0" encoding="UTF-8"?>
-  <component-configuration
-          xmlns="http://tis.co.jp/nablarch/component-configuration"
-          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-          xsi:schemaLocation="http://tis.co.jp/nablarch/component-configuration https://nablarch.github.io/schema/component-configuration.xsd">
-
-    <!-- Micrometerアダプタの設定を読み込む -->
-    <config-file file="config/metrics.properties" />
-
-  </component-configuration>
-
-.. tip::
-
-  このXMLファイルはコンポーネント設定ファイルと同じ書式で記述できる。
-
-  ただし、このファイルでコンポーネントを定義しても、System Repositoryから参照を取得できない。
-
-
-.. _micrometer_default_metrics:
-
-DefaultMeterBinderListProviderで収集されるメトリクス
------------------------------------------------------
-
-:java:extdoc:`DefaultMeterBinderListProvider <nablarch.integration.micrometer.DefaultMeterBinderListProvider>` が生成する `MeterBinder(外部サイト、英語)`_ のリストには、以下のクラスが含まれている。
-
-
-* `JvmMemoryMetrics(外部サイト、英語)`_
-* `JvmGcMetrics(外部サイト、英語)`_
-* `JvmThreadMetrics(外部サイト、英語)`_
-* `ClassLoaderMetrics(外部サイト、英語)`_
-* `ProcessorMetrics(外部サイト、英語)`_
-* `FileDescriptorMetrics(外部サイト、英語)`_
-* `UptimeMetrics(外部サイト、英語)`_
-* :java:extdoc:`NablarchGcCountMetrics <nablarch.integration.micrometer.instrument.binder.jvm.NablarchGcCountMetrics>`
-
-
-
-これにより、下記メトリクスが収集されるようになる。
-
-.. list-table::
-
-  * - メトリクス名
-    - 説明
-  * - ``jvm.buffer.count``
-    - バッファプール内のバッファの数
-  * - ``jvm.buffer.memory.used``
-    - バッファプールの使用量
-  * - ``jvm.buffer.total.capacity``
-    - バッファプールの合計容量
-  * - ``jvm.memory.used``
-    - メモリプールのメモリ使用量
-  * - ``jvm.memory.committed``
-    - メモリプールのコミットされたメモリ量
-  * - ``jvm.memory.max``
-    - メモリプールの最大メモリ量
-  * - ``jvm.gc.max.data.size``
-    - OLD領域の最大メモリ量
-  * - ``jvm.gc.live.data.size``
-    - Full GC 後の OLD 領域のメモリ使用量
-  * - ``jvm.gc.memory.promoted``
-    - GC 前後で増加した、 OLD 領域のメモリ使用量の増分
-  * - ``jvm.gc.memory.allocated``
-    - 前回の GC 後から今回の GC までの、 Young 領域のメモリ使用量の増分
-  * - ``jvm.gc.concurrent.phase.time``
-    - コンカレントフェーズの処理時間
-  * - ``jvm.gc.pause``
-    - GC の一時停止に費やされた時間
-  * - ``jvm.threads.peak``
-    - スレッド数のピーク数
-  * - ``jvm.threads.daemon``
-    - 現在のデーモンスレッドの数
-  * - ``jvm.threads.live``
-    - 現在の非デーモンスレッドの数
-  * - ``jvm.threads.states``
-    - 現在のスレッドの状態ごとの数
-  * - ``jvm.classes.loaded``
-    - 現在ロードされているクラスの数
-  * - ``jvm.classes.unloaded``
-    - JVM が起動してから今までにアンロードされたクラスの数
-  * - ``system.cpu.count``
-    - JVM で使用できるプロセッサーの数
-  * - ``system.load.average.1m``
-    - 最後の1分のシステム負荷平均 （参考： `OperatingSystemMXBean(外部サイト) <https://docs.oracle.com/javase/jp/17/docs/api/java.management/java/lang/management/OperatingSystemMXBean.html#getSystemLoadAverage()>`_ ）
-  * - ``system.cpu.usage``
-    - システム全体の直近の CPU 使用率
-  * - ``process.cpu.usage``
-    - JVM の直近のCPU使用率
-  * - ``process.files.open``
-    - 開いているファイルディスクリプタの数
-  * - ``process.files.max``
-    - ファイルディスクリプタの最大数
-  * - ``process.uptime``
-    - JVM の稼働時間
-  * - ``process.start.time``
-    - JVM の起動時刻（UNIX 時間）
-  * - ``jvm.gc.count``
-    - GC の回数
-  * - ``jvm.threads.started``
-    - JVMで起動したスレッド数
-  * - ``process.cpu.time``
-    - Java仮想マシン・プロセスによって使用されるCPU時間
-
-実際に収集されるメトリクスのイメージは :ref:`micrometer_metrics_output_example` を参照。
-
-共通のタグを設定する
---------------------------------------------------
-
-レジストリファクトリの :java:extdoc:`tags <nablarch.integration.micrometer.MeterRegistryFactory.setTags(java.util.Map)>` プロパティで、すべてのメトリクスに共通するタグを設定できる。
-
-この機能は、应用が稼働しているホスト、インスタンス、リージョンなどを識別できる情報を設定するといった用途として使用できる。
-
-以下に設定方法を記載する。
-
-.. code-block:: xml
-
-  <component name="meterRegistry" class="nablarch.integration.micrometer.logging.LoggingMeterRegistryFactory">
-    <property name="meterBinderListProvider" ref="meterBinderListProvider" />
-    <property name="applicationDisposer" ref="disposer" />
-
-    <!-- tags プロパティで共通のタグを設定 -->
-    <property name="tags">
-      <map>
-        <entry key="foo" value="FOO" />
-        <entry key="bar" value="BAR" />
-      </map>
-    </property>
-  </component>
-
-``tags`` プロパティの型は ``Map<String, String>`` となっており、 ``<map>`` タグを使って設定できる。
-このとき、マップのキーがタグの名前、マップの値がタグの値に対応付けられる。
-
-上記設定の場合、収集されるメトリクスは次のようになる。
-
-.. code-block:: text
-
-  （省略）
-  2020-09-04 17:30:06.656 [INFO ]      i.m.c.i.l.LoggingMeterRegistry: process.start.time{bar=BAR,foo=FOO} value=444224h 29m 38.875000064s
-  2020-09-04 17:30:06.656 [INFO ]      i.m.c.i.l.LoggingMeterRegistry: process.uptime{bar=BAR,foo=FOO} value=27.849s
-  2020-09-04 17:30:06.656 [INFO ]      i.m.c.i.l.LoggingMeterRegistry: system.cpu.count{bar=BAR,foo=FOO} value=8
-  2020-09-04 17:30:06.657 [INFO ]      i.m.c.i.l.LoggingMeterRegistry: system.cpu.usage{bar=BAR,foo=FOO} value=0.475654
-
-全てのメトリクスに、 ``foo=FOO``, ``bar=BAR`` のタグが設定されていることが確認できる。
-
-.. _micrometer_collaboration:
-
-監視サービスと連携する
---------------------------------------------------
-
-監視サービスと連携するためには、大きく次のとおり設定する必要がある。
-
-#. 監視サービスや連携方法ごとに用意された Micrometer のモジュールを依存関係に追加する
-#. 使用するレジストリファクトリをコンポーネントとして定義する
-#. その他、監視サービスごとに独自に設定する
-
-ここでは、それぞれの監視サービスと連携する方法について説明する。
-
-
-Datadog と連携する
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-依存関係を追加する
-  .. code-block:: xml
-
-    <dependency>
-      <groupId>io.micrometer</groupId>
-      <artifactId>micrometer-registry-datadog</artifactId>
-      <version>1.13.0</version>
-    </dependency>
-
-レジストリファクトリを宣言する
-  .. code-block:: xml
-  
-    <component name="meterRegistry" class="nablarch.integration.micrometer.datadog.DatadogMeterRegistryFactory">
-      <property name="meterBinderListProvider" ref="meterBinderListProvider" />
-      <property name="applicationDisposer" ref="disposer" />
-    </component>
-
-APIキーを設定する
-  .. code-block:: text
-
-    nablarch.micrometer.datadog.apiKey=XXXXXXXXXXXXXXXX
-
-  APIキーは ``nablarch.micrometer.datadog.apiKey`` で設定できる。
-
-サイトURLを設定する
-  .. code-block:: text
-
-    nablarch.micrometer.datadog.uri=<サイトURL>
-
-  サイトURLは ``nablarch.micrometer.datadog.uri`` で設定できる。
-
-  その他の設定については `DatadogConfig(外部サイト、英語)`_ を参照。
-
-連携を無効にする
-  .. code-block:: text
-
-    nablarch.micrometer.datadog.enabled=false
-    nablarch.micrometer.datadog.apiKey=XXXXXXXXXXXXXXXX
-
-  ``micrometer.properties`` で ``nablarch.micrometer.datadog.enabled`` に ``false`` を設定することで、メトリクスの連携を無効にできる。
-  この設定は環境変数で上書きできるので、本番環境のみ環境変数で ``true`` に上書きして連携を有効にできる。
-
-  .. important::
-    連携を無効にした場合も、 ``nablarch.micrometer.datadog.apiKey`` には何らかの値を設定しておく必要がある。
-    値はダミーで問題ない。
-
-CloudWatch と連携する
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-依存関係を追加する
-  .. code-block:: xml
-
-    <dependency>
-      <groupId>io.micrometer</groupId>
-      <artifactId>micrometer-registry-cloudwatch2</artifactId>
-      <version>1.13.0</version>
-    </dependency>
-
-レジストリファクトリを宣言する
-  .. code-block:: xml
-  
-    <component name="meterRegistry" class="nablarch.integration.micrometer.cloudwatch.CloudWatchMeterRegistryFactory">
-      <property name="meterBinderListProvider" ref="meterBinderListProvider" />
-      <property name="applicationDisposer" ref="disposer" />
-    </component>
-
-リージョンやアクセスキーを設定する
-  .. code-block:: bash
-    
-    $ export AWS_REGION=ap-northeast-1
-
-    $ export AWS_ACCESS_KEY_ID=XXXXXXXXXXXXXXXXXXXXX
-
-    $ export AWS_SECRET_ACCESS_KEY=YYYYYYYYYYYYYYYYYYYYY
-
-  ``micrometer-registry-cloudwatch2`` モジュールは AWS SDK を使用している。
-  したがって、リージョンやアクセスキーなどの設定は AWS SDK の方法に準拠する。
-
-  上記は、LinuxでOS環境変数を使って設定する場合の例を記載している。
-  より詳細な情報は、 `AWSのドキュメント(外部サイト) <https://docs.aws.amazon.com/ja_jp/sdk-for-java/v1/developer-guide/setup-credentials.html>`_ を参照。
-
-名前空間を設定する
-  .. code-block:: text
-
-    nablarch.micrometer.cloudwatch.namespace=test
-
-  メトリクスのカスタム名前空間は ``nablarch.micrometer.cloudwatch.namespace`` で設定できる。
-
-  その他の設定については `CloudWatchConfig(外部サイト、英語)`_ を参照。
-
-より詳細な設定
-  OS環境変数や設定ファイルでは指定できない、より詳細に設定したい場合は、 :java:extdoc:`CloudWatchAsyncClientProvider <nablarch.integration.micrometer.cloudwatch.CloudWatchAsyncClientProvider>` を実装したカスタムプロバイダを作ることで対応できる。
-
-  .. code-block:: java
-
-      package example.micrometer.cloudwatch;
-
-      import nablarch.integration.micrometer.cloudwatch.CloudWatchAsyncClientProvider;
-      import software.amazon.awssdk.services.cloudwatch.CloudWatchAsyncClient;
-
-      public class CustomCloudWatchAsyncClientProvider implements CloudWatchAsyncClientProvider {
-          @Override
-          public CloudWatchAsyncClient provide() {
-              return CloudWatchAsyncClient
-                      .builder()
-                      .asyncConfiguration(...) // 任意の設定を行う
-                      .build();
-          }
-      }
-
-  :java:extdoc:`CloudWatchAsyncClientProvider <nablarch.integration.micrometer.cloudwatch.CloudWatchAsyncClientProvider>` は ``CloudWatchAsyncClient`` を提供する ``provide()`` メソッドを持つ。
-  カスタムプロバイダでは、任意の設定を行った ``CloudWatchAsyncClient`` を構築して返すように ``provide()`` メソッドを実装する。
-
-  .. code-block:: xml
-
-    <component name="meterRegistry" class="nablarch.integration.micrometer.cloudwatch.CloudWatchMeterRegistryFactory">
-      <property name="meterBinderListProvider" ref="meterBinderListProvider" />
-      <property name="applicationDisposer" ref="disposer" />
-
-      <!-- cloudWatchAsyncClientProvider プロパティにカスタムプロバイダを設定する -->
-      <property name="cloudWatchAsyncClientProvider">
-        <component class="example.micrometer.cloudwatch.CustomCloudWatchAsyncClientProvider" />
-      </property>
-    </component>
-
-  作成したカスタムプロバイダは、 ``CloudWatchMeterRegistryFactory`` の :java:extdoc:`cloudWatchAsyncClientProvider <nablarch.integration.micrometer.cloudwatch.CloudWatchMeterRegistryFactory.setCloudWatchAsyncClientProvider(nablarch.integration.micrometer.cloudwatch.CloudWatchAsyncClientProvider)>` プロパティに設定する。
-
-  これにより、カスタムプロバイダが生成した ``CloudWatchAsyncClient`` がメトリクスの連携で使用されるようになる。
-
-  .. tip::
-
-    デフォルトでは、 `CloudWatchAsyncClient.create() (外部サイト、英語) <https://javadoc.io/static/software.amazon.awssdk/cloudwatch/2.13.4/software/amazon/awssdk/services/cloudwatch/CloudWatchAsyncClient.html#create-->`_ で作成されたインスタンスが使用される。
-
-連携を無効にする
-  .. code-block:: text
-
-    nablarch.micrometer.cloudwatch.enabled=false
-    nablarch.micrometer.cloudwatch.namespace=test
-
-  ``micrometer.properties`` で ``nablarch.micrometer.cloudwatch.enabled`` に ``false`` を設定することで、メトリクスの連携を無効にできる。
-  この設定は環境変数で上書きできるので、本番環境のみ環境変数で ``true`` に上書きして連携を有効にできる。
-
-  .. important::
-    連携を無効にした場合も、 ``nablarch.micrometer.cloudwatch.namespace`` には何らかの値を設定しておく必要がある。
-    また、環境変数 ``AWS_REGION`` を設定しておく必要がある。
-
-    いずれも、値はダミーで問題ない。
-
-Azure と連携する
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-MicrometerでメトリクスをAzureに連携する方法
-  Azureは、Java应用からAzureにメトリクスを連携するための仕組みとして、Javaエージェントを用いた方法(**Java 3.0 エージェント**)を提供している。
-
-  * `Azure Monitor Application Insights を監視する Java のコード不要の应用(外部サイト) <https://learn.microsoft.com/ja-jp/azure/azure-monitor/app/opentelemetry-enable?tabs=java>`_
-
-  このJava 3.0 エージェントは、Micrometerの `グローバルレジストリ(外部サイト、英語) <https://docs.micrometer.io/micrometer/reference/concepts/registry.html#_global_registry>`_ に出力したメトリクスを自動的に収集し、Azureに連携する仕組みを提供している。
-
-  * `应用からカスタム テレメトリを送信する(外部サイト) <https://learn.microsoft.com/ja-jp/azure/azure-monitor/app/opentelemetry-enable?tabs=java>`_
-
-  .. important::
-    Java 3.0 エージェントは、初期化処理中に大量のjarファイルをロードする。
-    これにより、Java 3.0 エージェントの初期化処理中はGCが頻発することがある。
-
-    このため、应用起動後しばらくは、GCの影響により性能が一時的に劣化する可能性がある点に注意すること。
-
-    また、高負荷時は Java 3.0 エージェントの処理によるオーバーヘッドが性能に影響を与える可能性がある。
-    したがって、性能試験では本番同様に Java 3.0 エージェントを導入し、想定内の性能になることを確認すること。
-
-
-  Java 3.0 エージェントの設定方法は :ref:`Azureにおける分散トレーシング <azure_distributed_tracing>` 参照。
-
-MicrometerアダプタでメトリクスをAzureに連携するための設定
-  MicrometerアダプタでメトリクスをAzureに連携するためには、以下のとおり設定する必要がある。
-
-  * 应用の起動オプションに、Java 3.0 エージェントを追加する
-  * ``MeterRegistry`` にグローバルレジストリを使うようにコンポーネントを定義する
-
-  1つ目の起動オプションの設定方法については、 `Azureのドキュメント <https://learn.microsoft.com/ja-jp/azure/azure-monitor/app/opentelemetry-enable?tabs=java#modify-your-application>`_ を参照のこと。
-
-  2つ目のグローバルレジストリを使う方法について、本アダプタではグローバルレジストリのファクトリクラスとして :java:extdoc:`GlobalMeterRegistryFactory <nablarch.integration.micrometer.GlobalMeterRegistryFactory>` を用意している。
-  以下に、このファクトリクラスのコンポーネント定義の例を示す。
-
-  .. code-block:: xml
-
-    <component name="meterRegistry" class="nablarch.integration.micrometer.GlobalMeterRegistryFactory">
-      <property name="meterBinderListProvider" ref="meterBinderListProvider" />
-      <property name="applicationDisposer" ref="disposer" />
-    </component>
-
-  この設定により、メトリクスの収集はグローバルレジストリによって行われるようになる。
-  そして、グローバルレジストリで収集されたメトリクスは、Java 3.0 エージェントによってAzureに連携されるようになる。
-
-  .. tip::
-    Java 3.0 エージェントを使うこの方法では、Azure用の ``MeterRegistry`` は使用しない。
-    したがって、Azure用のモジュールを依存関係に追加しなくてもメトリクスを連携できる。
-
-
-詳細設定について
-  メトリクスの連携は、Azureが提供するJava 3.0 エージェントによって行われる。
-  このため、メトリクスの連携に関する設定は全てJava 3.0 エージェントが提供する方法で行う必要がある。
-
-  Java 3.0 エージェントの設定の詳細については、 `構成オプション(外部サイト) <https://learn.microsoft.com/ja-jp/azure/azure-monitor/app/java-standalone-config>`_ を参照のこと。
-
-  .. important::
-    本アダプタ用の設定ファイルである ``micrometer.properties`` は使用できないが、ファイルは配置しておく必要がある（内容は空で構わない）。
-
-連携を無効にする
-  Java 3.0 エージェントを使用せずに应用を起動することで、メトリクスの連携を無効にできる。
-
-StatsD で連携する
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Datadog は `DogStatsD(外部サイト) <https://docs.datadoghq.com/ja/developers/dogstatsd/?tab=hostagent>`_ という `StatsD(外部サイト、英語) <https://github.com/statsd/statsd>`_ プロトコルを使った連携をサポートしている。
-したがって、 ``micrometer-registry-statsd`` モジュールを用いることで、 StatsD で Datadog と連携することもできる。
-
-ここでは、 Datadog に StatsD プロトコルで連携する場合を例にして説明する。
-なお、DogStatsD のインストール方法などについては `Datadogのサイト(外部サイト) <https://docs.datadoghq.com/ja/agent/>`_ を参照。
-
-依存関係を追加する
-  .. code-block:: xml
-
-    <dependency>
-      <groupId>io.micrometer</groupId>
-      <artifactId>micrometer-registry-statsd</artifactId>
-      <version>1.13.0</version>
-    </dependency>
-
-レジストリファクトリを宣言する
-  .. code-block:: xml
-  
-    <component name="meterRegistry" class="nablarch.integration.micrometer.statsd.StatsdMeterRegistryFactory">
-      <property name="meterBinderListProvider" ref="meterBinderListProvider" />
-      <property name="applicationDisposer" ref="disposer" />
-    </component>
-
-必要に応じて設定ファイルを記述する
-  StatsD デーモンと連携するための設定は、デフォルト値が DogStatsD をデフォルト構成でインストールした場合と一致するように調整されている。
-  
-  したがって、 DogStatsD をデフォルトの構成でインストールしている場合は、特に設定を明示しなくても DogStatsD による連携が動作する。
-
-  もしデフォルト構成以外でインストールしている場合は、 `StatsdConfig(外部サイト、英語)`_ を参照して、実際の環境に合わせた設定を行うこと。
-
-  .. code-block:: text
-
-    # ポートを変更
-    nablarch.micrometer.statsd.port=9999
-
-連携を無効にする
-  .. code-block:: text
-
-    nablarch.micrometer.statsd.enabled=false
-
-  ``micrometer.properties`` で ``nablarch.micrometer.statsd.enabled`` に ``false`` を設定することで、メトリクスの連携を無効にできる。
-  この設定は環境変数で上書きできるので、本番環境のみ環境変数で ``true`` に上書きして連携を有効にできる。
-
-OpenTelemetry Protocol (OTLP) で連携する
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-多くの監視サービスでは `OpenTelemetry(外部サイト) <https://opentelemetry.io/ja>`_ をサポートしており、通信プロトコルに OpenTelemetry Protocol (以下、OTLP) を使用してメトリクスを収集できる。
-``micrometer-registry-otlp`` モジュールを用いることで、 OTLP で様々な監視サービスと連携できる。
-
-  .. important::
-     OpenTelemetry によるメトリクスの収集では、どういった連携方法が適しているか（利用可能か）は監視サービスによって異なるため、使用する監視サービスの情報を確認すること。
-     例として、いくつかの監視サービスの情報を以下に示す。
-
-     * `Datadog の OpenTelemetry(外部サイト) <https://docs.datadoghq.com/ja/opentelemetry/>`_
-     * `New RelicによるOpenTelemetryの紹介(外部サイト) <https://docs.newrelic.com/jp/docs/opentelemetry/opentelemetry-introduction>`_
-     * `Prometheus | HTTP API | OTLP Receiver(外部サイト、英語) <https://prometheus.io/docs/prometheus/latest/querying/api/#otlp-receiver>`_
-
-ここでは、localhost の 9090 ポートで起動している Prometheus に OTLP で連携する場合を例にして説明する。
-
-依存関係を追加する
-  .. code-block:: xml
-
-    <dependency>
-      <groupId>io.micrometer</groupId>
-      <artifactId>micrometer-registry-otlp</artifactId>
-      <version>1.13.0</version>
-    </dependency>
-
-レジストリファクトリを宣言する
-  .. code-block:: xml
-  
-    <component name="meterRegistry" class="nablarch.integration.micrometer.otlp.OtlpMeterRegistryFactory">
-      <property name="meterBinderListProvider" ref="meterBinderListProvider" />
-      <property name="applicationDisposer" ref="disposer" />
-    </component>
-
-設定ファイルを記述する
-  .. code-block:: text
-
-    # 送信先を変更
-    nablarch.micrometer.otlp.url=http://localhost:9090/api/v1/otlp/v1/metrics
-
-ヘッダ情報を設定する
-  .. code-block:: text
-
-    nablarch.micrometer.otlp.headers=key1=value1,key2=value2
-
-  認証で使用するAPIキー等のヘッダ情報が必要な場合、 ``nablarch.micrometer.otlp.headers`` で設定できる。
-
-連携を無効にする
-  .. code-block:: text
-
-    nablarch.micrometer.otlp.enabled=false
-
-  ``micrometer.properties`` で ``nablarch.micrometer.otlp.enabled`` に ``false`` を設定することで、メトリクスの連携を無効にできる。
-  この設定は環境変数で上書きできるので、本番環境のみ環境変数で ``true`` に上書きして連携を有効にできる。
-
-应用の形式ごとに収集するメトリクスの例
+各应用程序形式收集的指标示例
 ---------------------------------------------------------
 
-ここでは、应用の形式（ウェブ・バッチ）ごとに、どのようなメトリクスを収集すると良いか説明する。
+这里说明按应用程序形式（Web・批处理）分别收集哪些指标比较好。
 
-ウェブ应用で収集するメトリクスの例
+Web应用程序收集的指标示例
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-HTTPリクエストの処理時間
-  HTTPリクエストごとの処理時間を計測することで、以下のようなことができるようになる。
+HTTP请求的处理时间
+  通过测量每个HTTP请求的处理时间，可以实现以下功能。
 
-  * 各URLごとにどの程度アクセスがあるか確認する
-  * リクエストの処理にどれくらい時間がかかっているか確認する
+  * 确认各URL的访问频率
+  * 确认请求处理需要多少时间
 
-  また、パーセンタイルを計測することで、大部分のリクエストがどれくらいの時間で処理できているかを確認できるようにもなる。
+  此外，通过测量百分位数，还可以确认大部分请求在多长的时间内可以处理完成。
 
-  これらのメトリクスを収集する方法については、以下のガイドを参照のこと。
+  收集这些指标的方法请参阅以下指南。
 
   * :ref:`micrometer_timer_metrics_handler`
   * :ref:`micrometer_timer_metrics_handler_percentiles`
 
-SQLの処理時間
-  SQLの処理時間を計測することで、以下のようなことができるようになる。
+SQL的处理时间
+  通过测量SQL的处理时间，可以实现以下功能。
 
-  * それぞれのSQLがどの程度の時間で処理されているか確認する
-  * 想定よりも時間がかかっているSQLが無いか確認する
+  * 确认各SQL处理需要多少时间
+  * 确认是否存在处理时间比预想长的SQL
 
-  SQLの処理時間を計測する方法については、以下のガイドを参照のこと。
+  测量SQL处理时间的方法请参阅以下指南。
 
   * :ref:`micrometer_sql_time`
 
-ログレベルごとの出力回数
-  ログレベルごとの出力回数を計測することで、以下のようなことができるようになる。
+各日志级别的输出次数
+  通过测量各日志级别的输出次数，可以实现以下功能。
 
-  * 警告ログが異常な回数出力されていないか確認する（攻撃の検知）
-  * エラーログを検知する
+  * 确认警告日志是否异常频繁输出（攻击检测）
+  * 检测错误日志
 
-  ログレベルごとの出力回数については、以下のガイドを参照のこと。
+  关于各日志级别的输出次数，请参阅以下指南。
 
   * :ref:`micrometer_log_count`
 
-应用サーバやライブラリが提供するリソースの情報
-  应用サーバやライブラリが提供するリソース（スレッドプールやDBのコネクションプールなど）の状態を
-  メトリクスとして収集しておくことで、障害発生時に原因箇所を特定するための情報源として活用できるようになる。
+应用服务器或库提供的资源信息
+  将应用服务器或库提供的资源（线程池或DB连接池等）状态作为指标收集，
+  可以在故障发生时作为确定原因位置的信息源使用。
 
-  多くの应用サーバは、リソースの状態をJMXのMBeanを通じて公開している。
-  MBeanの情報を収集する方法については、以下のガイドを参照のこと。
+  许多应用服务器通过JMX的MBean公开资源状态。
+  收集MBean信息的方法请参阅以下指南。
 
   * :ref:`micrometer_mbean_metrics`
 
-バッチ应用で収集するメトリクスの例
+批处理应用程序收集的指标示例
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-バッチの処理時間
-  普段からバッチの処理時間を計測しておくことで、平常時の処理時間を知ることができる。
-  これにより、処理時間が平常時とは異なる値になったときに、異常を迅速に検知できるようになる。
+批处理的处理时间
+  平时测量批处理的处理时间可以了解正常时的处理时间。
+  这样当处理时间与正常时不同的值时，可以快速检测异常。
 
-  バッチの処理時間は、 :ref:`micrometer_default_metrics` で収集される ``process.uptime`` で計測できる。
+  批处理的处理时间可以通过 :ref:`micrometer_default_metrics` 中收集的 ``process.uptime`` 测量。
 
-トランザクション単位の処理時間
-  トランザクション単位の処理時間を計測することで、マルチスレッドのバッチが均等に処理を分散できているかなどを確認できるようになる。
+事务单位的处理时间
+  通过测量事务单位的处理时间，可以确认多线程批处理是否均匀分配处理等。
 
-  また、バッチの処理時間と同様に、処理時間が平常時から逸脱したときにも異常を迅速に検知できる。
+  此外，与批处理的处理时间一样，当处理时间偏离正常时也可以快速检测异常。
 
-  バッチのトランザクション単位の処理時間の計測については、以下のガイドを参照のこと。
+  关于批处理事务单位的处理时间测量，请参阅以下指南。
 
   * :ref:`micrometer_adaptor_batch_transaction_time`
 
-バッチの処理件数
-  バッチの処理件数を計測することで、以下のようなことができるようになる。
+批处理的处理件数
+  通过测量批处理的处理件数，可以实现以下功能。
 
-  * バッチの進捗状況を確認する
-  * 想定通りの速度で処理が進んでいるか確認する
-  * 想定通りの件数が処理できているか確認する
+  * 确认批处理的进度
+  * 确认是否以预想的速度进行处理
+  * 确认是否处理了预想的件数
 
-  バッチの処理件数の計測については、以下のガイドを参照のこと。
+  关于批处理处理件数的测量，请参阅以下指南。
 
   * :ref:`micrometer_batch_processed_count`
 
-SQLの処理時間
-  SQLの処理時間を計測することで、以下のようなことができるようになる。
+SQL的处理时间
+  通过测量SQL的处理时间，可以实现以下功能。
 
-  * それぞれのSQLがどの程度の時間で処理されているか確認する
-  * 想定よりも時間がかかっているSQLが無いか確認する
+  * 确认各SQL处理需要多少时间
+  * 确认是否存在处理时间比预想长的SQL
 
-  SQLの処理時間を計測する方法については、以下のガイドを参照のこと。
+  测量SQL处理时间的方法请参阅以下指南。
 
   * :ref:`micrometer_sql_time`
 
-ログレベルごとの出力回数
-  ログレベルごとの出力回数を計測することで、警告ログやエラーログの検知ができるようになる。
+各日志级别的输出次数
+  通过测量各日志级别的输出次数，可以检测警告日志或错误日志。
 
-  ログレベルごとの出力回数については、以下のガイドを参照のこと。
+  关于各日志级别的输出次数，请参阅以下指南。
 
   * :ref:`micrometer_log_count`
 
-ライブラリが提供するリソースの情報
-  ライブラリが提供するリソース（DBのコネクションプールなど）の状態をメトリクスとして収集しておくことで、
-  障害発生時に原因箇所を特定するための情報源として活用できるようになる。
+库提供的资源信息
+  将库提供的资源（DB连接池等）状态作为指标收集，
+  可以在故障发生时作为确定原因位置的信息源使用。
 
-  ライブラリによっては、リソースの状態をJMXのMBeanで公開していることがある。
-  MBeanの情報を収集する方法については、以下のガイドを参照のこと。
+  某些库通过JMX的MBean公开资源状态。
+  收集MBean信息的方法请参阅以下指南。
 
   * :ref:`micrometer_mbean_metrics`
 
 
 .. _micrometer_timer_metrics_handler:
 
-処理時間を計測するハンドラ
+测量处理时间的处理程序
 --------------------------------------------------
 
-:java:extdoc:`TimerMetricsHandler <nablarch.integration.micrometer.instrument.handler.TimerMetricsHandler>` をhandler队列に設定すると、後続ハンドラの処理時間を計測しメトリクスとして収集できるようになる。
-これにより、handler队列内の処理の平均処理時間や最大処理時間をモニタできるようになる。
+在处理程序队列中设置 :java:extdoc:`TimerMetricsHandler <nablarch.integration.micrometer.instrument.handler.TimerMetricsHandler>` ，
+可以测量后续处理程序的处理时间并将其作为指标收集。
+这样可以监控处理程序队列内处理的平均处理时间和最大处理时间。
 
-``TimerMetricsHandler`` には、 :java:extdoc:`HandlerMetricsMetaDataBuilder <nablarch.integration.micrometer.instrument.handler.HandlerMetricsMetaDataBuilder>` インタフェースを実装したクラスのインスタンスを設定する必要がある。
-``HandlerMetricsMetaDataBuilder`` は、収集したメトリクスに設定する以下のメタ情報を構築する機能を提供する。
+``TimerMetricsHandler`` 需要设置实现 :java:extdoc:`HandlerMetricsMetaDataBuilder <nablarch.integration.micrometer.instrument.handler.HandlerMetricsMetaDataBuilder>` 接口的类实例。
+``HandlerMetricsMetaDataBuilder`` 提供构建收集指标时设置的以下元信息的功能。
 
-* メトリクスの名前
-* メトリクスの説明
-* メトリクスに設定するタグの一覧
+* 指标的名称
+* 指标的说明
+* 指标设置的标签列表
 
-``HandlerMetricsMetaDataBuilder`` の実装例を以下に示す。
+以下显示 ``HandlerMetricsMetaDataBuilder`` 的实现示例。
 
 .. code-block:: java
 
@@ -971,16 +150,16 @@ SQLの処理時間
       }
   }
 
-``getMetricsName()`` と ``getMetricsDescription()`` は、それぞれメトリクスの名前と説明を返すように実装する。
+``getMetricsName()`` 和 ``getMetricsDescription()`` 分别实现返回指标的名称和说明。
 
-``buildTagList()`` には、ハンドラに渡されたパラメータと後続ハンドラの実行結果、そして後続ハンドラがスローした例外が渡される（例外がスローされていない場合は ``null``）。
-本メソッドは必要に応じてこれらの情報を参照し、メトリクスに設定するタグの一覧を ``List<io.micrometer.core.instrument.Tag>`` で返すように実装する。
+``buildTagList()`` 中传递了传递给处理程序的参数和后续处理程序的执行结果，以及后续处理程序抛出的异常（未抛出异常时为 ``null`` ）。
+本方法根据需要参考这些信息，实现以 ``List<io.micrometer.core.instrument.Tag>`` 返回指标设置的标签列表。
 
-次に、 ``TimerMetricsHandler`` をhandler队列に設定する例を以下に示す。
+接下来，以下显示在处理程序队列中设置 ``TimerMetricsHandler`` 的示例。
 
 .. code-block:: xml
 
-  <!-- handler队列構成 -->
+  <!-- 处理程序队列构成 -->
   <component name="webFrontController"
              class="nablarch.fw.web.servlet.WebFrontController">
     <property name="handlerQueue">
@@ -1000,51 +179,51 @@ SQLの処理時間
     </property>
   </component>
 
-handler队列に ``TimerMetricsHandler`` を追加し、 ``handlerMetricsMetaDataBuilder`` プロパティに作成した ``HandlerMetricsMetaDataBuilder`` のコンポーネントを設定する。
+在处理程序队列中添加 ``TimerMetricsHandler`` ，并在 ``handlerMetricsMetaDataBuilder`` 属性中设置创建的 ``HandlerMetricsMetaDataBuilder`` 组件。
 
-また ``meterRegistry`` プロパティには、使用しているレジストリファクトリが生成した `MeterRegistry(外部サイト、英語)`_ を渡すように設定する。
+此外， ``meterRegistry`` 属性需要设置使用的注册表工厂生成的 `MeterRegistry(外部网站、英语)`_ 。
 
-これにより、ここより後ろのハンドラの処理時間をメトリクスとして収集できるようになる。
+这样可以收集此后处理程序的处理时间作为指标。
 
-なお、Nablarchでは ``HandlerMetricsMetaDataBuilder`` の実装として以下の機能を提供するクラスを用意している。
-詳細は、リンク先の説明を参照のこと。
+另外，Nablarch提供了以下功能作为 ``HandlerMetricsMetaDataBuilder`` 的实现类。
+详情请参阅链接处的说明。
 
 * :ref:`micrometer_adaptor_http_request_process_time_metrics`
 
 .. _micrometer_timer_metrics_handler_percentiles:
 
-パーセンタイルを収集する
+收集百分位数
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-``TimerMetricsHandler`` には、パーセンタイル値を監視サービスに連携するために以下のプロパティが用意されている。
+``TimerMetricsHandler`` 提供了以下属性用于将百分位数值联动到监控服务。
 
 .. list-table::
 
-  * - プロパティ
-    - 説明
+  * - 属性
+    - 说明
   * - ``percentiles``
-    - 収集するパーセンタイル値のリスト。
-      95パーセンタイルを収集する場合、 ``0.95`` と指定する。
+    - 要收集的百分位数值列表。
+      收集95百分位数时指定为 ``0.95`` 。
   * - ``enablePercentileHistogram``
-    - 収集したヒストグラムのバケットを監視サービスに連携するかどうかのフラグ。
-      連携先の監視サービスがヒストグラムからパーセンタイル値を計算する仕組みをサポートしていない場合、この設定は無視される。
+    - 是否将收集的直方图桶联动到监控服务的标志。
+      如果联动目标的监控服务不支持从直方图计算百分位数值的机制，则此设置被忽略。
   * - ``serviceLevelObjectives``
-    - 収集するヒストグラムに追加するバケットの値のリスト。
-      単位はミリ秒。
-      この値は、SLO(Service Level Objective)に基づいて設定する。
+    - 添加到收集的直方图中的桶值列表。
+      单位为毫秒。
+      此值基于SLO(Service Level Objective)设置。
   * - ``minimumExpectedValue``
-    - 収集するヒストグラムバケットの最小値を設定する。
-      単位はミリ秒。
+    - 设置收集的直方图桶的最小值。
+      单位为毫秒。
   * - ``maximumExpectedValue``
-    - 収集するヒストグラムバケットの最大値を設定する。
-      単位はミリ秒。
+    - 设置收集的直方图桶的最大值。
+      单位为毫秒。
 
-これらのプロパティは、Micrometerが提供する `Timer(外部サイト、英語)`_ に設定する値として使用される。
-より詳細な説明は、 `Micrometerのドキュメント <https://docs.micrometer.io/micrometer/reference/concepts/histogram-quantiles.html>`_ を参照のこと。
+这些属性用作Micrometer提供的 `Timer(外部网站、英语)`_ 中设置的值。
+更详细的说明请参阅 `Micrometer文档 <https://docs.micrometer.io/micrometer/reference/concepts/histogram-quantiles.html>`_ 。
 
-なお、これらのプロパティはデフォルトでは全て未設定のため、パーセンタイルの情報は収集されない。
-パーセンタイルの情報を収集する必要がある場合は、これらのプロパティを明示的に設定すること。
-以下に、設定例を示す。
+这些属性默认全部未设置，因此不收集百分位数信息。
+如果需要收集百分位数信息，请显式设置这些属性。
+以下显示设置示例。
 
 .. code-block:: xml
 
@@ -1054,7 +233,7 @@ handler队列に ``TimerMetricsHandler`` を追加し、 ``handlerMetricsMetaDat
       <component class="nablarch.integration.micrometer.instrument.http.HttpRequestTimeMetricsMetaDataBuilder" />
     </property>
 
-    <!-- 98, 90, 50 パーセンタイルを収集する -->
+    <!-- 收集98、90、50百分位数 -->
     <property name="percentiles">
       <list>
         <value>0.98</value>
@@ -1063,10 +242,10 @@ handler队列に ``TimerMetricsHandler`` を追加し、 ``handlerMetricsMetaDat
       </list>
     </property>
 
-    <!-- ヒストグラムバケットを監視サービスに連携する -->
+    <!-- 将直方图桶联动到监控服务 -->
     <property name="enablePercentileHistogram" value="true" />
 
-    <!-- SLO として 1000ms, 1500ms を設定 -->
+    <!-- 将1000ms、1500ms设置为SLO -->
     <property name="serviceLevelObjectives">
       <list>
         <value>1000</value>
@@ -1074,13 +253,13 @@ handler队列に ``TimerMetricsHandler`` を追加し、 ``handlerMetricsMetaDat
       </list>
     </property>
     
-    <!-- バケットの最小値に 500 ms を設定 -->
+    <!-- 将桶最小值设为500 ms -->
     <property name="minimumExpectedValue" value="500" />
-    <!-- バケットの最大値に 3000 ms を設定 -->
+    <!-- 将桶最大值设为3000 ms -->
     <property name="maximumExpectedValue" value="3000" />
   </component>
 
-ヒストグラムバケットをサポートする ``MeterRegistry`` を使用した場合、上記設定により次のようなメトリクスが収集できるようになる。
+使用支持直方图桶的 ``MeterRegistry`` 时，通过上述设置可以收集以下指标。
 
 .. code-block:: text
 
@@ -1106,11 +285,11 @@ handler队列に ``TimerMetricsHandler`` を追加し、 ``handlerMetricsMetaDat
   http_server_requests_seconds_bucket{class="com.nablarch.example.app.web.action.MetricsAction",exception="None",httpMethod="GET",method="index_nablarch.fw.web.HttpRequest_nablarch.fw.ExecutionContext",outcome="SUCCESS",status="200",le="+Inf",} 32.0
 
 .. tip::
-  本アダプタで提供している ``MeterRegistry`` では ``OtlpMeterRegistry`` のみがヒストグラムバケットをサポートする。
+  本适配器提供的 ``MeterRegistry`` 中只有 ``OtlpMeterRegistry`` 支持直方图桶。
 
-  例では、ヒストグラムバケットの具体例（``http_server_requests_seconds_bucket``）を示すため `PrometheusMeterRegistry(外部サイト、英語)`_ を使用している（`Prometheus(外部サイト、英語) <https://prometheus.io/>`_ は、ヒストグラムによるパーセンタイルの計算をサポートしている）。
-  ただし、 ``PrometheusMeterRegistry`` の ``MeterRegistryFactory`` は、本アダプタでは提供していない。
-  実際に ``PrometheusMeterRegistry`` を試したい場合は、以下のようなクラスを自前で用意すること。
+  示例中为了显示直方图桶的具体示例（``http_server_requests_seconds_bucket``）使用了 `PrometheusMeterRegistry(外部网站、英语)`_ （`Prometheus(外部网站、英语) <https://prometheus.io/>`_ 支持通过直方图计算百分位数）。
+  但是， ``PrometheusMeterRegistry`` 的 ``MeterRegistryFactory`` 本适配器不提供。
+  实际想尝试 ``PrometheusMeterRegistry`` 时，请自行准备如下类。
 
   .. code-block:: java
 
@@ -1148,56 +327,56 @@ handler队列に ``TimerMetricsHandler`` を追加し、 ``handlerMetricsMetaDat
         }
     }
 
-あらかじめ用意されているHandlerMetricsMetaDataBuilderの実装
+预先准备的HandlerMetricsMetaDataBuilder实现
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-ここでは、Nablarchによってあらかじめ用意されている ``HandlerMetricsMetaDataBuilder`` の実装クラスについて紹介する。
+这里介绍Nablarch预先准备的 ``HandlerMetricsMetaDataBuilder`` 实现类。
 
 .. _micrometer_adaptor_http_request_process_time_metrics:
 
-HTTPリクエストの処理時間を収集する
+收集HTTP请求的处理时间
 *********************************************************************
 
-:java:extdoc:`HttpRequestTimeMetricsMetaDataBuilder <nablarch.integration.micrometer.instrument.http.HttpRequestTimeMetricsMetaDataBuilder>` は、HTTPリクエストの処理時間計測のためのメトリクスのメタ情報を構築する。
+:java:extdoc:`HttpRequestTimeMetricsMetaDataBuilder <nablarch.integration.micrometer.instrument.http.HttpRequestTimeMetricsMetaDataBuilder>` 用于构建HTTP请求处理时间测量指标的元信息。
 
-本クラスは、メトリクスの名前に ``http.server.requests`` を使用する。
+本类在指标名称中使用 ``http.server.requests`` 。
 
-また、本クラスは以下のタグを生成する。
+此外，本类生成以下标签。
 
 .. list-table::
 
-  * - タグ名
-    - 説明
+  * - 标签名
+    - 说明
   * - ``class``
-    - リクエストを処理したAction类の名前(``Class.getName()``)。
-      取得できない場合は ``UNKNOWN``。
+    - 处理请求的Action类名(``Class.getName()``)。
+      无法获取时为 ``UNKNOWN`` 。
   * - ``method``
-    - リクエストを処理したAction类のメソッド名と、引数の型名(``Class.getCanonicalName()``)をアンダースコア(``_``)で繋げた文字列。
-      取得できない場合は ``UNKNOWN``。
+    - 处理请求的Action类方法名与参数类型名(``Class.getCanonicalName()``)用下划线(``_``)连接而成的字符串。
+      无法获取时为 ``UNKNOWN`` 。
   * - ``httpMethod``
-    - HTTPメソッド
+    - HTTP方法
   * - ``status``
-    - HTTPステータスコード
+    - HTTP状态码
   * - ``outcome``
-    - ステータスコードの種類を表す文字列（1XX: ``INFORMATION``, 2XX: ``SUCCESS``, 3XX: ``REDIRECTION``, 4XX: ``CLIENT_ERROR``, 5XX: ``SERVER_ERROR``, その他: ``UNKNOWN``）
+    - 表示状态码种类的字符串（1XX: ``INFORMATION`` , 2XX: ``SUCCESS`` , 3XX: ``REDIRECTION`` , 4XX: ``CLIENT_ERROR`` , 5XX: ``SERVER_ERROR`` , 其他: ``UNKNOWN`` ）
   * - ``exception``
-    - リクエスト処理中のスローされた例外の単純名（例外スローされていない場合は ``None``）
+    - 请求处理中抛出的异常的简单名（未抛出异常时为 ``None`` ）
 
-本クラスを使った場合の設定例を以下に示す。
+以下显示使用本类的设置示例。
 
 .. code-block:: xml
 
-  <!-- handler队列構成 -->
+  <!-- 处理程序队列构成 -->
   <component name="webFrontController"
              class="nablarch.fw.web.servlet.WebFrontController">
     <property name="handlerQueue">
       <list>
-        <!-- HTTPリクエストの処理時間のメトリクス収集ハンドラ -->
+        <!-- HTTP请求处理时间指标收集处理程序 -->
         <component class="nablarch.integration.micrometer.instrument.handler.TimerMetricsHandler">
-          <!-- レジストリファクトリが生成する MeterRegistry を meterRegistry プロパティに設定する -->
+          <!-- 将注册表工厂生成的 MeterRegistry 设置到 meterRegistry 属性 -->
           <property name="meterRegistry" ref="meterRegistry" />
 
-          <!-- HttpRequestTimeMetricsMetaDataBuilder を handlerMetricsMetaDataBuilder に設定する -->
+          <!-- 将 HttpRequestTimeMetricsMetaDataBuilder 设置到 handlerMetricsMetaDataBuilder -->
           <property name="handlerMetricsMetaDataBuilder">
             <component class="nablarch.integration.micrometer.instrument.http.HttpRequestTimeMetricsMetaDataBuilder" />
           </property>
@@ -1210,9 +389,9 @@ HTTPリクエストの処理時間を収集する
     </property>
   </component>
 
-リクエスト全体の処理時間を計測するため、 ``TimerMetricsHandler`` はhandler队列の先頭に設定する。
+为测量请求整体的处理时间， ``TimerMetricsHandler`` 设置在处理程序队列的开头。
 
-以上の設定で、 ``LoggingMeterRegistry`` を使っていた場合は次のようなメトリクスが収集されるようになる。
+通过以上设置，使用 ``LoggingMeterRegistry`` 时可以收集以下指标。
 
 .. code-block:: text
 
@@ -1223,39 +402,39 @@ HTTPリクエストの処理時間を収集する
 
 .. _micrometer_adaptor_batch_transaction_time:
 
-バッチのトランザクション単位の処理時間を計測する
+测量批处理事务单位的处理时间
 --------------------------------------------------
 
-:java:extdoc:`BatchTransactionTimeMetricsLogger <nablarch.integration.micrometer.instrument.batch.BatchTransactionTimeMetricsLogger>` を使用することで、 :ref:`nablarch_batch` のトランザクション単位の処理時間をメトリクスとして計測できるようになる。
-これにより、トランザクション単位の平均処理時間や最大処理時間をモニタできるようになる。
+使用 :java:extdoc:`BatchTransactionTimeMetricsLogger <nablarch.integration.micrometer.instrument.batch.BatchTransactionTimeMetricsLogger>` 可以测量 :ref:`nablarch_batch` 事务单位的处理时间作为指标。
+这样可以监控事务单位的平均处理时间和最大处理时间。
 
-``BatchTransactionTimeMetricsLogger`` は `Timer(外部サイト、英語)`_ を使って ``batch.transaction.time`` という名前でメトリクスを収集する。
-この名前は、 :java:extdoc:`setMetricsName(String) <nablarch.integration.micrometer.instrument.batch.BatchTransactionTimeMetricsLogger.setMetricsName(java.lang.String)>` で変更できる。
+``BatchTransactionTimeMetricsLogger`` 使用 `Timer(外部网站、英语)`_ 以 ``batch.transaction.time`` 名称收集指标。
+此名称可以通过 :java:extdoc:`setMetricsName(String) <nablarch.integration.micrometer.instrument.batch.BatchTransactionTimeMetricsLogger.setMetricsName(java.lang.String)>` 更改。
 
-また、メトリクスには以下のタグが付与される。
+此外，指标会附加以下标签。
 
 .. list-table::
 
-  * - タグ名
-    - 説明
+  * - 标签名
+    - 说明
   * - ``class``
-    - アクションのクラス名（ :ref:`-requestPath <nablarch_batch-resolve_action>` から取得した値）
+    - Action的类名（从 :ref:`-requestPath <nablarch_batch-resolve_action>` 获取的值）
 
-以下に ``BatchTransactionTimeMetricsLogger`` を使うための設定例を示す。
+以下显示使用 ``BatchTransactionTimeMetricsLogger`` 的设置示例。
 
 .. code-block:: xml
 
-  <!-- CommitLogger を複数組み合わせる -->
+  <!-- 组合多个CommitLogger -->
   <component name="commitLogger"
              class="nablarch.core.log.app.CompositeCommitLogger">
     <property name="commitLoggerList">
       <list>
-        <!-- デフォルトの CommitLogger を設定 -->
+        <!-- 设置默认的 CommitLogger -->
         <component class="nablarch.core.log.app.BasicCommitLogger">
           <property name="interval" value="${nablarch.commitLogger.interval}" />
         </component>
 
-        <!-- トランザクション単位の処理時間の計測 -->
+        <!-- 事务单位处理时间的测量 -->
         <component class="nablarch.integration.micrometer.instrument.batch.BatchTransactionTimeMetricsLogger">
           <property name="meterRegistry" ref="meterRegistry" />
         </component>
@@ -1263,24 +442,24 @@ HTTPリクエストの処理時間を収集する
     </property>
   </component>
 
-まず、 :java:extdoc:`CompositeCommitLogger <nablarch.core.log.app.CompositeCommitLogger>` を ``commitLogger`` という名前でコンポーネントとして定義する。
-そして、 ``commitLoggerList`` プロパティに :java:extdoc:`BasicCommitLogger <nablarch.core.log.app.BasicCommitLogger>` と ``BatchTransactionTimeMetricsLogger`` のコンポーネントを設定する。
+首先，以 ``commitLogger`` 名称将 :java:extdoc:`CompositeCommitLogger <nablarch.core.log.app.CompositeCommitLogger>` 定义为组件。
+然后，在 ``commitLoggerList`` 属性中设置 :java:extdoc:`BasicCommitLogger <nablarch.core.log.app.BasicCommitLogger>` 和 ``BatchTransactionTimeMetricsLogger`` 的组件。
 
-以上の設定により、トランザクション単位の時間計測が可能となる。
-以下で、その仕組みを説明する。
+通过以上设置，可以测量事务单位的时间。
+以下说明其机制。
 
-Nablarchバッチは、 :ref:`loop_handler` によってトランザクションのコミット間隔を制御している。
-このトランザクションループ制御ハンドラは、トランザクションがコミットされるときに :java:extdoc:`CommitLogger <nablarch.core.log.app.CommitLogger>` の ``increment(long)`` メソッドをコールする仕組みを提供している。
-この ``CommitLogger`` の実体は、 ``commitLogger`` という名前でコンポーネントを定義することで上書きできる。
+Nablarch批处理通过 :ref:`loop_handler` 控制事务的提交间隔。
+此事务循环控制处理程序提供了在事务提交时调用 :java:extdoc:`CommitLogger <nablarch.core.log.app.CommitLogger>` 的 ``increment(long)`` 方法的机制。
+此 ``CommitLogger`` 实体可以通过以 ``commitLogger`` 名称定义组件来覆盖。
 
-``BatchTransactionTimeMetricsLogger`` は ``CommitLogger`` インタフェースを実装している。
-そして、 ``increment(long)`` の呼び出し間隔を計測することでトランザクション単位の時間を計測している。
-このため、 ``BatchTransactionTimeMetricsLogger`` を ``commitLogger`` という名前でコンポーネント定義すると、トランザクション単位の時間計測ができる仕組みとなっている。
+``BatchTransactionTimeMetricsLogger`` 实现了 ``CommitLogger`` 接口。
+然后，通过测量 ``increment(long)`` 调用间隔来测量事务单位的时间。
+因此，以 ``commitLogger`` 名称定义 ``BatchTransactionTimeMetricsLogger`` 组件，即可测量事务单位的时间。
 
-しかし、 ``BatchTransactionTimeMetricsLogger`` をそのまま ``commitLogger`` という名前で定義した場合、デフォルトで定義されている ``CommitLogger`` のコンポーネントである ``BasicCommitLogger`` が動作しなくなる。
-そこで上記設定例では、複数の ``CommitLogger`` を組み合わせることができる ``CompositeCommitLogger`` を使用して、 ``BasicCommitLogger`` と ``BatchTransactionTimeMetricsLogger`` を併用するようにしている。
+但是，如果直接将 ``BatchTransactionTimeMetricsLogger`` 以 ``commitLogger`` 名称定义，默认定义的 ``CommitLogger`` 组件 ``BasicCommitLogger`` 将无法工作。
+因此上述设置示例中，使用可以组合多个 ``CommitLogger`` 的 ``CompositeCommitLogger`` ，使 ``BasicCommitLogger`` 和 ``BatchTransactionTimeMetricsLogger`` 并用。
 
-``LoggingMeterRegistry`` を使用している場合、 ``BatchTransactionTimeMetricsLogger`` の計測結果は以下のように出力される。
+使用 ``LoggingMeterRegistry`` 时， ``BatchTransactionTimeMetricsLogger`` 的测量结果输出如下。
 
 .. code-block:: text
 
@@ -1289,39 +468,39 @@ Nablarchバッチは、 :ref:`loop_handler` によってトランザクション
 
 .. _micrometer_batch_processed_count:
 
-バッチの処理件数を計測する
+测量批处理的处理件数
 --------------------------------------------------
 
-:java:extdoc:`BatchProcessedRecordCountMetricsLogger <nablarch.integration.micrometer.instrument.batch.BatchProcessedRecordCountMetricsLogger>` を使用すると、 :ref:`nablarch_batch` が処理した入力データの件数を計測できるようになる。
-これにより、バッチの進捗状況や処理速度の変化をモニタできるようになる。
+使用 :java:extdoc:`BatchProcessedRecordCountMetricsLogger <nablarch.integration.micrometer.instrument.batch.BatchProcessedRecordCountMetricsLogger>` 可以测量 :ref:`nablarch_batch` 处理的输入数据件数。
+这样可以监控批处理的进度和处理速度的变化。
 
-``BatchProcessedRecordCountMetricsLogger`` は `Counter(外部サイト、英語)`_ を使って ``batch.processed.record.count`` という名前でメトリクスを収集する。
-この名前は、 :java:extdoc:`setMetricsName(String) <nablarch.integration.micrometer.instrument.batch.BatchProcessedRecordCountMetricsLogger.setMetricsName(java.lang.String)>` で変更できる。
+``BatchProcessedRecordCountMetricsLogger`` 使用 `Counter(外部网站、英语)`_ 以 ``batch.processed.record.count`` 名称收集指标。
+此名称可以通过 :java:extdoc:`setMetricsName(String) <nablarch.integration.micrometer.instrument.batch.BatchProcessedRecordCountMetricsLogger.setMetricsName(java.lang.String)>` 更改。
 
-また、メトリクスには以下のタグが付与される。
+此外，指标会附加以下标签。
 
 .. list-table::
 
-  * - タグ名
-    - 説明
+  * - 标签名
+    - 说明
   * - ``class``
-    - アクションのクラス名（ :ref:`-requestPath <nablarch_batch-resolve_action>` から取得した値）
+    - Action的类名（从 :ref:`-requestPath <nablarch_batch-resolve_action>` 获取的值）
 
-以下に ``BatchProcessedRecordCountMetricsLogger`` を使うための設定例を示す。
+以下显示使用 ``BatchProcessedRecordCountMetricsLogger`` 的设置示例。
 
 .. code-block:: xml
 
-  <!-- CommitLogger を複数組み合わせる -->
+  <!-- 组合多个CommitLogger -->
   <component name="commitLogger"
              class="nablarch.core.log.app.CompositeCommitLogger">
     <property name="commitLoggerList">
       <list>
-        <!-- デフォルトの CommitLogger を設定 -->
+        <!-- 设置默认的 CommitLogger -->
         <component class="nablarch.core.log.app.BasicCommitLogger">
           <property name="interval" value="${nablarch.commitLogger.interval}" />
         </component>
 
-        <!-- 処理件数を計測する -->
+        <!-- 测量处理件数 -->
         <component class="nablarch.integration.micrometer.instrument.batch.BatchProcessedRecordCountMetricsLogger">
           <property name="meterRegistry" ref="meterRegistry" />
         </component>
@@ -1329,12 +508,12 @@ Nablarchバッチは、 :ref:`loop_handler` によってトランザクション
     </property>
   </component>
 
-``BatchProcessedRecordCountMetricsLogger`` は、「バッチのトランザクション単位の処理時間の計測」と同じく、 :java:extdoc:`CommitLogger <nablarch.core.log.app.CommitLogger>` の仕組みを利用して処理件数を計測している。
-``CommitLogger`` の仕組みや、その利用の仕方については :ref:`micrometer_adaptor_batch_transaction_time` を参照のこと。
+``BatchProcessedRecordCountMetricsLogger`` 与"批处理事务单位处理时间的测量"一样，利用 :java:extdoc:`CommitLogger <nablarch.core.log.app.CommitLogger>` 的机制测量处理件数。
+关于 ``CommitLogger`` 的机制及其使用方法请参阅 :ref:`micrometer_adaptor_batch_transaction_time` 。
 
-以上の設定で、 ``BatchProcessedRecordCountMetricsLogger`` を使用できるようになる。
+通过以上设置，可以使用 ``BatchProcessedRecordCountMetricsLogger`` 。
 
-``LoggingMeterRegistry`` を使用している場合、以下のようにメトリクスが出力されることを確認できる。
+使用 ``LoggingMeterRegistry`` 时，可以确认指标输出如下。
 
 .. code-block:: text
 
@@ -1347,45 +526,45 @@ Nablarchバッチは、 :ref:`loop_handler` によってトランザクション
 
 .. _micrometer_log_count:
 
-ログレベルごとの出力回数を計測する
+测量各日志级别的输出次数
 --------------------------------------------------
 
-:java:extdoc:`LogCountMetrics <nablarch.integration.micrometer.instrument.binder.logging.LogCountMetrics>` を使用すると、ログレベルごとの出力回数を計測できるようになる。
-これにより、特定レベルのログ出力頻度をモニタしたり、エラーログの監視などができるようになる。
+使用 :java:extdoc:`LogCountMetrics <nablarch.integration.micrometer.instrument.binder.logging.LogCountMetrics>` 可以测量各日志级别的输出次数。
+这样可以监控特定级别日志的输出频率或错误日志的监控等。
 
-``LogCountMetrics`` は `Counter(外部サイト、英語)`_ を使って ``log.count`` という名前でメトリクスを収集する。
-この名前は、 :java:extdoc:`MetricsMetaData <nablarch.integration.micrometer.instrument.binder.MetricsMetaData>` を受け取る :java:extdoc:`コンストラクタ <nablarch.integration.micrometer.instrument.binder.logging.LogCountMetrics.<init>(nablarch.integration.micrometer.instrument.binder.MetricsMetaData)>` で変更できる。
+``LogCountMetrics`` 使用 `Counter(外部网站、英语)`_ 以 ``log.count`` 名称收集指标。
+此名称可以在接收 :java:extdoc:`MetricsMetaData <nablarch.integration.micrometer.instrument.binder.MetricsMetaData>` 的 :java:extdoc:`构造函数 <nablarch.integration.micrometer.instrument.binder.logging.LogCountMetrics.<init>(nablarch.integration.micrometer.instrument.binder.MetricsMetaData)>` 中更改。
 
-また、メトリクスには以下のタグが付与される。
+此外，指标会附加以下标签。
 
 .. list-table::
 
-  * - タグ名
-    - 説明
+  * - 标签名
+    - 说明
   * - ``level``
-    - ログレベル。
+    - 日志级别。
   * - ``logger``
-    - :java:extdoc:`LoggerManager <nablarch.core.log.LoggerManager>` からロガーを取得するときに使用した名前。
+    - 从 :java:extdoc:`LoggerManager <nablarch.core.log.LoggerManager>` 获取日志记录器时使用的名称。
 
-LogPublisher を設定する
+设置LogPublisher
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-``LogCountMetrics`` は、ログ出力イベントを検知するために :java:extdoc:`LogPublisher <nablarch.core.log.basic.LogPublisher>` の仕組みを使用している。
+``LogCountMetrics`` 使用 :java:extdoc:`LogPublisher <nablarch.core.log.basic.LogPublisher>` 的机制检测日志输出事件。
 
-したがって ``LogCountMetrics`` を使い始めるためには、まず ``LogPublisher`` の設定をする必要がある。
-``LogPublisher`` の設定については、 :ref:`log-publisher_usage` を参照のこと。
+因此开始使用 ``LogCountMetrics`` 前，需要首先进行 ``LogPublisher`` 的设置。
+关于 ``LogPublisher`` 的设置请参阅 :ref:`log-publisher_usage` 。
 
-カスタムのDefaultMeterBinderListProviderを作成する
+创建自定义的DefaultMeterBinderListProvider
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-``LogCountMetrics`` は `MeterBinder(外部サイト、英語)`_ の実装クラスとして提供されている。
-したがって、 :java:extdoc:`DefaultMeterBinderListProvider <nablarch.integration.micrometer.DefaultMeterBinderListProvider>` を継承したクラスを作り、 ``LogCountMetrics`` を含んだ ``MeterBinder`` のリストを返すように実装する必要がある。
+``LogCountMetrics`` 作为 `MeterBinder(外部网站、英语)`_ 的实现类提供。
+因此，需要创建继承 :java:extdoc:`DefaultMeterBinderListProvider <nablarch.integration.micrometer.DefaultMeterBinderListProvider>` 的类，实现返回包含 ``LogCountMetrics`` 的 ``MeterBinder`` 列表。
 
 .. tip::
 
-  ``DefaultMeterBinderListProvider`` の説明については、 :ref:`micrometer_adaptor_declare_default_meter_binder_list_provider_as_component` を参照。
+  关于 ``DefaultMeterBinderListProvider`` 的说明请参阅 :ref:`micrometer_adaptor_declare_default_meter_binder_list_provider_as_component` 。
 
-以下に、その実装例を示す。
+以下显示其实现示例。
 
 .. code-block:: java
 
@@ -1402,30 +581,30 @@ LogPublisher を設定する
 
       @Override
       protected List<MeterBinder> createMeterBinderList() {
-          // デフォルトの MeterBinder リストに LogCountMetrics を追加
+          // 向默认的 MeterBinder 列表添加 LogCountMetrics
           List<MeterBinder> meterBinderList = new ArrayList<>(super.createMeterBinderList());
           meterBinderList.add(new LogCountMetrics());
           return meterBinderList;
       }
   }
 
-最後に、 ``MeterRegistryFactory`` コンポーネントの ``meterBinderListProvider`` プロパティに、作成したカスタムの ``DefaultMeterBinderListProvider`` を設定する。
-以上で、 ``LogCountMetrics`` が使用できるようになる。
+最后，在 ``MeterRegistryFactory`` 组件的 ``meterBinderListProvider`` 属性中设置创建的自定义 ``DefaultMeterBinderListProvider`` 。
+以上即可使用 ``LogCountMetrics`` 。
 
-``LoggingMeterRegistry`` を使用した場合、以下のようにメトリクスが出力されることが確認できる。
+使用 ``LoggingMeterRegistry`` 时，可以确认指标输出如下。
 
 .. code-block:: text
 
   2020-12-22 14:25:36.978 [INFO ]      i.m.c.i.l.LoggingMeterRegistry: log.count{level=WARN,logger=com.nablarch.example.app.web.action.MetricsAction} throughput=0.4/s
   2020-12-22 14:25:41.978 [INFO ]      i.m.c.i.l.LoggingMeterRegistry: log.count{level=ERROR,logger=com.nablarch.example.app.web.action.MetricsAction} throughput=1.4/s
 
-集計対象のログレベル
+聚合对象的日志级别
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-デフォルトでは、 ``WARN`` 以上のログ出力回数のみが集計の対象となる。
+默认只有 ``WARN`` 以上的日志输出次数成为聚合对象。
 
-集計対象のログレベルのしきい値は、 ``LogCountMetrics`` のコンストラクタに :java:extdoc:`LogLevel <nablarch.core.log.basic.LogLevel>` を渡すことで変更できる。
-以下の実装例では、しきい値を ``INFO`` に変更している。
+聚合对象的日志级别阈值可以通过在 ``LogCountMetrics`` 构造函数中传递 :java:extdoc:`LogLevel <nablarch.core.log.basic.LogLevel>` 进行更改。
+以下实现示例中将阈值更改为 ``INFO`` 。
 
 .. code-block:: java
 
@@ -1437,48 +616,48 @@ LogPublisher を設定する
       @Override
       protected List<MeterBinder> createMeterBinderList() {
           List<MeterBinder> meterBinderList = new ArrayList<>(super.createMeterBinderList());
-          meterBinderList.add(new LogCountMetrics(LogLevel.INFO)); // LogLevel のしきい値を指定
+          meterBinderList.add(new LogCountMetrics(LogLevel.INFO)); // 指定LogLevel的阈值
           return meterBinderList;
       }
   }
 
 .. important::
 
-  ログレベルのしきい値を下げすぎると、应用によっては大量のメトリクスが収集される可能性がある。
-  使用する監視サービスの料金体系によっては使用料金が増大する可能性があるため、注意して設定すること。
+  如果日志级别阈值设置过低，根据应用程序可能会收集大量指标。
+  根据使用监控服务的费用体系，使用费用可能会增加，请注意设置。
 
 .. _micrometer_sql_time:
 
-SQLの処理時間を計測する
+测量SQL的处理时间
 --------------------------------------------------
 
-:java:extdoc:`SqlTimeMetricsDaoContext <nablarch.integration.micrometer.instrument.dao.SqlTimeMetricsDaoContext>` を使用することで、 :ref:`universal_dao` を通じて実行したSQLの処理時間を計測できるようになる。
-これにより、SQLごとの平均処理時間や最大処理時間をモニタできるようになる。
+使用 :java:extdoc:`SqlTimeMetricsDaoContext <nablarch.integration.micrometer.instrument.dao.SqlTimeMetricsDaoContext>` 可以测量通过 :ref:`universal_dao` 执行的SQL处理时间。
+这样可以监控各SQL的平均处理时间和最大处理时间。
 
-``SqlTimeMetricsDaoContext`` は `Timer(外部サイト、英語)`_ を使って ``sql.process.time`` という名前でメトリクスを収集する。
-この名前は、 ``SqlTimeMetricsDaoContext`` のファクトリクラスである :java:extdoc:`SqlTimeMetricsDaoContextFactory <nablarch.integration.micrometer.instrument.dao.SqlTimeMetricsDaoContextFactory>` の :java:extdoc:`setMetricsName(String) <nablarch.integration.micrometer.instrument.dao.SqlTimeMetricsDaoContextFactory.setMetricsName(java.lang.String)>` で変更できる。
+``SqlTimeMetricsDaoContext`` 使用 `Timer(外部网站、英语)`_ 以 ``sql.process.time`` 名称收集指标。
+此名称可以在 ``SqlTimeMetricsDaoContext`` 的工厂类 :java:extdoc:`SqlTimeMetricsDaoContextFactory <nablarch.integration.micrometer.instrument.dao.SqlTimeMetricsDaoContextFactory>` 的 :java:extdoc:`setMetricsName(String) <nablarch.integration.micrometer.instrument.dao.SqlTimeMetricsDaoContextFactory.setMetricsName(java.lang.String)>` 中更改。
 
-また、メトリクスには以下のタグが付与される。
+此外，指标会附加以下标签。
 
 .. list-table::
 
-  * - タグ名
-    - 説明
+  * - 标签名
+    - 说明
   * - ``sql.id``
-    - ``DaoContext`` のメソッド引数に渡されたSQLID（SQLIDが無い場合は ``"None"``）
+    - 传递给 ``DaoContext`` 方法参数的SQLID（无SQLID时为 ``"None"`` ）
   * - ``entity``
-    - エンティティクラスの名前（``Class.getName()``）
+    - 实体类的名称（``Class.getName()`` ）
   * - ``method``
-    - 実行された ``DaoContext`` のメソッド名
+    - 执行的 ``DaoContext`` 的方法名
 
-以下に ``SqlTimeMetricsDaoContext`` を使うための設定例を示す。
+以下显示使用 ``SqlTimeMetricsDaoContext`` 的设置示例。
 
 .. code-block:: xml
 
-  <!-- SqlTimeMetricsDaoContextFactory を daoContextFactory という名前で定義 -->
+  <!-- 以 daoContextFactory 名称定义 SqlTimeMetricsDaoContextFactory -->
   <component name="daoContextFactory"
              class="nablarch.integration.micrometer.instrument.dao.SqlTimeMetricsDaoContextFactory">
-    <!-- delegate に、委譲先となる DaoContext のファクトリを設定する -->
+    <!-- 向 delegate 设置委托目标的 DaoContext 工厂 -->
     <property name="delegate">
       <component class="nablarch.common.dao.BasicDaoContextFactory">
         <property name="sequenceIdGenerator">
@@ -1487,19 +666,19 @@ SQLの処理時間を計測する
       </component>
     </property>
 
-    <!-- レジストリファクトリが生成する MeterRegistry を meterRegistry プロパティに設定する -->
+    <!-- 将注册表工厂生成的 MeterRegistry 设置到 meterRegistry 属性 -->
     <property name="meterRegistry" ref="meterRegistry" />
   </component>
 
-``SqlTimeMetricsDaoContext`` は、 :java:extdoc:`DaoContext <nablarch.common.dao.DaoContext>` をラップすることで各データベースアクセスメソッドの処理時間を計測する仕組みになっている。
-そして、 :java:extdoc:`SqlTimeMetricsDaoContextFactory <nablarch.integration.micrometer.instrument.dao.SqlTimeMetricsDaoContextFactory>` は、 ``DaoContext`` をラップした ``SqlTimeMetricsDaoContext`` を生成するファクトリクラスとなる。
+``SqlTimeMetricsDaoContext`` 通过包装 :java:extdoc:`DaoContext <nablarch.common.dao.DaoContext>` 来测量各数据库访问方法的处理时间。
+而 :java:extdoc:`SqlTimeMetricsDaoContextFactory <nablarch.integration.micrometer.instrument.dao.SqlTimeMetricsDaoContextFactory>` 是生成包装 ``DaoContext`` 的 ``SqlTimeMetricsDaoContext`` 的工厂类。
 
-この ``SqlTimeMetricsDaoContextFactory`` を ``daoContextFactory`` という名前でコンポーネントとして定義する。
-これにより、 :ref:`universal_dao` が使用する ``DaoContext`` が ``SqlTimeMetricsDaoContext`` に置き換わる。
+将此 ``SqlTimeMetricsDaoContextFactory`` 以 ``daoContextFactory`` 名称定义为组件。
+这样， :ref:`universal_dao` 使用的 ``DaoContext`` 将被替换为 ``SqlTimeMetricsDaoContext`` 。
 
-以上で、 ``SqlTimeMetricsDaoContext`` が使用できるようになる。
+以上即可使用 ``SqlTimeMetricsDaoContext`` 。
 
-``LoggingMeterRegistry`` を使用した場合、以下のようにメトリクスが出力されることが確認できる。
+使用 ``LoggingMeterRegistry`` 时，可以确认指标输出如下。
 
 .. code-block:: text
 
@@ -1510,38 +689,38 @@ SQLの処理時間を計測する
 
 .. _micrometer_mbean_metrics:
 
-任意のMBeanから取得した値をメトリクスとして計測する
+将任意MBean获取的值作为指标测量
 -------------------------------------------------------------
 
-:java:extdoc:`JmxGaugeMetrics <nablarch.integration.micrometer.instrument.binder.jmx.JmxGaugeMetrics>` を使用すると、任意のMBeanから取得した値をメトリクスとして計測できるようになる。
-これにより、使用している应用サーバやライブラリがMBeanで提供している様々な情報を計測し、モニタできるようになる。
+使用 :java:extdoc:`JmxGaugeMetrics <nablarch.integration.micrometer.instrument.binder.jmx.JmxGaugeMetrics>` 可以将任意MBean获取的值作为指标测量。
+这样可以测量使用的应用服务器或库通过MBean提供的各种信息并进行监控。
 
 .. tip::
 
-  MBeanとは、Java Management Extensions(JMX)で定義されたJavaオブジェクトで、管理対象リソースの情報へアクセスするためのAPIなどを提供する。
-  Tomcatなどの应用サーバの多くは、サーバの状態（スレッドプールの状態など）をMBeanで公開している。
-  应用からこれらのMBeanにアクセスすることで、サーバの状態を取得できるようになっている。
+  MBean是Java Management Extensions(JMX)定义的Java对象，提供访问管理对象资源的API等。
+  Tomcat等许多应用服务器通过MBean公开服务器状态（线程池状态等）。
+  应用程序可以通过访问这些MBean获取服务器状态。
 
-  JMXについての詳細は、 `Java Management Extensions ガイド(外部サイト) <https://docs.oracle.com/javase/jp/17/jmx/java-management-extensions-jmx-user-guide.html>`_ を参照。
+  关于JMX的详细信息请参阅 `Java Management Extensions 指南(外部网站) <https://docs.oracle.com/javase/jp/17/jmx/java-management-extensions-jmx-user-guide.html>`_ 。
 
-``JmxGaugeMetrics`` は、 `Gauge(外部サイト、英語)`_ を使用して、MBeanから取得した値を計測する。
+``JmxGaugeMetrics`` 使用 `Gauge(外部网站、英语)`_ 测量从MBean获取的值。
 
-以下で、 ``JmxGaugeMetrics`` の設定例を説明する。
+以下说明 ``JmxGaugeMetrics`` 的设置示例。
 
-まず、应用サーバが提供するMBeanを参照する例として、Tomcatのスレッドプールの状態を取得する例を示す。
-次に应用に組み込んだライブラリが提供するMBeanを参照する例として、HikariCPのコネクションプールの状態を取得する例を示す。
+首先作为应用服务器提供的MBean引用示例，显示获取Tomcat线程池状态的示例。
+接下来作为应用内嵌入的库提供的MBean引用示例，显示获取HikariCP连接池状态的示例。
 
-Tomcatのスレッドプールの状態を取得する
+获取Tomcat线程池的状态
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-``JmxGaugeMetrics`` は `MeterBinder(外部サイト、英語)`_ の実装クラスとして提供されている。
-したがって、 :java:extdoc:`DefaultMeterBinderListProvider <nablarch.integration.micrometer.DefaultMeterBinderListProvider>` を継承したクラスを作り、 ``JmxGaugeMetrics`` を含んだ ``MeterBinder`` のリストを返すように実装する必要がある。
+``JmxGaugeMetrics`` 作为 `MeterBinder(外部网站、英语)`_ 的实现类提供。
+因此，需要创建继承 :java:extdoc:`DefaultMeterBinderListProvider <nablarch.integration.micrometer.DefaultMeterBinderListProvider>` 的类，实现返回包含 ``JmxGaugeMetrics`` 的 ``MeterBinder`` 列表。
 
 .. tip::
 
-  ``DefaultMeterBinderListProvider`` の説明については、 :ref:`micrometer_adaptor_declare_default_meter_binder_list_provider_as_component` を参照。
+  关于 ``DefaultMeterBinderListProvider`` 的说明请参阅 :ref:`micrometer_adaptor_declare_default_meter_binder_list_provider_as_component` 。
 
-以下に、実装例を示す。
+以下显示实现示例。
 
 .. code-block:: java
 
@@ -1562,49 +741,49 @@ Tomcatのスレッドプールの状態を取得する
       protected List<MeterBinder> createMeterBinderList() {
           List<MeterBinder> meterBinderList = new ArrayList<>(super.createMeterBinderList());
           meterBinderList.add(new JmxGaugeMetrics(
-              // メトリクスの名前と説明
+              // 指标的名称和说明
               new MetricsMetaData("thread.count.current", "Current thread count."),
-              // 収集する MBean の属性を特定する情報
+              // 确定要收集的MBean属性的信息
               new MBeanAttributeCondition("Catalina:type=ThreadPool,name=\"http-nio-8080\"", "currentThreadCount")
           ));
           return meterBinderList;
       }
   }
 
-``JmxGaugeMetrics`` のコンストラクタには、次の２つのクラスを渡す必要がある。
+``JmxGaugeMetrics`` 的构造函数需要传递以下2个类。
 
 * :java:extdoc:`MetricsMetaData <nablarch.integration.micrometer.instrument.binder.MetricsMetaData>`
-    * メトリクスの名前や説明、タグなどのメタ情報を指定する
+    * 指定指标的名称、说明、标签等元信息
 * :java:extdoc:`MBeanAttributeCondition <nablarch.integration.micrometer.instrument.binder.jmx.MBeanAttributeCondition>`
-    * 収集するMbeanを特定するための、オブジェクト名と属性名を指定する
+    * 指定确定要收集Mbean的对象名和属性名
 
-``JmxGaugeMetrics`` は、 ``MBeanAttributeCondition`` で指定された情報に基づいてMBeanの情報を取得する。
-そして、 ``MetricsMetaData`` で指定された情報でメトリクスを構築する。
+``JmxGaugeMetrics`` 基于 ``MBeanAttributeCondition`` 指定的信息获取MBean信息。
+然后，基于 ``MetricsMetaData`` 指定的信息构建指标。
 
 .. tip::
 
-  Tomcatが作成するMBeanのオブジェクト名・属性名は、JDKに付属しているJConsoleというツールを使って確認できる。
-  JConsoleでTomcatを実行しているJVMに接続し「MBeans」タブを開くと、接続しているJVMで取得可能なMBeanの一覧が表示される。
+  可以使用JDK附带的JConsole工具确认Tomcat创建的MBean的对象名・属性名。
+  使用JConsole连接运行Tomcat的JVM，打开「MBeans」标签页，会显示连接的JVM可获取的MBean列表。
 
-  JConsoleについての詳細は、 `モニタリングおよび管理ガイド(外部サイト) <https://docs.oracle.com/javase/jp/17/management/using-jconsole.html#GUID-77416B38-7F15-4E35-B3D1-34BFD88350B5>`_ を参照。
+  关于JConsole的详细信息请参阅 `监视和管理指南(外部网站) <https://docs.oracle.com/javase/jp/17/management/using-jconsole.html#GUID-77416B38-7F15-4E35-B3D1-34BFD88350B5>`_ 。
 
-以上の設定で ``LoggingMeterRegistry`` を使用した場合、以下のようにメトリクスが出力されることが確認できる。
+通过以上设置使用 ``LoggingMeterRegistry`` 时，可以确认指标输出如下。
 
 .. code-block:: text
 
   24-Dec-2020 16:20:24.467 情報 [logging-metrics-publisher] io.micrometer.core.instrument.logging.LoggingMeterRegistry.lambda$publish$3 thread.count.current{} value=10
 
-HikariCPのコネクションプールの状態を取得する
+获取HikariCP连接池的状态
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-`HikariCP(外部サイト、英語) <https://github.com/brettwooldridge/HikariCP>`_ には、コネクションプールの情報をMBeanで参照できるようにする機能が用意されている。
+`HikariCP(外部网站、英语) <https://github.com/brettwooldridge/HikariCP>`_ 提供了可以通过MBean引用连接池信息的功能。
 
-* `MBean (JMX) Monitoring and Management(外部サイト、英語) <https://github.com/brettwooldridge/HikariCP/wiki/MBean-(JMX)-Monitoring-and-Management>`_
+* `MBean (JMX) Monitoring and Management(外部网站、英语) <https://github.com/brettwooldridge/HikariCP/wiki/MBean-(JMX)-Monitoring-and-Management>`_
 
-この機能を使用することで、 ``JmxGaugeMetrics`` でコネクションプールの情報を収集できるようになる。
+使用此功能可以通过 ``JmxGaugeMetrics`` 收集连接池信息。
 
-まず、HikariCPのMBeanで情報を公開する機能を有効にする。
-MBeanによる情報公開を有効にするには、 ``com.zaxxer.hikari.HikariDataSource`` の ``registerMbeans`` プロパティに ``true`` を設定する。
+首先，启用HikariCP通过MBean公开信息的功能。
+要启用MBean信息公开，在 ``com.zaxxer.hikari.HikariDataSource`` 的 ``registerMbeans`` 属性中设置 ``true`` 。
 
 .. code-block:: xml
 
@@ -1615,7 +794,7 @@ MBeanによる情報公開を有効にするには、 ``com.zaxxer.hikari.Hikari
           xsi:schemaLocation="http://tis.co.jp/nablarch/component-configuration https://nablarch.github.io/schema/component-configuration.xsd">
     <!-- 省略 -->
 
-    <!-- データソース設定 -->
+    <!-- 数据源设置 -->
     <component name="dataSource"
               class="com.zaxxer.hikari.HikariDataSource" autowireType="None">
       <property name="driverClassName" value="${nablarch.db.jdbcDriver}"/>
@@ -1623,18 +802,18 @@ MBeanによる情報公開を有効にするには、 ``com.zaxxer.hikari.Hikari
       <property name="username"        value="${nablarch.db.user}"/>
       <property name="password"        value="${nablarch.db.password}"/>
       <property name="maximumPoolSize" value="${nablarch.db.maxPoolSize}"/>
-      <!-- MBeanによる情報公開を有効にする -->
+      <!-- 启用MBean信息公开 -->
       <property name="registerMbeans"  value="true"/>
     </component>
 
   </component-configuration>
 
-上記設定では、 ``HikariDataSource`` のコンポーネント定義で ``registerMbeans`` プロパティに ``true`` を設定している。
+上述设置中， ``HikariDataSource`` 的组件定义在 ``registerMbeans`` 属性中设置了 ``true`` 。
 
-次に、HikariCPが公開するMBeanのオブジェクト名と、計測したい属性名を指定した形で ``JmxGaugeMetrics`` を設定する。
-なお、オブジェクト名や属性名の仕様は、 `前述のHikariCPのドキュメント(外部サイト、英語) <https://github.com/brettwooldridge/HikariCP/wiki/MBean-(JMX)-Monitoring-and-Management#programmatic-access>`_ に記載されている。
+接下来，指定HikariCP公开的MBean对象名和要测量的属性名来设置 ``JmxGaugeMetrics`` 。
+对象名和属性名的规格记载在 `上述HikariCP文档(外部网站、英语) <https://github.com/brettwooldridge/HikariCP/wiki/MBean-(JMX)-Monitoring-and-Management#programmatic-access>`_ 中。
 
-以下は、コネクションプールの最大数とアクティブ数を計測する場合の ``JmxGaugeMetrics`` の実装例になる。
+以下是测量连接池最大数和活跃数的 ``JmxGaugeMetrics`` 实现示例。
 
 .. code-block:: java
 
@@ -1659,7 +838,7 @@ MBeanによる情報公開を有効にするには、 ``com.zaxxer.hikari.Hikari
               new MetricsMetaData("db.pool.total", "Total DB pool count."),
               new MBeanAttributeCondition("com.zaxxer.hikari:type=Pool (HikariPool-1)", "TotalConnections")
           ));
-          // アクティブ数
+          // 活跃数
           meterBinderList.add(new JmxGaugeMetrics(
               new MetricsMetaData("db.pool.active", "Active DB pool count."),
               new MBeanAttributeCondition("com.zaxxer.hikari:type=Pool (HikariPool-1)", "ActiveConnections")
@@ -1668,28 +847,28 @@ MBeanによる情報公開を有効にするには、 ``com.zaxxer.hikari.Hikari
       }
   }
 
-以上の設定で ``LoggingMeterRegistry`` を使用した場合、以下のようにメトリクスが出力されることが確認できる。
+通过以上设置使用 ``LoggingMeterRegistry`` 时，可以确认指标输出如下。
 
 .. code-block:: text
 
   2020-12-24 16:37:57.143 [INFO ]      i.m.c.i.l.LoggingMeterRegistry: db.pool.active{} value=0
   2020-12-24 16:37:57.143 [INFO ]      i.m.c.i.l.LoggingMeterRegistry: db.pool.total{} value=5
 
-サーバ起動時に出力される警告ログについて
+关于服务器启动时输出的警告日志
 *********************************************************************
 
-Micrometerが監視サービスにメトリクスを連携する方法には、大きく次の２つの方法が存在する。
+Micrometer向监控服务联动指标的方法大体存在以下2种。
 
-* 一定間隔で应用が監視サービスにメトリクスを送信する (Client pushes)
-    * Datadog, CloudWatch など
-* 一定間隔で監視サービスが应用にメトリクスを問い合わせに来る (Server polls)
-    * Prometheus など
+* 应用程序定期向监控服务发送指标 (Client pushes)
+    * Datadog, CloudWatch 等
+* 监控服务定期向应用程序查询指标 (Server polls)
+    * Prometheus 等
 
-前者(Client pushes)の場合、 ``MeterRegistry`` はコンポーネント生成後に一定間隔でメトリクスの送信を開始する。
-一方で、HikariCPのコネクションプールは、一番最初にデータベースアクセスが行われたときに初めて作成される仕様となっている。
+前者(Client pushes)情况下， ``MeterRegistry`` 在组件生成后开始定期发送指标。
+另一方面，HikariCP的连接池在首次进行数据库访问时才首次创建的规格。
 
-このため、最初のデータベースアクセスが発生する前にメトリクスの送信が実行されると、 ``JmxGaugeMetrics`` は存在しないコネクションプールの情報を参照することになる。
-このとき、Micrometerは以下のような警告ログを出力する。
+因此，如果首次数据库访问发生前执行了指标发送， ``JmxGaugeMetrics`` 将引用不存在的连接池信息。
+此时，Micrometer会输出以下警告日志。
 
 .. code-block:: text
 
@@ -1726,20 +905,20 @@ Micrometerが監視サービスにメトリクスを連携する方法には、�
                   at nablarch.integration.micrometer.instrument.binder.jmx.JmxGaugeMetrics.obtainGaugeValue(JmxGaugeMetrics.java:52)
                   ... 23 more
 
-なお、コネクションプールが生成されていない間、メトリクスの値は ``NaN`` となる。
+连接池未生成期间，指标值为 ``NaN`` 。
 
 .. code-block:: text
 
   24-Dec-2020 17:01:31.443 情報 [logging-metrics-publisher] io.micrometer.core.instrument.logging.LoggingMeterRegistry.lambda$publish$3 db.pool.active{} value=NaN
   24-Dec-2020 17:01:31.443 情報 [logging-metrics-publisher] io.micrometer.core.instrument.logging.LoggingMeterRegistry.lambda$publish$3 db.pool.total{} value=NaN
 
-この警告ログは最初の一度だけ出力され、2回目以降は抑制されるようになっている。
-また、データベースアクセスが実行されコネクションプールが生成されると、そのあとは正常にコネクションプールの値が収集されるようになる。
+此警告日志仅首次输出，第2次以后会被抑制。
+此外，执行数据库访问生成连接池后，之后将正常收集连接池的值。
 
-つまり、この警告ログは应用が正常な場合であってもタイミング次第で出力される可能性があるということになる。
-しかし、実害は無いので無視しても問題はない。
+也就是说，此警告日志即使应用程序正常也可能因时序而输出。
+但是，没有实质危害，忽略也没有问题。
 
-ただし、どうしても警告ログを抑制したい場合は、以下のように実装することである程度回避できるようになる。
+但是，如果一定要抑制警告日志，可以通过以下实现一定程度上回避。
 
 .. code-block:: java
 
@@ -1770,70 +949,70 @@ Micrometerが監視サービスにメトリクスを連携する方法には、�
       @Override
       public void initialize() {
           try (Connection con = dataSource.getConnection()) {
-              // 初期化時にコネクションを確立することで、MBeanが取れないことによる警告ログの出力を抑制する
+              // 初始化时建立连接以抑制因无法获取MBean而输出的警告日志
           } catch (SQLException e) {
               LOGGER.logWarn("Failed initial connection.", e);
           }
       }
   }
 
-カスタムの ``DefaultMeterBinderListProvider`` で :java:extdoc:`Initializable <nablarch.core.repository.initialization.Initializable>` を実装する。
-また、 ``java.sql.DataSource`` をプロパティとして受け取れるように実装を修正する。
-そして、 ``initialize()`` メソッドの中でデータベースに接続するように実装する。
+在自定义的 ``DefaultMeterBinderListProvider`` 中实现 :java:extdoc:`Initializable <nablarch.core.repository.initialization.Initializable>` 。
+此外，修改实现以可以接收 ``java.sql.DataSource`` 作为属性。
+然后，在 ``initialize()`` 方法中实现连接数据库。
 
-コンポーネント定義では、 ``DataSource`` をプロパティで渡すように変更する。
-そして、初期化対象のコンポーネント一覧に、このクラスを追加する。
+在组件定义中，修改以通过属性传递 ``DataSource`` 。
+然后，在需要初始化的组件列表中添加此类。
 
 .. code-block:: xml
 
   <component name="meterBinderListProvider"
              class="example.micrometer.CustomMeterBinderListProvider">
-    <!-- DataSource を設定する -->
+    <!-- 设置 DataSource -->
     <property name="dataSource" ref="dataSource" />
   </component>
 
-  <!-- 初期化が必要なコンポーネント -->
+  <!-- 需要初始化的组件 -->
   <component name="initializer"
              class="nablarch.core.repository.initialization.BasicApplicationInitializer">
     <property name="initializeList">
       <list>
         <!-- 省略 -->
 
-        <!-- 初期化対象のコンポーネントとして追加 -->
+        <!-- 添加为需要初始化的组件 -->
         <component-ref name="meterBinderListProvider" />
       </list>
     </property>
   </component>
 
-以上の修正により、System Repositoryが初期化されたときにデータベース接続が行われるようになる。
-メトリクスの送信間隔はデフォルトで１分なので、たいていの場合メトリクス送信よりも前にコネクションプールが作成されるようになる。
-これにより、警告ログは出力されなくなる。
+通过以上修改，系统仓库初始化时将执行数据库连接。
+指标发送间隔默认为1分钟，因此大多数情况下指标发送前会创建连接池。
+这样可以不输出警告日志。
 
-ただし、メトリクスの送信間隔を非常に短い時間に設定している場合、System Repositoryが初期化される前にメトリクスが送信されて警告ログが出力される可能性がある点に注意すること。
+但是，如果指标发送间隔设置得非常短，系统仓库初始化前可能会发送指标而输出警告日志，请注意。
 
 
 
-.. _MeterBinder(外部サイト、英語): https://javadoc.io/doc/io.micrometer/micrometer-core/1.13.0/io/micrometer/core/instrument/binder/MeterBinder.html
-.. _Counter(外部サイト、英語): https://javadoc.io/doc/io.micrometer/micrometer-core/1.13.0/io/micrometer/core/instrument/Counter.html
-.. _Gauge(外部サイト、英語): https://javadoc.io/doc/io.micrometer/micrometer-core/1.13.0/io/micrometer/core/instrument/Gauge.html
-.. _DatadogConfig(外部サイト、英語): https://javadoc.io/doc/io.micrometer/micrometer-registry-datadog/1.13.0/io/micrometer/datadog/DatadogConfig.html
-.. _CloudWatchConfig(外部サイト、英語): https://javadoc.io/doc/io.micrometer/micrometer-registry-cloudwatch2/1.13.0/io/micrometer/cloudwatch2/CloudWatchConfig.html
-.. _StatsdConfig(外部サイト、英語): https://javadoc.io/doc/io.micrometer/micrometer-registry-statsd/1.13.0/io/micrometer/statsd/StatsdConfig.html
-.. _OtlpConfig(外部サイト、英語): https://javadoc.io/static/io.micrometer/micrometer-registry-otlp/1.13.0/io/micrometer/registry/otlp/OtlpConfig.html
-.. _MeterRegistry(外部サイト、英語): https://javadoc.io/doc/io.micrometer/micrometer-core/1.13.0/io/micrometer/core/instrument/MeterRegistry.html
-.. _DatadogMeterRegistry(外部サイト、英語): https://javadoc.io/doc/io.micrometer/micrometer-registry-datadog/1.13.0/io/micrometer/datadog/DatadogMeterRegistry.html
-.. _StatsdMeterRegistry(外部サイト、英語): https://javadoc.io/doc/io.micrometer/micrometer-registry-statsd/1.13.0/io/micrometer/statsd/StatsdMeterRegistry.html
-.. _OtlpMeterRegistry(外部サイト、英語): https://javadoc.io/static/io.micrometer/micrometer-registry-otlp/1.13.0/io/micrometer/registry/otlp/OtlpMeterRegistry.html
-.. _DatadogMeterRegistry(外部サイト、英語): https://javadoc.io/doc/io.micrometer/micrometer-registry-datadog/1.13.0/io/micrometer/datadog/DatadogMeterRegistry.html
-.. _CloudWatchMeterRegistry(外部サイト、英語): https://javadoc.io/doc/io.micrometer/micrometer-registry-cloudwatch2/1.13.0/io/micrometer/cloudwatch2/CloudWatchMeterRegistry.html
-.. _LoggingMeterRegistry(外部サイト、英語): https://javadoc.io/doc/io.micrometer/micrometer-core/1.13.0/io/micrometer/core/instrument/logging/LoggingMeterRegistry.html
-.. _SimpleMeterRegistry(外部サイト、英語): https://javadoc.io/doc/io.micrometer/micrometer-core/1.13.0/io/micrometer/core/instrument/simple/SimpleMeterRegistry.html
-.. _JvmMemoryMetrics(外部サイト、英語): https://javadoc.io/doc/io.micrometer/micrometer-core/1.13.0/io/micrometer/core/instrument/binder/jvm/JvmMemoryMetrics.html
-.. _ProcessorMetrics(外部サイト、英語): https://javadoc.io/doc/io.micrometer/micrometer-core/1.13.0/io/micrometer/core/instrument/binder/system/ProcessorMetrics.html
-.. _JvmGcMetrics(外部サイト、英語): https://javadoc.io/doc/io.micrometer/micrometer-core/1.13.0/io/micrometer/core/instrument/binder/jvm/JvmGcMetrics.html
-.. _JvmThreadMetrics(外部サイト、英語): https://javadoc.io/doc/io.micrometer/micrometer-core/1.13.0/io/micrometer/core/instrument/binder/jvm/JvmThreadMetrics.html
-.. _ClassLoaderMetrics(外部サイト、英語): https://javadoc.io/doc/io.micrometer/micrometer-core/1.13.0/io/micrometer/core/instrument/binder/jvm/ClassLoaderMetrics.html
-.. _FileDescriptorMetrics(外部サイト、英語): https://javadoc.io/doc/io.micrometer/micrometer-core/1.13.0/io/micrometer/core/instrument/binder/system/FileDescriptorMetrics.html
-.. _UptimeMetrics(外部サイト、英語): https://javadoc.io/doc/io.micrometer/micrometer-core/1.13.0/io/micrometer/core/instrument/binder/system/UptimeMetrics.html
-.. _Timer(外部サイト、英語): https://javadoc.io/doc/io.micrometer/micrometer-core/1.13.0/io/micrometer/core/instrument/Timer.html
-.. _PrometheusMeterRegistry(外部サイト、英語): https://javadoc.io/doc/io.micrometer/micrometer-registry-prometheus/1.13.0/io/micrometer/prometheusmetrics/PrometheusMeterRegistry.html
+.. _MeterBinder(外部网站、英语): https://javadoc.io/doc/io.micrometer/micrometer-core/1.13.0/io/micrometer/core/instrument/binder/MeterBinder.html
+.. _Counter(外部网站、英语): https://javadoc.io/doc/io.micrometer/micrometer-core/1.13.0/io/micrometer/core/instrument/Counter.html
+.. _Gauge(外部网站、英语): https://javadoc.io/doc/io.micrometer/micrometer-core/1.13.0/io/micrometer/core/instrument/Gauge.html
+.. _DatadogConfig(外部网站、英语): https://javadoc.io/doc/io.micrometer/micrometer-registry-datadog/1.13.0/io/micrometer/datadog/DatadogConfig.html
+.. _CloudWatchConfig(外部网站、英语): https://javadoc.io/doc/io.micrometer/micrometer-registry-cloudwatch2/1.13.0/io/micrometer/cloudwatch2/CloudWatchConfig.html
+.. _StatsdConfig(外部网站、英语): https://javadoc.io/doc/io.micrometer/micrometer-registry-statsd/1.13.0/io/micrometer/statsd/StatsdConfig.html
+.. _OtlpConfig(外部网站、英语): https://javadoc.io/static/io.micrometer/micrometer-registry-otlp/1.13.0/io/micrometer/registry/otlp/OtlpConfig.html
+.. _MeterRegistry(外部网站、英语): https://javadoc.io/doc/io.micrometer/micrometer-core/1.13.0/io/micrometer/core/instrument/MeterRegistry.html
+.. _DatadogMeterRegistry(外部网站、英语): https://javadoc.io/doc/io.micrometer/micrometer-registry-datadog/1.13.0/io/micrometer/datadog/DatadogMeterRegistry.html
+.. _StatsdMeterRegistry(外部网站、英语): https://javadoc.io/doc/io.micrometer/micrometer-registry-statsd/1.13.0/io/micrometer/statsd/StatsdMeterRegistry.html
+.. _OtlpMeterRegistry(外部网站、英语): https://javadoc.io/static/io.micrometer/micrometer-registry-otlp/1.13.0/io/micrometer/registry/otlp/OtlpMeterRegistry.html
+.. _DatadogMeterRegistry(外部网站、英语): https://javadoc.io/doc/io.micrometer/micrometer-registry-datadog/1.13.0/io/micrometer/datadog/DatadogMeterRegistry.html
+.. _CloudWatchMeterRegistry(外部网站、英语): https://javadoc.io/doc/io.micrometer/micrometer-registry-cloudwatch2/1.13.0/io/micrometer/cloudwatch2/CloudWatchMeterRegistry.html
+.. _LoggingMeterRegistry(外部网站、英语): https://javadoc.io/doc/io.micrometer/micrometer-core/1.13.0/io/micrometer/core/instrument/logging/LoggingMeterRegistry.html
+.. _SimpleMeterRegistry(外部网站、英语): https://javadoc.io/doc/io.micrometer/micrometer-core/1.13.0/io/micrometer/core/instrument/simple/SimpleMeterRegistry.html
+.. _JvmMemoryMetrics(外部网站、英语): https://javadoc.io/doc/io.micrometer/micrometer-core/1.13.0/io/micrometer/core/instrument/binder/jvm/JvmMemoryMetrics.html
+.. _ProcessorMetrics(外部网站、英语): https://javadoc.io/doc/io.micrometer/micrometer-core/1.13.0/io/micrometer/core/instrument/binder/system/ProcessorMetrics.html
+.. _JvmGcMetrics(外部网站、英语): https://javadoc.io/doc/io.micrometer/micrometer-core/1.13.0/io/micrometer/core/instrument/binder/jvm/JvmGcMetrics.html
+.. _JvmThreadMetrics(外部网站、英语): https://javadoc.io/doc/io.micrometer/micrometer-core/1.13.0/io/micrometer/core/instrument/binder/jvm/JvmThreadMetrics.html
+.. _ClassLoaderMetrics(外部网站、英语): https://javadoc.io/doc/io.micrometer/micrometer-core/1.13.0/io/micrometer/core/instrument/binder/jvm/ClassLoaderMetrics.html
+.. _FileDescriptorMetrics(外部网站、英语): https://javadoc.io/doc/io.micrometer/micrometer-core/1.13.0/io/micrometer/core/instrument/binder/system/FileDescriptorMetrics.html
+.. _UptimeMetrics(外部网站、英语): https://javadoc.io/doc/io.micrometer/micrometer-core/1.13.0/io/micrometer/core/instrument/binder/system/UptimeMetrics.html
+.. _Timer(外部网站、英语): https://javadoc.io/doc/io.micrometer/micrometer-core/1.13.0/io/micrometer/core/instrument/Timer.html
+.. _PrometheusMeterRegistry(外部网站、英语): https://javadoc.io/doc/io.micrometer/micrometer-registry-prometheus/1.13.0/io/micrometer/prometheusmetrics/PrometheusMeterRegistry.html

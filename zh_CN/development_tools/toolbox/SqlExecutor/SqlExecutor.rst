@@ -8,116 +8,116 @@ Nablarch SQL Executor
 概要
 -------
 
-Nablarch SQL ExecutorはNablarch特殊構文を含むSQLファイルを対話的に実行するツールである。
-PJにおいて設計者がSQLを設計する際などに使用する。
+Nablarch SQL Executor是以交互方式执行包含Nablarch特殊语法的SQL文件的工具。
+在项目等中设计者设计SQL时使用。
 
-本ツールはPJで使用するDBを設定して、ビルドして使う必要がある。
+本工具需要设置项目中使用的数据库并构建后使用。
 
-想定使用方法
+设想使用方法
 --------------
 
-本ツールの想定使用方法
+本工具的设想使用方法
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-本ツールを使用するためには、DBを設定して、Mavenでビルドする必要がある。
-ビルド済みのツールは配布可能であるため、本作業はPJ内で1人が対応すればよい。
+使用本工具需要设置数据库并用Maven构建。
+由于构建完成的工具可以分发，因此这项工作只需项目内1人处理即可。
 
 
-本ツールは以下のような使用方法を想定している。
+本工具设想以下使用方法。
 
-* PJの環境構築担当者がSQL Executorをビルドして配布する。
-* 配布したファイルは設計者が使用する。
+* 项目的环境构建负责人构建SQL Executor并分发。
+* 分发的文件由设计者使用。
 
-ビルド済みのツールはJavaとDBへの接続環境があれば使用可能である。
+构建完成的工具只要有Java和数据库连接环境即可使用。
 
 
 .. figure:: ./_images/sql-executor-1.png
-   :alt: 配布イメージ
+   :alt: 分发示意图
 
    [1]_
 
-DB接続方法の選択
+数据库连接方法的选择
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-本ツールは、DBの接続において以下の2つの方法をとることができる。
+本工具在数据库连接时可采用以下两种方法。
 
-* ツール使用者全員がPJ共通のDBに接続する
-* ツール使用者それぞれがローカルのDBに接続する
+* 工具使用者全部连接到项目共用的数据库
+* 工具使用者各自连接到本地数据库
 
-本ツールを使用する際、PJ共通のDBを使用できる。
+使用本工具时，可以使用项目共用的数据库。
 
 
 .. figure:: ./_images/sql-executor-db-same.png
-   :alt: 各ユーザが同じDBに接続するイメージ
+   :alt: 各用户连接到相同数据库的示意图
 
    [1]_
 
-ツール使用者それぞれがローカルのDBも使用できる。
+工具使用者也可以使用各自的本地数据库。
 
 .. figure:: ./_images/sql-executor-db-separate.png
-   :alt: 各ユーザが別々のDBに接続するイメージ
+   :alt: 各用户连接到不同数据库的示意图
 
    [1]_
 
 
-制約
+约束
 ^^^^
 
-本ツールには以下の制約がある。
-このため、これらのSQLを実行したい場合には、本ツールではなく使用するデータベース付属のSQL実行環境などを用いること。
+本工具存在以下约束。
+因此，要执行这些SQL时，请使用本工具以外的数据库附带的SQL执行环境等。
 
-* WITH句で始まるSQLを実行することが出来ない
-* IN句の条件に ``,`` を含めることができない
-* DATETIMEリテラルを条件とした検索ができない。
+* 无法执行以WITH句开头的SQL
+* IN句的条件中不能包含 ``,``
+* 不能使用DATETIME字面量作为条件进行搜索。
 
 .. tip::
 
-  Nablarchでは2-way SQLとしてSQLを記述できる `Doma(外部サイト、英語) <https://doma.readthedocs.io/en/stable/>`_ 用の :ref:`アダプタ <doma_adaptor>` を提供している。
+  Nablarch提供了用于 `Doma(外部网站，英语) <https://doma.readthedocs.io/en/stable/>`_ 的 :ref:`适配器 <doma_adaptor>` ，可以将SQL记述为2-way SQL。
 
-  Domaを使用した場合、本ツールのような複雑なツールのセットアップを行わなくても、本番環境用に定義したSQLを簡単にテスト実行出来る。
-  (動的な条件を構築するような場合でも、SQLを書き換えることなく実行できる)
+  使用Doma时，无需进行本工具这样的复杂工具设置，就可以轻松测试执行为生产环境定义的SQL。
+  (即使是构建动态条件的情况，也无需重写SQL即可执行)
 
-  このため、Domaの使用を検討することを推奨する。
+  因此，建议考虑使用Doma。
 
-配布方法
+分发方法
 -------------------------
 
 前提条件
 ^^^^^^^^
 
-本ツールをビルドし配布するための前提条件を以下に示す。
+以下显示构建并分发本工具的前提条件。
 
-* FirefoxまたはChromeがインストール済みであること。
-* Nablarchの開発環境が設定済みであること。
-* Maven Central RepositoryにJDBCドライバが存在しないRDBMSを使用する場合は、Project Local RepositoryまたはLocal RepositoryにJDBCドライバを登録済みであること。
-  登録方法は、:ref:`customizeDBAddFileMavenRepo` を参照。
+* Firefox或Chrome已安装。
+* Nablarch的开发环境已设置。
+* 使用Maven Central Repository中不存在JDBC驱动程序的RDBMS时，已在Project Local Repository或Local Repository中注册JDBC驱动程序。
+  注册方法请参阅 :ref:`customizeDBAddFileMavenRepo` 。
 
-ソースコード取得
+源代码获取
 ^^^^^^^^^^^^^^^^
 
-以下のサイトで公開されているリポジトリをcloneする。
+clone以下网站公开的仓库。
 
-https://github.com/nablarch/sql-executor (外部サイト)
+https://github.com/nablarch/sql-executor (外部网站)
 
 .. _db-settings:
 
-DB設定変更
-^^^^^^^^^^
+数据库设置更改
+^^^^^^^^^^^^
 
-使用するRDBMSに応じて設定変更を行う。
+根据使用的RDBMS进行设置更改。
 
 
 ~~~~~~~~~~~~~~
-基本設定の変更
+基本设置的更改
 ~~~~~~~~~~~~~~
 
-src/main/resources/db.configの修正
+src/main/resources/db.config的修正
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-接続URLやユーザ、パスワードを変更する場合、src/main/resources/db.configを修正する。
+要更改连接URL、用户、密码时，修正src/main/resources/db.config。
 
-以下に設定例を示す。
+以下显示设置示例。
 
 
-**H2の設定例(デフォルト)**
+**H2的设置示例(默认)**
 
 .. code-block:: text
 
@@ -126,68 +126,68 @@ src/main/resources/db.configの修正
   db.password=SAMPLE
 
 
-**Oracleの設定例**
+**Oracle的设置示例**
 
 .. code-block:: text
 
-  # jdbc:oracle:thin:@ホスト名:ポート番号:データベースのSID
+  # jdbc:oracle:thin:@主机名:端口号:数据库SID
   db.url=jdbc:oracle:thin:@localhost:1521/xe
   db.user=sample
   db.password=sample
 
 
-**PostgreSQLの設定例**
+**PostgreSQL的设置示例**
 
 .. code-block:: text
 
-  # jdbc:postgresql://ホスト名:ポート番号/データベース名
+  # jdbc:postgresql://主机名:端口号/数据库名
   db.url=jdbc:postgresql://localhost:5432/postgres
   db.user=sample
   db.password=sample
 
 
-**DB2の設定例**
+**DB2的设置示例**
 
 .. code-block:: text
 
-  # jdbc:db2://ホスト名:ポート番号/データベース名
+  # jdbc:db2://主机名:端口号/数据库名
   db.url=jdbc:db2://localhost:50000/SAMPLE
   db.user=sample
   db.password=sample
 
 
-**SQL Serverの設定例**
+**SQL Server的设置示例**
 
 .. code-block:: text
 
-  # jdbc:sqlserver://ホスト名:ポート番号;instanceName=インスタンス名
+  # jdbc:sqlserver://主机名:端口号;instanceName=实例名
   db.url=jdbc:sqlserver://localhost:1433;instanceName=SQLEXPRESS
   db.user=SAMPLE
   db.password=SAMPLE
 
 
 ~~~~~~~~~~~~~~~~~~
-JDBCドライバの変更
+JDBC驱动程序的更改
 ~~~~~~~~~~~~~~~~~~
 
-JDBCドライバを変更する場合、以下のファイルを修正する。
+要更改JDBC驱动程序时，修正以下文件。
 
 
 pom.xml
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-pom.xml中の「使用するRDBMSにあわせて、下記JDBCドライバの dependency を更新してください。」とのコメントがある箇所を修正する。
+修正pom.xml中写有「请根据使用的RDBMS更新下述JDBC驱动程序的dependency。」注释的部分。
 
-以下、データベース毎の設定例を記述する。
+以下，记载各数据库的设置示例。
 
-**H2の設定例(デフォルト)**
+**H2的设置示例(默认)**
 
 .. code-block:: xml
 
     <dependencies>
       <!-- 中略 -->
 
-      <!-- 使用するRDBMSにあわせて、下記JDBCドライバの dependency を更新してください。 -->
+      <!-- 请根据使用的RDBMS更新下述JDBC驱动程序的dependency。 -->
       <dependency>
         <groupId>com.h2database</groupId>
         <artifactId>h2</artifactId>
@@ -197,14 +197,14 @@ pom.xml中の「使用するRDBMSにあわせて、下記JDBCドライバの dep
     </dependencies>
 
 
-**Oracleの設定例**
+**Oracle的设置示例**
 
 .. code-block:: xml
 
     <dependencies>
       <!-- 中略 -->
 
-      <!-- 使用するRDBMSにあわせて、下記JDBCドライバの dependency を更新してください。 -->
+      <!-- 请根据使用的RDBMS更新下述JDBC驱动程序的dependency。 -->
       <dependency>
         <groupId>com.oracle.database.jdbc</groupId>
         <artifactId>ojdbc11</artifactId>
@@ -214,14 +214,14 @@ pom.xml中の「使用するRDBMSにあわせて、下記JDBCドライバの dep
     </dependencies>
 
 
-**PostgreSQLの設定例**
+**PostgreSQL的设置示例**
 
 .. code-block:: xml
 
     <dependencies>
       <!-- 中略 -->
 
-      <!-- 使用するRDBMSにあわせて、下記JDBCドライバの dependency を更新してください。 -->
+      <!-- 请根据使用的RDBMS更新下述JDBC驱动程序的dependency。 -->
       <dependency>
         <groupId>org.postgresql</groupId>
         <artifactId>postgresql</artifactId>
@@ -231,14 +231,14 @@ pom.xml中の「使用するRDBMSにあわせて、下記JDBCドライバの dep
     </dependencies>
 
 
-**DB2の設定例**
+**DB2的设置示例**
 
 .. code-block:: xml
 
     <dependencies>
       <!-- 中略 -->
 
-      <!-- 使用するRDBMSにあわせて、下記JDBCドライバの dependency を更新してください。 -->
+      <!-- 请根据使用的RDBMS更新下述JDBC驱动程序的dependency。 -->
       <dependency>
         <groupId>com.ibm.db2</groupId>
         <artifactId>jcc</artifactId>
@@ -250,43 +250,43 @@ pom.xml中の「使用するRDBMSにあわせて、下記JDBCドライバの dep
 
 src/main/resources/db.xml
 ~~~~~~~~~~~~~~~~~~~~~~~~~
-JDBCドライバのクラス名とダイアレクトのクラス名を修正する。
-dataSourceコンポーネントのdriverClassNameプロパティに、ドライバのクラス名を設定する。
+修正JDBC驱动程序的类名和方言(dialect)的类名。
+在dataSource组件的driverClassName属性中设置驱动程序的类名。
 
-該当箇所を以下に示す。
+显示相关部分。
 
 .. code-block:: xml
 
-  <!-- データソース設定 -->
+  <!-- 数据源设置 -->
   <component name="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
-    <!-- JDBCドライバのクラス名設定 -->
-    <!-- TODO: データベース接続情報を変更する場合、ここを修正します -->
+    <!-- JDBC驱动程序的类名设置 -->
+    <!-- TODO: 要更改数据库连接信息时，请修正此处 -->
     <property name="driverClassName"
               value="org.h2.Driver" />
     <!-- 中略 -->
   </component>
 
-  <!-- データベース接続用設定 -->
+  <!-- 数据库连接用设置 -->
   <component name="connectionFactory"
       class="nablarch.core.db.connection.BasicDbConnectionFactoryForDataSource">
     <!-- 中略 -->
     <property name="dialect">
-      <!-- ダイアレクトのクラス名設定 -->
-      <!-- TODO: データベースを変更する場合、ここを修正します。-->
+      <!-- 方言的类名设置 -->
+      <!-- TODO: 要更改数据库时，请修正此处。-->
       <component class="nablarch.core.db.dialect.H2Dialect"/>
     </property>
   </component>
 
 
-設定値の例を以下に示す。
+显示设置值的示例。
 
 .. list-table::
    :widths: 5 8 10
    :header-rows: 1
 
-   * - データベース
-     - JDBCドライバのクラス名
-     - ダイアレクトのクラス名
+   * - 数据库
+     - JDBC驱动程序的类名
+     - 方言的类名
    * - H2
      - org.h2.Driver
      - nablarch.core.db.dialect.H2Dialect
@@ -304,220 +304,220 @@ dataSourceコンポーネントのdriverClassNameプロパティに、ドライ�
      - nablarch.core.db.dialect.SqlServerDialect
 
 
-起動確認
+启动确认
 ^^^^^^^^
 
-以下のコマンドを実行する。
+执行以下命令。
 
 .. code-block:: text
 
   mvn compile exec:java
 
 
-その後、ブラウザを起動して、 http://localhost:7979/index.html を表示する。
+然后，启动浏览器，显示 http://localhost:7979/index.html 。
 
 .. tip::
 
-  * 初回起動時等、起動に時間がかかる場合、ブラウザがタイムアウトすることがある。
-    この場合は、起動完了後にブラウザをリロードする。
-  * 本ツールは、Internet Explorerでは、正常に動作しない。Internet Explorerが起動した場合は、URLをコピーし、FirefoxまたはChromeのアドレス欄に貼り付けること。
+  * 首次启动等启动需要时间时，浏览器可能会超时。
+    此时，请在启动完成后重新加载浏览器。
+  * 本工具在Internet Explorer中无法正常动作。如果Internet Explorer启动了，请复制URL并粘贴到Firefox或Chrome的地址栏中。
 
 
-配布ファイル作成
+分发文件创建
 ^^^^^^^^^^^^^^^^
-以下のコマンドを実行する。
+执行以下命令。
 
 .. code-block:: text
 
   mvn package
 
 
-target直下に作成されたsql-executor-distribution.zipを配布することで、Git, Mavenの環境なしでツールを使用できる。
+target下创建的sql-executor-distribution.zip通过分发，可以在没有Git、Maven环境的情况下使用工具。
 
-配布されたツールの使用方法
+分发的工具的使用方法
 ---------------------------
 
 前提条件
 ^^^^^^^^^
 
-ツールを使用するための前提条件を以下に示す。
+显示使用工具的前提条件。
 
-- PJで使用されるバージョンのJavaがインストール済みであること。
-- :ref:`db-settings` で設定したDBに接続可能であること。
-- FirefoxまたはChromeがインストール済みであること。  
+- 项目中使用版本的Java已安装。
+- 可以连接到 :ref:`db-settings` 中设置的数据库。
+- Firefox或Chrome已安装。  
 
-配布されたファイルの起動
+分发文件的启动
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-配布されたsql-executor-distribution.zipを解凍する。
+解压缩分发的sql-executor-distribution.zip。
 
-sql-executor-distribution/sql-executor直下のsql-executor.batを実行する。
-ファイルをダブルクリックするか、コマンドプロンプトから起動する。
+执行sql-executor-distribution/sql-executor下的sql-executor.bat。
+双击文件或从命令提示符启动。
 
 .. code-block:: bat
 
   sql-executor.bat
 
 
-配布時に設定済みのDB以外に接続したい場合
+想要连接到分发时设置的数据库以外的数据库时
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-``sql-executor.bat`` を編集する。設定項目は以下の通り。
+编辑 ``sql-executor.bat`` 。设置项目如下。
 
-.. csv-table:: 設定項目
+.. csv-table:: 设置项目
 
-  "db.url", "データベースURL"
-  "db.user", "接続ユーザ"
-  "db.password", "パスワード"
+  "db.url", "数据库URL"
+  "db.user", "连接用户"
+  "db.password", "密码"
 
-例として ``db.url=jdbc:h2:./h2/db/SAMPLE`` , ``db.user=SAMPLE``, ``db.password=SAMPLE`` へ接続する場合の編集方法を以下に示す。
+示例显示 ``db.url=jdbc:h2:./h2/db/SAMPLE`` , ``db.user=SAMPLE``, ``db.password=SAMPLE`` 时的编辑方法。
 
 .. code-block:: bat
   :emphasize-lines: 3
 
   cd /d %~dp0
 
-  start java -Ddb.url=jdbc:h2:./h2/db/SAMPLE -Ddb.user=SAMPLE -Ddb.password=SAMPLE -jar sql-executor.jar （以降略）
+  start java -Ddb.url=jdbc:h2:./h2/db/SAMPLE -Ddb.user=SAMPLE -Ddb.password=SAMPLE -jar sql-executor.jar （以下略）
   cmd /c start http://localhost:7979/index.html
 
-実行しても何も出力されずに異常終了する場合は、 :ref:`faq` を参照。
+执行后无任何输出就异常结束时，请参阅 :ref:`faq` 。
 
 
 操作方法
 --------
 
-基本的な操作方法
+基本的操作方法
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-初回起動時はカレントディレクトリ配下のSQLファイルの一覧を表示するが、
-存在しない場合は以下のような画面が表示される。
+首次启动时显示当前目录下的SQL文件列表，
+如果不存在则显示以下画面。
 
 .. figure:: ./_images/initial_screen.png
-   :alt: 初期画面
+   :alt: 初始画面
 
-   初期画面
+   初始画面
 
-右下の入力欄にローカルフォルダのパスを指定し、下図のように **[再検索]**
-をクリックすると
-その配下の検索してSQLファイルと各ファイルに記述されているステートメントの
-一覧を表示する。
+在右下的输入栏中指定本地文件夹的路径，如下图所示点击 **[重新搜索]**
+则显示
+该路径下搜索到的SQL文件和各文件中记述的语句的
+列表。
 
 .. figure:: ./_images/setting_search_root_path.png
-   :alt: 検索パス設定
+   :alt: 搜索路径设置
 
-   検索パス設定
+   搜索路径设置
 
-各ステートメント名をクリックすると、その内容と操作用のボタンが表示される。
+点击各语句名则显示其内容和操作用按钮。
 
 .. figure:: ./_images/browsing_sql_scripts.png
-   :alt: SQLステートメント一覧
+   :alt: SQL语句列表
 
-   SQLステートメント一覧
+   SQL语句列表
 
-ステートメント内の埋込み変数は入力フィールドになっており、内容を編集して
+语句内的嵌入变量为输入字段，可以编辑内容并点击
 **[Run]**
-をクリックすることで、当該ステートメントを実行できる。
+来执行该语句。
 
-また **[Fill]**
-をクリックすると、前回の実行時の入力フィールドの内容を復元する。
+另外点击 **[Fill]**
+则会恢复上次执行时输入字段的内容。
 
 .. figure:: ./_images/running_sql_scripts.png
-   :alt: SQL実行結果(クエリ)
+   :alt: SQL执行结果(查询)
 
-   SQL実行結果(クエリ)
+   SQL执行结果(查询)
 
 .. figure:: ./_images/running_dml_scripts.png
-   :alt: SQL実行結果(DML)
+   :alt: SQL执行结果(DML)
 
-   SQL実行結果(DML)
+   SQL执行结果(DML)
 
-SQLExecutorでの記法
+SQLExecutor中的记法
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 ~~~~~~~~~~~~~~~~~~
-文字列の記述
+字符串的记述
 ~~~~~~~~~~~~~~~~~~
 
-本ツールにおいて文字列を条件として入力したい場合は、文字列を ``'`` で囲む必要がある。
+在本工具中要将字符串作为条件输入时，需要用 ``'`` 包围字符串。
 
 ~~~~~~~~~~~~~~~~~~
-文字列以外の記述
+字符串以外的记述
 ~~~~~~~~~~~~~~~~~~
 
-文字列以外は ``'`` で囲まずに記述する。
+字符串以外的内容不用 ``'`` 包围记述。
 
 ~~~~~~~~~~~~~~~~~~
-IN句の記述
+IN句的记述
 ~~~~~~~~~~~~~~~~~~
 
-本ツールにおいてIN句を実行するためには、条件を ``[]`` で囲む必要がある。また、複数項目を入力する場合は ``,`` で区切る必要がある。
+在本工具中要执行IN句时，需要将条件用 ``[]`` 包围。另外，要输入多个项目时需要以 ``,`` 分隔。
 
-また、 ``$if`` 特殊構文とIN句の条件に同一の変数名を指定している場合は、同一の値を入力する必要がある。
+另外， ``$if`` 特殊语法和IN句的条件中指定了相同变量名时，需要输入相同的值。
 
-下記に例を示す。
+以下示例。
 
 .. figure:: ./_images/in-success.png
-   :alt: IN句の条件を[]で囲んでいる画像
+   :alt: IN句的条件用[]包围的图片
 
-IN句の条件の項目に ``[]`` が付与されていない場合、以下のエラーが出力される。
+IN句的条件项目没有赋予 ``[]`` 时，会输出以下错误。
 ``java.lang.IllegalArgumentException: object type in field is invalid. valid object type is Collection or Array.``
 
 .. figure:: ./_images/in-fail.png
-   :alt: IllegalArgumentExceptionが出力されている画像
+   :alt: 输出IllegalArgumentException的图片
 
 .. warning::
 
-    ただし、本ツールにおいて ``,`` をIN句の検索条件として扱うことはできない。
+    但是，在本工具中不能将 ``,`` 作为IN句的搜索条件处理。
 
 
 ~~~~~~~~~~~~~~~~~~
-日付型の設定
+日期型的设置
 ~~~~~~~~~~~~~~~~~~
 
-日付型(DATE)フィールドへの値の設定は、SQL92のDATEリテラルと同じ書式で記述する。
+日期型(DATE)字段的值设置，使用与SQL92的DATE字面量相同格式记述。
 
-以下に例を示す。
+以下示例。
 
 ::
 
   1970-12-11
 
 
-また、キーワード ``SYSDATE`` を指定することで、現在時刻が設定される。
+另外，通过指定关键字 ``SYSDATE`` ，可以设置当前时刻。
 
 
 .. warning::
 
-    DATETIMEリテラルを条件とした検索はできない。
+    不能使用DATETIME字面量作为条件进行搜索。
 
 .. _faq:
 
 FAQ
 ---
 
-**Q1** :実行時のログを見たいが、どのようにすればログを確認できるか？
+**Q1** :想查看执行时的日志，如何确认日志？
 
-**A1** :実行時に、以下のログファイルが出力される。
+**A1** :执行时会输出以下日志文件。
 
-        * sql.log → SQL文の実行時ログ
-        * app.log → 全実行ログ
-
-^^^^^^^^^^^^^^
-
-**Q2** :実行しても何も出力されずに異常終了してしまう場合、どう対処すればよいか？
-
-**A2** :起動時のDBコネクションエラーなどの一部のエラーは
-標準エラー出力ではなく、実行ログファイルに出力される。
-実行ログは、カレントディレクトリ直下に ``app.log`` という名前で
-出力されるので、その内容を確認して対処する。
+        * sql.log → SQL语句执行时日志
+        * app.log → 全执行日志
 
 ^^^^^^^^^^^^^^
 
-**Q3** : ``パラメータの指定方法が正しくありません。`` というメッセージが表示されるが、対処方法が分からない。
+**Q2** :执行后无任何输出就异常结束时，应如何处理？
+
+**A2** :启动时的数据库连接错误等部分错误
+不会输出到标准错误输出，而是输出到执行日志文件。
+执行日志以 ``app.log`` 的名称输出到当前目录下，
+请确认其内容并处理。
+
+^^^^^^^^^^^^^^
+
+**Q3** :显示 ``参数指定方法不正确。`` 的消息，但不知道处理方法。
 
 **A3** :
-文字列を入力したい場合には文字列を ``'`` で囲んでいるかを確認する。
-真偽値、日付型を入力したい場合には、スペルミスや形式のミスがないかを確認して対処する。
+要输入字符串时请确认是否用 ``'`` 包围了字符串。
+要输入布尔值、日期型时，请确认是否有拼写错误或格式错误并处理。
 
 
-.. [1] Future Architect, Inc. Japan ( `クリエイティブ・コモンズ・ライセンス（表示4.0 国際） <https://creativecommons.org/licenses/by/4.0/>`_ ） を改変して作成
+.. [1] Future Architect, Inc. Japan ( `创作共用许可（表示4.0 国际） <https://creativecommons.org/licenses/by/4.0/>`_ ）改作创建
 
 .. |br| raw:: html
 

@@ -27,11 +27,11 @@ Nablarch 是一个为企业信息系统开发的 Java 应用框架，由日本 T
 
 ## 文档索引
 
-| 文档 | 说明 |
-|------|------|
-| [TRANSLATION_STATUS.md](TRANSLATION_STATUS.md) | 详细翻译进度 |
-| [TERMINOLOGY.md](.kimi/skills/nablarch-translation/terms/TERMINOLOGY.md) | 术语对照表 |
-| [TRANSLATION_GUIDE.md](.kimi/skills/nablarch-translation/guides/TRANSLATION_GUIDE.md) | 翻译指南 |
+| 文档                                                                                  | 说明         |
+| ------------------------------------------------------------------------------------- | ------------ |
+| [TRANSLATION_STATUS.md](TRANSLATION_STATUS.md)                                        | 详细翻译进度 |
+| [TERMINOLOGY.md](.kimi/skills/nablarch-translation/terms/TERMINOLOGY.md)              | 术语对照表   |
+| [TRANSLATION_GUIDE.md](.kimi/skills/nablarch-translation/guides/TRANSLATION_GUIDE.md) | 翻译指南     |
 
 ## 翻译进度
 
@@ -57,6 +57,7 @@ pip install -r requirements.txt
 
 - Node.js（已在 v20.15.1 版本验证）
 - npm 依赖：
+
   ```bash
   npm install
   ```
@@ -110,10 +111,10 @@ docker run --rm -v <仓库目录(绝对路径)>:/root/document nablarch-document
 
 ### 配置文件
 
-| 文件 | 说明 |
-|------|------|
-| `.textlintrc` | textlint 配置文件 |
-| `.textlint/conf/prh.yml` | 词典文件 |
+| 文件                     | 说明              |
+| ------------------------ | ----------------- |
+| `.textlintrc`            | textlint 配置文件 |
+| `.textlint/conf/prh.yml` | 词典文件          |
 
 ### 运行 textlint
 
@@ -172,6 +173,7 @@ docker run --rm -v <仓库目录(绝对路径)>:/root/document nablarch-document
 ```
 
 AI 会自动：
+
 1. 参考术语表进行翻译
 2. 保持 RST 格式不变
 3. 确保无日文假名残留
@@ -228,4 +230,4 @@ python .kimi/skills/nablarch-translation/scripts/check_translation.py
 
 ---
 
-*本项目由社区维护，非 Nablarch 官方翻译项目。*
+_本项目由社区维护，非 Nablarch 官方翻译项目。_

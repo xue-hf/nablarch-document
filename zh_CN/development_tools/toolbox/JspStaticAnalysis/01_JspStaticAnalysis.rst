@@ -1,7 +1,7 @@
 .. _jsp_static_analysis_tool:
 
 =====================================
-Jakarta Server Pages静的解析ツール
+Jakarta Server Pages静态分析工具
 =====================================
 
 .. contents:: 目录
@@ -12,124 +12,122 @@ Jakarta Server Pages静的解析ツール
 概要
 ----
 
-JSPで使用を許可する構文とタグを規定し、許可する構文とタグのみを使用していることをチェックする。
-これにより、次のことを保証できる。
+规定JSP中允许使用的语法和标签，并检查仅使用了允许的语法和标签。
+这样可以确保以下事项。
 
-* 使用されている構文とタグを限定できるため、保守性が向上する。
-* 使用できる構文とタグを限定することにより、サニタイジング漏れを検出できる。
+* 由于限定了使用的语法和标签，可提高可维护性。
+* 通过限定可使用的语法和标签，可以检测出消毒(sanitizing)遗漏。
 
-本ツールでは、JSPコンパイルが成功するファイルに対するチェックを行うものである。
-このため、JSPコンパイルが通らないファイル（例えばtaglibのとじタグが存在していない等）の場合には、本ツールは正しくJSPファイルを解析することは出来ない。
+本工具用于对JSP编译成功的文件进行检查。
+因此，对于JSP编译不通过的文件（例如taglib的结束标签不存在等），本工具无法正确解析JSP文件。
 
-なお、本ツールはnablarch-testing-XXX.jarに含まれる。
+本工具包含在nablarch-testing-XXX.jar中。
 
 ----
-仕様
+规格
 ----
 
-許可するタグの指定方法
+允许标签的指定方法
 ===========================
 
-本ツールは、 **JSPで使用を許可する構文とタグ** を設定ファイルに定義することで、設定ファイルに定義されていない構文とタグが使用されている箇所を指摘する。
-チェック結果は、HTMLまたはXML形式で出力する。
+本工具通过在配置文件中定义 **JSP中允许使用的语法和标签** ，来指出使用了配置文件中未定义的语法和标签的位置。
+检查结果以HTML或XML格式输出。
 
-本ツールで指定可能な構文とタグを下記に示す。
+本工具可指定的语法和标签如下所示。
 
-* XMLコメント
-* HTMLコメント [#html_comment]_
-* EL式
-* 宣言
-* 式
-* スクリプトレット
-* ディレクティブ
-* アクションタグ
-* カスタムタグ
+* XML注释
+* HTML注释 [#html_comment]_
+* EL表达式
+* 声明
+* 表达式
+* 脚本小程序(scriptlet)
+* 指令(directive)
+* 动作标签(action tag)
+* 自定义标签(custom tag)
 
-本ツールではHTMLタグ等の上記以外の構文とタグは指定できない。
+本工具无法指定HTML标签等上述以外的语法和标签。
 
-本ツールでは、下記の場所をチェック対象外とする。下記以外の場所は常にチェックする。
+本工具将以下位置作为检查对象外。除此以外的位置始终进行检查。
 
-* 使用を許可したタグの属性
+* 允许使用的标签的属性
 
-下記に例として、EL式を禁止した場合のチェック結果を示す。
+以下举例说明禁止EL表达式时的检查结果。
 
-* 使用を許可したタグの属性にEL式を指定した場合は、指摘しない。 ::
+* 在允许使用的标签的属性中指定EL表达式时，不会指出。 ::
 
     <jsp:include page="${ Expression }" />
 
-* 使用を許可したタグのボディにEL式を指定した場合は、指摘する。 ::
+* 在允许使用的标签的主体(body)中指定EL表达式时，会指出。 ::
      
     <jsp:text> 
        ${ Expression }
     </jsp:text>
 
-* HTMLタグの属性にEL式を指定した場合は、指摘する。 ::
+* 在HTML标签的属性中指定EL表达式时，会指出。 ::
 
     <td height="${ Expression }"> </td>
 
-* HTMLタグのボディにEL式を指定した場合は、指摘する。 ::
+* 在HTML标签的主体中指定EL表达式时，会指出。 ::
 
     <td> ${ Expression } </td>
 
-* JavaScript中にEL式を指定した場合は、指摘する。 ::
+* 在JavaScript中指定EL表达式时，会指出。 ::
 
     function samplefunc() {
         var id = ${user.id}
     }
 
-設定ファイルの記述方法は :ref:`01_customJspAnalysis` を参照のこと。
+配置文件的记述方法请参阅 :ref:`01_customJspAnalysis` 。
 
 .. [#html_comment]
 
-  HTMLコメントを使用不可とした場合でも、以下のコメントについてはエラーとして検出しない。
+  即使将HTML注释设置为不可用，以下注释也不会作为错误被检测出来。
 
-  * 条件付きコメント(IEによって解釈される条件付きのコメント)
-  * 業務画面作成支援ツールをロードするためのコメント
+  * 条件注释(由IE解释的条件注释)
+  * 用于加载业务画面创建支援工具的注释
 
-  これらのコメントは、ブラウザによるCSSの切り替えや業務画面作成支援ツールを使用した際に
-  使用必須のコメントとなるため、エラーとして検出することは不適切であるため。
-
+  这些注释是在浏览器切换CSS或使用业务画面创建支援工具时必须使用的注释，因此不适合作为错误检测。
 
 
-チェック対象ファイルの指定方法
+
+检查对象文件的指定方法
 ===============================
-チェック対象のファイル（ディレクトリ）は、本ツールへの起動引数として指定する。
-ディレクトリを指定した場合は、対象のファイル(デフォルトでは拡張子がjspのファイルで、設定により拡張子は追加可能)を再帰的にチェックする。
+检查对象的文件（目录）作为启动参数指定给本工具。
+如果指定了目录，则会递归地检查目标文件（默认扩展名为jsp的文件，根据设置可添加扩展名）。
 
-チェック対象のファイル（本番環境にデプロイされるファイル）と、
-チェック対象外のファイル（テスト用のファイルなどで本番環境にはデプロイされないファイル）が、
-チェック対象ディレクトリに混在するケースがある。
-このような場合には、除外ファイル設定を使用することで、不要なファイルへのチェックを無効にできる。
+检查对象的文件（部署到生产环境的文件）和
+检查对象外的文件（测试用文件等不部署到生产环境的文件）
+可能会混合存在于检查对象目录中。
+在这种情况下，可以使用排除文件设置来禁用对不需要的文件进行检查。
 
-チェック対象のファイル（ディレクトリ）、チェック対象外ファイル（ディレクトリ）の設定方法は、 :ref:`01_customJspAnalysisProp` を参照
+检查对象的文件（目录）、检查对象外文件（目录）的设置方法请参阅 :ref:`01_customJspAnalysisProp`
 
-対象ファイル内の一部を強制的にチェック対象外にする方法
+将目标文件内的一部分强制设为检查对象外的方法
 ===================================================================
-アーキテクトが作成するJSPやタグファイルなどで、やむを得ない事情で許可されていないタグを使う必要性が出てくる場合がある。 
-例えば、应用開発者が作成するJSPファイルから使用されたくないタグを、
-アーキテクトが作成するタグファイル内に隠蔽する場合等がこれに該当する。
+在架构师创建的JSP或标签文件等中，可能由于不得已的情况需要使用不允许的标签。
+例如，将应用程序开发者创建JSP文件时不希望被使用的标签隐藏在架构师创建的标签文件内等情况。
 
-このような場合には、特定箇所のチェックを強制的に無効化する機能を使用する。
-特定箇所のチェックを無効化するには、該当行のすぐ上の行にチェックを無効化するJSPコメントを記述する。
-無効化コメントは、本ツールのチェック対象外のタグとなる。このため、JSPコメントを使用不可とした場合でもエラーとはならない。
+在这种情况下，可以使用强制禁用特定位置检查的功能。
+要禁用特定位置的检查，需要在该行的正上方记述禁用检查的JSP注释。
+禁用注释会成为本工具检查对象外的标签。因此，即使将JSP注释设置为不可用也不会成为错误。
 
-無効化するJSPコメントは以下のルールに従い記述する。
+禁用JSP注释需遵循以下规则记述。
 
-* コメントの開始タグと終了タグを同一行に記述する
-* コメントは必ず **suppress jsp check** で始める
+* 在同一行记述注释的开始标签和结束标签
+* 注释必须以 **suppress jsp check** 开头
 
-  **suppress jsp check**  以降は、任意のコメントを記述できる。
-  任意のコメント部には、チェックを無効化する理由を記述すると良い
-
+  **suppress jsp check**  之后可以记述任意注释。
+  在任意注释部分记述禁用检查的理由比较好
 
 
-以下に例を示す::
+
+以下示例::
 
   <%@tag import="java.util.regex.Pattern" %>
   <%@tag import="java.util.regex.Matcher" %>
   <%@taglib prefix="n" uri="http://tis.co.jp/nablarch" %>
 
-  <%-- suppress jsp check:サーバサイドで判定し、bodyのクラスに埋め込むために必要なコード --%>
+  <%-- suppress jsp check:在服务器端进行判断，需要嵌入body的class中 --%>
   <%!
     static class UserAgent { 
     }
@@ -139,34 +137,34 @@ JSPで使用を許可する構文とタグを規定し、許可する構文と�
 前提条件
 ---------
 
-* アーキタイプからブランクプロジェクトの生成が完了していること。
+* 已从原型(archetype)完成空白项目的生成。
 
 
 ---------
 使用方法
 ---------
 
-設定ファイルの存在確認
+配置文件的存在确认
 ======================
 
-toolsプロジェクトのstatic-analysis/jspanalysisディレクトリに、本ツールを実行するために必要な以下のファイルが存在することを確認する。
+确认tools项目的static-analysis/jspanalysis目录中存在本工具执行所需的以下文件。
 
-* :download:`config.txt<../tools/JspStaticAnalysis/config.txt>` … Jakarta Server Pages静的解析ツール設定ファイル
-* :download:`transform-to-html.xsl<../tools/JspStaticAnalysis/transform-to-html.xsl>` … 解析結果のXMLをHTMLに変換する際の定義ファイル
+* :download:`config.txt<../tools/JspStaticAnalysis/config.txt>` … Jakarta Server Pages静态分析工具配置文件
+* :download:`transform-to-html.xsl<../tools/JspStaticAnalysis/transform-to-html.xsl>` … 将解析结果的XML转换为HTML时的定义文件
 
-これらファイルについての詳細は :doc:`02_JspStaticAnalysisInstall` を参照のこと。
+这些文件的详细说明请参阅 :doc:`02_JspStaticAnalysisInstall` 。
 
 
-Antタスクの定義ファイル確認
+Ant任务定义文件确认
 ===========================
 
-toolsプロジェクトのnablarch-tools.xmlに以下の定義が存在することを確認する。
+确认tools项目的nablarch-tools.xml中存在以下定义。
 
 .. code-block:: xml
 
   <project name="Nablarch Toolbox">
     <!-- 中略 -->
-    <target name="analyzeJsp" depends="analyzeJspOutputXml" description="JSPの解析を行い、HTMLレポートを出力する。">
+    <target name="analyzeJsp" depends="analyzeJspOutputXml" description="进行JSP解析，输出HTML报告。">
       <java classname="nablarch.test.tool.sanitizingcheck.HtmlConvert" dir="${nablarch.tools.dir}" fork="true">
         <arg value="${jspanalysis.xmloutput}" />
         <arg value="${jspanalysis.xsl}" />
@@ -177,7 +175,7 @@ toolsプロジェクトのnablarch-tools.xmlに以下の定義が存在するこ
       </java>
     </target>
 
-    <target name="analyzeJspOutputXml" description="JSPの解析を行い、XMLレポートを出力する。">
+    <target name="analyzeJspOutputXml" description="进行JSP解析，输出XML报告。">
       <java classname="nablarch.test.tool.sanitizingcheck.SanitizingCheckTask" dir="${nablarch.tools.dir}" fork="true">
         <arg value="${jspanalysis.checkjspdir}" />
         <arg value="${jspanalysis.xmloutput}" />
@@ -185,8 +183,8 @@ toolsプロジェクトのnablarch-tools.xmlに以下の定義が存在するこ
         <arg value="${jspanalysis.charset}" />
         <arg value="${jspanalysis.lineseparator}" />
         <arg value="${jspanalysis.additionalexts}" />
-        <!-- Jakarta Server Pages静的解析ツールにおいて、「チェック対象外とするディレクトリ（ファイル）名を正規表現で設定する」ための項目。
-             parentプロジェクトのpom.xmlにて、本値を有効にした場合は、コメントアウトを解除する。
+        <!-- 在Jakarta Server Pages静态分析工具中，"用正则表达式设置要设为检查对象外的目录（文件）名"的项目。
+             如果在parent项目的pom.xml中启用本值，请解除注释。
         <arg value="${jspanalysis.excludePatterns}" />
         -->
         <classpath>
@@ -198,17 +196,17 @@ toolsプロジェクトのnablarch-tools.xmlに以下の定義が存在するこ
   </project>
 
 
-Jakarta Server Pages静的解析ツールでチェックしたい対象の存在するプロジェクトのpom.xmlの確認
+确认要检查的目标所在项目的pom.xml
 ===========================================================================================
 
-Jakarta Server Pages静的解析ツールでチェックしたい対象の存在するプロジェクトのpom.xmlに、以下の記述が存在することを確認する。
+确认要检查的目标所在项目的pom.xml中存在以下记述。
 
 .. code-block:: xml
 
   <properties>
     <!-- 中略 -->
-    <!-- Jakarta Server Pages静的解析ツールにおいて、「チェック対象外とするディレクトリ（ファイル）名を正規表現で設定する」ための項目。
-         本設定を有効にする場合は、toolsプロジェクト中のnablarch-tools.xml中の設定のコメントアウトも解除すること。
+    <!-- 在Jakarta Server Pages静态分析工具中，"用正则表达式设置要设为检查对象外的目录（文件）名"的项目。
+         要启用本设置时，也需要解除tools目录中nablarch-tools.xml中设置的注释。
     <jspanalysis.excludePatterns></jspanalysis.excludePatterns>
     -->
     <!-- 中略 -->
@@ -230,13 +228,13 @@ Jakarta Server Pages静的解析ツールでチェックしたい対象の存在
 
 .. tip::
     
-    Jakarta Server Pages静的解析ツールの設定値は、nablarch-archetype-parentのpom.xmlに記述している。
+    Jakarta Server Pages静态分析工具的设置值记述在nablarch-archetype-parent的pom.xml中。
     
     .. code-block:: xml
     
       <properties>
         <!-- 中略 -->
-        <!-- Jakarta Server Pages静的解析ツールの設定項目 -->
+        <!-- Jakarta Server Pages静态分析工具的设置项目 -->
         <jspanalysis.checkjspdir>${project.basedir}/src/main/webapp</jspanalysis.checkjspdir>
         <jspanalysis.xmloutput>${project.basedir}/target/jspanalysis-result.xml</jspanalysis.xmloutput>
         <jspanalysis.checkconfig>${nablarch.tools.dir}/static-analysis/jspanalysis/config.txt</jspanalysis.checkconfig>
@@ -247,49 +245,49 @@ Jakarta Server Pages静的解析ツールでチェックしたい対象の存在
         <jspanalysis.additionalexts>tag</jspanalysis.additionalexts>
       </properties>
       
-    各設定項目に関しては、 :doc:`02_JspStaticAnalysisInstall` を参照のこと。
+    关于各设置项目，请参阅 :doc:`02_JspStaticAnalysisInstall` 。
       
 
 
 .. _01_customJspAnalysis:
 
-Jakarta Server Pages静的解析ツール設定ファイルの記述方法
+Jakarta Server Pages静态分析工具配置文件的记述方法
 ========================================================
 
-プロジェクトの規約を反映するために設定ファイルを変更する。
+为了反映项目的规范，需要更改配置文件。
 
 .. important::
-  開発時に应用プログラマの都合に合わせて設定を変えてはいけない。
+  开发时不能根据应用程序程序员的情况更改设置。
 
-設定ファイルには使用を許可する構文とタグの一覧を下表に従って記載する。
-「--」で始まる行はコメント行とする。
+在配置文件中按照下表记载允许使用的语法和标签的列表。
+以"--"开头的行作为注释行。
 
 ================= ============================================== ========================================================  
-構文又はタグ       JSPでの使用例                                   設定ファイルへの記述方法                           
+语法或标签         JSP中的使用示例                                   配置文件中的记述方法                           
 ================= ============================================== ======================================================== 
-XMLコメント       <%-- comment --%>                               <%--
-HTMLコメント      <!-- comment -->                                <!--
-EL式              ${10 mod 4}                                     ${
-宣言              <%! int i = 0; %>                               <%!
-式                <%= map.size() %>                               <%=
-スクリプトレット   <%  String name = null; %>                      <%
-ディレクティブ    <%@ taglib prefix="n" uri=  |br|               「<%@」から始まり、最初の空白までの |br|
-                  "http://tis.co.jp/nablarch" %>                 部分を記述する。
+XML注释           <%-- comment --%>                               <%--
+HTML注释          <!-- comment -->                                <!--
+EL表达式          ${10 mod 4}                                     ${
+声明              <%! int i = 0; %>                               <%!
+表达式            <%= map.size() %>                               <%=
+脚本小程序         <%  String name = null; %>                      <%
+指令              <%@ taglib prefix="n" uri=  |br|               从"<%@"开始到第一个空格为止的 |br|
+                  "http://tis.co.jp/nablarch" %>                 部分记述。
 
                                                                  例：） <%@ taglib
-アクションタグ    <jsp:attribute name="attrName" />              「<jsp:」から始まり、最初の空白までの |br|
-                                                                 部分を記述する。|br|
-                                                                 「<jsp:」のみを設定した場合、|br|
-                                                                 アクションタグ全てが使用可能となる。
+动作标签          <jsp:attribute name="attrName" />              从"<jsp:"开始到第一个空格为止的 |br|
+                                                                 部分记述。|br|
+                                                                 如果只设置了"<jsp:"，|br|
+                                                                 则所有动作标签都可以使用。
 
                                                                  例：） <jsp:attribute
 
-カスタムタグ      <n:error name="attrName" />                    設定方法は、アクションタグと同じ。
+自定义标签        <n:error name="attrName" />                    设置方法与动作标签相同。
 
 ================= ============================================== ======================================================== 
 
 
-デフォルトの設定は下記のとおりである。 ::
+默认设置如下所示。 ::
 
   <n:
   <c:
@@ -307,9 +305,9 @@ EL式              ${10 mod 4}                                     ${
   <jsp:attribute
 
 
-デフォルトの設定で除外した構文とタグは下記のとおりである。
+默认设置中排除的语法和标签如下所示。
 
-これらは、Nablarchカスタムタグに同様の機能を有するか、セキュリティホールとなりうる可能性がある構文とタグである。 ::
+这些是具有与Nablarch自定义标签相同功能或可能成为安全漏洞的语法和标签。 ::
 
   <!--
   <%!
@@ -336,20 +334,20 @@ EL式              ${10 mod 4}                                     ${
   <jsp:text
   <jsp:useBean
 
-pom.xmlの修正の修正
+pom.xml的修正
 ============================================
 
-pom.xmlに記述されているプロパティを、実行環境にあわせて修正すること。
+按照执行环境修改pom.xml中记述的属性。
 
-詳細は、 :ref:`01_customJspAnalysisProp` を参照
+详细请参阅 :ref:`01_customJspAnalysisProp`
 
 
-実行方法
+执行方法
 =========
 
-カレントディレクトリを解析対象のディレクトリにし、verifyフェーズを実行する。
+将当前目录设置为解析对象目录，执行verify阶段。
 
-以下に例を示す。
+以下示例。
 
 .. code-block:: text
                 
@@ -360,48 +358,48 @@ pom.xmlに記述されているプロパティを、実行環境にあわせて�
 .. _01_outputJspAnalysis:
 
 
-出力結果確認方法
+输出结果确认方法
 =================
 
-* JSP解析(HTMLレポート出力)
+* JSP解析(HTML报告输出)
 
-  JSPのチェックを行い、チェック結果をHTMLに出力する。
+  进行JSP检查，将检查结果输出为HTML。
 
-  デフォルトの設定では、target/jspanalysis-result.htmlに出力される。
+  默认设置中，输出到target/jspanalysis-result.html。
 
-  出力先は、 pom.xml の jspanalysis.htmloutput プロパティの設定で変更できる。
+  输出目标可以通过 pom.xml 的 jspanalysis.htmloutput 属性的设置进行更改。
 
-  出力内容の例を以下に示す。
+  输出内容示例如下。
 
   .. image:: ./_image/how-to-trace-jsp.png
      :scale: 70
 
-  上記の例では、指摘内容は2通りあり、各指摘への対処方法は次のとおりである。
+  在上述示例中，指出内容有2种，各指出内容的处理方法如下。
 
-  * 許可されていないタグが使用されている場合。
+  * 使用了不允许的标签时。
 
-    「"構文またはタグ名" + "指摘位置" is forbidden.」というエラー内容が表示される。
-    プロジェクトの規約にて使用を許可されている構文とタグを使用し対処する。
+    会显示"语法或标签名" + "指出位置" is forbidden.这样的错误内容。
+    请使用项目规范中允许使用的语法和标签进行处理。
 
 
-* JSP解析(XMLレポート出力)
+* JSP解析(XML报告输出)
 
-  JSPのチェックを行い、チェック結果をXMLに出力する。
+  进行JSP检查，将检查结果输出为XML。
 
-  XMLの出力先は pom.xml の jspanalysis.xmloutputプロパティにて指定する。
+  XML的输出目标在 pom.xml 的 jspanalysis.xmloutput 属性中指定。
 
-  出力したXMLをXSLT等で整形すれば、任意のレポート作成が可能である。
+  输出的XML经过XSLT等格式化后，可以创建任意报告。
 
-  出力されるXMLフォーマットは次のとおりである。
+  输出的XML格式如下。
 
   ======  ===============================
-  要素名  説明
+  元素名  说明
   ======  ===============================
-  result  ルートノード
-  item    各JSPに対して作成されるノード
-  path    該当のJSPのパスを表すノード
-  errors  該当のJSPに対する指摘を表すノード
-  error   個々の指摘内容
+  result  根节点
+  item    为每个JSP创建的节点
+  path    表示该JSP路径的节点
+  errors  表示该JSP指出的节点
+  error   各个指出内容
   ======  ===============================
 
   .. code-block:: xml
@@ -435,8 +433,8 @@ pom.xmlに記述されているプロパティを、実行環境にあわせて�
 
 .. tip::
 
- 本ツールの実行は、应用開発者任せではなくJenkinsのようなCIサーバで定期的に実行し、
- 許可されていないタグが使われていないことを常に保証する必要がある。
+ 本工具的执行不应交由应用程序开发者，而应在Jenkins等CI服务器上定期执行，
+ 始终确保没有使用不允许的标签。
 
 
 .. |br| raw:: html

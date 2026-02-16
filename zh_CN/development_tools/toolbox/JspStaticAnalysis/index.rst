@@ -1,5 +1,5 @@
 ====================================
-Jakarta Server Pages静的解析ツール
+Jakarta Server Pages静态分析工具
 ====================================
 
 .. toctree::
@@ -10,9 +10,9 @@ Jakarta Server Pages静的解析ツール
 
 
 .. tip::
-  本ツールは、Nablarch5までは「JSP静的解析ツール」という名称だった。
-  しかし、Java EEがEclipse Foundationに移管され仕様名が変わったことに伴い「Jakarta Server Pages静的解析ツール」という名称に変更された。
+  本工具在Nablarch5之前的名称为"JSP静态分析工具"。
+  但随着Java EE移交至Eclipse Foundation后规格名称变更，现更名为"Jakarta Server Pages静态分析工具"。
 
-  変更されたのは名称のみで、機能的な差は無い。
+  变更的只有名称，功能上没有差异。
 
-  その他、Nablarch6で名称が変更された機能については :ref:`renamed_features_in_nablarch_6` を参照のこと。
+  关于Nablarch6中其他名称变更的功能，请参阅 :ref:`renamed_features_in_nablarch_6`。

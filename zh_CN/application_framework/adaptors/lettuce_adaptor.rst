@@ -1,18 +1,18 @@
 .. _lettuce_adaptor:
 
-Lettuceアダプタ
+Lettuce适配器
 ================================================================================================
 
 .. contents:: 目录
   :depth: 3
   :local:
 
-Nablarchが提供する下記の機能で `Redis(外部サイト、英語) <https://redis.io/>`_ を使用できるようにするアダプタを提供する。
+提供适配器，使Nablarch提供的以下功能可以使用 `Redis(外部网站，英语) <https://redis.io/>`_ 。
 
 - :ref:`session_store`
 - :ref:`health_check_endpoint_handler`
 
-本アダプタでは、Redisのクライアントライブラリとして `Lettuce(外部サイト、英語) <https://redis.github.io/lettuce/>`_ を使用している。
+本适配器使用 `Lettuce(外部网站，英语) <https://redis.github.io/lettuce/>`_ 作为Redis的客户端库。
 
 .. _lettuce_adaptor_module_list:
 
@@ -21,13 +21,13 @@ Nablarchが提供する下記の機能で `Redis(外部サイト、英語) <http
 
 .. code-block:: xml
 
-  <!-- RedisStore Lettuceアダプタ -->
+  <!-- RedisStore Lettuce适配器 -->
   <dependency>
     <groupId>com.nablarch.integration</groupId>
     <artifactId>nablarch-lettuce-adaptor</artifactId>
   </dependency>
 
-  <!-- デフォルトコンフィグレーション -->
+  <!-- 默认配置 -->
   <dependency>
     <groupId>com.nablarch.configuration</groupId>
     <artifactId>nablarch-main-default-configuration</artifactId>
@@ -35,10 +35,10 @@ Nablarchが提供する下記の機能で `Redis(外部サイト、英語) <http
 
 .. tip::
 
-  Redisは5.0.9、Lettuceは5.3.0.RELEASEのバージョンを使用してテストを行っている。
-  バージョンを変更する場合は、プロジェクト側でテストを行い問題ないことを確認すること。
+  使用Redis 5.0.9、Lettuce 5.3.0.RELEASE版本进行测试。
+  要更改版本时，请在项目侧进行测试确认无问题。
 
-各機能に対応したアダプタの説明は下記を参照。
+各功能对应的适配器说明请参阅以下内容。
 
 .. toctree::
   :maxdepth: 1

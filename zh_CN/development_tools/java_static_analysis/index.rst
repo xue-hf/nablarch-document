@@ -1,59 +1,59 @@
-効率的なJava静的チェック
+高效的Java静态检查
 =========================
 
 .. contents:: 目录
   :depth: 2
   :local:
 
-コードの品質と保守性を高めるために次の３つを実践する。
+为了提高代码质量和可维护性，需要实践以下三点。
 
 * :ref:`code-analysis`
 * :ref:`code-format`
 * :ref:`api-analysis`
 
-上記を行うために、NablarchではJetBrains社製のIDEである `IntelliJ IDEA(外部サイト) <https://www.jetbrains.com/idea/>`_ の使用を推奨している。
-本ページでは、IntelliJ IDEAを用いた効率的なJava静的チェックの方法を説明する。
+为了进行上述操作，Nablarch推荐使用JetBrains公司的IDE `IntelliJ IDEA(外部网站) <https://www.jetbrains.com/idea/>`_ 。
+本页面将说明使用IntelliJ IDEA进行高效的Java静态检查的方法。
 
 .. _code-analysis:
 
-Inspectionを行う
+进行Inspection
 ------------------
 
-IntelliJ IDEAには静的検査を行う `Inspection機能(外部サイト) <https://www.jetbrains.com/help/idea/code-inspection.html>`_ があり、Javaコーディングの慣例に沿っているか、潜在的なバグが含まれていないかなどをチェックし、リアルタイムに警告してくれる。
+IntelliJ IDEA具有进行静态检查的 `Inspection功能(外部网站) <https://www.jetbrains.com/help/idea/code-inspection.html>`_ ，可以检查是否符合Java编码惯例、是否包含潜在的bug等，并实时发出警告。
 
-Inspectionはデフォルトで、一般的に注意すべき点について警告する設定となっている。
+Inspection默认设置为对一般需要注意的事项进行警告。
 
-プロジェクトで規約を策定している場合は、プロジェクトに適した設定に変更することで、Inspectionをより有効に活用することができる。
-変更した設定はエクスポートおよびインポートすることで、プロジェクトの開発者間で共有することができる。
-エクスポートおよびインポートの方法については `プロファイルの構成(外部サイト) <https://www.jetbrains.com/help/idea/customizing-profiles.html>`_ を参照。
+如果项目制定了规范，可以将其更改为适合项目的设置，从而更有效地利用Inspection。
+更改后的设置可以通过导出和导入在项目开发人员之间共享。
+关于导出和导入的方法，请参阅 `配置配置文件(外部网站) <https://www.jetbrains.com/help/idea/customizing-profiles.html>`_ 。
 
 .. _code-format:
 
-フォーマットを統一する
+统一格式
 ----------------------
 
-IntelliJ IDEAのコードフォーマッター機能を使用することで、プロジェクトでコードスタイルを統一することができる。
-使用方法については `JavaスタイルガイドのJavaコードフォーマッター解説 <https://github.com/Fintan-contents/coding-standards/blob/main/java/code-formatter.md>`_ を参照。
+使用IntelliJ IDEA的代码格式化程序功能，可以在项目中统一代码风格。
+关于使用方法，请参阅 `Java样式指南的Java代码格式化程序说明 <https://github.com/Fintan-contents/coding-standards/blob/main/java/code-formatter.md>`_ 。
 
 .. _api-analysis:
 
-許可していないAPIが使用されていないかチェックする
+检查是否使用了不允许的API
 -------------------------------------------------
 
-このチェックにはIntelliJ IDEAのプラグインとIntelliJ IDEAに依存しないSpotBugsプラグインの2種類のツールを提供している。
+为此检查提供了两种工具：IntelliJ IDEA插件和不依赖于IntelliJ IDEA的SpotBugs插件。
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-nablarch-intellij-pluginを使用する
+使用nablarch-intellij-plugin
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-`nablarch-intellij-plugin <https://github.com/nablarch/nablarch-intellij-plugin>`_ はNablarch開発を支援するためのIntelliJ IDEA用のプラグインであり、下記の機能を有している。
+`nablarch-intellij-plugin <https://github.com/nablarch/nablarch-intellij-plugin>`_ 是用于支持Nablarch开发的IntelliJ IDEA插件，具有以下功能。
 
-* Nablarch非公開APIが使用されている場合に警告を出す
-* ブラックリストに登録したJava APIが使用されている場合に警告を出す
+* 当使用了Nablarch非公开API时发出警告
+* 当使用了黑名单中注册的Java API时发出警告
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-使用不許可APIチェックツールを使用する
+使用不允许API检查工具
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-使用不許可APIチェックツールはSpotBugsのプラグインとして作成されたツールである。
-詳細な仕様と実行方法は `Javaスタイルガイドの使用不許可APIチェックツール解説 <https://github.com/Fintan-contents/coding-standards/blob/main/java/staticanalysis/unpublished-api/README.md>`_ を参照。
+不允许API检查工具是作为SpotBugs插件创建的工具。
+详细的规格和执行方法请参阅 `Java样式指南的不允许API检查工具说明 <https://github.com/Fintan-contents/coding-standards/blob/main/java/staticanalysis/unpublished-api/README.md>`_ 。
 
-なお、ブランクプロジェクトには `Mavenで実行するための設定 <https://github.com/Fintan-contents/coding-standards/blob/main/java/staticanalysis/spotbugs/docs/Maven-settings.md>`_ をあらかじめ設定してあるため、すぐにチェックを実施することが可能である。
+此外，空白项目中已预先配置了 `使用Maven执行的设置 <https://github.com/Fintan-contents/coding-standards/blob/main/java/staticanalysis/spotbugs/docs/Maven-settings.md>`_ ，因此可以立即执行检查。

@@ -1,55 +1,55 @@
 .. _redishealthchecker_lettuce_adaptor:
 
-Redisヘルスチェッカ(Lettuce)アダプタ
+Redis健康检查器(Lettuce)适配器
 ================================================================================================
 
 .. contents:: 目录
   :depth: 3
   :local:
 
-`Redis(外部サイト、英語) <https://redis.io/>`_ のヘルスチェックをできるようにするアダプタを提供する。
-ヘルスチェックについては :ref:`health_check_endpoint_handler` を参照。
+提供可以进行 `Redis(外部网站，英语) <https://redis.io/>`_ 健康检查的适配器。
+关于健康检查请参阅 :ref:`health_check_endpoint_handler` 。
 
-ヘルスチェックは、 :ref:`health_check_endpoint_handler-add_health_checker` で説明している
-:java:extdoc:`HealthChecker <nablarch.fw.web.handler.health.HealthChecker>` を継承したクラスを作成して追加できる。
-このアダプタでは、HealthCheckerを継承した :java:extdoc:`RedisHealthChecker <nablarch.integration.health.RedisHealthChecker>` を提供している。
+健康检查可以通过创建继承 :ref:`health_check_endpoint_handler-add_health_checker` 中说明的
+:java:extdoc:`HealthChecker <nablarch.fw.web.handler.health.HealthChecker>` 的类来添加。
+本适配器提供了继承HealthChecker的 :java:extdoc:`RedisHealthChecker <nablarch.integration.health.RedisHealthChecker>` 。
 
 .. _redishealthchecker_lettuce_adaptor_settings:
 
-Redisのヘルスチェックを行う
+进行Redis的健康检查
 -----------------------------------------------------------------------------------------------
-HealthCheckEndpointHandlerのhealthCheckersプロパティにRedisHealthCheckerを指定することで、Redisのヘルスチェックを実現できる。
+通过在HealthCheckEndpointHandler的healthCheckers属性中指定RedisHealthChecker，可以实现Redis的健康检查。
 
-設定例を以下に示す。
+以下显示设置示例。
 
 .. code-block:: xml
 
-    <!-- ヘルスチェックエンドポイントハンドラ -->
+    <!-- 健康检查端点处理程序 -->
     <component class="nablarch.fw.web.handler.HealthCheckEndpointHandler">
-      <!-- healthCheckersプロパティはリストで指定 -->
+      <!-- healthCheckers属性以列表指定 -->
       <property name="healthCheckers">
         <list>
-          <!-- Redisのヘルスチェック -->
+          <!-- Redis的健康检查 -->
           <component class="nablarch.integration.health.RedisHealthChecker">
-            <!-- Redisのクライアント(LettuceRedisClient)を指定 -->
+            <!-- 指定Redis的客户端(LettuceRedisClient) -->
             <property name="client" ref="lettuceRedisClient" />
           </component>
         </list>
       </property>
     </component>
 
-RedisHealthCheckerは :java:extdoc:`LettuceRedisClient<nablarch.integration.redisstore.lettuce.LettuceRedisClient>` を使って、
-キーの存在確認を行い、例外が発生しなけければヘルスチェックが成功と判断する。キーは存在しなくてよい。
-LettuceRedisClient については :ref:`redisstore_redis_client_config_client_classes` を参照。
+RedisHealthChecker使用 :java:extdoc:`LettuceRedisClient<nablarch.integration.redisstore.lettuce.LettuceRedisClient>` 
+进行键的存在确认，如果不发生异常则判断健康检查成功。键可以不存在。
+关于LettuceRedisClient请参阅 :ref:`redisstore_redis_client_config_client_classes` 。
 
-キーを変更したい場合はRedisHealthCheckerのkeyプロパティに指定する。
+想要更改键时，在RedisHealthChecker的key属性中指定。
 
 .. code-block:: xml
 
-    <!-- Redisのヘルスチェック -->
+    <!-- Redis的健康检查 -->
     <component class="nablarch.integration.health.RedisHealthChecker">
-      <!-- Redisのクライアント(LettuceRedisClient)を指定 -->
+      <!-- 指定Redis的客户端(LettuceRedisClient) -->
       <property name="client" ref="lettuceRedisClient" />
-      <!-- キーを指定 -->
+      <!-- 指定键 -->
       <property name="key" ref="pingtest" />
     </component>

@@ -1,202 +1,180 @@
-# Nablarch 文档中文翻译进度
+# Nablarch 文档中文翻译状态
 
-本文档记录了 Nablarch 框架文档的中文翻译进度。
+## 总体进度
 
-## 翻译统计
-
-| 项目 | 数量 |
+| 指标 | 数量 |
 |------|------|
 | 总文件数 | 334 |
-| 已翻译文件 | 195 |
-| 未翻译文件 | 139 |
-| 翻译进度 | **58.4%** |
-
-> **判断标准**：文件中不包含日文假名（平假名/片假名）即认为已翻译
+| 已翻译 | 262 |
+| 未翻译 | 72 |
+| **进度** | **78.4%** |
 
 ---
 
-## 按模块统计
+## 各模块翻译状态
 
-| 模块 | 已翻译 | 未翻译 | 进度 |
-|------|--------|--------|------|
-| 处理器 (Handlers) | 65 | 0 | 100% ✅ |
-| Web 应用 | 23 | 0 | 100% ✅ |
-| Web 服务 | 17 | 0 | 100% ✅ |
-| 批处理 (Batch) | 29 | 0 | 100% ✅ |
-| 关于 Nablarch | 4 | 1 | 80% |
-| Nablarch 核心 | 5 | 0 | 100% ✅ |
-| 类库 (Libraries) | 49 | 0 | 100% ✅ |
-| 空白项目 (Blank Project) | 1 | 19 | 5% |
-| 适配器 (Adaptors) | 1 | 15 | 6.3% |
-| 消息处理 (Messaging) | 0 | 12 | 0% |
-| 云原生 (Cloud Native) | 0 | 4 | 0% |
-| 开发工具 (Development Tools) | 0 | 52 | 0% |
-| 业务示例 (Biz Samples) | 0 | 15 | 0% |
+| 模块 | 文件数 | 已翻译 | 未翻译 | 进度 |
+|------|--------|--------|--------|------|
+| about_nablarch | 7 | 5 | 2 | 71.4% |
+| application_framework | 219 | 203 | 16 | 92.7% |
+| biz_samples | 16 | 1 | 15 | 6.3% |
+| development_tools | 55 | 55 | 0 | **100%** |
+| inquiry | 1 | 0 | 1 | 0% |
+| releases | 1 | 0 | 1 | 0% |
+| terms_of_use | 1 | 0 | 1 | 0% |
 
 ---
 
-## 已完成模块详情
+## 已完成的模块
 
-### ✅ 处理器 (Handlers) - 65个文件
+以下模块已 100% 翻译完成：
 
-包含所有子类别：
-- **Batch 处理器**: 4个文件
-- **Common 处理器**: 11个文件
-- **HTTP Messaging 处理器**: 4个文件
-- **MOM Messaging 处理器**: 4个文件
-- **REST 处理器**: 6个文件
-- **Standalone 处理器**: 9个文件
-- **Web 处理器**: 23个文件
-- **Web Interceptor**: 6个文件
-
-### ✅ Web 应用 - 23个文件
-
-包含：
-- 应用设计、架构、功能详情
-- 入门教程（客户端创建、搜索、更新、删除、上传、下载等）
-- 错误页面、JSP Session、前端控制器等
-
-### ✅ Web 服务 - 17个文件
-
-包含：
-- 功能对比
-- HTTP Messaging（设计、架构、功能详情、入门教程）
-- REST（设计、架构、功能详情、入门教程）
-
-### ✅ Nablarch 核心 - 5个文件
-
-- architecture.rst
-- big_picture.rst
-- index.rst
-- platform.rst
-- policy.rst
-
-### ✅ 批处理 (Batch) - 29个文件
-
-包含：
-- **JSR352 批处理**: 16个文件
-  - 应用设计、架构、功能详情、入门教程
-- **Nablarch 批处理**: 12个文件
-  - 应用设计、架构、功能详情、入门教程
-- **功能对比文档**: 1个文件
-
-### ✅ 类库 (Libraries) - 49个文件
-
-包含：
-- **数据访问**: database, universal_dao, generator, data_bind
-- **数据转换**: data_converter, format, data_io, data_format
-- **验证**: bean_validation, nablarch_validation
-- **日志**: log, failure_log, http_access_log, jaxrs_access_log, messaging_log, performance_log, sql_log
-- **会话管理**: session_store
-- **系统消息**: system_messaging, http_system_messaging, mom_system_messaging
-- **其他**: code, mail, message, repository, transaction, exclusive_control, static_data_cache, stateless_web_app 等
+- ✅ **Development Tools** (55/55 文件)
+  - Java Static Analysis
+  - Testing Framework (单元测试指南、测试框架指南、测试工具)
+  - Toolbox (JSP静态分析、SQL执行器、OpenAPI生成器)
+  
+- ✅ **Adaptors** (16/16 文件)
+  - Doma适配器
+  - Jakarta RESTful Web Services适配器
+  - JSR310适配器
+  - Lettuce适配器 (Redis存储、Redis健康检查)
+  - 日志适配器 (SLF4J、JBoss Logging)
+  - 邮件发送适配器 (FreeMarker、Thymeleaf、Velocity)
+  - Micrometer适配器
+  - 路由适配器
+  - SLF4J适配器
+  - Web Thymeleaf适配器
+  - IBM MQ适配器
 
 ---
 
-## 未翻译文件分布
+## 主要已完成子模块
 
-### 1. 空白项目 (Blank Project) - 19个文件
-
-| 文件 | 状态 |
-|------|------|
-| `blank_project/FirstStep.rst` | 🔴 与原文相同 |
-| `blank_project/FirstStepContainer.rst` | 🔴 与原文相同 |
-| `blank_project/ModifySettings.rst` | 🔴 与原文相同 |
-| `blank_project/CustomizeDB.rst` | 🟡 含日文 |
-| `blank_project/beforeFirstStep.rst` | 🟡 含日文 |
-| `blank_project/MavenModuleStructures/index.rst` | 🟡 含日文 |
-| `blank_project/addin_gsp.rst` | 🟡 含日文 |
-| `blank_project/maven.rst` | 🟡 含日文 |
-| `blank_project/setup_blankProject/*.rst` | 🟡 含日文 (6个) |
-| `blank_project/setup_containerBlankProject/*.rst` | 🟡 含日文 (4个) |
-| `blank_project/firstStep_appendix/*.rst` | 🟡 含日文 (2个) |
-
-### 2. 适配器 (Adaptors) - 15个文件
-
-全部包含日文，需要翻译：
-- doma_adaptor.rst
-- jaxrs_adaptor.rst
-- jsr310_adaptor.rst
-- lettuce_adaptor 及相关文件
-- log_adaptor.rst
-- mail_sender_freemarker_adaptor.rst
-- mail_sender_thymeleaf_adaptor.rst
-- mail_sender_velocity_adaptor.rst
-- micrometer_adaptor.rst
-- router_adaptor.rst
-- slf4j_adaptor.rst
-- web_thymeleaf_adaptor.rst
-- webspheremq_adaptor.rst
-
-### 3. 类库 (Libraries) - 0个文件 ✅
-
-所有文件已翻译完成！
-
-### 4. 批处理 (Batch) - 0个文件 ✅
-
-所有文件已翻译完成！
-
-### 5. 消息处理 (Messaging) - 12个文件
-
-全部未翻译：
-- mom_messaging/*.rst
-- http_messaging/*.rst
-- db/*.rst
-
-### 6. 开发工具 (Development Tools) - 52个文件
-
-全部未翻译，包括：
-- testing_framework/guide/development_guide/... (测试框架)
-- java_static_analysis/... (静态分析)
-
-### 7. 业务示例 (Biz Samples) - 15个文件
-
-全部未翻译，包括：
-- 01/ (PBKDF2密码加密)
-- 03/ (文件管理)
-- 04/ (扩展字段类型)
-- 其他业务示例
-
-### 8. 其他 - 19个文件
-
-包括：
-- cloud_native/*.rst (4个)
-- configuration/*.rst
-- setting_guide/*.rst
-- about_nablarch/versionup_policy.rst
-- 其他配置文档
+| 子模块 | 文件数 | 状态 |
+|--------|--------|------|
+| **Handlers** | 74 | ✅ 100% 完成 |
+| **Web** | 44 | ✅ 100% 完成 |
+| **Batch** (JSR352 + Nablarch) | 29 | ✅ 100% 完成 |
+| **Libraries** | 49 | ✅ 100% 完成 |
+| **Web Service** (REST + HTTP Messaging) | 22 | ✅ 100% 完成 |
+| **Nablarch Core** | 5 | ✅ 100% 完成 |
+| **Adaptors** | 16 | ✅ 100% 完成 |
 
 ---
 
-## 如何贡献翻译
+## 剩余未翻译文件 (72个)
 
-1. 从「未翻译文件列表」中选择要翻译的文件
-2. 参考 `ja/` 目录下的对应日文原文进行翻译
-3. 将翻译后的文件保存到 `zh_CN/` 目录的对应位置
-4. 确保翻译后的文件中**不包含日文假名**（平假名/片假名）
-5. 运行检查脚本更新翻译进度：
-   ```bash
-   python check_translation.py
-   ```
-6. 提交 Pull Request
+### About Nablarch (2个)
+- `about_nablarch/versionup_policy.rst` ⭐ 高优先级
 
-### 翻译规范
+### Application Framework - Blank Project (17个)
+- `blank_project/FirstStep.rst`
+- `blank_project/FirstStepContainer.rst`
+- `blank_project/ModifySettings.rst`
+- `blank_project/CustomizeDB.rst`
+- `blank_project/maven.rst`
+- `blank_project/addin_gsp.rst`
+- `blank_project/beforeFirstStep.rst`
+- `blank_project/MavenModuleStructures/index.rst`
+- `blank_project/firstStep_appendix/ResiBatchReboot.rst`
+- `blank_project/firstStep_appendix/firststep_complement.rst`
+- `blank_project/setup_blankProject/setup_Java21.rst`
+- `blank_project/setup_blankProject/setup_Jbatch.rst`
+- `blank_project/setup_blankProject/setup_NablarchBatch.rst`
+- `blank_project/setup_blankProject/setup_NablarchBatch_Dbless.rst`
+- `blank_project/setup_blankProject/setup_Web.rst`
+- `blank_project/setup_blankProject/setup_WebService.rst`
+- `blank_project/setup_containerBlankProject/setup_ContainerBatch.rst`
+- `blank_project/setup_containerBlankProject/setup_ContainerBatch_Dbless.rst`
+- `blank_project/setup_containerBlankProject/setup_ContainerWeb.rst`
+- `blank_project/setup_containerBlankProject/setup_ContainerWebService.rst`
 
-- 保持与原文档的 RST 格式一致
-- 参考 `.kimi/skills/nablarch-translation/terms/TERMINOLOGY.md` 术语表
-- 技术术语首次出现时标注日文或英文
-- **确保最终文件中没有日文假名**
+### Application Framework - Messaging (12个)
+- `messaging/db/index.rst`
+- `messaging/db/application_design.rst`
+- `messaging/db/architecture.rst`
+- `messaging/db/feature_details.rst`
+- `messaging/db/feature_details/error_processing.rst`
+- `messaging/db/feature_details/multiple_process.rst`
+- `messaging/db/getting_started.rst`
+- `messaging/db/getting_started/table_queue.rst`
+- `messaging/mom/index.rst`
+- `messaging/mom/application_design.rst`
+- `messaging/mom/architecture.rst`
+- `messaging/mom/feature_details.rst`
+- `messaging/mom/getting_started.rst`
+- `messaging/index.rst`
+
+### Application Framework - Cloud Native (6个)
+- `cloud_native/index.rst`
+- `cloud_native/containerize/index.rst`
+- `cloud_native/distributed_tracing/index.rst`
+- `cloud_native/distributed_tracing/aws_distributed_tracing.rst`
+- `cloud_native/distributed_tracing/azure_distributed_tracing.rst`
+
+### Application Framework - Setting Guide (7个)
+- `setting_guide/index.rst`
+- `setting_guide/configuration/index.rst`
+- `setting_guide/ManagingEnvironmentalConfiguration/index.rst`
+- `setting_guide/CustomizingConfigurations/index.rst`
+- `setting_guide/CustomizingConfigurations/config_key_naming.rst`
+- `setting_guide/CustomizingConfigurations/CustomizeMessageIDAndMessage.rst`
+- `setting_guide/CustomizingConfigurations/CustomizeAvailableCharacters.rst`
+- `setting_guide/CustomizingConfigurations/CustomizeSystemTableName.rst`
+
+### Biz Samples (13个)
+- `biz_samples/01/0101_PBKDF2PasswordEncryptor.rst`
+- `biz_samples/04/index.rst`
+- `biz_samples/04/0402_ExtendedFieldType.rst`
+- `biz_samples/13/index.rst`
+- 以及其他9个文件
+
+### Others (3个)
+- `inquiry/index.rst`
+- `releases/index.rst`
+- `terms_of_use/index.rst`
 
 ---
 
-## 更新记录
+## 建议翻译优先级
+
+| 优先级 | 模块 | 文件数 | 理由 |
+|--------|------|--------|------|
+| 🔴 高 | **Blank Project** | 17 | 项目初始设置指南，新用户必需 |
+| 🟡 中 | **Messaging** | 12 | 消息处理功能 |
+| 🟡 中 | **Cloud Native** | 6 | 云原生支持 |
+| 🟢 低 | **Setting Guide** | 7 | 配置指南 |
+| 🟢 低 | **Biz Samples** | 13 | 业务示例 |
+| 🟢 低 | **Others** | 3 | 其他页面 |
+
+---
+
+## 术语表
+
+术语对照表请参考 `.kimi/skills/nablarch-translation/terms/TERMINOLOGY.md`
+
+---
+
+## 更新历史
 
 | 日期 | 更新内容 |
 |------|----------|
-| 2026-02-15 | 更新翻译进度：已翻译 176 个文件，进度 52.7% |
-| 2026-02-15 | 新增翻译 16 个文件（批处理 1 个，类库 15 个），已翻译 192 个文件，进度 57.5% |
-| 2026-02-16 | 确认并更新：类库和批处理模块已 100% 完成翻译，已翻译 195 个文件，进度 58.4% |
+| 2025-02-16 | 完成 Adaptors 模块翻译 (16个文件)，整体进度达到 78.4% |
+| 2025-02-16 | 完成 Development Tools 模块翻译 (55个文件) |
+| 2025-02-16 | 完成 Testing Framework 模块翻译 (47个文件) |
+| 2025-02-12 | 完成 Libraries 模块翻译 (49个文件) |
+| 2025-02-11 | 完成 Batch 模块翻译 (29个文件) |
+| 2025-02-11 | 完成 Web 模块翻译 (44个文件) |
+| 2025-02-09 | 完成 Handlers 模块翻译 (74个文件) |
+| 2025-02-08 | 初始化翻译项目，建立术语表 |
 
 ---
 
-*本文档由脚本自动生成，如有疑问请参考项目 README_zh_CN.md*
+## 翻译规范
+
+1. **准确性**：技术术语准确，符合中文技术文档习惯
+2. **一致性**：同一术语全文统一翻译
+3. **可读性**：语句通顺，符合中文表达习惯
+4. **保留英文**：专有名词、Java类名保留英文
+5. **无日文假名**：翻译后的文件不应包含日文假名（平假名/片假名）

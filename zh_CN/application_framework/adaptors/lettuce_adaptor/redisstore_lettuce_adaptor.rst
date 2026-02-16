@@ -1,33 +1,33 @@
 .. _redisstore_lettuce_adaptor:
 
-Redisストア(Lettuce)アダプタ
+Redis存储(Lettuce)适配器
 ================================================================================================
 
 .. contents:: 目录
   :depth: 3
   :local:
 
-セッションストアに `Redis(外部サイト、英語) <https://redis.io/>`_ を使用できるようにするアダプタを提供する。
+提供可以在会话存储中使用 `Redis(外部网站，英语) <https://redis.io/>`_ 的适配器。
 
-セッションストアにRedisを使用すると、DBストアを選択した場合と比較して次のようなメリットが得られる。
+在会话存储中使用Redis，与选择DB存储相比可以获得以下好处。
 
-* セッション情報を保存するためのテーブルを事前に用意する必要がない
-* 有効期限が切れたセッション情報を削除するためのバッチを作る必要がない
+* 无需事先准备用于保存会话信息的表
+* 无需创建批处理来删除已过有效期的会话信息
 
 .. _redisstore_minimum_settings:
 
-最小構成で動かす
+最小构成运行
 -----------------------------------------------------------------------------------------------
-ここでは、 ``localhost`` の ``6379`` ポートで起動している単一のRedisインスタンスに対して接続する場合を例に、設定方法を説明する。
+这里以连接到在 ``localhost`` 的 ``6379`` 端口运行的单个Redis实例为例，说明设置方法。
 
 .. tip::
-  ローカルで試す場合、Dockerを使えば次のようにコマンドを実行することでRedisインスタンスを構築できる。
+  在本地试用时，可以使用Docker通过执行以下命令构建Redis实例。
   
   .. code-block:: shell
 
     > docker run --name redis -d -p 6379:6379 redis:5.0.9
   
-  停止する場合は次のようにコマンドを実行する。
+  停止时执行以下命令。
 
   .. code-block:: shell
 
@@ -37,16 +37,16 @@ Redisストア(Lettuce)アダプタ
 
 .. _redisstore_minimum_settings_content:
 
-設定内容
+设置内容
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-最小構成でRedisストアを使い始めるには、应用のコンポーネント定義と環境設定値を修正する必要がある。
+要以最小构成开始使用Redis存储，需要修改应用程序的组件定义和环境设置值。
 
 .. _redisstore_minimum_settings_how_modify_component_definition:
 
-コンポーネント設定ファイルを修正する
+修改组件配置文件
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-最初に、コンポーネント設定ファイルを修正する方法について説明する。
+首先，说明修改组件配置文件的方法。
 
 .. code-block:: xml
 
@@ -58,32 +58,33 @@ Redisストア(Lettuce)アダプタ
   <!-- 省略 -->
   <import file="nablarch/webui/redisstore-lettuce.xml" />
 
-まず、デフォルトコンフィグレーションが提供している次の２つの設定ファイルを読み込む。
+首先，加载默认配置提供的以下2个设置文件。
 
 * ``nablarch/webui/redisstore-lettuce.config``
 * ``nablarch/webui/redisstore-lettuce.xml``
 
-``redisstore-lettuce.config`` には、 ``redisstore-lettuce.xml`` で使用しているプレースホルダのデフォルト値が宣言されている。
+``redisstore-lettuce.config`` 中声明了 ``redisstore-lettuce.xml`` 中使用的占位符的默认值。
 
-应用で用意している環境設定ファイル（``env.properties`` など）がある場合、 ``redisstore-lettuce.config`` はそれよりも前に読み込むようにする。
-こうすることで、必要に応じてデフォルトのプレースホルダの値を应用の環境設定ファイルで上書きできるようになる。
+如果应用程序有准备的环境设置文件（``env.properties`` 等），请将 ``redisstore-lettuce.config`` 放在其之前加载。
+这样做可以根据需要在应用程序的环境设置文件中覆盖默认的占位符值。
 
-さらに、 :ref:`repository-overwrite_environment_configuration_by_os_env_var` で説明している方法を用いることで、実行環境ごとに接続先のRedisを切り替えることができるようになる。
+此外，使用 :ref:`repository-overwrite_environment_configuration_by_os_env_var` 中说明的方法，可以根据执行环境切换要连接的Redis。
 
 .. tip::
 
-  デフォルトでは、 ``localhost`` の ``6379`` ポートで起動している単一のRedisインスタンスに接続するように設定されている。
+  默认设置为连接到在 ``localhost`` 的 ``6379`` 端口运行的单个Redis实例。
 
 
-``redisstore-lettuce.xml`` には、Redisストアを使用するために必要となるコンポーネントが定義されている。
+``redisstore-lettuce.xml`` 中定义了使用Redis存储所需的组件。
 
-``redisstore-lettuce.xml`` を使用すると、 ``nablarch/webui/session-store.xml`` は不要になる。
-:ref:`ウェブのアーキタイプ <firstStepGenerateWebBlankProject>` でプロジェクトを生成している場合、デフォルトで ``session-store.xml`` を使用するように設定されているので、 ``session-store.xml`` のインポートを削除し、代わりに ``redisstore-lettuce.xml`` をインポートするように修正する。
+使用 ``redisstore-lettuce.xml`` 后，就不再需要 ``nablarch/webui/session-store.xml`` 了。
+如果使用 :ref:`Web原型 <firstStepGenerateWebBlankProject>` 生成项目，默认设置为使用 ``session-store.xml`` ，
+因此请删除 ``session-store.xml`` 的导入，改为导入 ``redisstore-lettuce.xml`` 。
 
 
 .. code-block:: xml
 
-  <!-- 初期化が必要なコンポーネント -->
+  <!-- 需要初始化的组件 -->
   <component name="initializer"
              class="nablarch.core.repository.initialization.BasicApplicationInitializer">
     <property name="initializeList">
@@ -94,16 +95,16 @@ Redisストア(Lettuce)アダプタ
     </property>
   </component>
 
-次に、 :java:extdoc:`LettuceRedisClientProvider<nablarch.integration.redisstore.lettuce.LettuceRedisClientProvider>` のコンポーネントを :java:extdoc:`BasicApplicationInitializer<nablarch.core.repository.initialization.BasicApplicationInitializer>` の ``initializeList`` に追加する。
+接下来，将 :java:extdoc:`LettuceRedisClientProvider<nablarch.integration.redisstore.lettuce.LettuceRedisClientProvider>` 的组件添加到 :java:extdoc:`BasicApplicationInitializer<nablarch.core.repository.initialization.BasicApplicationInitializer>` 的 ``initializeList`` 中。
 
-``LettuceRedisClientProvider`` のコンポーネントは ``redisstore-lettuce.xml`` に ``lettuceRedisClientProvider`` という名前で定義されているので、名前参照を使って設定できるようになっている。
+``LettuceRedisClientProvider`` 的组件在 ``redisstore-lettuce.xml`` 中以 ``lettuceRedisClientProvider`` 名称定义，因此可以使用名称引用进行设置。
 
-この設定の説明については、 :ref:`redisstore_initialize_client` を参照。
+关于此设置的说明请参阅 :ref:`redisstore_initialize_client` 。
 
 
 .. code-block:: xml
 
-  <!-- 廃棄が必要なコンポーネント -->
+  <!-- 需要废弃的组件 -->
   <component name="disposer"
              class="nablarch.core.repository.disposal.BasicApplicationDisposer">
     <property name="disposableList">
@@ -114,84 +115,85 @@ Redisストア(Lettuce)アダプタ
     </property>
   </component>
 
-さらに、 :java:extdoc:`LettuceRedisClientProvider<nablarch.integration.redisstore.lettuce.LettuceRedisClientProvider>` のコンポーネントを :java:extdoc:`BasicApplicationDisposer<nablarch.core.repository.disposal.BasicApplicationDisposer>` の ``disposableList`` に追加する。
+此外，将 :java:extdoc:`LettuceRedisClientProvider<nablarch.integration.redisstore.lettuce.LettuceRedisClientProvider>` 的组件添加到 :java:extdoc:`BasicApplicationDisposer<nablarch.core.repository.disposal.BasicApplicationDisposer>` 的 ``disposableList`` 中。
 
-この設定の説明については、 :ref:`repository-dispose_object` を参照。
+关于此设置的说明请参阅 :ref:`repository-dispose_object` 。
 
 
 .. _redisstore_minimum_settings_how_modify_env_config:
 
-環境設定値を修正する
+修改环境设置值
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-次に、環境設定値の修正方法を説明する。
+接下来，说明环境设置值的修改方法。
 
 .. code-block:: properties
 
-  # デフォルトのセッションストア名
+  # 默认的会话存储名称
   nablarch.sessionManager.defaultStoreName=redis
 
-プロジェクトの環境設定ファイルで、 ``nablarch.sessionManager.defaultStoreName`` という設定項目を定義し、値に ``redis`` と設定する。
+在项目的环境设置文件中定义 ``nablarch.sessionManager.defaultStoreName`` 设置项，并将值设为 ``redis`` 。
 
 .. tip::
 
-  :ref:`ウェブのアーキタイプ <firstStepGenerateWebBlankProject>` でプロジェクトを生成している場合は、 ``src/main/resources/common.properties`` に ``nablarch.sessionManager.defaultStoreName`` が宣言されている。
+  如果使用 :ref:`Web原型 <firstStepGenerateWebBlankProject>` 生成项目，
+  则在 ``src/main/resources/common.properties`` 中声明了 ``nablarch.sessionManager.defaultStoreName`` 。
 
 
-以上で、 ``localhost`` の ``6379`` ポートで起動しているRedisをセッションストアとして使用できるようになる。
+以上即可完成使用在 ``localhost`` 的 ``6379`` 端口运行的Redis作为会话存储的设置。
 
 .. _redisstore_redis_client_config:
 
-Redis の構成に合わせて設定する
+根据Redis的构成进行设置
 -----------------------------------------------------------------------------------------------
-:ref:`redisstore_minimum_settings` では、ローカルで起動する単一のRedisインスタンスに接続する例を示した。
+:ref:`redisstore_minimum_settings` 中显示了连接到在本地运行的单个Redis实例的示例。
 
-しかし、実際に本番などでRedisを使用する場合は次のような構成のRedisに接続できる必要がある。
+但是，实际在生产等环境中使用Redis时，需要能够连接到以下构成的Redis。
 
-* Sentinelを使用したMaster-Replica構成
-* Cluster構成
+* 使用Sentinel的Master-Replica构成
+* Cluster构成
 
-ここでは、接続先のRedisの構成に合わせて、どのように設定を変更すればいいのかについて説明する。
+这里说明如何根据要连接的Redis的构成更改设置。
 
 .. _redisstore_redis_client_config_client_classes:
 
-構成ごとに用意されたクライアントクラス
+各构成专用的客户端类
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-本アダプタでは、接続先のRedisの構成ごとに専用のクライアントクラス（:java:extdoc:`LettuceRedisClient<nablarch.integration.redisstore.lettuce.LettuceRedisClient>` を実装したクラス）を用意している。
+本适配器为每种要连接的Redis构成准备了专用的客户端类（:java:extdoc:`LettuceRedisClient<nablarch.integration.redisstore.lettuce.LettuceRedisClient>` 的实现类）。
 
 :java:extdoc:`LettuceSimpleRedisClient<nablarch.integration.redisstore.lettuce.LettuceSimpleRedisClient>`
-  単一のRedisインスタンスに直接接続する場合に使用するクラス。
+  直接连接到单个Redis实例时使用的类。
 
 :java:extdoc:`LettuceMasterReplicaRedisClient<nablarch.integration.redisstore.lettuce.LettuceMasterReplicaRedisClient>`
-  Master-Replica構成のRedisインスタンスに接続する場合に使用するクラス。
-  Sentinelを介して接続する場合も、このクラスを使用する。
+  连接到Master-Replica构成的Redis实例时使用的类。
+  通过Sentinel连接时也使用此类。
 
 :java:extdoc:`LettuceClusterRedisClient<nablarch.integration.redisstore.lettuce.LettuceClusterRedisClient>`
-  Cluster構成のRedisインスタンスに接続する場合に使用するクラス。
+  连接到Cluster构成的Redis实例时使用的类。
 
-应用で使用するRedisの構成に合わせて、これらの中から使用するクライアントクラスを設定する必要がある。
+需要根据应用程序使用的Redis构成，从这些中选择要使用的客户端类进行设置。
 
 .. tip::
 
-  これらのクライアントクラスのコンポーネントは ``redisstore-lettuce.xml`` で定義されているので、利用者側で定義する必要はない。
+  这些客户端类的组件在 ``redisstore-lettuce.xml`` 中定义，因此使用者无需自行定义。
 
 .. _redisstore_redis_client_config_how_select_client:
 
-使用するクライアントクラスを設定する
+设置要使用的客户端类
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-どのクライアントクラスを使用するかは、環境設定値 ``nablarch.lettuce.clientType`` で設定できるようになっている。
+要使用的客户端类可以通过环境设置值 ``nablarch.lettuce.clientType`` 进行设置。
 
-設定値と採用されるクライアントクラスの関係を、以下に表で示す。
+设置值与采用的客户端类的关系如下表所示。
 
 ================= ======================================
-設定値             クライアントクラス
+设置值             客户端类
 ================= ======================================
 ``simple``        ``LettuceSimpleRedisClient``
 ``masterReplica`` ``LettuceMasterReplicaRedisClient``
 ``cluster``       ``LettuceClusterRedisClient``
 ================= ======================================
 
-したがって、应用の環境設定ファイルで次のように設定することで、Cluster構成のRedisに接続できるようになる。
+因此，在应用程序的环境设置文件中按以下方式设置，即可连接到Cluster构成的Redis。
 
 .. code-block:: properties
 
@@ -199,56 +201,56 @@ Redis の構成に合わせて設定する
 
 .. tip::
 
-  ``nablarch.lettuce.clientType`` のデフォルト値は、 ``redisstore-lettuce.config`` で ``simple`` が設定されている。
+  ``nablarch.lettuce.clientType`` 的默认值在 ``redisstore-lettuce.config`` 中设置为 ``simple`` 。
 
 .. _redisstore_redis_client_config_uri:
 
-接続URIを設定する
+设置连接URI
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-接続先のRedisの情報は、URIで指定する。
+连接目标的Redis信息以URI指定。
 
-URIは、Redisの構成ごとに次の環境設定値で設定できるようになっている。
+URI可以在每种Redis构成的以下环境设置值中进行设置。
 
 =============== ====================================== =============
-Redisの構成     環境設定値                               デフォルト値(redisstore-lettuce.configで設定されている値)
+Redis的构成     环境设置值                               默认值(在redisstore-lettuce.config中设置的值)
 =============== ====================================== =============
-単一            ``nablarch.lettuce.simple.uri``         ``redis://localhost:6379``
+单一            ``nablarch.lettuce.simple.uri``         ``redis://localhost:6379``
 Master-Replica  ``nablarch.lettuce.masterReplica.uri`` ``redis-sentinel://localhost:26379,localhost:26380,localhost:26381?sentinelMasterId=masterGroupName``
 Cluster         ``nablarch.lettuce.cluster.uriList``   ``redis://localhost:6379,redis://localhost:6380,redis://localhost:6381``
 =============== ====================================== =============
 
-Clusterの設定値は、各ノードに接続するためのURIを半角カンマで列挙した値を設定する。
-個々のURIのフォーマットの詳細については、 `Lettuceのドキュメント(外部サイト、英語) <https://redis.github.io/lettuce/user-guide/connecting-redis/#uri-syntax>`_ を参照。
+Cluster的设置值是枚举连接到各节点的URI，用半角逗号分隔的值。
+关于各个URI格式的详细信息，请参阅 `Lettuce文档(外部网站，英语) <https://redis.github.io/lettuce/user-guide/connecting-redis/#uri-syntax>`_ 。
 
 .. _redisstore_redis_client_config_advanced:
 
-より高度な設定
+更高级的设置
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-環境設定値で指定できるのは、クライアントクラスの種類とURIのみとなっている。
-より細かく設定したい場合は、各クライアントクラスを継承したカスタムクライアントクラスを作成する必要がある。
+环境设置值只能指定客户端类的种类和URI。
+想要进行更详细的设置时，需要创建继承各客户端类的自定义客户端类。
 
-各クライアントクラスには、Lettuceのインスタンスを生成するメソッドが ``protected`` で定義されている。
-各クライアントクラスに用意されている、 ``protected`` メソッドを以下に表で示す。
+各客户端类中定义了以 ``protected`` 修饰符生成Lettuce实例的方法。
+各客户端类中准备的 ``protected`` 方法如下表所示。
 
 =================================== ======================================== =============
-クライアントクラス                    メソッド                                  戻り値の型
+客户端类                            方法                                     返回值类型
 =================================== ======================================== =============
-``LettuceSimpleRedisClient``        ``createClient()``                       `RedisClient(外部サイト、英語) <https://www.javadoc.io/static/io.lettuce/lettuce-core/5.3.0.RELEASE/io/lettuce/core/RedisClient.html>`_
-\                                   ``createConnection(RedisClient)``        `StatefulRedisConnection<byte[], byte[]>(外部サイト、英語) <https://www.javadoc.io/static/io.lettuce/lettuce-core/5.3.0.RELEASE/io/lettuce/core/api/StatefulRedisConnection.html>`_
-``LettuceMasterReplicaRedisClient`` ``createClient()``                       `RedisClient(外部サイト、英語) <https://www.javadoc.io/static/io.lettuce/lettuce-core/5.3.0.RELEASE/io/lettuce/core/RedisClient.html>`_
-\                                   ``createConnection(RedisClient)``        `StatefulRedisMasterReplicaConnection<byte[], byte[]>(外部サイト、英語) <https://www.javadoc.io/static/io.lettuce/lettuce-core/5.3.0.RELEASE/io/lettuce/core/masterreplica/StatefulRedisMasterReplicaConnection.html>`_
-``LettuceClusterRedisClient``       ``createClient()``                       `RedisClusterClient(外部サイト、英語) <https://www.javadoc.io/static/io.lettuce/lettuce-core/5.3.0.RELEASE/io/lettuce/core/cluster/RedisClusterClient.html>`_
-\                                   ``createConnection(RedisClusterClient)`` `StatefulRedisClusterConnection<byte[], byte[]>(外部サイト、英語) <https://www.javadoc.io/static/io.lettuce/lettuce-core/5.3.0.RELEASE/io/lettuce/core/cluster/api/StatefulRedisClusterConnection.html>`_
+``LettuceSimpleRedisClient``        ``createClient()``                       `RedisClient(外部网站，英语) <https://www.javadoc.io/static/io.lettuce/lettuce-core/5.3.0.RELEASE/io/lettuce/core/RedisClient.html>`_
+\                                   ``createConnection(RedisClient)``        `StatefulRedisConnection<byte[], byte[]>(外部网站，英语) <https://www.javadoc.io/static/io.lettuce/lettuce-core/5.3.0.RELEASE/io/lettuce/core/api/StatefulRedisConnection.html>`_
+``LettuceMasterReplicaRedisClient`` ``createClient()``                       `RedisClient(外部网站，英语) <https://www.javadoc.io/static/io.lettuce/lettuce-core/5.3.0.RELEASE/io/lettuce/core/RedisClient.html>`_
+\                                   ``createConnection(RedisClient)``        `StatefulRedisMasterReplicaConnection<byte[], byte[]>(外部网站，英语) <https://www.javadoc.io/static/io.lettuce/lettuce-core/5.3.0.RELEASE/io/lettuce/core/masterreplica/StatefulRedisMasterReplicaConnection.html>`_
+``LettuceClusterRedisClient``       ``createClient()``                       `RedisClusterClient(外部网站，英语) <https://www.javadoc.io/static/io.lettuce/lettuce-core/5.3.0.RELEASE/io/lettuce/core/cluster/RedisClusterClient.html>`_
+\                                   ``createConnection(RedisClusterClient)`` `StatefulRedisClusterConnection<byte[], byte[]>(外部网站，英语) <https://www.javadoc.io/static/io.lettuce/lettuce-core/5.3.0.RELEASE/io/lettuce/core/cluster/api/StatefulRedisClusterConnection.html>`_
 =================================== ======================================== =============
 
-これらのメソッドをカスタムクライアントクラスでオーバーライドし、独自に設定したLettuceのインスタンスを返すように実装することで、任意で設定できるようになる。
+通过在自定义客户端类中覆盖这些方法并实现返回自行设置的Lettuce实例，可以进行任意设置。
 
-そして、元となったコンポーネントと同じ名前でカスタムクライアントクラスのコンポーネントを定義することで、クライアントクラスのコンポーネントを差し替えることができる。
+然后，以与原始组件相同的名称定义自定义客户端类的组件，即可替换客户端类的组件。
 
-各クライアントクラスのコンポーネント名を、以下に表で示す。
+各客户端类的组件名称如下表所示。
 
 =================================== ====================================
-クライアントクラス                    コンポーネント名
+客户端类                            组件名
 =================================== ====================================
 ``LettuceSimpleRedisClient``        ``lettuceSimpleRedisClient``
 ``LettuceMasterReplicaRedisClient`` ``lettuceMasterReplicaRedisClient``
@@ -257,11 +259,11 @@ Clusterの設定値は、各ノードに接続するためのURIを半角カン�
 
 .. _redisstore_redis_client_config_advanced_topology_refresh_example:
 
-例：Clusterのトポロジ更新の監視を有効にする
+示例：启用Cluster的拓扑更新监控
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-Clusterのトポロジ更新の監視を有効にする設定を例に、カスタムクライアントクラスの実装と設定方法を説明する。
+以启用Cluster的拓扑更新监控的设置为例，说明自定义客户端类的实现和设置方法。
 
-まず、Cluster構成用のクライアントクラスである ``LettuceClusterRedisClient`` を継承して、カスタムクライアントクラス（``CustomClusterRedisClient``）を作成する。
+首先，继承Cluster构成用的客户端类 ``LettuceClusterRedisClient`` ，创建自定义客户端类（``CustomClusterRedisClient``）。
 
 .. code-block:: java
   
@@ -299,15 +301,17 @@ Clusterのトポロジ更新の監視を有効にする設定を例に、カス�
       }
   }
 
-LettuceでClusterのトポロジ更新を監視できるようにするには、必要な情報を設定した `ClusterTopologyRefreshOptions（外部サイト、英語） <https://www.javadoc.io/static/io.lettuce/lettuce-core/5.3.0.RELEASE/io/lettuce/core/cluster/ClusterTopologyRefreshOptions.html>`_ を `RedisClusterClient（外部サイト、英語） <https://www.javadoc.io/static/io.lettuce/lettuce-core/5.3.0.RELEASE/io/lettuce/core/cluster/RedisClusterClient.html>`_ に設定する必要がある。
+要在Lettuce中启用Cluster的拓扑更新监控，需要将设置了必要信息的 `ClusterTopologyRefreshOptions（外部网站，英语） <https://www.javadoc.io/static/io.lettuce/lettuce-core/5.3.0.RELEASE/io/lettuce/core/cluster/ClusterTopologyRefreshOptions.html>`_ 
+设置到 `RedisClusterClient（外部网站，英语） <https://www.javadoc.io/static/io.lettuce/lettuce-core/5.3.0.RELEASE/io/lettuce/core/cluster/RedisClusterClient.html>`_ 中。
 
-したがって、 ``CustomClusterRedisClient`` では ``RedisClusterClient`` を生成する ``createClient()`` をオーバーライドして、必要な情報を設定した ``RedisClusterClient`` のインスタンスを返すように実装する。
+因此，在 ``CustomClusterRedisClient`` 中覆盖生成 ``RedisClusterClient`` 的 ``createClient()`` ，
+实现返回设置了必要信息的 ``RedisClusterClient`` 实例。
 
 .. tip::
 
-  Lettuceの設定の詳細については、 `Lettuceのドキュメント（外部サイト、英語） <https://redis.github.io/lettuce/advanced-usage/#cluster-specific-options>`_ を参照。
+  关于Lettuce设置的详细信息，请参阅 `Lettuce文档（外部网站，英语） <https://redis.github.io/lettuce/advanced-usage/#cluster-specific-options>`_ 。
 
-次に、このカスタムクライアントクラスをコンポーネント定義する。
+接下来，定义此自定义客户端类的组件。
 
 .. code-block:: xml
 
@@ -317,23 +321,24 @@ LettuceでClusterのトポロジ更新を監視できるようにするには、
     <property name="uriList" ref="redisClusterUriListFactory" />
   </component>
 
-``CustomClusterRedisClient`` の元となったクライアントクラスは ``LettuceClusterRedisClient`` なので、 ``lettuceClusterRedisClient`` という名前で定義することでコンポーネントを上書きできる。
+由于 ``CustomClusterRedisClient`` 的原始客户端类是 ``LettuceClusterRedisClient`` ，
+因此以 ``lettuceClusterRedisClient`` 名称定义即可覆盖组件。
 
-``uriList`` プロパティの設定は、元となった ``redisstore-lettuce.xml`` での設定をそのまま流用している。
-他のクライアントクラスを拡張したクラスを作る場合も、プロパティの設定は ``redisstore-lettuce.xml`` の設定をそのまま流用すること。
+``uriList`` 属性的设置直接沿用了原始 ``redisstore-lettuce.xml`` 中的设置。
+创建继承其他客户端类的类时，也请直接沿用 ``redisstore-lettuce.xml`` 中的属性设置。
 
-以上で、トポロジ更新の監視が可能となる。
+以上即可启用拓扑更新监控。
 
 .. _redisstore_mechanism_to_decide_client:
 
-使用するクライアントクラスの決定の仕組み
+使用客户端类的决定机制
 -----------------------------------------------------------------------------------------------
-:ref:`redisstore_redis_client_config_how_select_client` で、使用するクライアントクラスは環境設定値 ``nablarch.lettuce.clientType`` で設定できることを説明した。
-ここでは、具体的にどのようにしてクライアントクラスが決定されているのか、仕組みを説明する。
+:ref:`redisstore_redis_client_config_how_select_client` 中说明了可以通过环境设置值 ``nablarch.lettuce.clientType`` 设置要使用的客户端类。
+这里具体说明客户端类是如何决定的机制。
 
-３つのクライアントクラスのコンポーネントのうち、実際にどのコンポーネントを使用するかは :java:extdoc:`LettuceRedisClientProvider<nablarch.integration.redisstore.lettuce.LettuceRedisClientProvider>` によって決定される。
+3个客户端类的组件中实际使用哪个，由 :java:extdoc:`LettuceRedisClientProvider<nablarch.integration.redisstore.lettuce.LettuceRedisClientProvider>` 决定。
 
-``LettuceRedisClientProvider`` は、 ``redisstore-lettuce.xml`` で次のように定義されている。
+``LettuceRedisClientProvider`` 在 ``redisstore-lettuce.xml`` 中定义如下。
 
 .. code-block:: xml
 
@@ -348,31 +353,33 @@ LettuceでClusterのトポロジ更新を監視できるようにするには、
       </property>
   </component>
 
-このクラスは、 ``clientList`` と ``clientType`` という２つのプロパティを持っている。
+此类具有 ``clientList`` 和 ``clientType`` 两个属性。
 
-``clientList`` には、候補となるクライアントクラスのコンポーネントがリストで設定されている。
-そして ``clientType`` には、使用するクライアントクラスの識別子を設定する。
+``clientList`` 中列表形式设置了候选的客户端类组件。
+而 ``clientType`` 中设置要使用的客户端类的标识符。
 
-各クライアントクラスは ``getType()`` という自身の識別子を返すメソッドを持っている。
-``LettuceRedisClientProvider`` は ``clientType`` プロパティに設定された値と ``clientList`` プロパティに設定された各コンポーネントが返す ``getType()`` の値を比較する。
-そして、値が一致したものを、実際に使用するコンポーネントとして決定している。
+各客户端类具有返回自身标识符的 ``getType()`` 方法。
+``LettuceRedisClientProvider`` 比较 ``clientType`` 属性中设置的值和 ``clientList`` 属性中设置的各组件返回的 ``getType()`` 值。
+然后，将值一致的组件决定为实际使用的组件。
 
-``LettuceRedisClientProvider`` は :java:extdoc:`ComponentFactory<nablarch.core.repository.di.ComponentFactory>` を実装しており、 ``createObject()`` メソッドは、決定されたクライアントクラス（:java:extdoc:`LettuceRedisClient<nablarch.integration.redisstore.lettuce.LettuceRedisClient>`）のコンポーネントを返すように実装されている。
+``LettuceRedisClientProvider`` 实现了 :java:extdoc:`ComponentFactory<nablarch.core.repository.di.ComponentFactory>` ，
+``createObject()`` 方法实现为返回决定的客户端类（:java:extdoc:`LettuceRedisClient<nablarch.integration.redisstore.lettuce.LettuceRedisClient>`）的组件。
 
 .. _redisstore_initialize_client:
 
-クライアントクラスの初期化
+客户端类的初始化
 -----------------------------------------------------------------------------------------------
-本アダプタが提供している３つのクライアントクラスは、いずれもRedisへの接続を確立するために初期化が必要となっている。
+本适配器提供的3个客户端类都需要初始化才能建立到Redis的连接。
 
-各クライアントクラスは :java:extdoc:`Initializable<nablarch.core.repository.initialization.Initializable>` を実装しており、 ``initialize()`` メソッドを実行することでRedisへの接続が確立される。
-したがって、使用するクライアントクラスのコンポーネントは、 :java:extdoc:`BasicApplicationInitializer<nablarch.core.repository.initialization.BasicApplicationInitializer>` の ``initializeList`` プロパティに設定しなければならない。
+各客户端类实现了 :java:extdoc:`Initializable<nablarch.core.repository.initialization.Initializable>` ，
+执行 ``initialize()`` 方法即可建立到Redis的连接。
+因此，必须将使用的客户端类组件设置到 :java:extdoc:`BasicApplicationInitializer<nablarch.core.repository.initialization.BasicApplicationInitializer>` 的 ``initializeList`` 属性中。
 
-実際の ``initializeList`` への設定は、以下のように :ref:`redisstore_mechanism_to_decide_client` で説明した ``LettuceRedisClientProvider`` のコンポーネントを使用する。
+实际的 ``initializeList`` 设置如下，使用 :ref:`redisstore_mechanism_to_decide_client` 中说明的 ``LettuceRedisClientProvider`` 的组件。
 
 .. code-block:: xml
 
-  <!-- 初期化が必要なコンポーネント -->
+  <!-- 需要初始化的组件 -->
   <component name="initializer"
              class="nablarch.core.repository.initialization.BasicApplicationInitializer">
     <property name="initializeList">
@@ -383,17 +390,19 @@ LettuceでClusterのトポロジ更新を監視できるようにするには、
     </property>
   </component>
 
-こうすることで、コンポーネント定義の記述を変更することなく、決定されたクライアントクラスのコンポーネントを初期化できる。
+这样做可以在不更改组件定义记述的情况下，初始化决定的客户端类组件。
 
-クライアントクラスの廃棄処理
+客户端类的废弃处理
 -----------------------------------------------------------------------------------------------
 
-各クライアントクラスは :java:extdoc:`Disposable<nablarch.core.repository.disposal.Disposable>` を実装しており、 ``dispose()`` メソッドを実行することでRedisへの接続が閉じられる。
-したがって、使用するクライアントクラスのコンポーネントを :java:extdoc:`BasicApplicationDisposer<nablarch.core.repository.disposal.BasicApplicationDisposer>` の ``disposableList`` プロパティに設定することで、应用終了時にRedisとの接続を閉じることができる。
+各客户端类实现了 :java:extdoc:`Disposable<nablarch.core.repository.disposal.Disposable>` ，
+执行 ``dispose()`` 方法即可关闭到Redis的连接。
+因此，通过将使用的客户端类组件设置到 :java:extdoc:`BasicApplicationDisposer<nablarch.core.repository.disposal.BasicApplicationDisposer>` 的 ``disposableList`` 属性中，
+可以在应用程序结束时关闭与Redis的连接。
 
 .. code-block:: xml
 
-  <!-- 廃棄が必要なコンポーネント -->
+  <!-- 需要废弃的组件 -->
   <component name="disposer"
              class="nablarch.core.repository.disposal.BasicApplicationDisposer">
     <property name="disposableList">
@@ -404,40 +413,42 @@ LettuceでClusterのトポロジ更新を監視できるようにするには、
     </property>
   </component>
 
-``BasicApplicationInitializer`` の ``initializeList`` と同様で、 ``disposableList`` プロパティに ``LettuceRedisClientProvider`` コンポーネントを指定することで、実際に使用されるクライアントクラスの廃棄処理が実行されるようになる。
+与 ``BasicApplicationInitializer`` 的 ``initializeList`` 一样，
+在 ``disposableList`` 属性中指定 ``LettuceRedisClientProvider`` 组件，即可执行实际使用的客户端类的废弃处理。
 
 
 .. _redisstore_session_persistence:
 
-セッション情報の保存方法
+会话信息的保存方法
 -----------------------------------------------------------------------------------------------
-Redisに保存されたセッション情報は、 ``nablarch.session.<セッションID>`` というキーで保存されている。
+保存到Redis的会话信息以 ``nablarch.session.<会话ID>`` 的键保存。
 
-以下は、 ``redis-cli`` で保存されているキーを表示した様子を記載している。
+以下显示使用 ``redis-cli`` 显示保存键的状态。
 
 .. code-block:: shell
 
   127.0.0.1:6379> keys *
   1) "nablarch.session.8b00bce5-d19f-4f63-b1fe-d14ecca9a4f6"
 
-また、セッション情報（:java:extdoc:`SessionEntry<nablarch.common.web.session.SessionEntry>` のリスト）は、デフォルトでは :java:extdoc:`JavaSerializeStateEncoder<nablarch.common.web.session.encoder.JavaSerializeStateEncoder>` でエンコードされたバイナリ形式で保存されている。
+此外，会话信息（:java:extdoc:`SessionEntry<nablarch.common.web.session.SessionEntry>` 的列表）
+默认以 :java:extdoc:`JavaSerializeStateEncoder<nablarch.common.web.session.encoder.JavaSerializeStateEncoder>` 
+编码的二进制形式保存。
 
-使用するエンコーダーは、 ``serializeEncoder`` という名前で別のエンコーダーのコンポーネントを定義することで変更できる。
+可以通过以 ``serializeEncoder`` 名称定义其他编码器的组件来更改使用的编码器。
 
 .. _redisstore_expiration:
 
-有効期限の管理方法
+有效期的管理方法
 -----------------------------------------------------------------------------------------------
-Redisには、保存したキーに対して有効期限を設定する仕組みが用意されている。
-有効期限が切れたキーは自動的に削除される。
+Redis提供了为保存的键设置有效期的机制。
+已过有效期的键会自动删除。
 
-本アダプタは、セッションの有効期限の管理にこのRedisの有効期限の仕組みを使用している。
-したがって、有効期限が切れたセッション情報は自動的に削除されるため、ゴミとして残ったセッション情報を削除するためのバッチを用意する必要はない。
+本适配器使用此Redis的有效期机制来管理会话的有效期。
+因此，已过有效期的会话信息会自动删除，无需准备批处理来删除作为垃圾残留的会话信息。
 
-以下は、セッション情報の有効期限を `pttl コマンド（外部サイト、英語） <https://redis.io/docs/latest/commands/pttl/>`_ で確認している様子を記載している。
+以下显示使用 `pttl 命令（外部网站，英语） <https://redis.io/docs/latest/commands/pttl/>`_ 确认会话信息有效期的状态。
 
 .. code-block:: shell
 
   127.0.0.1:6379> pttl "nablarch.session.8b00bce5-d19f-4f63-b1fe-d14ecca9a4f6"
   (integer) 879774
-

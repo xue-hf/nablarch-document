@@ -1,3 +1,8 @@
+---
+name: nablarch-translation
+description: 我的项目中用于 Nablarch 框架文档翻译的 Skill，提供术语对照、翻译指南和质量保证功能，确保翻译质量和一致性。同时包含了文件翻译状态查询工具说明
+---
+
 # Nablarch 文档翻译 Skill
 
 本 Skill 用于辅助 Nablarch 框架文档的中文翻译工作。
@@ -20,10 +25,11 @@
 请翻译 ja/application_framework/application_framework/web/architecture.rst
 ```
 
-AI 会：
+AI 应该：
+
 1. 参考现有术语表进行翻译
 2. 保持 RST 格式不变
-3. 确保翻译后的文件无日文假名
+3. 确保翻译后的文件无日文假名（可以通过脚本）
 
 ### 批量翻译
 
@@ -43,7 +49,8 @@ AI 会：
 
 翻译进度统一维护在 `@TRANSLATION_STATUS.md` 中。
 
-如需更新进度，运行：
+如需确认进度，运行：
+
 ```bash
 python check_translation.py
 ```
@@ -71,18 +78,14 @@ python check_translation.py
    - 保持 RST 格式不变
    - 标题和正文使用术语表中的翻译
    - 代码注释翻译，代码本身不变
-4. **质量检查**：确保无日文假名残留
-5. **保存文件**：保存到 `zh_CN/` 对应位置
-6. **更新术语**：如有新术语，更新术语表
-7. **清理临时文件**：删除 `_translated.txt` 和 `_untranslated.txt` 临时文件
 
 ### 翻译文件后
 
-1. 检查翻译质量（无日文假名）
-2. 如有新术语，更新 `TERMINOLOGY.md`
-3. **清理临时文件**：删除 `_translated.txt` 和 `_untranslated.txt` 临时文件
-
-> **注意**：翻译进度由 `check_translation.py` 脚本统一维护，AI 不需要手动更新 TRANSLATION_STATUS.md。
+1. **清理临时文件**：删除 `_translated.txt` 和 `_untranslated.txt` 临时文件
+2. **质量检查**：确保无日文假名残留
+3. **保存文件**：保存到 `zh_CN/` 对应位置
+4. **更新术语**：如有新术语，更新术语表
+5. **清理临时文件**：删除 `_translated.txt` 和 `_untranslated.txt` 临时文件
 
 ### 维护术语表时
 
@@ -94,14 +97,14 @@ python check_translation.py
 
 ### 核心术语
 
-| 日文 | 中文 | 英文 | 备注 |
-|------|------|------|------|
-| ハンドラ | handler/处理器 | Handler | 标题用 handler，正文可用"处理器" |
-| アクションクラス | Action类 | Action Class | 类名保留英文 |
-| フォームクラス | Form类 | Form Class | 也可说"表单类" |
-| エンティティクラス | Entity类 | Entity Class | 也可说"实体类" |
-| バリデーション | 验证 | Validation | 也可说"校验" |
-| バッチ | Batch | Batch | 保留英文 |
+| 日文               | 中文           | 英文         | 备注                             |
+| ------------------ | -------------- | ------------ | -------------------------------- |
+| ハンドラ           | handler/处理器 | Handler      | 标题用 handler，正文可用"处理器" |
+| アクションクラス   | Action类       | Action Class | 类名保留英文                     |
+| フォームクラス     | Form类         | Form Class   | 也可说"表单类"                   |
+| エンティティクラス | Entity类       | Entity Class | 也可说"实体类"                   |
+| バリデーション     | 验证           | Validation   | 也可说"校验"                     |
+| バッチ             | Batch          | Batch        | 保留英文                         |
 
 更多术语请参考 `terms/TERMINOLOGY.md`
 
@@ -116,11 +119,14 @@ python check_translation.py
 ## 判断标准
 
 ### 文件已翻译
+
 - 文件中**不包含日文假名**（ひらがな/カタカナ）
 - 与原文不完全相同
 
 ### 术语提取
+
 从已翻译文件中识别：
+
 - 标题对照
 - 正文中的术语（日文→中文）
 - 括号注释（如：ハンドラ(handler)）
@@ -130,8 +136,38 @@ python check_translation.py
 本 Skill 主要由 AI 驱动，但提供了可选的检查脚本：
 
 ```bash
-# 检查翻译状态（可选）
-python .kimi/skills/nablarch-translation/scripts/check_translation.py
+# 检查所有文件的翻译状态
+python check_translation.py
+
+# 检查指定目录的翻译状态
+python check_translation.py -d application_framework/handlers
+
+# 检查单个文件的翻译状态
+python check_translation.py -f application_framework/handlers/web/index.rst
+
+# 只显示缺失的文件（与-d选项配合使用）
+python check_translation.py -d development_tools --missing
 ```
+
+> **注意**：脚本位于项目根目录下，使用前先切换到项目根目录。
+
+### 脚本功能说明
+
+| 选项              | 说明                               | 示例                                              |
+| ----------------- | ---------------------------------- | ------------------------------------------------- |
+| `-d, --directory` | 检查指定目录（相对于ja目录的路径） | `-d application_framework/handlers`               |
+| `-f, --file`      | 检查单个文件（相对路径）           | `-f application_framework/handlers/web/index.rst` |
+| `--missing`       | 只显示缺失的文件（与-d配合使用）   | `-d development_tools --missing`                  |
+
+### 判断标准
+
+脚本通过以下标准判断文件是否已翻译：
+
+- ✅ **已翻译**：文件不含日文假名（平假名/片假名）
+- 🟡 **含日文**：文件包含日文假名，需要翻译
+- 🔴 **与原文相同**：文件内容与原文完全一致
+- 🔴 **文件缺失**：中文译文文件不存在
+
+**排除的符号**：日文标点符号（・、～等）不算作未翻译
 
 AI 可以直接完成所有任务，脚本仅作为辅助工具。

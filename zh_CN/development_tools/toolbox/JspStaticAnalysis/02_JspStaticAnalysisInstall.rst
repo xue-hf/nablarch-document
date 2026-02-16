@@ -1,23 +1,23 @@
 ===================================================
-Jakarta Server Pages静的解析ツール 設定変更ガイド
+Jakarta Server Pages静态分析工具 设置更改指南
 ===================================================
 
 .. contents:: 目录
   :depth: 2
   :local:
 
-:doc:`index`\ の設定変更方法について説明する。
+:doc:`index`\ 的设置更改方法说明。
 
 前提条件
 --------
 
-* アーキタイプからブランクプロジェクトの生成が完了していること。
+* 已从原型(archetype)完成空白项目的生成。
 
 
-設定ファイル構成
+配置文件构成
 ----------------
 
-設定ファイルの構成は下表の通り。
+配置文件的构成如下表所示。
 
 .. list-table::
   :header-rows: 1
@@ -25,113 +25,113 @@ Jakarta Server Pages静的解析ツール 設定変更ガイド
   :widths: 10,13
 
 
-  * - ファイル名
-    - 説明
+  * - 文件名
+    - 说明
 
   * - pom.xml
-    - 起動に必要な設定と、jspanalysis.excludePatternsを設定する。
+    - 启动所需的设置，以及设置jspanalysis.excludePatterns。
 
   * - tools/nablarch-tools.xml
-    - Antタスクの定義ファイル [1]_ 。通常編集することはない。
+    - Ant任务的定义文件 [1]_ 。通常不需要编辑。
 
   * - tools/static-analysis/jspanalysis/config.txt
-    - Jakarta Server Pages静的解析ツール設定ファイル。記述方法は、 :ref:`01_customJspAnalysis` を参照。
+    - Jakarta Server Pages静态分析工具配置文件。记述方法请参阅 :ref:`01_customJspAnalysis` 。
 
   * - tools/static-analysis/jspanalysis/transform-to-html.xsl
-    - 解析結果のXMLをHTMLに変換する際の定義ファイル。|br|
-      記述方法は、 :ref:`01_outputJspAnalysis` の「JSP解析(XMLレポート出力)」を参照。
+    - 将解析结果的XML转换为HTML时的定义文件。|br|
+      记述方法请参阅 :ref:`01_outputJspAnalysis` 的"JSP解析(XML报告输出)"。
 
-  * - nablarch-archetype-parentのpom.xml
-    - jspanalysis.excludePatterns以外を設定する。
-
-
+  * - nablarch-archetype-parent的pom.xml
+    - 设置jspanalysis.excludePatterns以外的项目。
 
 
-.. [1] 内部でAntを使用しているため存在する。利用者はMaven経由で実行するため通常意識することはない。
+
+
+.. [1] 由于内部使用Ant而存在。使用者通过Maven执行，通常不需要关注。
 
 .. _01_customJspAnalysisProp:
 
-pom.xmlの書き換え
+pom.xml的改写
 -----------------------------------------------
-Jakarta Server Pages静的解析ツール用のプロパティを実行環境にあわせて修正する際は、jspanalysis.excludePatternsの修正であればツールを実行するプロジェクトのpom.xmlを修正する。それ以外の項目の修正であればnablarch-archetype-parentのpom.xmlを修正する。
+按照执行环境修改Jakarta Server Pages静态分析工具用的属性时，如果是修改jspanalysis.excludePatterns则修改执行工具的项目的pom.xml。如果是修改其他项目则修改nablarch-archetype-parent的pom.xml。
 
 ================================  ======================================================================================
-設定プロパティ                    説明
+设置属性                           说明
 ================================  ======================================================================================
-jspanalysis.checkjspdir           チェック対象JSPディレクトリパスもしくはファイルパスを設定する。
+jspanalysis.checkjspdir           设置检查对象JSP目录路径或文件路径。
 
-                                  CI環境のように一括でチェックを実行する場合には、|br|
-                                  ディレクトリパスを設定する。
+                                  在CI环境等批量执行检查时，|br|
+                                  设置目录路径。
 
-                                  例::
+                                  示例::
 
                                      ./main/web
 
-                                  ディレクトリを指定した場合は、再帰的にチェックが実行される。
+                                  指定目录时，将递归执行检查。
 
-jspanalysis.xmloutput             チェック結果のXMLレポートファイルの出力パスを設定する。
+jspanalysis.xmloutput             设置检查结果XML报告文件的输出路径。
 
-                                  例::
+                                  示例::
 
                                      ./build/reports/jsp/report.xml
 
-jspanalysis.htmloutput            チェック結果のHTMLレポートファイルの出力パスを設定する。
+jspanalysis.htmloutput            设置检查结果HTML报告文件的输出路径。
 
-                                  例::
+                                  示例::
 
                                      ./build/reports/jsp/report.html
 
-jspanalysis.checkconfig           Jakarta Server Pages静的解析ツール設定ファイルのファイルパスを設定する。
+jspanalysis.checkconfig           设置Jakarta Server Pages静态分析工具配置文件的文件路径。
 
-                                  例::
+                                  示例::
 
                                     ./tool/jspanalysis/config.txt
 
-jspanalysis.charset               チェック対象JSPファイルの文字コードを設定する。
+jspanalysis.charset               设置检查对象JSP文件的字符编码。
 
-                                  例::
+                                  示例::
 
                                      utf-8
 
-jspanalysis.lineseparator         チェック対象JSPファイルで使用されている改行コードを |br|
-                                  設定する。
+jspanalysis.lineseparator         设置检查对象JSP文件使用的换行符。|br|
+                                  
 
-                                  例::
+                                  示例::
 
                                      \n
 
-jspanalysis.xsl                   チェック結果のXMLをHTMLファイルに変換する際のXSLT |br|
-                                  ファイルパスを設定する。
+jspanalysis.xsl                   设置将检查结果的XML转换为HTML文件时的XSLT |br|
+                                  文件路径。
 
-                                  例::
+                                  示例::
 
                                     ./tool/jspanalysis/transform-to-html.xsl
 
-jspanalysis.additionalext         チェック対象とするJSPファイルの拡張子を設定する。
+jspanalysis.additionalext         设置作为检查对象的JSP文件的扩展名。
 
-                                  複数の拡張子を指定する場合には、カンマ(,)区切りで指定する。|br|
-                                  この設定値の内容にかかわらず、拡張子が ``jsp`` のファイル |br|
-                                  は必ずチェック対象となる。
+                                  指定多个扩展名时，用逗号(,)分隔。|br|
+                                  无论此设置值的内容如何，扩展名为 ``jsp`` 的文件 |br|
+                                  必定会成为检查对象。
 
-                                  例::
+                                  示例::
 
                                     tag
 
-jspanalysis.excludePatterns [2]_  チェック対象外とするディレクトリ（ファイル）名を正規表現で設 |br|
-                                  定する。
+jspanalysis.excludePatterns [2]_  用正则表达式设置要设为检查对象外的目录（文件）名。|br|
+                                  
 
-                                  複数のパターンを設定する場合にはカンマ(,)区切りで指定する。
+                                  设置多个模式时用逗号(,)分隔。
 
-                                  例::
+                                  示例::
 
                                     ui_local,ui_test,ui_test/.*/set.tag
 ================================  ======================================================================================
 
-.. [2] 本設定は、デフォルトではコメントアウトしている。本設定を使用する場合は、pom.xmlと、toolsディレクトリのnablarch-tools.xmlについてコメントアウトを解除すること。
+.. [2] 本设置默认是注释掉的。要使用本设置时，请解除pom.xml和tools目录的nablarch-tools.xml中的注释。
 
 .. tip::
 
-  ファイルパス(ディレクトリパス)は、絶対パスでの指定も可能となっている。
+  文件路径(目录路径)也可以用绝对路径指定。
 
 .. _how_to_setup_ant_view_in_eclipse_jsp_analysis:
 
