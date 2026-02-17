@@ -192,13 +192,13 @@ MOM消息传递支持Jakarta Messaging，并提供了
   INS_PROJECT_SEND_MESSAGE
    ====================== ======================
    发送电文序号(PK)       SEND_MESSAGE_SEQUENCE
-   项目名称         PROJECT_NAME
-   项目类型       PROJECT_TYPE
-   项目分类       PROJECT_CLASS
+   项目名称               PROJECT_NAME
+   项目类型               PROJECT_TYPE
+   项目分类               PROJECT_CLASS
        ：(省略)
-   状态             STATUS
-   更新用户ID           UPDATED_USER_ID
-   更新日期时间               UPDATED_DATE
+   状态                   STATUS
+   更新用户ID             UPDATED_USER_ID
+   更新日期时间           UPDATED_DATE
    ====================== ======================
 
  格式定义文件
@@ -515,14 +515,14 @@ MOM消息传递支持Jakarta Messaging，并提供了
 
   INS_PROJECT_RECEIVE_MESSAGE
    ====================== ======================
-   接收消息序号(PK) RECEIVED_MESSAGE_SEQUENCE
-   项目名称         PROJECT_NAME
-   项目类型       PROJECT_TYPE
-   项目分类       PROJECT_CLASS
+   接收消息序号(PK)       RECEIVED_MESSAGE_SEQUENCE
+   项目名称               PROJECT_NAME
+   项目类型               PROJECT_TYPE
+   项目分类               PROJECT_CLASS
        ：(省略)
-   状态             STATUS
-   注册用户ID           INSERT_USER_ID
-   注册日期时间               INSERT_DATE
+   状态                   STATUS
+   注册用户ID             INSERT_USER_ID
+   注册日期时间           INSERT_DATE
    ====================== ======================
 
  格式定义文件

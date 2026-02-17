@@ -123,15 +123,15 @@ exports              变量重写设置
 ============================ ============================== ===========================================================
 变量类型                     格式                           适用类
 ============================ ============================== ===========================================================
-会话作用域           %{session:(变量名)}            HttpRequestRewriteRule / ContentPathRewriteRule
-请求作用域           %{request:(变量名)}            HttpRequestRewriteRule / ContentPathRewriteRule
-线程上下文         %{thread:(变量名)}             HttpRequestRewriteRule / ContentPathRewriteRule
-请求参数         %{param:(变量名)}              HttpRequestRewriteRule
-HTTP头部                   %{header:(头部名)}           HttpRequestRewriteRule / ContentPathRewriteRule
-HTTP请求方法       %{httpMethod}                  HttpRequestRewriteRule
-HTTP版本               %{httpVersion}                 HttpRequestRewriteRule
-全部请求参数名     %{paramNames}                  HttpRequestRewriteRule
-状态码             %{statusCode}                  ContentPathRewriteRule
+会话作用域                   %{session:(变量名)}            HttpRequestRewriteRule / ContentPathRewriteRule
+请求作用域                   %{request:(变量名)}            HttpRequestRewriteRule / ContentPathRewriteRule
+线程上下文                   %{thread:(变量名)}             HttpRequestRewriteRule / ContentPathRewriteRule
+请求参数                     %{param:(变量名)}              HttpRequestRewriteRule
+HTTP头部                     %{header:(头部名)}             HttpRequestRewriteRule / ContentPathRewriteRule
+HTTP请求方法                 %{httpMethod}                  HttpRequestRewriteRule
+HTTP版本                     %{httpVersion}                 HttpRequestRewriteRule
+全部请求参数名               %{paramNames}                  HttpRequestRewriteRule
+状态码                       %{statusCode}                  ContentPathRewriteRule
 ============================ ============================== ===========================================================
 
 
@@ -173,10 +173,10 @@ export 属性中设置。
 exports 中「要设置的变量名」可设置的变量作用域如下。
 
 ============================ ======================= ========================================================
-变量作用域                 格式                    对象
+变量作用域                   格式                    对象
 ============================ ======================= ========================================================
-会话作用域           %{session:(变量名)}     HttpRequestRewriteRule / ContentPathRewriteRule
-请求作用域           %{request:(变量名)}     HttpRequestRewriteRule / ContentPathRewriteRule
-线程上下文         %{thread:(变量名)}      HttpRequestRewriteRule / ContentPathRewriteRule
-窗口作用域           %{param:(变量名)}       HttpRequestRewriteRule
+会话作用域                   %{session:(变量名)}     HttpRequestRewriteRule / ContentPathRewriteRule
+请求作用域                   %{request:(变量名)}     HttpRequestRewriteRule / ContentPathRewriteRule
+线程上下文                   %{thread:(变量名)}      HttpRequestRewriteRule / ContentPathRewriteRule
+窗口作用域                   %{param:(变量名)}       HttpRequestRewriteRule
 ============================ ======================= ========================================================

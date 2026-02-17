@@ -76,7 +76,7 @@ RotatePolicy
 此外，正如 :ref:`log-app_log_setting` 中所述，各种日志的输出功能仅进行格式处理，
 日志的输出处理本身使用的是本功能。
 从Nablarch提供的原型生成的空白项目中，已经设置了各种日志的格式。
-各配置值请参考 :download:`默认设置一览 <../configuration/default_settings.xlsx>`。
+各配置值请参考 :download:`默认设置一览 <../configuration/默认设置一览.xlsx>`。
 
 .. toctree::
   :hidden:
@@ -568,6 +568,7 @@ RotatePolicy
     writer.sample.rotatePolicy=nablarch.core.log.basic.DateRotatePolicy
     # 更新时间。可选。
     writer.sample.rotateTime=12:00
+
 扩展示例
 ---------------------------------------------------------------------
 
@@ -771,12 +772,12 @@ LogFormatter的设置假设如下。
   # 指定日期时间格式使用的模式。
   # 如果不指定则为"yyyy-MM-dd HH:mm:ss.SSS"。
   writer.appLog.formatter.datePattern=yyyy-MM-dd'T'HH:mm:ss.SSS'Z'
- 
+
  :java:extdoc:`JsonLogFormatter <nablarch.core.log.basic.JsonLogFormatter>` 中，
-在 ``targets`` 属性中以逗号分隔指定输出项目。
-可用的输出项目如下。
-此外，默认情况下输出所有项目。
- 
+ 在 ``targets`` 属性中以逗号分隔指定输出项目。
+ 可用的输出项目如下。
+ 此外，默认情况下输出所有项目。
+
  .. list-table:: targets属性可指定的输出项目
    :header-rows: 1
    :class: white-space-normal
@@ -822,7 +823,7 @@ LogFormatter的设置假设如下。
      - 选项信息中指定的对象。
  
  .. tip::
-  ``datePattern`` 和 ``label``（日志级别文字指定）与 :java:extdoc:`BasicLogFormatter <nablarch.core.log.basic.BasicLogFormatter>` 功能相同。
+  ``datePattern`` 和 ``label`` （日志级别文字指定）与 :java:extdoc:`BasicLogFormatter <nablarch.core.log.basic.BasicLogFormatter>` 功能相同。
   
  记述例
   .. code-block:: java
@@ -834,7 +835,7 @@ LogFormatter的设置假设如下。
   .. code-block:: java
   
    LOGGER.logInfo("hello");
- 
+
   (输出结果)
 
   .. code-block:: none
@@ -895,7 +896,7 @@ LogFormatter的设置假设如下。
    * - 其他对象
      - 将 ``toString()`` 方法的返回值作为JSON字符串输出。
  
- 记述例
+记述例
   .. code-block:: java
  
    Map<String, Object> structuredArgs = new HashTable<String, Object>();
@@ -907,7 +908,7 @@ LogFormatter的设置假设如下。
    LOGGER.logInfo("addition fields", structuredArgs);
  
   (输出结果)
- 
+
   .. code-block:: none
   
    {"date":"2021-02-04 12:34:56.789","logLevel":"INFO","message":"addition fields","key1":"value1","key2":123,"key3":true,"key5":"2021-02-04 12:34:56.789"}

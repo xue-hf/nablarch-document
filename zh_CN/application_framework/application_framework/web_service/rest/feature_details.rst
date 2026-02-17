@@ -45,7 +45,7 @@ URI与资源(Action)类的映射
 
   feature_details/resource_signature
 
-* :ref:`router_adaptor>`
+* :ref:`router_adaptor`
 * :ref:`资源类的方法签名 <rest_feature_details-method_signature>`
 
 .. _rest-path_query_param:

@@ -71,9 +71,9 @@ LIST_MAP=testShots
 === ============= ==================  ========== ========= ============== ============ ===============
 no  description   expectedStatusCode  setUpTable setUpFile expectedTable  expectedFile   requestPath    
 === ============= ==================  ========== ========= ============== ============ ===============
- 1  文件输入                 100  default    default   default                     fileInputBatch 
- 2  用户删除                   100  default              default                     userDeleteBatch
- 3  文件输出                 100  default              fileInputBatch default      fileOutputBatch          
+ 1  文件输入                     100  default    default   default                     fileInputBatch 
+ 2  用户删除                     100  default              default                     userDeleteBatch
+ 3  文件输出                     100  default              fileInputBatch default      fileOutputBatch          
 === ============= ==================  ========== ========= ============== ============ ===============
 
 
@@ -117,7 +117,7 @@ LIST_MAP=testShots
 ==== ============= ==================  ========== ========= ===============
  no  case          expectedStatusCode  setUpTable setUpFile    requestPath    
 ==== ============= ==================  ========== ========= ===============
-  1  文件输入                 100  default    default   fileInputBatch 
+  1  文件输入                     100  default    default   fileInputBatch 
 ==== ============= ==================  ========== ========= ===============
 
 \
@@ -129,7 +129,7 @@ LIST_MAP=testShots
 ==== ============= ==================  ========== ============= ===============
  no  case          expectedStatusCode  setUpTable expectedTable requestPath    
 ==== ============= ==================  ========== ============= ===============
-  1  用户删除                   100  default    default       userDeleteBatch
+  1  用户删除                     100  default    default       userDeleteBatch
 ==== ============= ==================  ========== ============= ===============
 
 
@@ -140,7 +140,7 @@ LIST_MAP=testShots
 ==== ============= ==================  ========== ========= ===============
  no  case          expectedStatusCode  setUpTable outFile    requestPath    
 ==== ============= ==================  ========== ========= ===============
-  1  文件输出                 100  default    default   fileOutputBatch 
+  1  文件输出                     100  default    default   fileOutputBatch 
 ==== ============= ==================  ========== ========= ===============
 
 
@@ -167,10 +167,10 @@ LIST_MAP=testShots
 === ==================== ==================  ========== ========= ============== ============ ===============
  no  description         expectedStatusCode  setUpTable setUpFile expectedTable  expectedFile   requestPath    
 === ==================== ==================  ========== ========= ============== ============ ===============
-1-1  文件输入                    100      shot1      shot1                                fileInputBatch 
-1-2  用户删除                      100                           shot1                      userDeleteBatch
-2-1  文件输入（0件）             100      shot2      shot2                                fileInputBatch 
-2-2  用户删除（0件）               100                           shot2                      userDeleteBatch
+1-1  文件输入                        100      shot1      shot1                                fileInputBatch 
+1-2  用户删除                        100                           shot1                      userDeleteBatch
+2-1  文件输入（0件）                 100      shot2      shot2                                fileInputBatch 
+2-2  用户删除（0件）                 100                           shot2                      userDeleteBatch
 === ==================== ==================  ========== ========= ============== ============ ===============
 
 \

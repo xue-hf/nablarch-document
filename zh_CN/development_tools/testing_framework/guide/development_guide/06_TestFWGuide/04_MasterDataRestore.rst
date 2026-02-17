@@ -141,7 +141,7 @@
 .. _MasterDataRestore-configuration:
 
 设置示例
-~~~~~~
+~~~~~~~~
 
 .. code-block:: xml
 

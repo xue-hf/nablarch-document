@@ -1,3 +1,825 @@
+.. _micrometer_adaptor:
+
+Micrometer适配器
+==================================================
+
+.. contents:: 目录
+  :depth: 3
+  :local:
+
+提供用于使用 `Micrometer(外部网站、英语) <https://micrometer.io/>`_ 进行指标收集的适配器。
+
+使用本适配器可以实现以下功能，获得便于应用程序运维监控的优势。
+
+* 可以收集JVM内存使用量、CPU使用率等应用程序指标
+* 可以将收集的指标联动到 `Datadog(外部网站) <https://www.datadoghq.com/ja/>`_ 或 `CloudWatch(外部网站) <https://aws.amazon.com/jp/cloudwatch/>`_ 等监控服务
+
+
+模块列表
+--------------------------------------------------
+.. code-block:: xml
+
+  <!-- Micrometer适配器 -->
+  <dependency>
+    <groupId>com.nablarch.integration</groupId>
+    <artifactId>nablarch-micrometer-adaptor</artifactId>
+  </dependency>
+  
+.. tip::
+
+  使用Micrometer版本1.13.0进行测试。
+  更改版本时，请在项目侧进行测试确认无问题。
+
+进行Micrometer适配器的使用设置
+--------------------------------------------------
+要在Micrometer中收集指标，需要创建称为 `registry(外部网站、英语) <https://docs.micrometer.io/micrometer/reference/concepts/registry.html>`_ 的类。
+本适配器提供了用于将此registry注册到 :ref:`repository` 的 :java:extdoc:`ComponentFactory<nablarch.core.repository.di.ComponentFactory>` 。
+
+这里以将 `LoggingMeterRegistry(外部网站、英语)`_ 注册为组件的 :java:extdoc:`LoggingMeterRegistryFactory<nablarch.integration.micrometer.logging.LoggingMeterRegistryFactory>` 为例说明设置方法。
+
+.. tip::
+
+  `LoggingMeterRegistry(外部网站、英语)`_ 提供了使用SLF4J或Java Util Logging将指标输出到日志的功能。
+  未特别设置时，将使用Java Util Logging输出到标准输出，适合进行简单的动作确认。
+
+  其他registry需要准备联动目标服务、创建输出指标的处理等，比较麻烦。
+  因此，本说明使用可以最简单确认动作的 `LoggingMeterRegistry(外部网站、英语)`_ 。
+
+另外，基础应用程序使用 `Web应用程序的Example(外部网站) <https://github.com/nablarch/nablarch-example-web>`_ 。
+
+.. _micrometer_adaptor_declare_default_meter_binder_list_provider_as_component:
+
+将DefaultMeterBinderListProvider声明为组件
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Micrometer中存在 `MeterBinder(外部网站、英语)`_ 接口。
+
+JVM内存使用量、CPU使用率等常用指标的收集，已事先以实现了此接口的类形式准备好。
+（例：JVM内存使用量为 `JvmMemoryMetrics(外部网站、英语)`_ 、CPU使用率为 `ProcessorMetrics(外部网站、英语)`_ ）
+
+:java:extdoc:`DefaultMeterBinderListProvider <nablarch.integration.micrometer.DefaultMeterBinderListProvider>` 是提供此 `MeterBinder(外部网站、英语)`_ 列表的类，使用本类可以收集JVM内存使用量、CPU使用率等指标。
+
+首先在 ``src/main/resources/web-component-configuration.xml`` 中，添加此 :java:extdoc:`DefaultMeterBinderListProvider <nablarch.integration.micrometer.DefaultMeterBinderListProvider>` 的声明。
+
+.. code-block:: xml
+
+  <component name="meterBinderListProvider"
+             class="nablarch.integration.micrometer.DefaultMeterBinderListProvider" />
+
+
+关于收集的指标的具体说明，请参阅 :ref:`micrometer_default_metrics` 。
+
+将DefaultMeterBinderListProvider设为废弃处理对象
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+:java:extdoc:`DefaultMeterBinderListProvider <nablarch.integration.micrometer.DefaultMeterBinderListProvider>` 是需要废弃处理的组件，因此如下声明为废弃处理对象。
+
+.. code-block:: xml
+  
+  <component name="disposer"
+      class="nablarch.core.repository.disposal.BasicApplicationDisposer">
+
+    <property name="disposableList">
+      <list>
+        <component-ref name="meterBinderListProvider"/>
+      </list>
+    </property>
+
+  </component>
+
+关于对象的废弃处理，请参阅 :ref:`repository-dispose_object` 。
+
+将registry的factory类声明为组件
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: xml
+
+  <component class="nablarch.integration.micrometer.logging.LoggingMeterRegistryFactory">
+    <property name="meterBinderListProvider" ref="meterBinderListProvider" />
+    <property name="applicationDisposer" ref="disposer" />
+  </component>
+
+接下来，将各registry准备的factory类声明为组件。
+
+此时，设置 ``meterBinderListProvider`` 和 ``applicationDisposer`` 两个属性。
+各属性分别设置上面声明的 :java:extdoc:`DefaultMeterBinderListProvider <nablarch.integration.micrometer.DefaultMeterBinderListProvider>` 和 :java:extdoc:`BasicApplicationDisposer <nablarch.core.repository.disposal.BasicApplicationDisposer>` 。
+
+关于本适配器提供的factory类，在 :ref:`micrometer_registry_factory` 中列出。
+
+
+创建设置文件
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+最后，在 ``src/main/resources`` 下创建名为 ``micrometer.properties`` 的文本文件。
+
+这里内容如下描述。
+
+.. code-block:: properties
+
+  # 为方便确认，每5秒输出指标（默认1分钟）
+  nablarch.micrometer.logging.step=5s
+  # 设置即使在step指定时间之前应用程序结束，废弃处理时也会输出日志
+  nablarch.micrometer.logging.logInactive=true
+
+.. important::
+
+  ``micrometer.properties`` 即使内容为空也必须配置。
+
+
+.. _micrometer_metrics_output_example:
+
+执行结果
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+以上，即可使用 ``LoggingMeterRegistry`` 收集指标。
+
+启动应用程序，可以确认收集的指标如下输出到标准输出。
+
+.. code-block:: text
+
+  2020-09-04 15:33:40.689 [INFO ]      i.m.c.i.l.LoggingMeterRegistry: jvm.gc.count{memory.manager.name=PS Scavenge} throughput=2.6/s
+  2020-09-04 15:33:40.690 [INFO ]      i.m.c.i.l.LoggingMeterRegistry: jvm.gc.count{memory.manager.name=PS MarkSweep} throughput=0.4/s
+  2020-09-04 15:33:40.691 [INFO ]      i.m.c.i.l.LoggingMeterRegistry: jvm.buffer.count{id=mapped} value=0 buffers
+  2020-09-04 15:33:40.691 [INFO ]      i.m.c.i.l.LoggingMeterRegistry: jvm.buffer.count{id=direct} value=2 buffers
+  2020-09-04 15:33:40.692 [INFO ]      i.m.c.i.l.LoggingMeterRegistry: jvm.buffer.memory.used{id=direct} value=124 KiB
+  2020-09-04 15:33:40.692 [INFO ]      i.m.c.i.l.LoggingMeterRegistry: jvm.buffer.memory.used{id=mapped} value=0 B
+  2020-09-04 15:33:40.692 [INFO ]      i.m.c.i.l.LoggingMeterRegistry: jvm.buffer.total.capacity{id=mapped} value=0 B
+  2020-09-04 15:33:40.692 [INFO ]      i.m.c.i.l.LoggingMeterRegistry: jvm.buffer.total.capacity{id=direct} value=124 KiB
+  2020-09-04 15:33:40.693 [INFO ]      i.m.c.i.l.LoggingMeterRegistry: jvm.classes.loaded{} value=9932 classes
+  2020-09-04 15:33:40.693 [INFO ]      i.m.c.i.l.LoggingMeterRegistry: jvm.gc.live.data.size{} value=0 B
+  2020-09-04 15:33:40.693 [INFO ]      i.m.c.i.l.LoggingMeterRegistry: jvm.gc.max.data.size{} value=2.65918 GiB
+  2020-09-04 15:33:40.694 [INFO ]      i.m.c.i.l.LoggingMeterRegistry: jvm.memory.committed{area=heap,id=PS Old Gen} value=182.5 MiB
+  2020-09-04 15:33:40.694 [INFO ]      i.m.c.i.l.LoggingMeterRegistry: jvm.memory.committed{area=heap,id=PS Survivor Space} value=44 MiB
+  2020-09-04 15:33:40.694 [INFO ]      i.m.c.i.l.LoggingMeterRegistry: jvm.memory.committed{area=heap,id=PS Eden Space} value=197 MiB
+  2020-09-04 15:33:40.694 [INFO ]      i.m.c.i.l.LoggingMeterRegistry: jvm.memory.committed{area=nonheap,id=Code Cache} value=29.125 MiB
+  2020-09-04 15:33:40.694 [INFO ]      i.m.c.i.l.LoggingMeterRegistry: jvm.memory.committed{area=nonheap,id=Compressed Class Space} value=6.796875 MiB
+  2020-09-04 15:33:40.694 [INFO ]      i.m.c.i.l.LoggingMeterRegistry: jvm.memory.committed{area=nonheap,id=Metaspace} value=55.789062 MiB
+  2020-09-04 15:33:40.695 [INFO ]      i.m.c.i.l.LoggingMeterRegistry: jvm.memory.max{area=heap,id=PS Old Gen} value=2.65918 GiB
+  2020-09-04 15:33:40.695 [INFO ]      i.m.c.i.l.LoggingMeterRegistry: jvm.memory.max{area=heap,id=PS Survivor Space} value=44 MiB
+  2020-09-04 15:33:40.696 [INFO ]      i.m.c.i.l.LoggingMeterRegistry: jvm.memory.max{area=nonheap,id=Code Cache} value=240 MiB
+  2020-09-04 15:33:40.696 [INFO ]      i.m.c.i.l.LoggingMeterRegistry: jvm.memory.max{area=nonheap,id=Metaspace} value=-1 B
+  2020-09-04 15:33:40.696 [INFO ]      i.m.c.i.l.LoggingMeterRegistry: jvm.memory.max{area=heap,id=PS Eden Space} value=1.243652 GiB
+  2020-09-04 15:33:40.696 [INFO ]      i.m.c.i.l.LoggingMeterRegistry: jvm.memory.max{area=nonheap,id=Compressed Class Space} value=1 GiB
+  2020-09-04 15:33:40.697 [INFO ]      i.m.c.i.l.LoggingMeterRegistry: jvm.memory.used{area=nonheap,id=Code Cache} value=28.618713 MiB
+  2020-09-04 15:33:40.697 [INFO ]      i.m.c.i.l.LoggingMeterRegistry: jvm.memory.used{area=nonheap,id=Compressed Class Space} value=6.270714 MiB
+  2020-09-04 15:33:40.697 [INFO ]      i.m.c.i.l.LoggingMeterRegistry: jvm.memory.used{area=nonheap,id=Metaspace} value=54.118324 MiB
+  2020-09-04 15:33:40.698 [INFO ]      i.m.c.i.l.LoggingMeterRegistry: jvm.memory.used{area=heap,id=PS Old Gen} value=69.320663 MiB
+  2020-09-04 15:33:40.698 [INFO ]      i.m.c.i.l.LoggingMeterRegistry: jvm.memory.used{area=heap,id=PS Survivor Space} value=7.926674 MiB
+  2020-09-04 15:33:40.698 [INFO ]      i.m.c.i.l.LoggingMeterRegistry: jvm.memory.used{area=heap,id=PS Eden Space} value=171.750542 MiB
+  2020-09-04 15:33:40.698 [INFO ]      i.m.c.i.l.LoggingMeterRegistry: jvm.threads.daemon{} value=28 threads
+  2020-09-04 15:33:40.698 [INFO ]      i.m.c.i.l.LoggingMeterRegistry: jvm.threads.live{} value=29 threads
+  2020-09-04 15:33:40.699 [INFO ]      i.m.c.i.l.LoggingMeterRegistry: jvm.threads.peak{} value=31 threads
+  2020-09-04 15:33:40.702 [INFO ]      i.m.c.i.l.LoggingMeterRegistry: jvm.threads.states{state=blocked} value=0 threads
+  2020-09-04 15:33:40.703 [INFO ]      i.m.c.i.l.LoggingMeterRegistry: jvm.threads.states{state=runnable} value=9 threads
+  2020-09-04 15:33:40.703 [INFO ]      i.m.c.i.l.LoggingMeterRegistry: jvm.threads.states{state=new} value=0 threads
+  2020-09-04 15:33:40.703 [INFO ]      i.m.c.i.l.LoggingMeterRegistry: jvm.threads.states{state=timed-waiting} value=3 threads
+  2020-09-04 15:33:40.703 [INFO ]      i.m.c.i.l.LoggingMeterRegistry: jvm.threads.states{state=terminated} value=0 threads
+  2020-09-04 15:33:40.704 [INFO ]      i.m.c.i.l.LoggingMeterRegistry: jvm.threads.states{state=waiting} value=17 threads
+  2020-09-04 15:33:41.199 [INFO ]      i.m.c.i.l.LoggingMeterRegistry: process.cpu.usage{} value=0.111672
+  2020-09-04 15:33:41.199 [INFO ]      i.m.c.i.l.LoggingMeterRegistry: process.start.time{} value=444222h 33m 14.544s
+  2020-09-04 15:33:41.199 [INFO ]      i.m.c.i.l.LoggingMeterRegistry: process.uptime{} value=26.729s
+  2020-09-04 15:33:41.200 [INFO ]      i.m.c.i.l.LoggingMeterRegistry: system.cpu.count{} value=8
+  2020-09-04 15:33:41.200 [INFO ]      i.m.c.i.l.LoggingMeterRegistry: system.cpu.usage{} value=0.394545
+
+
+
+.. _micrometer_registry_factory:
+
+Registry Factory
+--------------------------------------------------
+本适配器提供以下registry的factory类。
+
+.. list-table::
+
+  * - Registry
+    - Factory类
+    - 提供的适配器版本
+  * - `SimpleMeterRegistry(外部网站、英语)`_
+    - :java:extdoc:`SimpleMeterRegistryFactory <nablarch.integration.micrometer.simple.SimpleMeterRegistryFactory>`
+    - ``1.0.0`` 以上
+  * - `LoggingMeterRegistry(外部网站、英语)`_
+    - :java:extdoc:`LoggingMeterRegistryFactory <nablarch.integration.micrometer.logging.LoggingMeterRegistryFactory>`
+    - ``1.0.0`` 以上
+  * - `CloudWatchMeterRegistry(外部网站、英语)`_
+    - :java:extdoc:`CloudWatchMeterRegistryFactory <nablarch.integration.micrometer.cloudwatch.CloudWatchMeterRegistryFactory>`
+    - ``1.0.0`` 以上
+  * - `DatadogMeterRegistry(外部网站、英语)`_
+    - :java:extdoc:`DatadogMeterRegistryFactory <nablarch.integration.micrometer.datadog.DatadogMeterRegistryFactory>`
+    - ``1.0.0`` 以上
+  * - `StatsdMeterRegistry(外部网站、英语)`_
+    - :java:extdoc:`StatsdMeterRegistryFactory <nablarch.integration.micrometer.statsd.StatsdMeterRegistryFactory>`
+    - ``1.0.0`` 以上
+  * - `OtlpMeterRegistry(外部网站、英语)`_
+    - :java:extdoc:`OtlpMeterRegistryFactory <nablarch.integration.micrometer.otlp.OtlpMeterRegistryFactory>`
+    - ``1.3.0`` 以上
+
+
+.. _micrometer_configuration:
+
+设置文件
+--------------------------------------------------
+
+存放位置
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+本适配器的设置文件，创建时应以 ``micrometer.properties`` 名称存放在类路径根目录下。
+
+格式
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+此文件中记载的设置，按以下格式描述。
+
+.. code-block:: text
+
+  nablarch.micrometer.<subPrefix>.<key>=要设置的值
+
+这里， ``<subPrefix>`` 设置的值因使用的registry factory而异。
+
+各registry factory在 ``<subPrefix>`` 中指定的值如下表所示。
+
+=================================== ================
+Registry Factory                      subPrefix
+=================================== ================
+``SimpleMeterRegistryFactory``      ``simple``
+``LoggingMeterRegistryFactory``     ``logging``
+``CloudWatchMeterRegistryFactory``  ``cloudwatch``
+``DatadogMeterRegistryFactory``     ``datadog``
+``StatsdMeterRegistryFactory``      ``statsd``
+``OtlpMeterRegistryFactory``        ``otlp``
+=================================== ================
+
+另外， ``<key>`` 中指定Micrometer为各registry提供的 `设置类(外部网站、英语) <https://javadoc.io/doc/io.micrometer/micrometer-core/1.13.0/io/micrometer/core/instrument/config/MeterRegistryConfig.html>`_ 中定义的方法同名。
+
+例如，对于 `DatadogMeterRegistry(外部网站、英语)`_ 准备了 `DatadogConfig(外部网站、英语)`_ 设置类。
+并且，此设置类中定义了 `apiKey(外部网站、英语) <https://javadoc.io/doc/io.micrometer/micrometer-registry-datadog/1.13.0/io/micrometer/datadog/DatadogConfig.html#apiKey()>`_ 方法。
+
+
+
+
+因此，在 ``micrometer.properties`` 中如下描述即可设置 ``apiKey`` 。
+
+.. code-block:: text
+
+  nablarch.micrometer.datadog.apiKey=XXXXXXXXXXXXXXXXXXXX
+
+通过OS环境变量・系统属性覆盖
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+``micrometer.properties`` 中描述的设置值，可以通过OS环境变量和系统属性覆盖。
+
+设置值按优先级从高到低的顺序采用如下。
+
+#. 系统属性中指定的值
+#. OS环境变量中指定的值
+#. ``micrometer.properties`` 的设置值
+
+例如，假设在以下条件中设置。
+
+micrometer.properties
+
+  .. code-block:: text
+
+    nablarch.micrometer.example.one=PROPERTIES
+    nablarch.micrometer.example.two=PROPERTIES
+    nablarch.micrometer.example.three=PROPERTIES
+
+OS环境变量
+
+  .. code-block:: text
+
+    $ export NABLARCH_MICROMETER_EXAMPLE_TWO=OS_ENV
+
+    $ export NABLARCH_MICROMETER_EXAMPLE_THREE=OS_ENV
+
+系统属性
+
+  .. code-block:: text
+
+    -Dnablarch.micrometer.example.three=SYSTEM_PROP
+
+此时，各设置值最终采用如下值。
+
+========== ================
+key        采用的值
+========== ================
+``one``    ``PROPERTIES``
+``two``    ``OS_ENV``
+``three``  ``SYSTEM_PROP``
+========== ================
+
+关于通过OS环境变量覆盖时的命名规则，请参阅 :ref:`关于OS环境变量的名称 <repository-overwrite_environment_configuration_by_os_env_var_naming_rule>` 。
+
+更改设置的前缀
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+设置的前缀 (``nablarch.micrometer.<subPrefix>``) ，可通过在各registry factory中指定 :java:extdoc:`prefix <nablarch.integration.micrometer.MeterRegistryFactory.setPrefix(java.lang.String)>` 属性来更改。
+
+以下记载更改前缀的示例。
+
+.. code-block:: xml
+
+  <component name="meterRegistry" class="nablarch.integration.micrometer.logging.LoggingMeterRegistryFactory">
+    <property name="meterBinderListProvider" ref="meterBinderListProvider" />
+    <property name="applicationDisposer" ref="disposer" />
+
+    <!-- 在prefix属性中设置任意前缀 -->
+    <property name="prefix" value="sample.prefix" />
+  </component>
+
+此时， ``micrometer.properties`` 可以如下设置。
+
+.. code-block:: text
+
+  sample.prefix.step=10s
+
+更改设置文件的位置
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+设置文件（``micrometer.properties``）的位置，可通过以下方法更改。
+
+首先，在registry factory的 :java:extdoc:`xmlConfigPath <nablarch.integration.micrometer.MeterRegistryFactory.setXmlConfigPath(java.lang.String)>` 属性中，指定读取设置文件的XML文件路径。
+
+.. code-block:: xml
+
+  <component name="meterRegistry" class="nablarch.integration.micrometer.logging.LoggingMeterRegistryFactory">
+    <property name="meterBinderListProvider" ref="meterBinderListProvider" />
+    <property name="applicationDisposer" ref="disposer" />
+
+    <!-- 指定读取设置文件的XML文件路径 -->
+    <property name="xmlConfigPath" value="config/metrics.xml" />
+  </component>
+
+然后，在 ``xmlConfigPath`` 属性指定的位置，配置读取设置文件的XML文件。
+以下设置中，类路径内的 ``config/metrics.properties`` 将作为设置文件被读取。
+
+.. code-block:: xml
+
+  <?xml version="1.0" encoding="UTF-8"?>
+  <component-configuration
+          xmlns="http://tis.co.jp/nablarch/component-configuration"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://tis.co.jp/nablarch/component-configuration https://nablarch.github.io/schema/component-configuration.xsd">
+
+    <!-- 读取Micrometer适配器的设置 -->
+    <config-file file="config/metrics.properties" />
+
+  </component-configuration>
+
+.. tip::
+
+  此XML文件可以用与组件设置文件相同的格式描述。
+
+  但是，即使在此文件中定义组件，也无法从系统仓库获取引用。
+
+
+.. _micrometer_default_metrics:
+
+DefaultMeterBinderListProvider收集的指标
+-----------------------------------------------------
+
+:java:extdoc:`DefaultMeterBinderListProvider <nablarch.integration.micrometer.DefaultMeterBinderListProvider>` 生成的 `MeterBinder(外部网站、英语)`_ 列表包含以下类。
+
+
+* `JvmMemoryMetrics(外部网站、英语)`_
+* `JvmGcMetrics(外部网站、英语)`_
+* `JvmThreadMetrics(外部网站、英语)`_
+* `ClassLoaderMetrics(外部网站、英语)`_
+* `ProcessorMetrics(外部网站、英语)`_
+* `FileDescriptorMetrics(外部网站、英语)`_
+* `UptimeMetrics(外部网站、英语)`_
+* :java:extdoc:`NablarchGcCountMetrics <nablarch.integration.micrometer.instrument.binder.jvm.NablarchGcCountMetrics>`
+
+
+
+由此，可收集以下指标。
+
+.. list-table::
+
+  * - 指标名
+    - 说明
+  * - ``jvm.buffer.count``
+    - 缓冲池内的缓冲数量
+  * - ``jvm.buffer.memory.used``
+    - 缓冲池的使用量
+  * - ``jvm.buffer.total.capacity``
+    - 缓冲池的总容量
+  * - ``jvm.memory.used``
+    - 内存池的内存使用量
+  * - ``jvm.memory.committed``
+    - 内存池的已提交内存量
+  * - ``jvm.memory.max``
+    - 内存池的最大内存量
+  * - ``jvm.gc.max.data.size``
+    - OLD区域的最大内存量
+  * - ``jvm.gc.live.data.size``
+    - Full GC后的OLD区域内存使用量
+  * - ``jvm.gc.memory.promoted``
+    - GC前后增加的OLD区域内存使用量增量
+  * - ``jvm.gc.memory.allocated``
+    - 上次GC后至本次GC的Young区域内存使用量增量
+  * - ``jvm.gc.concurrent.phase.time``
+    - 并发阶段的处理时间
+  * - ``jvm.gc.pause``
+    - GC暂停所花费的时间
+  * - ``jvm.threads.peak``
+    - 线程数的峰值
+  * - ``jvm.threads.daemon``
+    - 当前守护线程数
+  * - ``jvm.threads.live``
+    - 当前非守护线程数
+  * - ``jvm.threads.states``
+    - 当前各线程状态的数目
+  * - ``jvm.classes.loaded``
+    - 当前已加载的类数
+  * - ``jvm.classes.unloaded``
+    - JVM启动至今卸载的类数
+  * - ``system.cpu.count``
+    - JVM可使用的处理器数
+  * - ``system.load.average.1m``
+    - 最近1分钟的系统负载平均值（参考： `OperatingSystemMXBean(外部网站) <https://docs.oracle.com/javase/jp/17/docs/api/java.management/java/lang/management/OperatingSystemMXBean.html#getSystemLoadAverage()>`_ ）
+  * - ``system.cpu.usage``
+    - 系统整体的最近CPU使用率
+  * - ``process.cpu.usage``
+    - JVM的最近CPU使用率
+  * - ``process.files.open``
+    - 打开的文件描述符数
+  * - ``process.files.max``
+    - 文件描述符的最大数
+  * - ``process.uptime``
+    - JVM的运行时间
+  * - ``process.start.time``
+    - JVM的启动时间（UNIX时间）
+  * - ``jvm.gc.count``
+    - GC次数
+  * - ``jvm.threads.started``
+    - JVM启动的线程数
+  * - ``process.cpu.time``
+    - Java虚拟机进程使用的CPU时间
+
+实际收集的指标示例请参阅 :ref:`micrometer_metrics_output_example` 。
+
+设置通用标签
+--------------------------------------------------
+
+在registry factory的 :java:extdoc:`tags <nablarch.integration.micrometer.MeterRegistryFactory.setTags(java.util.Map)>` 属性中，可以设置所有指标共通的标签。
+
+此功能可用于设置识别应用程序运行主机、实例、区域等信息的用途。
+
+以下记载设置方法。
+
+.. code-block:: xml
+
+  <component name="meterRegistry" class="nablarch.integration.micrometer.logging.LoggingMeterRegistryFactory">
+    <property name="meterBinderListProvider" ref="meterBinderListProvider" />
+    <property name="applicationDisposer" ref="disposer" />
+
+    <!-- 在tags属性中设置共通标签 -->
+    <property name="tags">
+      <map>
+        <entry key="foo" value="FOO" />
+        <entry key="bar" value="BAR" />
+      </map>
+    </property>
+  </component>
+
+``tags`` 属性的类型为 ``Map<String, String>`` ，可以使用 ``<map>`` 标签设置。
+此时，Map的键对应标签名，Map的值对应标签值。
+
+上述设置情况下，收集的指标如下所示。
+
+.. code-block:: text
+
+  （省略）
+  2020-09-04 17:30:06.656 [INFO ]      i.m.c.i.l.LoggingMeterRegistry: process.start.time{bar=BAR,foo=FOO} value=444224h 29m 38.875000064s
+  2020-09-04 17:30:06.656 [INFO ]      i.m.c.i.l.LoggingMeterRegistry: process.uptime{bar=BAR,foo=FOO} value=27.849s
+  2020-09-04 17:30:06.656 [INFO ]      i.m.c.i.l.LoggingMeterRegistry: system.cpu.count{bar=BAR,foo=FOO} value=8
+  2020-09-04 17:30:06.657 [INFO ]      i.m.c.i.l.LoggingMeterRegistry: system.cpu.usage{bar=BAR,foo=FOO} value=0.475654
+
+可以确认所有指标都设置了 ``foo=FOO``、``bar=BAR`` 的标签。
+
+.. _micrometer_collaboration:
+
+与监控服务联动
+--------------------------------------------------
+
+要与监控服务联动，大致需要进行以下设置。
+
+#. 添加监控服务或联动方法对应的Micrometer模块到依赖
+#. 将使用的registry factory定义为组件
+#. 其他，各监控服务独自的设置
+
+这里说明与各监控服务联动的方法。
+
+
+与Datadog联动
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+添加依赖
+  .. code-block:: xml
+
+    <dependency>
+      <groupId>io.micrometer</groupId>
+      <artifactId>micrometer-registry-datadog</artifactId>
+      <version>1.13.0</version>
+    </dependency>
+
+声明registry factory
+  .. code-block:: xml
+  
+    <component name="meterRegistry" class="nablarch.integration.micrometer.datadog.DatadogMeterRegistryFactory">
+      <property name="meterBinderListProvider" ref="meterBinderListProvider" />
+      <property name="applicationDisposer" ref="disposer" />
+    </component>
+
+设置API密钥
+  .. code-block:: text
+
+    nablarch.micrometer.datadog.apiKey=XXXXXXXXXXXXXXXX
+
+  API密钥可通过 ``nablarch.micrometer.datadog.apiKey`` 设置。
+
+设置站点URL
+  .. code-block:: text
+
+    nablarch.micrometer.datadog.uri=<站点URL>
+
+  站点URL可通过 ``nablarch.micrometer.datadog.uri`` 设置。
+
+  其他设置请参阅 `DatadogConfig(外部网站、英语)`_ 。
+
+禁用联动
+  .. code-block:: text
+
+    nablarch.micrometer.datadog.enabled=false
+    nablarch.micrometer.datadog.apiKey=XXXXXXXXXXXXXXXX
+
+  在 ``micrometer.properties`` 中将 ``nablarch.micrometer.datadog.enabled`` 设为 ``false`` ，可以禁用指标联动。
+  此设置可通过环境变量覆盖，因此可以仅在生产环境通过环境变量覆盖为 ``true`` 来启用联动。
+
+  .. important::
+    禁用联动时， ``nablarch.micrometer.datadog.apiKey`` 也需要设置某种值。
+    值可以是虚拟的。
+
+与CloudWatch联动
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+添加依赖
+  .. code-block:: xml
+
+    <dependency>
+      <groupId>io.micrometer</groupId>
+      <artifactId>micrometer-registry-cloudwatch2</artifactId>
+      <version>1.13.0</version>
+    </dependency>
+
+声明registry factory
+  .. code-block:: xml
+  
+    <component name="meterRegistry" class="nablarch.integration.micrometer.cloudwatch.CloudWatchMeterRegistryFactory">
+      <property name="meterBinderListProvider" ref="meterBinderListProvider" />
+      <property name="applicationDisposer" ref="disposer" />
+    </component>
+
+设置区域和访问密钥
+  .. code-block:: bash
+    
+    $ export AWS_REGION=ap-northeast-1
+
+    $ export AWS_ACCESS_KEY_ID=XXXXXXXXXXXXXXXXXXXXX
+
+    $ export AWS_SECRET_ACCESS_KEY=YYYYYYYYYYYYYYYYYYYYY
+
+  ``micrometer-registry-cloudwatch2`` 模块使用AWS SDK。
+  因此，区域和访问密钥等设置遵循AWS SDK的方法。
+
+  以上是在Linux中使用OS环境变量设置的示例。
+  更详细的信息请参阅 `AWS文档(外部网站) <https://docs.aws.amazon.com/ja_jp/sdk-for-java/v1/developer-guide/setup-credentials.html>`_ 。
+
+设置命名空间
+  .. code-block:: text
+
+    nablarch.micrometer.cloudwatch.namespace=test
+
+  指标的自定义命名空间可通过 ``nablarch.micrometer.cloudwatch.namespace`` 设置。
+
+  其他设置请参阅 `CloudWatchConfig(外部网站、英语)`_ 。
+
+更详细的设置
+  无法通过OS环境变量或设置文件指定、需要更详细设置时，可以通过实现 :java:extdoc:`CloudWatchAsyncClientProvider <nablarch.integration.micrometer.cloudwatch.CloudWatchAsyncClientProvider>` 的自定义provider来对应。
+
+  .. code-block:: java
+
+      package example.micrometer.cloudwatch;
+
+      import nablarch.integration.micrometer.cloudwatch.CloudWatchAsyncClientProvider;
+      import software.amazon.awssdk.services.cloudwatch.CloudWatchAsyncClient;
+
+      public class CustomCloudWatchAsyncClientProvider implements CloudWatchAsyncClientProvider {
+          @Override
+          public CloudWatchAsyncClient provide() {
+              return CloudWatchAsyncClient
+                      .builder()
+                      .asyncConfiguration(...) // 进行任意设置
+                      .build();
+          }
+      }
+
+  :java:extdoc:`CloudWatchAsyncClientProvider <nablarch.integration.micrometer.cloudwatch.CloudWatchAsyncClientProvider>` 具有提供 ``CloudWatchAsyncClient`` 的 ``provide()`` 方法。
+  在自定义provider中，实现 ``provide()`` 方法以返回进行了任意设置的 ``CloudWatchAsyncClient`` 。
+
+  .. code-block:: xml
+
+    <component name="meterRegistry" class="nablarch.integration.micrometer.cloudwatch.CloudWatchMeterRegistryFactory">
+      <property name="meterBinderListProvider" ref="meterBinderListProvider" />
+      <property name="applicationDisposer" ref="disposer" />
+
+      <!-- 在cloudWatchAsyncClientProvider属性中设置自定义provider -->
+      <property name="cloudWatchAsyncClientProvider">
+        <component class="example.micrometer.cloudwatch.CustomCloudWatchAsyncClientProvider" />
+      </property>
+    </component>
+
+  创建的自定义provider，设置在 ``CloudWatchMeterRegistryFactory`` 的 :java:extdoc:`cloudWatchAsyncClientProvider <nablarch.integration.micrometer.cloudwatch.CloudWatchMeterRegistryFactory.setCloudWatchAsyncClientProvider(nablarch.integration.micrometer.cloudwatch.CloudWatchAsyncClientProvider)>` 属性中。
+
+  由此，自定义provider生成的 ``CloudWatchAsyncClient`` 将用于指标联动。
+
+  .. tip::
+
+    默认使用 `CloudWatchAsyncClient.create() (外部网站、英语) <https://javadoc.io/static/software.amazon.awssdk/cloudwatch/2.13.4/software/amazon/awssdk/services/cloudwatch/CloudWatchAsyncClient.html#create-->`_ 创建的实例。
+
+禁用联动
+  .. code-block:: text
+
+    nablarch.micrometer.cloudwatch.enabled=false
+    nablarch.micrometer.cloudwatch.namespace=test
+
+  在 ``micrometer.properties`` 中将 ``nablarch.micrometer.cloudwatch.enabled`` 设为 ``false`` ，可以禁用指标联动。
+  此设置可通过环境变量覆盖，因此可以仅在生产环境通过环境变量覆盖为 ``true`` 来启用联动。
+
+  .. important::
+    禁用联动时， ``nablarch.micrometer.cloudwatch.namespace`` 也需要设置某种值。
+    另外，需要设置环境变量 ``AWS_REGION`` 。
+
+    值都可以是虚拟的。
+
+与Azure联动
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+使用Micrometer向Azure联动指标的方法
+  Azure提供了使用Java代理向Azure联动指标的机制（**Java 3.0 Agent**）。
+
+  * `使用Azure Monitor Application Insights监视Java的无代码应用程序(外部网站) <https://learn.microsoft.com/ja-jp/azure/azure-monitor/app/opentelemetry-enable?tabs=java>`_
+
+  此Java 3.0 Agent提供了自动收集Micrometer `全局registry(外部网站、英语) <https://docs.micrometer.io/micrometer/reference/concepts/registry.html#_global_registry>`_ 输出的指标并联动到Azure的机制。
+
+  * `从应用程序发送自定义遥测(外部网站) <https://learn.microsoft.com/ja-jp/azure/azure-monitor/app/opentelemetry-enable?tabs=java>`_
+
+  .. important::
+    Java 3.0 Agent在初始化处理中会加载大量jar文件。
+    因此，Java 3.0 Agent初始化处理期间GC可能会频繁发生。
+
+    因此，请注意应用程序启动后一段时间内，由于GC影响性能可能会暂时下降。
+
+    另外，高负载时Java 3.0 Agent的处理开销可能会影响性能。
+    因此，性能测试时请像生产环境一样引入Java 3.0 Agent，确认性能在预期范围内。
+
+
+  Java 3.0 Agent的设置方法请参阅 :ref:`Azure中的分布式追踪 <azure_distributed_tracing>` 。
+
+使用Micrometer适配器向Azure联动指标的设置
+  要在Micrometer适配器中将指标联动到Azure，需要进行以下设置。
+
+  * 在应用程序启动选项中添加Java 3.0 Agent
+  * 定义组件以使用全局registry作为 ``MeterRegistry``
+
+  关于第1个启动选项的设置方法，请参阅 `Azure文档 <https://learn.microsoft.com/ja-jp/azure/azure-monitor/app/opentelemetry-enable?tabs=java#modify-your-application>`_ 。
+
+  关于第2个使用全局registry的方法，本适配器提供了全局registry的factory类 :java:extdoc:`GlobalMeterRegistryFactory <nablarch.integration.micrometer.GlobalMeterRegistryFactory>` 。
+  以下显示此factory类的组件定义示例。
+
+  .. code-block:: xml
+
+    <component name="meterRegistry" class="nablarch.integration.micrometer.GlobalMeterRegistryFactory">
+      <property name="meterBinderListProvider" ref="meterBinderListProvider" />
+      <property name="applicationDisposer" ref="disposer" />
+    </component>
+
+  此设置后，指标收集将由全局registry执行。
+  并且，全局registry收集的指标将由Java 3.0 Agent联动到Azure。
+
+  .. tip::
+    此方法使用Java 3.0 Agent，不使用Azure用的 ``MeterRegistry`` 。
+    因此，即使不将Azure用模块添加到依赖也可以联动指标。
+
+
+关于详细设置
+  指标联动由Azure提供的Java 3.0 Agent执行。
+  因此，指标联动的相关设置都需要使用Java 3.0 Agent提供的方法进行。
+
+  关于Java 3.0 Agent设置的详细信息，请参阅 `配置选项(外部网站) <https://learn.microsoft.com/ja-jp/azure/azure-monitor/app/java-standalone-config>`_ 。
+
+  .. important::
+    本适配器用的设置文件 ``micrometer.properties`` 不能使用，但文件需要配置（内容为空即可）。
+
+禁用联动
+  不使用Java 3.0 Agent启动应用程序，即可禁用指标联动。
+
+通过StatsD联动
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Datadog支持使用 `DogStatsD(外部网站) <https://docs.datadoghq.com/ja/developers/dogstatsd/?tab=hostagent>`_ 这种 `StatsD(外部网站、英语) <https://github.com/statsd/statsd>`_ 协议进行联动。
+因此，使用 ``micrometer-registry-statsd`` 模块，也可以通过StatsD与Datadog联动。
+
+这里以使用StatsD协议与Datadog联动为例进行说明。
+关于DogStatsD的安装方法等，请参阅 `Datadog网站(外部网站) <https://docs.datadoghq.com/ja/agent/>`_ 。
+
+添加依赖
+  .. code-block:: xml
+
+    <dependency>
+      <groupId>io.micrometer</groupId>
+      <artifactId>micrometer-registry-statsd</artifactId>
+      <version>1.13.0</version>
+    </dependency>
+
+声明registry factory
+  .. code-block:: xml
+  
+    <component name="meterRegistry" class="nablarch.integration.micrometer.statsd.StatsdMeterRegistryFactory">
+      <property name="meterBinderListProvider" ref="meterBinderListProvider" />
+      <property name="applicationDisposer" ref="disposer" />
+    </component>
+
+根据需要描述设置文件
+  与StatsD守护进程联动的设置，已调整为默认值与默认配置安装DogStatsD时一致。
+  
+  因此，如果使用默认配置安装DogStatsD，则无需特别明示设置即可与DogStatsD联动。
+
+  如果使用默认配置以外的配置安装，请参阅 `StatsdConfig(外部网站、英语)`_ ，进行与实际环境相符的设置。
+
+  .. code-block:: text
+
+    # 更改端口
+    nablarch.micrometer.statsd.port=9999
+
+禁用联动
+  .. code-block:: text
+
+    nablarch.micrometer.statsd.enabled=false
+
+  在 ``micrometer.properties`` 中将 ``nablarch.micrometer.statsd.enabled`` 设为 ``false`` ，可以禁用指标联动。
+  此设置可通过环境变量覆盖，因此可以仅在生产环境通过环境变量覆盖为 ``true`` 来启用联动。
+
+通过OpenTelemetry Protocol (OTLP)联动
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+许多监控服务支持 `OpenTelemetry(外部网站) <https://opentelemetry.io/ja>`_ ，可以使用通信协议OpenTelemetry Protocol（以下简称OTLP）收集指标。
+使用 ``micrometer-registry-otlp`` 模块，可以通过OTLP与各种监控服务联动。
+
+  .. important::
+     OpenTelemetry的指标收集中，何种联动方法合适（可用）因监控服务而异，请确认使用监控服务的信息。
+     作为示例，以下显示一些监控服务的信息。
+
+     * `Datadog的OpenTelemetry(外部网站) <https://docs.datadoghq.com/ja/opentelemetry/>`_
+     * `New Relic介绍的OpenTelemetry(外部网站) <https://docs.newrelic.com/jp/docs/opentelemetry/opentelemetry-introduction>`_
+     * `Prometheus | HTTP API | OTLP Receiver(外部网站、英语) <https://prometheus.io/docs/prometheus/latest/querying/api/#otlp-receiver>`_
+
+这里以向在localhost 9090端口启动的Prometheus通过OTLP联动为例进行说明。
+
+添加依赖
+  .. code-block:: xml
+
+    <dependency>
+      <groupId>io.micrometer</groupId>
+      <artifactId>micrometer-registry-otlp</artifactId>
+      <version>1.13.0</version>
+    </dependency>
+
+声明registry factory
+  .. code-block:: xml
+  
+    <component name="meterRegistry" class="nablarch.integration.micrometer.otlp.OtlpMeterRegistryFactory">
+      <property name="meterBinderListProvider" ref="meterBinderListProvider" />
+      <property name="applicationDisposer" ref="disposer" />
+    </component>
+
+描述设置文件
+  .. code-block:: text
+
+    # 更改发送目标
+    nablarch.micrometer.otlp.url=http://localhost:9090/api/v1/otlp/v1/metrics
+
+设置头部信息
+  .. code-block:: text
+
+    nablarch.micrometer.otlp.headers=key1=value1,key2=value2
+
+  如果需要认证使用的API密钥等头部信息，可通过 ``nablarch.micrometer.otlp.headers`` 设置。
+
+禁用联动
+  .. code-block:: text
+
+    nablarch.micrometer.otlp.enabled=false
+
+  在 ``micrometer.properties`` 中将 ``nablarch.micrometer.otlp.enabled`` 设为 ``false`` ，可以禁用指标联动。
+  此设置可通过环境变量覆盖，因此可以仅在生产环境通过环境变量覆盖为 ``true`` 来启用联动。
+
 各应用程序形式收集的指标示例
 ---------------------------------------------------------
 

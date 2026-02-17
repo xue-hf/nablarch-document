@@ -100,7 +100,7 @@ https://github.com/nablarch/sql-executor (外部网站)
 .. _db-settings:
 
 数据库设置更改
-^^^^^^^^^^^^
+^^^^^^^^^^^^^^^
 
 根据使用的RDBMS进行设置更改。
 
